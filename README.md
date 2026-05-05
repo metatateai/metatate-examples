@@ -67,4 +67,4 @@ The sample flows use customer-defined controls, not named external compliance ca
 - Metatate docs: https://docs.getmetatate.com
 - MCP cookbook: https://docs.getmetatate.com/mcp/cookbook
 - Learn use cases: https://www.getmetatate.com/learn
-- Snowflake Marketplace listing: add the final listing URL before public launch
+- Snowflake Marketplace listing: https://app.snowflake.com/marketplace/listing/GZ2FTZU03OAS
