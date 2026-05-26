@@ -78,7 +78,7 @@ For live mode:
 
 ```bash
 cp .env.example .env
-# Fill in Snowflake connection values.
+# Configure either SNOWFLAKE_CONNECTION_NAME or direct connector values.
 pip install -r requirements-live.txt
 ```
 
@@ -88,7 +88,9 @@ Then set:
 export METATATE_EXAMPLES_MODE=live
 ```
 
-See [docs/live-mode.md](docs/live-mode.md).
+The recommended live setup is to reuse a Snowflake connector or Snow CLI
+profile through `SNOWFLAKE_CONNECTION_NAME`. See
+[docs/live-mode.md](docs/live-mode.md).
 
 ## Snowflake Fixture
 

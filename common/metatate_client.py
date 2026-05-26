@@ -169,13 +169,33 @@ class SnowflakeMetatateClient:
             except ImportError as exc:  # pragma: no cover - live dependency.
                 raise RuntimeError("Install requirements-live.txt to use live mode") from exc
 
-            self._connection = snowflake.connector.connect(
-                account=os.environ["SNOWFLAKE_ACCOUNT"],
-                user=os.environ["SNOWFLAKE_USER"],
-                role=os.getenv("SNOWFLAKE_ROLE"),
-                warehouse=os.getenv("SNOWFLAKE_WAREHOUSE"),
-                authenticator=os.getenv("SNOWFLAKE_AUTHENTICATOR", "externalbrowser"),
-            )
+            connection_name = os.getenv("SNOWFLAKE_CONNECTION_NAME")
+            connections_file_path = os.getenv("SNOWFLAKE_CONNECTIONS_FILE")
+            if connection_name:
+                kwargs: dict[str, Any] = {"connection_name": connection_name}
+                if connections_file_path:
+                    kwargs["connections_file_path"] = connections_file_path
+                if os.getenv("SNOWFLAKE_ROLE"):
+                    kwargs["role"] = os.environ["SNOWFLAKE_ROLE"]
+                if os.getenv("SNOWFLAKE_WAREHOUSE"):
+                    kwargs["warehouse"] = os.environ["SNOWFLAKE_WAREHOUSE"]
+                self._connection = snowflake.connector.connect(**kwargs)
+            else:
+                connect_kwargs: dict[str, Any] = {
+                    "account": os.environ["SNOWFLAKE_ACCOUNT"],
+                    "user": os.environ["SNOWFLAKE_USER"],
+                    "role": os.getenv("SNOWFLAKE_ROLE"),
+                    "warehouse": os.getenv("SNOWFLAKE_WAREHOUSE"),
+                    "authenticator": os.getenv("SNOWFLAKE_AUTHENTICATOR", "externalbrowser"),
+                }
+                password = os.getenv("SNOWFLAKE_PASSWORD")
+                token_env = os.getenv("SNOWFLAKE_PAT_ENV")
+                if token_env:
+                    password = os.environ[token_env]
+                    connect_kwargs["authenticator"] = "programmatic_access_token"
+                if password:
+                    connect_kwargs["password"] = password
+                self._connection = snowflake.connector.connect(**connect_kwargs)
         return self._connection
 
     def discover_context(self, **params: Any) -> dict[str, Any]:
