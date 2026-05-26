@@ -1,13 +1,18 @@
 # Live Mode
 
-Offline mode uses committed JSON response fixtures. Live mode calls a Metatate Native App installed in your Snowflake account.
+Offline mode uses committed JSON response fixtures. Live mode calls the
+Snowflake-managed Metatate MCP server.
+
+This is intentional: the notebooks demonstrate the same MCP tool surface used
+by Claude Code, Cortex Code, and custom agents.
 
 ## Prerequisites
 
 - Metatate installed as a Snowflake Native App
 - the app initialized and granted required references
-- the MCP/tool layer registered
-- a Snowflake role that can use the app objects
+- the managed MCP server registered from the app
+- a Snowflake role that can use the MCP server
+- a role-restricted Snowflake programmatic access token (PAT)
 - Python dependencies from `requirements-live.txt`
 
 ## Configure
@@ -20,66 +25,61 @@ Set:
 
 ```text
 METATATE_EXAMPLES_MODE=live
-METATATE_APP_NAME=METATATE_APP
+METATATE_MCP_URL=https://<account-url>/api/v2/databases/METATATE_APP/schemas/CORE/mcp-servers/METATATE_MCP
+SNOWFLAKE_ROLE=<role-with-metatate-mcp-access>
+METATATE_MCP_PAT_ENV=METATATE_EXAMPLES_PAT
 ```
 
-Then choose one authentication path.
-
-### Preferred: Snowflake Connection Profile
-
-The notebooks can reuse a Snowflake Python connector / Snow CLI connection
-profile:
-
-```text
-SNOWFLAKE_CONNECTION_NAME=<profile-name>
-SNOWFLAKE_ROLE=<role-with-metatate-access>
-```
-
-If your `connections.toml` is not in the connector default location, set its
-absolute path:
-
-```text
-SNOWFLAKE_CONNECTIONS_FILE=/absolute/path/to/connections.toml
-```
-
-This keeps account, user, role, warehouse, and authentication settings in one
-Snowflake profile instead of copying them into the examples `.env`. If the
-profile does not define a role or warehouse, set `SNOWFLAKE_ROLE` or
-`SNOWFLAKE_WAREHOUSE` in `.env`; the helper passes those through as connection
-overrides.
-
-### Direct Connector Values
-
-You can also set connector values directly:
-
-```text
-SNOWFLAKE_ACCOUNT=<org-account>
-SNOWFLAKE_USER=<user>
-SNOWFLAKE_ROLE=<role-with-metatate-access>
-SNOWFLAKE_WAREHOUSE=<warehouse>
-SNOWFLAKE_AUTHENTICATOR=externalbrowser
-```
-
-For PAT-based testing, keep the PAT in your shell and reference it by env var:
+Then export the PAT in the shell where you run Jupyter:
 
 ```bash
 export METATATE_EXAMPLES_PAT='<snowflake-pat-secret>'
 ```
 
+Do not write the PAT secret into `.env`.
+
+If you prefer constructing the endpoint from parts, omit `METATATE_MCP_URL` and
+set:
+
 ```text
-SNOWFLAKE_PAT_ENV=METATATE_EXAMPLES_PAT
-SNOWFLAKE_AUTHENTICATOR=programmatic_access_token
+METATATE_MCP_ACCOUNT_URL=https://<account-url>
+METATATE_APP_NAME=METATATE_APP
+METATATE_MCP_SCHEMA=CORE
+METATATE_MCP_SERVER_NAME=METATATE_MCP
 ```
 
-Do not write the PAT secret into `.env`.
+## MCP Tools Used
+
+The Python helper calls the managed MCP server through JSON-RPC:
+
+- `discover-context`
+- `get-decision-context`
+- `inspect-data-meaning`
+- `inspect-governance-rules`
+- `authorize-use`
+- `validate-query-context`
+- `explain-why`
+
+The notebooks keep a small Python API for readability, but live mode translates
+those calls into MCP tool invocations.
+
+## Seed Demo Data
+
+Live mode does not require AcmeCloud if your account already has governed
+tables. To run the notebooks exactly as written, seed the AcmeCloud fixture:
+
+```bash
+snow sql -f sql/setup_acmecloud_demo.sql -c <profile>
+```
+
+Review the placeholders at the top of the SQL file before running it.
 
 ## Network Policy Errors
 
-If live mode opens a browser or starts a PAT connection and Snowflake returns an
-IP allowlist error, the notebooks are reaching Snowflake but the account policy
-is blocking the machine running the examples. Keep the fix narrow: ask a
-Snowflake administrator to allow only the current public IP for the user or
-dedicated PAT user used by the examples.
+If Snowflake returns an IP allowlist or network-policy error, the notebooks are
+reaching the managed MCP endpoint but the PAT/user is blocked by account policy.
+Keep the fix narrow: ask a Snowflake administrator to allow only the current
+public IP for the user or dedicated PAT user used by the examples.
 
 Example administrator SQL:
 
@@ -94,34 +94,26 @@ ALTER USER <SNOWFLAKE_USER>
   SET NETWORK_POLICY = METATATE_EXAMPLES_NETWORK_POLICY;
 ```
 
-Do not use `0.0.0.0/0`, and do not broaden an account-level policy just to run
-the examples.
+For short-lived demo PATs, an administrator can also issue a PAT with a
+temporary network-policy bypass:
 
-The Python helper calls:
-
-- `METATATE_APP.CORE.DISCOVER_CONTEXT`
-- `METATATE_APP.CORE.GET_DECISION_CONTEXT`
-- `METATATE_APP.CORE.INSPECT_DATA_MEANING`
-- `METATATE_APP.CORE.INSPECT_GOVERNANCE_RULES`
-- `METATATE_APP.CORE.AUTHORIZE_USE`
-- `METATATE_APP.CORE.VALIDATE_QUERY_CONTEXT`
-- `METATATE_APP.CORE.EXPLAIN_WHY`
-
-If your app is named differently, set `METATATE_APP_NAME`.
-
-## Seed Demo Data
-
-Live mode does not require AcmeCloud if your account already has governed tables. To run the notebooks exactly as written, seed the AcmeCloud fixture:
-
-```bash
-snow sql -f sql/setup_acmecloud_demo.sql -c <profile>
+```sql
+ALTER USER <SNOWFLAKE_USER>
+  ADD PROGRAMMATIC ACCESS TOKEN metatate_examples_pat
+  ROLE_RESTRICTION = '<ROLE_WITH_METATATE_MCP_ACCESS>'
+  DAYS_TO_EXPIRY = 7
+  MINS_TO_BYPASS_NETWORK_POLICY_REQUIREMENT = 60
+  COMMENT = 'Temporary PAT for Metatate examples live notebook testing';
 ```
 
-Review the placeholders at the top of the SQL file before running it.
+Do not use `0.0.0.0/0`, and do not broaden an account-level policy just to run
+the examples.
 
 ## Security Notes
 
 - Do not commit `.env`.
-- Do not commit Snowflake passwords, PATs, or OAuth tokens.
-- Use role-scoped credentials for examples.
-- The fixture SQL is for demo/development accounts, not production policy deployment.
+- Do not commit Snowflake passwords, PATs, OAuth tokens, or refresh tokens.
+- Use role-restricted PATs for examples.
+- Keep `SNOWFLAKE_ROLE` aligned with the PAT `ROLE_RESTRICTION`.
+- The fixture SQL is for demo/development accounts, not production policy
+  deployment.

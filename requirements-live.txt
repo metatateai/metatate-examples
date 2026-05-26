@@ -1,3 +1,2 @@
 -r requirements.txt
-snowflake-connector-python>=3.12
-
+requests>=2.32

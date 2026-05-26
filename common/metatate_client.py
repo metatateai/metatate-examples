@@ -1,14 +1,13 @@
 """Small Metatate client helpers used by the notebooks.
 
-Offline mode reads committed fixture responses. Live mode calls the canonical
-Metatate Native App SQL functions and procedures in Snowflake.
+Offline mode reads committed fixture responses. Live mode calls the Snowflake-
+managed Metatate MCP server.
 """
 
 from __future__ import annotations
 
 import json
 import os
-import re
 from copy import deepcopy
 from pathlib import Path
 from typing import Any
@@ -21,7 +20,6 @@ except ImportError:  # pragma: no cover - dotenv is a notebook convenience.
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 FIXTURE_DIR = REPO_ROOT / "sample-data" / "acmecloud" / "metatate-responses"
-APP_IDENTIFIER = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 
 
 class OfflineMetatateClient:
@@ -149,128 +147,250 @@ class OfflineMetatateClient:
         }
 
 
-class SnowflakeMetatateClient:
-    """Live client for the Metatate Native App SQL tool layer."""
+class ManagedMCPMetatateClient:
+    """Live client for the Snowflake-managed Metatate MCP server."""
 
-    def __init__(self, app_name: str | None = None) -> None:
+    def __init__(self, endpoint: str | None = None) -> None:
         if load_dotenv:
             load_dotenv(REPO_ROOT / ".env")
 
-        self.app_name = app_name or os.getenv("METATATE_APP_NAME", "METATATE_APP")
-        if not APP_IDENTIFIER.match(self.app_name):
-            raise ValueError("METATATE_APP_NAME must be a simple Snowflake identifier")
-        self._connection = None
+        self.endpoint = endpoint or _mcp_endpoint_from_env()
+        self.role = os.getenv("METATATE_MCP_ROLE") or os.getenv("SNOWFLAKE_ROLE")
+        self.token_type = os.getenv("METATATE_MCP_TOKEN_TYPE", "PROGRAMMATIC_ACCESS_TOKEN")
+        self.token_env = os.getenv("METATATE_MCP_PAT_ENV", "METATATE_EXAMPLES_PAT")
+        self.timeout_seconds = int(os.getenv("METATATE_MCP_TIMEOUT_SECONDS", "120"))
+        self._session = None
+        self._initialized = False
 
     @property
-    def connection(self) -> Any:
-        if self._connection is None:
+    def session(self) -> Any:
+        if self._session is None:
             try:
-                import snowflake.connector
+                import requests
             except ImportError as exc:  # pragma: no cover - live dependency.
                 raise RuntimeError("Install requirements-live.txt to use live mode") from exc
 
-            connection_name = os.getenv("SNOWFLAKE_CONNECTION_NAME")
-            connections_file_path = os.getenv("SNOWFLAKE_CONNECTIONS_FILE")
-            if connection_name:
-                kwargs: dict[str, Any] = {"connection_name": connection_name}
-                if connections_file_path:
-                    kwargs["connections_file_path"] = connections_file_path
-                if os.getenv("SNOWFLAKE_ROLE"):
-                    kwargs["role"] = os.environ["SNOWFLAKE_ROLE"]
-                if os.getenv("SNOWFLAKE_WAREHOUSE"):
-                    kwargs["warehouse"] = os.environ["SNOWFLAKE_WAREHOUSE"]
-                self._connection = snowflake.connector.connect(**kwargs)
-            else:
-                connect_kwargs: dict[str, Any] = {
-                    "account": os.environ["SNOWFLAKE_ACCOUNT"],
-                    "user": os.environ["SNOWFLAKE_USER"],
-                    "role": os.getenv("SNOWFLAKE_ROLE"),
-                    "warehouse": os.getenv("SNOWFLAKE_WAREHOUSE"),
-                    "authenticator": os.getenv("SNOWFLAKE_AUTHENTICATOR", "externalbrowser"),
-                }
-                password = os.getenv("SNOWFLAKE_PASSWORD")
-                token_env = os.getenv("SNOWFLAKE_PAT_ENV")
-                if token_env:
-                    password = os.environ[token_env]
-                    connect_kwargs["authenticator"] = "programmatic_access_token"
-                if password:
-                    connect_kwargs["password"] = password
-                self._connection = snowflake.connector.connect(**connect_kwargs)
-        return self._connection
+            token = os.getenv(self.token_env)
+            if not token:
+                raise RuntimeError(
+                    f"Live mode requires a Snowflake PAT in ${self.token_env}. "
+                    "Set METATATE_MCP_PAT_ENV to use a different environment variable."
+                )
+
+            self._session = requests.Session()
+            headers = {
+                "Authorization": f"Bearer {token}",
+                "X-Snowflake-Authorization-Token-Type": self.token_type,
+                "Content-Type": "application/json",
+                "Accept": "application/json, text/event-stream",
+            }
+            if self.role:
+                headers["X-Snowflake-Role"] = self.role
+            self._session.headers.update(headers)
+        return self._session
 
     def discover_context(self, **params: Any) -> dict[str, Any]:
-        return self._select_variant("DISCOVER_CONTEXT", params)
+        compliance_any = params.get("compliance_any") or []
+        if isinstance(compliance_any, str):
+            compliance_framework = compliance_any
+        else:
+            compliance_framework = next(iter(compliance_any), None)
+
+        return self._call_tool(
+            "discover-context",
+            _drop_none(
+                {
+                    "database_name": params.get("database_name") or params.get("database"),
+                    "schema_name": params.get("schema_name") or params.get("schema"),
+                    "min_sensitivity": params.get("min_sensitivity"),
+                    "compliance_framework": params.get("compliance_framework") or compliance_framework,
+                    "has_pii": params.get("has_pii"),
+                    "domain": params.get("domain"),
+                }
+            ),
+        )
 
     def get_decision_context(self, table_name: str) -> dict[str, Any]:
-        return self._select_variant("GET_DECISION_CONTEXT", {"table_name": table_name})
+        return self._call_tool("get-decision-context", {"table_name": table_name})
 
     def inspect_data_meaning(self, table_name: str, columns: list[str] | None = None) -> dict[str, Any]:
-        payload: dict[str, Any] = {"table_name": table_name}
-        if columns:
-            payload["columns"] = columns
-        return self._select_variant("INSPECT_DATA_MEANING", payload)
+        response = self._call_tool(
+            "inspect-data-meaning",
+            _column_scoped_arguments(table_name, columns),
+        )
+        return _filter_columns(response, columns)
 
     def inspect_governance_rules(self, table_name: str, columns: list[str] | None = None) -> dict[str, Any]:
-        payload: dict[str, Any] = {"table_name": table_name}
-        if columns:
-            payload["columns"] = columns
-        return self._select_variant("INSPECT_GOVERNANCE_RULES", payload)
+        return self._call_tool(
+            "inspect-governance-rules",
+            _column_scoped_arguments(table_name, columns),
+        )
 
     def authorize_use(self, table_name: str, operation: str, intended_use: str, **params: Any) -> dict[str, Any]:
-        payload = {"table_name": table_name, "operation": operation, "intended_use": intended_use, **params}
-        return self._call_variant("AUTHORIZE_USE", payload)
+        destination = params.get("destination") or {}
+        payload: dict[str, Any] = {
+            "table_name": table_name,
+            "operation": operation,
+            "intended_use": intended_use,
+            "actor_role": params.get("actor_role"),
+            "columns_csv": _csv(params.get("columns")),
+            "destination_system": params.get("destination_system") or destination.get("system"),
+            "destination_jurisdiction": params.get("destination_jurisdiction") or destination.get("jurisdiction"),
+            "consumer_jurisdiction": params.get("consumer_jurisdiction"),
+            "context_json": _json_string(params.get("context")),
+            "raw_request_text": params.get("raw_request_text"),
+            "normalized_request_json": _json_string(params.get("normalized_request")),
+            "normalization_meta_json": _json_string(params.get("normalization_meta")),
+        }
+        return self._call_tool("authorize-use", _drop_none(payload))
 
     def validate_query_context(self, sql: str, **params: Any) -> dict[str, Any]:
-        payload = {"sql": sql, **params}
-        return self._call_variant("VALIDATE_QUERY_CONTEXT", payload)
+        payload = {
+            "sql_text": sql,
+            "operation": params.get("operation"),
+            "intended_use": params.get("intended_use"),
+            "actor_role": params.get("actor_role"),
+            "destination_system": params.get("destination_system"),
+            "destination_jurisdiction": params.get("destination_jurisdiction"),
+            "consumer_jurisdiction": params.get("consumer_jurisdiction"),
+        }
+        return self._call_tool("validate-query-context", _drop_none(payload))
 
     def explain_why(
         self,
         decision_id: str | None = None,
         validation_id: str | None = None,
     ) -> dict[str, Any]:
-        payload = {"decision_id": decision_id, "validation_id": validation_id}
-        return self._call_variant("EXPLAIN_WHY", {k: v for k, v in payload.items() if v})
+        return self._call_tool("explain-why", _drop_none({"decision_id": decision_id, "validation_id": validation_id}))
 
-    def _select_variant(self, object_name: str, payload: dict[str, Any]) -> dict[str, Any]:
-        sql = f"SELECT {self.app_name}.CORE.{object_name}(PARSE_JSON(%s))"
-        return self._execute_json(sql, payload)
+    def _call_tool(self, name: str, arguments: dict[str, Any]) -> dict[str, Any]:
+        self._ensure_initialized()
+        response = self._request("tools/call", {"name": name, "arguments": arguments})
+        return _extract_mcp_payload(response)
 
-    def _call_variant(self, object_name: str, payload: dict[str, Any]) -> dict[str, Any]:
-        sql = f"CALL {self.app_name}.CORE.{object_name}(PARSE_JSON(%s))"
-        return self._execute_json(sql, payload)
+    def _ensure_initialized(self) -> None:
+        if self._initialized:
+            return
+        self._request(
+            "initialize",
+            {
+                "protocolVersion": "2025-06-18",
+                "capabilities": {"tools": {}, "resources": {}},
+                "clientInfo": {"name": "metatate-examples", "version": "1.0.0"},
+            },
+        )
+        self.session.post(
+            self.endpoint,
+            json={"jsonrpc": "2.0", "method": "notifications/initialized"},
+            timeout=self.timeout_seconds,
+        )
+        self._initialized = True
 
-    def _execute_json(self, sql: str, payload: dict[str, Any]) -> dict[str, Any]:
-        cursor = self.connection.cursor()
-        try:
-            cursor.execute(sql, (json.dumps(payload),))
-            row = cursor.fetchone()
-            if not row:
-                raise RuntimeError("Snowflake returned no rows")
-            return _coerce_json(row[0])
-        finally:
-            cursor.close()
+    def _request(self, method: str, params: dict[str, Any] | None = None) -> dict[str, Any]:
+        payload: dict[str, Any] = {
+            "jsonrpc": "2.0",
+            "id": method,
+            "method": method,
+        }
+        if params is not None:
+            payload["params"] = params
+
+        response = self.session.post(self.endpoint, json=payload, timeout=self.timeout_seconds)
+        if response.status_code >= 400:
+            raise RuntimeError(f"MCP request failed with HTTP {response.status_code}: {response.text}")
+        return _parse_sse_or_json(response.text)
 
 
-def get_client() -> OfflineMetatateClient | SnowflakeMetatateClient:
+def get_client() -> OfflineMetatateClient | ManagedMCPMetatateClient:
     if load_dotenv:
         load_dotenv(REPO_ROOT / ".env")
     mode = os.getenv("METATATE_EXAMPLES_MODE", "offline").strip().lower()
     if mode == "live":
-        return SnowflakeMetatateClient()
+        return ManagedMCPMetatateClient()
     if mode != "offline":
         raise ValueError("METATATE_EXAMPLES_MODE must be offline or live")
     return OfflineMetatateClient()
 
 
-def _coerce_json(value: Any) -> dict[str, Any]:
-    if isinstance(value, dict):
-        return value
+def _mcp_endpoint_from_env() -> str:
+    endpoint = os.getenv("METATATE_MCP_URL")
+    if endpoint:
+        return endpoint.rstrip("/")
+
+    account_url = os.getenv("METATATE_MCP_ACCOUNT_URL") or os.getenv("SNOWFLAKE_ACCOUNT_URL")
+    if not account_url:
+        raise RuntimeError(
+            "Live mode requires METATATE_MCP_URL, or METATATE_MCP_ACCOUNT_URL plus app/schema/server names."
+        )
+
+    app_name = os.getenv("METATATE_APP_NAME", "METATATE_APP")
+    schema_name = os.getenv("METATATE_MCP_SCHEMA", "CORE")
+    server_name = os.getenv("METATATE_MCP_SERVER_NAME", "METATATE_MCP")
+    return (
+        account_url.rstrip("/")
+        + f"/api/v2/databases/{app_name}/schemas/{schema_name}/mcp-servers/{server_name}"
+    )
+
+
+def _parse_sse_or_json(text: str) -> dict[str, Any]:
+    for event in text.split("\n\n"):
+        if not event.strip():
+            continue
+        lines = event.split("\n")
+        if any("event: message" in line for line in lines):
+            data_line = next((line for line in lines if line.startswith("data: ")), None)
+            if data_line:
+                return json.loads(data_line[6:].strip())
+    return json.loads(text)
+
+
+def _extract_mcp_payload(response: dict[str, Any]) -> dict[str, Any]:
+    result = response.get("result", {})
+    content = result.get("content") or []
+    text = next((item.get("text", "") for item in content if item.get("type") == "text"), "")
+    if result.get("isError"):
+        raise RuntimeError(text or json.dumps(response))
+    if not text:
+        raise RuntimeError(f"MCP tool response did not include text content: {json.dumps(response)}")
+    return json.loads(text)
+
+
+def _column_scoped_arguments(table_name: str, columns: list[str] | None) -> dict[str, Any]:
+    payload = {"table_name": table_name}
+    if columns and len(columns) == 1:
+        payload["column_name"] = columns[0]
+    return payload
+
+
+def _filter_columns(response: dict[str, Any], columns: list[str] | None) -> dict[str, Any]:
+    if not columns or len(columns) == 1:
+        return response
+    wanted = {_upper_or_none(column) for column in columns}
+    result = deepcopy(response)
+    result["data"]["columns"] = [
+        column for column in response.get("data", {}).get("columns", []) if column.get("column_name") in wanted
+    ]
+    return result
+
+
+def _drop_none(payload: dict[str, Any]) -> dict[str, Any]:
+    return {key: value for key, value in payload.items() if value is not None}
+
+
+def _csv(value: Any) -> str | None:
+    if not value:
+        return None
     if isinstance(value, str):
-        return json.loads(value)
-    if hasattr(value, "as_dict"):
-        return value.as_dict()
-    raise TypeError(f"Cannot coerce Snowflake value to JSON: {type(value)!r}")
+        return value
+    return ",".join(str(item) for item in value)
+
+
+def _json_string(value: Any) -> str | None:
+    if value is None:
+        return None
+    if isinstance(value, str):
+        return value
+    return json.dumps(value)
 
 
 def _normalize_table(table_name: str) -> str:

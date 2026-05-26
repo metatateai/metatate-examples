@@ -1,3 +1,3 @@
-from .metatate_client import OfflineMetatateClient, SnowflakeMetatateClient, get_client
+from .metatate_client import ManagedMCPMetatateClient, OfflineMetatateClient, get_client
 
-__all__ = ["OfflineMetatateClient", "SnowflakeMetatateClient", "get_client"]
+__all__ = ["ManagedMCPMetatateClient", "OfflineMetatateClient", "get_client"]

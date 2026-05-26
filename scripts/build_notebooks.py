@@ -84,7 +84,7 @@ def setup_notebook() -> dict:
 
                 Offline mode is the default. It reads committed response fixtures and requires no Snowflake account.
 
-                Live mode calls the Metatate Native App SQL tool layer in Snowflake. Set `METATATE_EXAMPLES_MODE=live` and configure `.env` before starting Jupyter.
+                Live mode calls the Snowflake-managed Metatate MCP server. Set `METATATE_EXAMPLES_MODE=live`, configure `.env`, and export the PAT before starting Jupyter.
                 """
             ),
             code(SETUP_CELL),

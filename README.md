@@ -61,7 +61,7 @@ Start here:
 
 The notebooks default to offline mode and use committed sample Metatate responses. That means a reader can understand the decision flow without Snowflake credentials.
 
-Live mode is optional. It calls the Metatate Native App in your Snowflake account through the same canonical `core.*` tool layer used by the managed MCP server.
+Live mode is optional. It calls the Snowflake-managed Metatate MCP server, the same surface used by Claude Code, Cortex Code, and other MCP clients.
 
 ## Quick Start
 
@@ -78,7 +78,7 @@ For live mode:
 
 ```bash
 cp .env.example .env
-# Configure either SNOWFLAKE_CONNECTION_NAME or direct connector values.
+# Configure METATATE_MCP_URL and METATATE_MCP_PAT_ENV.
 pip install -r requirements-live.txt
 ```
 
@@ -88,9 +88,8 @@ Then set:
 export METATATE_EXAMPLES_MODE=live
 ```
 
-The recommended live setup is to reuse a Snowflake connector or Snow CLI
-profile through `SNOWFLAKE_CONNECTION_NAME`. See
-[docs/live-mode.md](docs/live-mode.md).
+Live mode requires a role-restricted Snowflake PAT for the managed MCP server.
+See [docs/live-mode.md](docs/live-mode.md).
 
 ## Snowflake Fixture
 

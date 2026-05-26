@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import csv
+import importlib
 import json
+import sys
 from pathlib import Path
 
 
@@ -30,6 +32,7 @@ def main() -> None:
     validate_policy_files()
     validate_notebooks()
     validate_sql_fixture()
+    validate_python_imports()
     print("metatate-examples validation passed")
 
 
@@ -82,6 +85,13 @@ def validate_sql_fixture() -> None:
 
     for rule_type in ("permitted_use", "prohibited_use", "ai_governance", "column_masking"):
         assert rule_type in setup_sql, f"setup SQL missing rule type {rule_type}"
+
+
+def validate_python_imports() -> None:
+    sys.path.insert(0, str(ROOT))
+    common = importlib.import_module("common")
+    for name in ("OfflineMetatateClient", "ManagedMCPMetatateClient", "get_client"):
+        assert hasattr(common, name), f"common missing {name}"
 
 
 if __name__ == "__main__":
