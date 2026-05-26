@@ -63,6 +63,8 @@ def validate_notebooks() -> None:
             payload = json.load(handle)
         assert payload["nbformat"] == 4, f"{path} is not nbformat 4"
         assert payload["cells"], f"{path} has no cells"
+        for cell in payload["cells"]:
+            assert cell.get("id"), f"{path} has a cell without an id"
 
 
 def validate_sql_fixture() -> None:

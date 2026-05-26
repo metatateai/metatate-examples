@@ -32,6 +32,8 @@ def _lines(source: str) -> list[str]:
 
 
 def notebook(cells: list[dict]) -> dict:
+    for index, cell in enumerate(cells, start=1):
+        cell["id"] = f"cell-{index:03d}"
     return {
         "cells": cells,
         "metadata": {
@@ -383,4 +385,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
