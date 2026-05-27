@@ -40,6 +40,11 @@ Demo policy behavior:
 | `04_governed_text_to_sql_agent.ipynb` | Text-to-SQL that validates and revises SQL before returning it. |
 | `05_agent_red_team_evaluation_harness.ipynb` | Repeatable risky-prompt checks for governed agents. |
 | `06_ci_gate_for_data_ai_changes.ipynb` | A release-gate pattern for SQL, export, and AI workflow changes. |
+| `07_governed_rag_embedding_ingestion_gate.ipynb` | Pre-ingestion checks before data enters RAG or embedding workflows. |
+| `08_snowflake_cortex_agent_tool_preflight.ipynb` | A Cortex-style custom-tool preflight pattern using Metatate decisions. |
+| `09_openai_agents_tool_guard_pattern.ipynb` | A deterministic tool guard pattern for OpenAI Agents SDK-style apps. |
+| `10_human_approval_packet_for_conditional_export.ipynb` | Turning conditional export decisions into reviewer-ready approval packets. |
+| `11_llamaindex_governed_retrieval_pattern.ipynb` | A governed retrieval function that can be wrapped as a LlamaIndex tool. |
 
 The notebooks run in two modes:
 

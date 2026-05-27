@@ -70,6 +70,29 @@ from common import get_client
 client = get_client()
 mode = os.getenv("METATATE_EXAMPLES_MODE", "offline")
 print(f"Metatate examples mode: {mode}")
+
+
+def decision_label(response):
+    data = response.get("data", {})
+    decision = data.get("decision")
+    if isinstance(decision, dict):
+        return decision.get("decision") or decision.get("overall_decision") or data.get("overall_decision", "UNKNOWN")
+    return decision or data.get("overall_decision", "UNKNOWN")
+
+
+def rationale_text(response):
+    data = response.get("data", {})
+    decision = data.get("decision")
+    if isinstance(decision, dict):
+        return decision.get("rationale") or data.get("summary") or ""
+    return data.get("rationale") or data.get("summary") or ""
+
+
+def agent_action_text(response):
+    action = response.get("data", {}).get("agent_action", {})
+    if isinstance(action, dict):
+        return action.get("message") or action.get("safe_next_step") or action.get("suggested_next_tool") or ""
+    return ""
 """
 
 
@@ -731,6 +754,466 @@ def ci_gate_notebook() -> dict:
     )
 
 
+def governed_rag_ingestion_gate_notebook() -> dict:
+    return notebook(
+        [
+            markdown(
+                """
+                # 07 - Governed RAG And Embedding Ingestion Gate
+
+                This notebook checks data before it enters a retrieval or embedding workflow. The agent treats indexing as an AI use, asks Metatate for the governing decision, and only prepares approved context.
+
+                The example intentionally includes support-ticket text because it is useful for a chatbot but blocked for model training in the base AcmeCloud policy.
+                """
+            ),
+            code(SETUP_CELL),
+            markdown("## Candidate sources for retrieval or embedding"),
+            code(
+                """
+                candidates = [
+                    {
+                        "asset": "support_ticket_text",
+                        "table_name": "ACMECLOUD_DEMO.PUBLIC.SUPPORT_TICKETS",
+                        "operation": "train",
+                        "intended_use": "ml_training",
+                        "actor_role": "ML_ENGINEER",
+                        "columns": ["TICKET_TEXT", "PRIORITY", "PRODUCT_AREA"],
+                        "why": "Use support text as examples for a support assistant.",
+                    },
+                    {
+                        "asset": "customer_arr_aggregate",
+                        "sql": "SELECT region, account_status, SUM(arr) AS arr FROM ACMECLOUD_DEMO.PUBLIC.CUSTOMERS WHERE account_status = 'active' GROUP BY region, account_status",
+                        "operation": "read",
+                        "intended_use": "analytics",
+                        "actor_role": "DATA_ANALYST",
+                        "why": "Expose aggregate revenue context for retrieval.",
+                    },
+                ]
+                """
+            ),
+            markdown("## Gate each candidate through Metatate"),
+            code(
+                """
+                def evaluate_candidate(candidate):
+                    if "sql" in candidate:
+                        response = client.validate_query_context(
+                            candidate["sql"],
+                            operation=candidate["operation"],
+                            intended_use=candidate["intended_use"],
+                            actor_role=candidate["actor_role"],
+                        )
+                    else:
+                        response = client.authorize_use(
+                            candidate["table_name"],
+                            operation=candidate["operation"],
+                            intended_use=candidate["intended_use"],
+                            actor_role=candidate["actor_role"],
+                            columns=candidate["columns"],
+                            raw_request_text=candidate["why"],
+                        )
+
+                    decision = decision_label(response)
+                    if decision == "ALLOW":
+                        gate = "index"
+                    elif decision == "CONDITIONAL":
+                        gate = "prepare_controls_first"
+                    else:
+                        gate = "do_not_index"
+
+                    return {
+                        "asset": candidate["asset"],
+                        "decision": decision,
+                        "gate": gate,
+                        "rationale": rationale_text(response),
+                        "agent_action": agent_action_text(response),
+                    }
+
+                ingestion_plan = pd.DataFrame([evaluate_candidate(candidate) for candidate in candidates])
+                ingestion_plan
+                """
+            ),
+            markdown("## Build the safe retrieval scope"),
+            code(
+                """
+                safe_scope = ingestion_plan[ingestion_plan["gate"] == "index"]["asset"].tolist()
+                blocked_scope = ingestion_plan[ingestion_plan["gate"] == "do_not_index"]["asset"].tolist()
+
+                print("Safe to index now:")
+                print(safe_scope)
+                print("\\nBlocked from indexing:")
+                print(blocked_scope)
+                """
+            ),
+            markdown(
+                """
+                The important behavior is pre-ingestion control. Once sensitive text is embedded, deleting or proving non-use is hard. Metatate gives the agent a decision before the index is built.
+                """
+            ),
+        ]
+    )
+
+
+def cortex_agent_preflight_notebook() -> dict:
+    return notebook(
+        [
+            markdown(
+                """
+                # 08 - Snowflake Cortex Agent Tool Preflight
+
+                This notebook models a Cortex Agent custom-tool pattern: before the agent answers with data or invokes an operational tool, it calls Metatate through managed MCP and records the decision.
+
+                The notebook runs locally for repeatability, but the contract is the same one a Snowflake-hosted custom tool can enforce.
+                """
+            ),
+            code(SETUP_CELL),
+            markdown("## Tool requests from an agent"),
+            code(
+                """
+                tool_requests = [
+                    {
+                        "request_id": "cortex-001",
+                        "tool_name": "run_revenue_sql",
+                        "sql": "SELECT region, account_status, SUM(arr) AS arr FROM ACMECLOUD_DEMO.PUBLIC.CUSTOMERS WHERE account_status = 'active' GROUP BY region, account_status",
+                        "operation": "read",
+                        "intended_use": "analytics",
+                        "actor_role": "DATA_ANALYST",
+                    },
+                    {
+                        "request_id": "cortex-002",
+                        "tool_name": "prepare_growth_campaign",
+                        "table_name": "ACMECLOUD_DEMO.PUBLIC.CUSTOMERS",
+                        "operation": "read",
+                        "intended_use": "marketing",
+                        "actor_role": "GROWTH_ANALYST",
+                        "columns": ["CUSTOMER_NAME", "EMAIL"],
+                    },
+                ]
+                """
+            ),
+            markdown("## Preflight wrapper"),
+            code(
+                """
+                def cortex_tool_preflight(request):
+                    if "sql" in request:
+                        response = client.validate_query_context(
+                            request["sql"],
+                            operation=request["operation"],
+                            intended_use=request["intended_use"],
+                            actor_role=request["actor_role"],
+                        )
+                    else:
+                        response = client.authorize_use(
+                            request["table_name"],
+                            operation=request["operation"],
+                            intended_use=request["intended_use"],
+                            actor_role=request["actor_role"],
+                            columns=request.get("columns"),
+                        )
+
+                    decision = decision_label(response)
+                    return {
+                        "request_id": request["request_id"],
+                        "tool_name": request["tool_name"],
+                        "decision": decision,
+                        "invoke_tool": decision != "DENY",
+                        "metatate_action": agent_action_text(response),
+                        "decision_id": response.get("data", {}).get("decision_id") or response.get("data", {}).get("validation_id"),
+                    }
+
+                preflight_results = pd.DataFrame([cortex_tool_preflight(request) for request in tool_requests])
+                preflight_results
+                """
+            ),
+            code(
+                """
+                allowed = preflight_results[preflight_results["invoke_tool"]]
+                blocked = preflight_results[~preflight_results["invoke_tool"]]
+
+                print("Tools the agent may invoke:")
+                print(allowed[["request_id", "tool_name", "decision"]].to_string(index=False))
+                print("\\nTools blocked before invocation:")
+                print(blocked[["request_id", "tool_name", "decision", "metatate_action"]].to_string(index=False))
+                """
+            ),
+            markdown(
+                """
+                This pattern keeps the agent runtime simple: every tool invocation gets a Metatate preflight decision, and denied tools never receive the data request.
+                """
+            ),
+        ]
+    )
+
+
+def openai_agents_tool_guard_notebook() -> dict:
+    return notebook(
+        [
+            markdown(
+                """
+                # 09 - OpenAI Agents SDK Tool Guard Pattern
+
+                This notebook shows how to put Metatate in front of tools an agent might call. The example is deterministic and does not call an LLM, so it can run offline and in CI.
+
+                In a production OpenAI Agents SDK app, the same guard function would wrap tool handlers before they execute.
+                """
+            ),
+            code(SETUP_CELL),
+            markdown("## Proposed tool calls"),
+            code(
+                """
+                proposed_tool_calls = [
+                    {
+                        "tool_call_id": "openai-001",
+                        "tool": "export_to_salesforce",
+                        "table_name": "ACMECLOUD_DEMO.PUBLIC.CUSTOMERS",
+                        "operation": "export",
+                        "intended_use": "external_sharing",
+                        "actor_role": "DATA_ENGINEER",
+                        "columns": ["CUSTOMER_ID", "CUSTOMER_NAME", "EMAIL", "ACCOUNT_STATUS"],
+                        "destination": {"system": "SALESFORCE", "jurisdiction": "US"},
+                        "consumer_jurisdiction": "EU",
+                    },
+                    {
+                        "tool_call_id": "openai-002",
+                        "tool": "export_to_ads_platform",
+                        "table_name": "ACMECLOUD_DEMO.PUBLIC.CUSTOMERS",
+                        "operation": "export",
+                        "intended_use": "external_sharing",
+                        "actor_role": "DATA_ENGINEER",
+                        "columns": ["CUSTOMER_ID", "CUSTOMER_NAME", "EMAIL"],
+                        "destination": {"system": "ADS_PLATFORM", "jurisdiction": "US"},
+                        "consumer_jurisdiction": "US",
+                    },
+                ]
+                """
+            ),
+            markdown("## Guard the tool call"),
+            code(
+                """
+                def guard_tool_call(call):
+                    response = client.authorize_use(
+                        call["table_name"],
+                        operation=call["operation"],
+                        intended_use=call["intended_use"],
+                        actor_role=call["actor_role"],
+                        columns=call.get("columns"),
+                        destination=call.get("destination"),
+                        consumer_jurisdiction=call.get("consumer_jurisdiction"),
+                    )
+                    decision = decision_label(response)
+                    if decision == "ALLOW":
+                        outcome = "execute"
+                    elif decision == "CONDITIONAL":
+                        outcome = "defer_for_controls"
+                    else:
+                        outcome = "block"
+                    return {
+                        "tool_call_id": call["tool_call_id"],
+                        "tool": call["tool"],
+                        "decision": decision,
+                        "outcome": outcome,
+                        "decision_id": response.get("data", {}).get("decision_id"),
+                        "message": agent_action_text(response),
+                    }
+
+                guard_trace = pd.DataFrame([guard_tool_call(call) for call in proposed_tool_calls])
+                guard_trace
+                """
+            ),
+            code(
+                """
+                for record in guard_trace.to_dict(orient="records"):
+                    print(f"{record['tool_call_id']} -> {record['outcome']} ({record['decision']})")
+                    print(record["message"])
+                    print()
+                """
+            ),
+            markdown(
+                """
+                The agent can still plan creatively, but execution is constrained. Tools that move or expose governed data only run after Metatate returns an allowed or controlled path.
+                """
+            ),
+        ]
+    )
+
+
+def approval_workflow_notebook() -> dict:
+    return notebook(
+        [
+            markdown(
+                """
+                # 10 - Human Approval Packet For Conditional Export
+
+                Metatate decisions are operational. A `CONDITIONAL` result should turn into an approval packet with the source, destination, required controls, and evidence needed by the reviewer.
+                """
+            ),
+            code(SETUP_CELL),
+            markdown("## Request an external transfer decision"),
+            code(
+                """
+                transfer = client.authorize_use(
+                    "ACMECLOUD_DEMO.PUBLIC.CUSTOMERS",
+                    operation="export",
+                    intended_use="external_sharing",
+                    actor_role="DATA_ENGINEER",
+                    columns=["CUSTOMER_ID", "CUSTOMER_NAME", "EMAIL", "ACCOUNT_STATUS"],
+                    destination={"system": "SALESFORCE", "jurisdiction": "US"},
+                    consumer_jurisdiction="EU",
+                )
+                print(json.dumps(transfer["data"], indent=2))
+                """
+            ),
+            markdown("## Convert the decision into an approval packet"),
+            code(
+                """
+                def compact(value):
+                    if value is None:
+                        return []
+                    if isinstance(value, list):
+                        return value
+                    return [value]
+
+                data = transfer["data"]
+                decision_id = data.get("decision_id")
+                explanation = client.explain_why(decision_id=decision_id) if decision_id else {"data": {}}
+
+                approval_packet = {
+                    "title": "Approve controlled customer export to Salesforce",
+                    "decision": decision_label(transfer),
+                    "decision_id": decision_id,
+                    "source": data.get("table_name"),
+                    "destination": data.get("destination", {"system": "SALESFORCE", "jurisdiction": "US"}),
+                    "consumer_jurisdiction": data.get("consumer_jurisdiction", "EU"),
+                    "required_controls": compact(data.get("conditions")),
+                    "obligations": compact(data.get("obligations")),
+                    "rationale": rationale_text(transfer),
+                    "reviewer_note": agent_action_text(transfer),
+                    "explanation_summary": explanation.get("data", {}).get("summary") or explanation.get("data", {}).get("rationale"),
+                }
+
+                print(json.dumps(approval_packet, indent=2))
+                """
+            ),
+            markdown("## Reviewer-facing summary"),
+            code(
+                """
+                lines = [
+                    f"# {approval_packet['title']}",
+                    f"Decision: {approval_packet['decision']}",
+                    f"Decision ID: {approval_packet['decision_id']}",
+                    f"Source: {approval_packet['source']}",
+                    f"Destination: {approval_packet['destination']}",
+                    "",
+                    "Required controls:",
+                ]
+                lines.extend(f"- {control}" for control in approval_packet["required_controls"])
+                lines.extend(["", "Obligations:"])
+                lines.extend(f"- {obligation}" for obligation in approval_packet["obligations"])
+                lines.extend(["", f"Rationale: {approval_packet['rationale']}"])
+                print("\\n".join(lines))
+                """
+            ),
+            markdown(
+                """
+                This is the bridge from agent output to governance operations. Conditional decisions become reviewable work items instead of ambiguous chat messages.
+                """
+            ),
+        ]
+    )
+
+
+def llamaindex_retrieval_notebook() -> dict:
+    return notebook(
+        [
+            markdown(
+                """
+                # 11 - LlamaIndex Governed Retrieval Pattern
+
+                This notebook demonstrates a LlamaIndex-style retrieval tool. The retrieval function searches policy context, then checks Metatate before returning data-bearing context to the agent.
+
+                If LlamaIndex is installed, the same function can be wrapped as a `FunctionTool`. Without LlamaIndex, the notebook runs the function directly.
+                """
+            ),
+            code(SETUP_CELL),
+            markdown("## A small policy-context retriever"),
+            code(
+                """
+                policy_dir = repo_root / "sample-data" / "acmecloud" / "policies"
+                policy_docs = [
+                    {"name": path.name, "text": path.read_text(encoding="utf-8")}
+                    for path in sorted(policy_dir.glob("*.yaml"))
+                ]
+
+                def keyword_score(text, query):
+                    terms = [term.lower() for term in query.split() if len(term) > 3]
+                    lowered = text.lower()
+                    return sum(lowered.count(term) for term in terms)
+
+                def retrieve_policy_context(query, limit=2):
+                    scored = sorted(
+                        (
+                            {**doc, "score": keyword_score(doc["text"], query)}
+                            for doc in policy_docs
+                        ),
+                        key=lambda item: item["score"],
+                        reverse=True,
+                    )
+                    return scored[:limit]
+                """
+            ),
+            markdown("## Govern the retrieval answer before returning it"),
+            code(
+                """
+                def governed_retrieval_answer(query):
+                    retrieved = retrieve_policy_context(query)
+                    sql = "SELECT region, account_status, SUM(arr) AS arr FROM ACMECLOUD_DEMO.PUBLIC.CUSTOMERS WHERE account_status = 'active' GROUP BY region, account_status"
+                    validation = client.validate_query_context(
+                        sql,
+                        operation="read",
+                        intended_use="analytics",
+                        actor_role="DATA_ANALYST",
+                    )
+                    decision = decision_label(validation)
+                    if decision == "DENY":
+                        return {
+                            "decision": decision,
+                            "answer": "Metatate blocked data-bearing context for this request.",
+                            "sources": [],
+                            "metatate_action": agent_action_text(validation),
+                        }
+                    return {
+                        "decision": decision,
+                        "answer": "Use aggregate ARR by region and account status. Do not include customer identifiers.",
+                        "sources": [item["name"] for item in retrieved],
+                        "metatate_action": agent_action_text(validation),
+                    }
+
+                query = "What governed context can an analyst use for active customer ARR by region?"
+                answer = governed_retrieval_answer(query)
+                print(json.dumps(answer, indent=2))
+                """
+            ),
+            markdown("## Optional LlamaIndex wrapper"),
+            code(
+                """
+                try:
+                    from llama_index.core.tools import FunctionTool
+
+                    tool = FunctionTool.from_defaults(fn=governed_retrieval_answer)
+                    print("Wrapped governed_retrieval_answer as a LlamaIndex FunctionTool.")
+                    print(tool.metadata.name)
+                except ImportError:
+                    print("LlamaIndex is not installed. The governed retrieval function above is the same callable you would wrap as a FunctionTool.")
+                """
+            ),
+            markdown(
+                """
+                The key point is placement: retrieval is not allowed to bypass governance. The retriever returns only context that survives a Metatate decision check.
+                """
+            ),
+        ]
+    )
+
+
 NOTEBOOKS = {
     "00_setup_live_or_offline.ipynb": setup_notebook,
     "01_decision_layer_cookbook.ipynb": cookbook_notebook,
@@ -739,6 +1222,11 @@ NOTEBOOKS = {
     "04_governed_text_to_sql_agent.ipynb": governed_text_to_sql_notebook,
     "05_agent_red_team_evaluation_harness.ipynb": red_team_notebook,
     "06_ci_gate_for_data_ai_changes.ipynb": ci_gate_notebook,
+    "07_governed_rag_embedding_ingestion_gate.ipynb": governed_rag_ingestion_gate_notebook,
+    "08_snowflake_cortex_agent_tool_preflight.ipynb": cortex_agent_preflight_notebook,
+    "09_openai_agents_tool_guard_pattern.ipynb": openai_agents_tool_guard_notebook,
+    "10_human_approval_packet_for_conditional_export.ipynb": approval_workflow_notebook,
+    "11_llamaindex_governed_retrieval_pattern.ipynb": llamaindex_retrieval_notebook,
 }
 
 

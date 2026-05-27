@@ -10,14 +10,19 @@ The examples are use-case first. Frameworks are included when they make the Meta
 - Governed text-to-SQL agent pattern
 - Agent red-team evaluation harness
 - CI-style data and AI release gate
+- Governed RAG and embedding ingestion gate
+- Snowflake Cortex Agent custom-tool preflight pattern
+- OpenAI Agents SDK-style tool guard pattern
+- Human approval packet for conditional exports
+- LlamaIndex governed retrieval pattern
 
 ## Next Candidates
 
-- Snowflake Cortex Agents
-- OpenAI Agents SDK
-- LlamaIndex
+- Snowflake Cortex Agent REST object setup
+- LangChain or CrewAI multi-agent handoff
 - Pydantic AI
 - dbt or Airflow policy gates beyond the notebook-first CI gate
+- evaluation dashboards for red-team and CI gate history
 
 ## Later Exploration
 
@@ -26,4 +31,3 @@ The examples are use-case first. Frameworks are included when they make the Meta
 - demo-only MCP endpoint for non-Snowflake playgrounds
 
 Avoid adding empty framework folders. Each new example should prove a specific decision workflow before it introduces another framework.
-
