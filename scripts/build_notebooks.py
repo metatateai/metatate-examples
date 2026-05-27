@@ -275,7 +275,12 @@ def langgraph_notebook() -> dict:
                     findings = state["validation"]["data"].get("sql_findings", [])
                     final_sql = state["draft_sql"]
                     notes = []
-                    if any(item.get("code") == "PII_COLUMN_SELECTED" for item in findings):
+                    if any(
+                        item.get("code") in {"PII_COLUMN_SELECTED", "PII_EXPOSED"}
+                        or item.get("type") == "PII_COLUMN"
+                        or (item.get("code") == "MASKING_REQUIRED" and item.get("column"))
+                        for item in findings
+                    ):
                         final_sql = (
                             "SELECT region, SUM(arr) AS arr "
                             "FROM ACMECLOUD_DEMO.PUBLIC.CUSTOMERS "

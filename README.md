@@ -51,6 +51,19 @@ The notebooks run in two modes:
 - **Offline:** default; uses committed JSON fixtures and needs no Snowflake account.
 - **Live:** calls the Snowflake-managed Metatate MCP server with a role-restricted PAT.
 
+## Validation Scope
+
+The notebook pack is fully executed in offline mode and live mode through the Snowflake-managed Metatate MCP server.
+
+Framework-specific scope is intentionally narrower:
+
+- `02_governed_sql_agent_langgraph.ipynb` uses LangGraph when `langgraph` is installed; otherwise it runs the same graph steps as plain Python.
+- `08_snowflake_cortex_agent_tool_preflight.ipynb` is a Cortex-style custom-tool preflight pattern, not a deployed Cortex Agent object test.
+- `09_openai_agents_tool_guard_pattern.ipynb` is an OpenAI Agents SDK-style guard pattern, not a live OpenAI SDK/LLM runtime test.
+- `11_llamaindex_governed_retrieval_pattern.ipynb` wraps the retrieval function as a LlamaIndex `FunctionTool` only when LlamaIndex is installed.
+
+Treat these as runnable decision-workflow examples. Full framework runtime acceptance tests should be added separately before claiming deployed framework integrations.
+
 ## Quick Start
 
 ```bash
