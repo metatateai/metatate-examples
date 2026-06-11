@@ -55,14 +55,14 @@ The notebooks run in two modes:
 
 The notebook pack is fully executed in offline mode and live mode through the Snowflake-managed Metatate MCP server.
 
-Framework-specific scope is intentionally narrower:
+Framework runtime coverage is separate from notebook execution:
 
 - `02_governed_sql_agent_langgraph.ipynb` uses LangGraph when `langgraph` is installed; otherwise it runs the same graph steps as plain Python.
 - `08_snowflake_cortex_agent_tool_preflight.ipynb` is a Cortex-style custom-tool preflight pattern, not a deployed Cortex Agent object test.
-- `09_openai_agents_tool_guard_pattern.ipynb` is an OpenAI Agents SDK-style guard pattern, not a live OpenAI SDK/LLM runtime test.
-- `11_llamaindex_governed_retrieval_pattern.ipynb` wraps the retrieval function as a LlamaIndex `FunctionTool` only when LlamaIndex is installed.
+- `09_openai_agents_tool_guard_pattern.ipynb` is paired with a deterministic OpenAI Agents SDK `FunctionTool` runtime acceptance script.
+- `11_llamaindex_governed_retrieval_pattern.ipynb` is paired with a deterministic LlamaIndex `FunctionTool` runtime acceptance script.
 
-Treat these as runnable decision-workflow examples. Full framework runtime acceptance tests should be added separately before claiming deployed framework integrations.
+The OpenAI and LlamaIndex runtime checks invoke real framework tool objects, but they intentionally do not call an LLM. Review [docs/framework-runtime-acceptance.md](docs/framework-runtime-acceptance.md) for the exact coverage.
 
 ## Quick Start
 
@@ -78,6 +78,18 @@ To execute the full pack offline:
 ```bash
 scripts/run_notebook_pack.sh
 ```
+
+To run the framework runtime acceptance checks:
+
+```bash
+python3 --version  # confirm Python 3.10+
+python3 -m venv .venv-framework
+source .venv-framework/bin/activate
+pip install -r requirements-framework.txt
+scripts/run_framework_runtime_acceptance.sh
+```
+
+Use Python 3.10 or newer for framework runtime acceptance.
 
 ## Live Mode
 

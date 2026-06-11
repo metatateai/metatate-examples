@@ -20,11 +20,16 @@ def main() -> None:
         "docs/live-mode.md",
         "docs/snowflake-setup.md",
         "common/metatate_client.py",
+        "framework_runtime/scenarios.py",
+        "framework_runtime/openai_agents_acceptance.py",
+        "framework_runtime/llamaindex_acceptance.py",
         "scripts/create_mcp_pat_user.sh",
+        "scripts/run_framework_runtime_acceptance.sh",
         "scripts/run_notebook_pack.sh",
         "sql/setup_acmecloud_demo.sql",
         "sql/smoke_acmecloud_demo.sql",
         "sql/cleanup_acmecloud_demo.sql",
+        "requirements-framework.txt",
     ]
     for relative in required:
         assert (ROOT / relative).exists(), f"missing {relative}"
@@ -34,6 +39,7 @@ def main() -> None:
     validate_policy_files()
     validate_notebooks()
     validate_sql_fixture()
+    validate_framework_runtime_files()
     validate_python_imports()
     print("metatate-examples validation passed")
 
@@ -87,6 +93,24 @@ def validate_sql_fixture() -> None:
 
     for rule_type in ("permitted_use", "prohibited_use", "ai_governance", "column_masking"):
         assert rule_type in setup_sql, f"setup SQL missing rule type {rule_type}"
+
+
+def validate_framework_runtime_files() -> None:
+    runner = (ROOT / "scripts" / "run_framework_runtime_acceptance.sh").read_text(encoding="utf-8")
+    for command in (
+        "python3 framework_runtime/openai_agents_acceptance.py",
+        "python3 framework_runtime/llamaindex_acceptance.py",
+    ):
+        assert command in runner, f"framework runner missing {command}"
+
+    scenarios = (ROOT / "framework_runtime" / "scenarios.py").read_text(encoding="utf-8")
+    for marker in (
+        "RecordingMetatateClient",
+        "validate_sql_for_agent",
+        "assert_guard_behavior",
+        "SAFE_ANALYTICS_SQL",
+    ):
+        assert marker in scenarios, f"framework scenarios missing {marker}"
 
 
 def validate_python_imports() -> None:

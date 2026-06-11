@@ -21,3 +21,7 @@ server instead.
 12. `11_llamaindex_governed_retrieval_pattern.ipynb`
 
 The notebooks are generated from `scripts/build_notebooks.py` so the JSON remains reproducible.
+
+Framework runtime acceptance for OpenAI Agents SDK and LlamaIndex lives outside
+the notebook pack in `framework_runtime/`. See
+`docs/framework-runtime-acceptance.md`.
