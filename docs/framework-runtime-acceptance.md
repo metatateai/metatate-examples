@@ -42,6 +42,7 @@ Use the PAT setup in [live-mode.md](live-mode.md). Do not attach notebook or exa
 ## What Is Covered
 
 - OpenAI Agents SDK: registers a Metatate-backed function tool on an `Agent`, invokes the SDK `FunctionTool` runtime, and asserts safe, revised, and blocked outcomes.
+- LangGraph: builds and invokes a real `StateGraph` with a Metatate validation node and asserts safe, revised, and blocked outcomes.
 - LlamaIndex: registers a Metatate-backed `FunctionTool`, invokes the LlamaIndex tool runtime, and asserts safe, revised, and blocked outcomes.
 
 Each script verifies that:
@@ -54,5 +55,6 @@ Each script verifies that:
 ## What Is Not Covered
 
 - OpenAI model loop execution. The OpenAI check proves the tool runtime, not model behavior.
+- LangGraph multi-node planning or conditional edge routing. The LangGraph check proves graph runtime invocation of the Metatate validation node.
 - LlamaIndex agent LLM planning. The LlamaIndex check proves the tool runtime, not LLM tool selection.
 - Snowflake Cortex Agent object runtime. Use [cortex-agent-runtime-acceptance.md](cortex-agent-runtime-acceptance.md) for the live Cortex Agent check.

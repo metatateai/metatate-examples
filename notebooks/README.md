@@ -19,9 +19,13 @@ server instead.
 10. `09_openai_agents_tool_guard_pattern.ipynb`
 11. `10_human_approval_packet_for_conditional_export.ipynb`
 12. `11_llamaindex_governed_retrieval_pattern.ipynb`
+13. `12_snowflake_cortex_agent_runtime.ipynb`
+
+Notebook `12_snowflake_cortex_agent_runtime.ipynb` is live-only. It creates and runs Snowflake Cortex Agent objects and is executed separately with `scripts/run_cortex_agent_runtime_notebook.sh`.
 
 The notebooks are generated from `scripts/build_notebooks.py` so the JSON remains reproducible.
 
-Framework runtime acceptance for OpenAI Agents SDK and LlamaIndex lives outside
-the notebook pack in `framework_runtime/`. See
-`docs/framework-runtime-acceptance.md`.
+Framework runtime acceptance for LangGraph, OpenAI Agents SDK, and LlamaIndex
+lives outside the notebook pack in `framework_runtime/`. Cortex Agent hosted
+runtime acceptance lives in `cortex_agent_runtime/`. See
+`docs/validation-matrix.md`.

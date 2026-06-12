@@ -2,6 +2,8 @@
 
 This live-only check proves that a Snowflake Cortex Agent object can call Metatate from a server-side custom tool.
 
+The developer-facing example is `notebooks/12_snowflake_cortex_agent_runtime.ipynb`. The acceptance script runs the same hosted-runtime path without notebook UI.
+
 It creates a scratch Cortex Agent, attaches a generic custom tool, runs the agent through the Cortex Agents REST API, and asserts that the agent response contains:
 
 - a `tool_use` for the Metatate validation tool
@@ -49,6 +51,17 @@ METATATE_CORTEX_ACCOUNT_URL=https://<account-url> \
 SNOWFLAKE_ROLE=NAC \
 METATATE_CORTEX_WAREHOUSE=WH_NAC \
 scripts/run_cortex_agent_runtime_acceptance.sh
+```
+
+To execute the notebook version:
+
+```bash
+export METATATE_EXAMPLES_PAT="$(cat /private/tmp/metatate_examples_mcp_pat)"
+
+METATATE_CORTEX_ACCOUNT_URL=https://<account-url> \
+SNOWFLAKE_ROLE=NAC \
+METATATE_CORTEX_WAREHOUSE=WH_NAC \
+scripts/run_cortex_agent_runtime_notebook.sh
 ```
 
 If `METATATE_MCP_URL`, `METATATE_MCP_ACCOUNT_URL`, or `SNOWFLAKE_ACCOUNT_URL` is already set, `METATATE_CORTEX_ACCOUNT_URL` is optional.

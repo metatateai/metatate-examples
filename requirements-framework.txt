@@ -1,5 +1,6 @@
 -r requirements.txt
 
 # Framework runtime acceptance requires Python 3.10+.
+langgraph>=0.2
 openai-agents>=0.17.5
 llama-index-core>=0.14.22

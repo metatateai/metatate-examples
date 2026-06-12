@@ -45,25 +45,28 @@ Demo policy behavior:
 | `09_openai_agents_tool_guard_pattern.ipynb` | A deterministic tool guard pattern for OpenAI Agents SDK-style apps. |
 | `10_human_approval_packet_for_conditional_export.ipynb` | Turning conditional export decisions into reviewer-ready approval packets. |
 | `11_llamaindex_governed_retrieval_pattern.ipynb` | A governed retrieval function that can be wrapped as a LlamaIndex tool. |
+| `12_snowflake_cortex_agent_runtime.ipynb` | Live-only Cortex Agent object with a server-side Metatate custom tool. |
 
-The notebooks run in two modes:
+The core notebooks run in two modes:
 
 - **Offline:** default; uses committed JSON fixtures and needs no Snowflake account.
 - **Live:** calls the Snowflake-managed Metatate MCP server with a role-restricted PAT.
+
+Notebook `12_snowflake_cortex_agent_runtime.ipynb` is live-only because it creates and runs Snowflake Cortex Agent objects.
 
 ## Validation Scope
 
 The notebook pack is fully executed in offline mode and live mode through the Snowflake-managed Metatate MCP server.
 
-Framework runtime coverage is separate from notebook execution:
+Runtime coverage is separate from core notebook execution:
 
-- `02_governed_sql_agent_langgraph.ipynb` uses LangGraph when `langgraph` is installed; otherwise it runs the same graph steps as plain Python.
+- `02_governed_sql_agent_langgraph.ipynb` is paired with a deterministic LangGraph `StateGraph` runtime acceptance script.
 - `08_snowflake_cortex_agent_tool_preflight.ipynb` is a Cortex-style custom-tool preflight pattern.
 - `scripts/run_cortex_agent_runtime_acceptance.sh` creates and runs a live Cortex Agent object with a server-side Metatate custom tool.
 - `09_openai_agents_tool_guard_pattern.ipynb` is paired with a deterministic OpenAI Agents SDK `FunctionTool` runtime acceptance script.
 - `11_llamaindex_governed_retrieval_pattern.ipynb` is paired with a deterministic LlamaIndex `FunctionTool` runtime acceptance script.
 
-The OpenAI and LlamaIndex runtime checks invoke real framework tool objects, but they intentionally do not call an LLM. Cortex Agent runtime acceptance is live-only and calls Snowflake Cortex Agents. Review [docs/framework-runtime-acceptance.md](docs/framework-runtime-acceptance.md) and [docs/cortex-agent-runtime-acceptance.md](docs/cortex-agent-runtime-acceptance.md) for the exact coverage.
+The LangGraph, OpenAI, and LlamaIndex runtime checks invoke real framework objects, but they intentionally do not call an LLM. Cortex Agent runtime acceptance is live-only and calls Snowflake Cortex Agents. Review [docs/validation-matrix.md](docs/validation-matrix.md), [docs/framework-runtime-acceptance.md](docs/framework-runtime-acceptance.md), and [docs/cortex-agent-runtime-acceptance.md](docs/cortex-agent-runtime-acceptance.md) for the exact coverage.
 
 ## Quick Start
 
@@ -105,6 +108,17 @@ scripts/run_cortex_agent_runtime_acceptance.sh
 
 Review [docs/cortex-agent-runtime-acceptance.md](docs/cortex-agent-runtime-acceptance.md) before running it. This check creates scratch Snowflake objects and has no offline mode.
 
+To execute the live Cortex Agent notebook:
+
+```bash
+export METATATE_EXAMPLES_PAT="$(cat /private/tmp/metatate_examples_mcp_pat)"
+
+METATATE_CORTEX_ACCOUNT_URL=https://<account-url> \
+SNOWFLAKE_ROLE=NAC \
+METATATE_CORTEX_WAREHOUSE=WH_NAC \
+scripts/run_cortex_agent_runtime_notebook.sh
+```
+
 ## Live Mode
 
 Live mode uses the Snowflake-managed Metatate MCP server. The notebooks still run locally, but every Metatate decision call goes through MCP.
@@ -142,7 +156,7 @@ For production use, deploy policies through Metatate. The SQL fixture is only fo
 ```text
 common/                         Shared Python client helpers
 docs/                           Setup, demo model, and troubleshooting
-cortex_agent_runtime/           Live Cortex Agent object acceptance helper
+cortex_agent_runtime/           Live Cortex Agent object acceptance helpers
 notebooks/                      Notebook-first walkthroughs
 sample-data/acmecloud/tables/   Small synthetic CSV tables
 sample-data/acmecloud/policies/ Example policy YAML

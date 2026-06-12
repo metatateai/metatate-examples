@@ -17,16 +17,20 @@ def main() -> None:
     required = [
         "README.md",
         "docs/demo-data-model.md",
+        "docs/validation-matrix.md",
         "docs/live-mode.md",
         "docs/snowflake-setup.md",
         "common/metatate_client.py",
         "cortex_agent_runtime/acceptance.py",
+        "cortex_agent_runtime/__init__.py",
+        "framework_runtime/langgraph_acceptance.py",
         "framework_runtime/scenarios.py",
         "framework_runtime/openai_agents_acceptance.py",
         "framework_runtime/llamaindex_acceptance.py",
         "docs/cortex-agent-runtime-acceptance.md",
         "scripts/create_mcp_pat_user.sh",
         "scripts/run_cortex_agent_runtime_acceptance.sh",
+        "scripts/run_cortex_agent_runtime_notebook.sh",
         "scripts/run_framework_runtime_acceptance.sh",
         "scripts/run_notebook_pack.sh",
         "sql/setup_acmecloud_demo.sql",
@@ -72,7 +76,7 @@ def validate_policy_files() -> None:
 
 def validate_notebooks() -> None:
     notebooks = sorted((ROOT / "notebooks").glob("*.ipynb"))
-    assert len(notebooks) == 12, "expected twelve starter notebooks"
+    assert len(notebooks) == 13, "expected thirteen starter notebooks"
     for path in notebooks:
         with path.open("r", encoding="utf-8") as handle:
             payload = json.load(handle)
@@ -102,6 +106,7 @@ def validate_sql_fixture() -> None:
 def validate_framework_runtime_files() -> None:
     runner = (ROOT / "scripts" / "run_framework_runtime_acceptance.sh").read_text(encoding="utf-8")
     for command in (
+        "python3 framework_runtime/langgraph_acceptance.py",
         "python3 framework_runtime/openai_agents_acceptance.py",
         "python3 framework_runtime/llamaindex_acceptance.py",
     ):
@@ -116,10 +121,17 @@ def validate_framework_runtime_files() -> None:
     ):
         assert marker in scenarios, f"framework scenarios missing {marker}"
 
+    langgraph = (ROOT / "framework_runtime" / "langgraph_acceptance.py").read_text(encoding="utf-8")
+    for marker in ("StateGraph", "validate_with_metatate", "assert_guard_behavior"):
+        assert marker in langgraph, f"LangGraph acceptance missing {marker}"
+
 
 def validate_cortex_agent_runtime_files() -> None:
     runner = (ROOT / "scripts" / "run_cortex_agent_runtime_acceptance.sh").read_text(encoding="utf-8")
     assert "cortex_agent_runtime/acceptance.py" in runner, "Cortex runner missing acceptance script"
+
+    notebook_runner = (ROOT / "scripts" / "run_cortex_agent_runtime_notebook.sh").read_text(encoding="utf-8")
+    assert "12_snowflake_cortex_agent_runtime.ipynb" in notebook_runner, "Cortex notebook runner missing notebook"
 
     acceptance = (ROOT / "cortex_agent_runtime" / "acceptance.py").read_text(encoding="utf-8")
     for marker in (

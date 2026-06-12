@@ -1219,6 +1219,124 @@ def llamaindex_retrieval_notebook() -> dict:
     )
 
 
+def cortex_agent_runtime_notebook() -> dict:
+    return notebook(
+        [
+            markdown(
+                """
+                # 12 - Snowflake Cortex Agent Runtime
+
+                This live-only notebook creates a Snowflake Cortex Agent object with a server-side custom tool. The custom tool delegates to the Metatate Native App Snowflake Intelligence wrapper before the agent answers a SQL validation request.
+
+                Unlike the offline notebook pack, this notebook has no fixture fallback. It needs a Snowflake account with Cortex Agents enabled, the AcmeCloud fixture seeded, and a role-restricted PAT for a dedicated service user.
+                """
+            ),
+            markdown("## Configure the live runtime"),
+            code(
+                """
+                from pathlib import Path
+                import json
+                import sys
+
+                repo_root = Path.cwd()
+                if repo_root.name == "notebooks":
+                    repo_root = repo_root.parent
+                sys.path.insert(0, str(repo_root))
+
+                from cortex_agent_runtime.acceptance import (
+                    TOOL_NAME,
+                    SnowflakeClient,
+                    assert_agent_result,
+                    create_and_run_agent,
+                    decision_label,
+                    load_config,
+                    run_direct_tool_smoke,
+                    setup_runtime_objects,
+                    validate_config,
+                )
+
+                config = load_config()
+                validate_config(config)
+                client = SnowflakeClient(config)
+
+                print(f"Account URL: {config.account_url}")
+                print(f"Role: {config.role}")
+                print(f"Warehouse: {config.warehouse}")
+                print(f"Runtime schema: {config.database}.{config.schema}")
+                print(f"Agent: {config.agent_name}")
+                print(f"Tool: {TOOL_NAME}")
+                """
+            ),
+            markdown("## Create the server-side Metatate tool"),
+            code(
+                """
+                setup_runtime_objects(client, config)
+
+                print("Created or replaced:")
+                print(f"- {config.procedure_fqn}")
+                print()
+                print("The procedure delegates to:")
+                print(f"- {config.metatate_validate_fqn}")
+                """
+            ),
+            markdown("## Smoke-test the tool before adding the agent"),
+            code(
+                """
+                def summarize_metatate_result(payload):
+                    data = payload.get("data", {})
+                    action = data.get("agent_action", {})
+                    return {
+                        "decision": decision_label(payload),
+                        "can_execute_query": action.get("can_execute_query"),
+                        "suggested_next_tool": action.get("suggested_next_tool"),
+                        "extracted_columns": data.get("extracted_columns"),
+                        "summary": data.get("summary"),
+                    }
+
+
+                direct_result = run_direct_tool_smoke(client, config)
+                print(json.dumps(summarize_metatate_result(direct_result), indent=2))
+                """
+            ),
+            markdown("## Create and run the Cortex Agent"),
+            code(
+                """
+                agent_response = create_and_run_agent(client, config)
+                agent_result = assert_agent_result(agent_response)
+
+                tool_use = next(
+                    item["tool_use"]
+                    for item in agent_response["content"]
+                    if item.get("tool_use")
+                )
+                tool_result = next(
+                    item["tool_result"]
+                    for item in agent_response["content"]
+                    if item.get("tool_result")
+                )
+
+                print("Cortex Agent tool use:")
+                print(json.dumps({
+                    "name": tool_use["name"],
+                    "server_side": tool_use.get("client_side_execute") is False,
+                    "input": tool_use["input"],
+                }, indent=2))
+                print()
+                print("Metatate decision returned through the agent:")
+                print(json.dumps(summarize_metatate_result(agent_result), indent=2))
+                print()
+                print(f"Tool result status: {tool_result.get('status')}")
+                """
+            ),
+            markdown(
+                """
+                The important runtime behavior is the `tool_use` plus server-side `tool_result`. The agent did not execute the governed SQL; it validated the SQL string through Metatate and returned the decision before any data access happened.
+                """
+            ),
+        ]
+    )
+
+
 NOTEBOOKS = {
     "00_setup_live_or_offline.ipynb": setup_notebook,
     "01_decision_layer_cookbook.ipynb": cookbook_notebook,
@@ -1232,6 +1350,7 @@ NOTEBOOKS = {
     "09_openai_agents_tool_guard_pattern.ipynb": openai_agents_tool_guard_notebook,
     "10_human_approval_packet_for_conditional_export.ipynb": approval_workflow_notebook,
     "11_llamaindex_governed_retrieval_pattern.ipynb": llamaindex_retrieval_notebook,
+    "12_snowflake_cortex_agent_runtime.ipynb": cortex_agent_runtime_notebook,
 }
 
 
