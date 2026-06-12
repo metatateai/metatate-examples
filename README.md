@@ -39,7 +39,7 @@ Demo policy behavior:
 | `03_transfer_governance_before_export.ipynb` | Destination-aware transfer decisions before export. |
 | `04_governed_text_to_sql_agent.ipynb` | Text-to-SQL that validates and revises SQL before returning it. |
 | `05_agent_red_team_evaluation_harness.ipynb` | Repeatable risky-prompt checks for governed agents. |
-| `06_ci_gate_for_data_ai_changes.ipynb` | A release-gate pattern for SQL, export, and AI workflow changes. |
+| `06_ci_gate_for_data_ai_changes.ipynb` | A runnable CI/CD policy gate for SQL, export, and AI workflow changes. |
 | `07_governed_rag_embedding_ingestion_gate.ipynb` | Pre-ingestion checks before data enters RAG or embedding workflows. |
 | `08_snowflake_cortex_agent_tool_preflight.ipynb` | A Cortex-style custom-tool preflight pattern using Metatate decisions. |
 | `09_openai_agents_tool_guard_pattern.ipynb` | A deterministic tool guard pattern for OpenAI Agents SDK-style apps. |
@@ -61,6 +61,7 @@ The notebook pack is fully executed in offline mode and live mode through the Sn
 
 Runtime coverage is separate from core notebook execution:
 
+- `06_ci_gate_for_data_ai_changes.ipynb` is backed by the reusable `cicd_policy_gate` package and an acceptance script.
 - `02_governed_sql_agent_langgraph.ipynb` is paired with a deterministic LangGraph `StateGraph` runtime acceptance script.
 - `13_langgraph_governed_sql_agent_runtime.ipynb` is paired with a multi-node LangGraph agent runtime acceptance script.
 - `08_snowflake_cortex_agent_tool_preflight.ipynb` is a Cortex-style custom-tool preflight pattern.
@@ -84,6 +85,15 @@ To execute the full pack offline:
 ```bash
 scripts/run_notebook_pack.sh
 ```
+
+To run the CI/CD policy gate locally:
+
+```bash
+scripts/run_cicd_policy_gate.sh
+scripts/run_cicd_policy_gate_acceptance.sh
+```
+
+Use `scripts/run_cicd_policy_gate.sh --strict` for a CI-style non-zero exit when denied changes are present. See [docs/ci-cd-policy-gate.md](docs/ci-cd-policy-gate.md).
 
 To run the framework runtime acceptance checks:
 
@@ -166,6 +176,7 @@ For production use, deploy policies through Metatate. The SQL fixture is only fo
 
 ```text
 common/                         Shared Python client helpers
+cicd_policy_gate/               Reusable CI/CD policy gate example
 docs/                           Setup, demo model, and troubleshooting
 cortex_agent_runtime/           Live Cortex Agent object acceptance helpers
 notebooks/                      Notebook-first walkthroughs

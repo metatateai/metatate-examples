@@ -1,0 +1,72 @@
+{
+  "change_set_id": "pr-042",
+  "description": "Example pull request with SQL model, export, and AI workflow changes.",
+  "changes": [
+    {
+      "change_id": "chg-001",
+      "kind": "sql_model",
+      "source_path": "models/revenue/customer_arr_by_region.sql",
+      "description": "Revenue dashboard aggregates active ARR by region and account status.",
+      "sql": "SELECT region, account_status, SUM(arr) AS arr FROM ACMECLOUD_DEMO.PUBLIC.CUSTOMERS WHERE account_status = 'active' GROUP BY region, account_status",
+      "operation": "read",
+      "intended_use": "analytics",
+      "actor_role": "DATA_ANALYST"
+    },
+    {
+      "change_id": "chg-002",
+      "kind": "sql_model",
+      "source_path": "models/revenue/eu_customer_arr_detail.sql",
+      "description": "Analyst-facing customer detail model includes customer identifiers.",
+      "sql": "SELECT customer_id, email, arr FROM ACMECLOUD_DEMO.PUBLIC.CUSTOMERS WHERE region = 'EU'",
+      "operation": "read",
+      "intended_use": "analytics",
+      "actor_role": "DATA_ANALYST"
+    },
+    {
+      "change_id": "chg-003",
+      "kind": "sql_model",
+      "source_path": "models/marketing/active_customer_activation.sql",
+      "description": "Marketing activation model selects names and email addresses.",
+      "sql": "SELECT customer_name, email FROM ACMECLOUD_DEMO.PUBLIC.CUSTOMERS WHERE account_status = 'active'",
+      "operation": "read",
+      "intended_use": "marketing",
+      "actor_role": "GROWTH_ANALYST"
+    },
+    {
+      "change_id": "chg-004",
+      "kind": "export_job",
+      "source_path": "jobs/salesforce/customer_sync.yaml",
+      "description": "CRM sync sends approved customer fields to Salesforce.",
+      "table_name": "ACMECLOUD_DEMO.PUBLIC.CUSTOMERS",
+      "operation": "export",
+      "intended_use": "external_sharing",
+      "actor_role": "DATA_ENGINEER",
+      "columns": [
+        "CUSTOMER_ID",
+        "CUSTOMER_NAME",
+        "EMAIL",
+        "ACCOUNT_STATUS"
+      ],
+      "destination": {
+        "system": "SALESFORCE",
+        "jurisdiction": "US"
+      },
+      "consumer_jurisdiction": "EU"
+    },
+    {
+      "change_id": "chg-005",
+      "kind": "ai_training_job",
+      "source_path": "pipelines/support-ticket-finetune.yaml",
+      "description": "Fine-tune a support assistant on raw support ticket text.",
+      "table_name": "ACMECLOUD_DEMO.PUBLIC.SUPPORT_TICKETS",
+      "operation": "train",
+      "intended_use": "ml_training",
+      "actor_role": "ML_ENGINEER",
+      "columns": [
+        "TICKET_TEXT",
+        "PRIORITY",
+        "CUSTOMER_ID"
+      ]
+    }
+  ]
+}

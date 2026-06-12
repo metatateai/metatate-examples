@@ -16,7 +16,7 @@ This repository separates examples from runtime acceptance tests.
 | Transfer governance before export | `03_transfer_governance_before_export.ipynb` | Yes | Yes | Covered by notebook execution |
 | Governed text-to-SQL | `04_governed_text_to_sql_agent.ipynb` | Yes | Yes | Covered by notebook execution |
 | Agent red-team evaluation | `05_agent_red_team_evaluation_harness.ipynb` | Yes | Yes | Covered by notebook execution |
-| CI gate for data and AI changes | `06_ci_gate_for_data_ai_changes.ipynb` | Yes | Yes | Covered by notebook execution |
+| CI/CD policy gate for data and AI changes | `06_ci_gate_for_data_ai_changes.ipynb` | Yes | Yes | `cicd_policy_gate/acceptance.py` |
 | Governed RAG ingestion gate | `07_governed_rag_embedding_ingestion_gate.ipynb` | Yes | Yes | Covered by notebook execution |
 | Cortex Agent custom-tool preflight | `08_snowflake_cortex_agent_tool_preflight.ipynb` | Yes | Yes | Pattern only; use the Cortex runtime notebook for hosted runtime proof |
 | OpenAI Agents SDK tool guard | `09_openai_agents_tool_guard_pattern.ipynb` | Yes | Yes | `framework_runtime/openai_agents_acceptance.py` |
@@ -46,6 +46,18 @@ Run framework runtime acceptance:
 
 ```bash
 scripts/run_framework_runtime_acceptance.sh
+```
+
+Run CI/CD policy gate acceptance:
+
+```bash
+scripts/run_cicd_policy_gate_acceptance.sh
+```
+
+Run the CI/CD policy gate as a CI command:
+
+```bash
+scripts/run_cicd_policy_gate.sh --strict
 ```
 
 Run the LangGraph runtime notebook:

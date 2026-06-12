@@ -11,7 +11,7 @@ The examples are use-case first. Frameworks are included when they make the Meta
 - LangGraph governed SQL agent runtime with conditional routing
 - Governed text-to-SQL agent pattern
 - Agent red-team evaluation harness
-- CI-style data and AI release gate
+- CI/CD data and AI policy gate package with acceptance coverage
 - Governed RAG and embedding ingestion gate
 - Snowflake Cortex Agent custom-tool preflight pattern
 - Snowflake Cortex Agent custom-tool live runtime acceptance
@@ -40,7 +40,7 @@ Framework runtime coverage is separate:
 - LlamaIndex FunctionAgent or AgentWorkflow LLM-planning smoke test
 - LangChain or CrewAI multi-agent handoff
 - Pydantic AI
-- dbt or Airflow policy gates beyond the notebook-first CI gate
+- dbt or Airflow adapters that generate change sets for the CI/CD policy gate
 - evaluation dashboards for red-team and CI gate history
 
 ## Later Exploration

@@ -17,10 +17,16 @@ def main() -> None:
     required = [
         "README.md",
         "docs/demo-data-model.md",
+        "docs/ci-cd-policy-gate.md",
         "docs/validation-matrix.md",
         "docs/live-mode.md",
         "docs/snowflake-setup.md",
         "common/metatate_client.py",
+        "cicd_policy_gate/__init__.py",
+        "cicd_policy_gate/cli.py",
+        "cicd_policy_gate/gate.py",
+        "cicd_policy_gate/acceptance.py",
+        "cicd_policy_gate/changes/pull_request_042.json",
         "cortex_agent_runtime/acceptance.py",
         "cortex_agent_runtime/__init__.py",
         "framework_runtime/langgraph_acceptance.py",
@@ -33,6 +39,8 @@ def main() -> None:
         "scripts/create_mcp_pat_user.sh",
         "scripts/run_cortex_agent_runtime_acceptance.sh",
         "scripts/run_cortex_agent_runtime_notebook.sh",
+        "scripts/run_cicd_policy_gate.sh",
+        "scripts/run_cicd_policy_gate_acceptance.sh",
         "scripts/run_framework_runtime_acceptance.sh",
         "scripts/run_langgraph_runtime_notebook.sh",
         "scripts/run_notebook_pack.sh",
@@ -50,6 +58,7 @@ def main() -> None:
     validate_notebooks()
     validate_sql_fixture()
     validate_cortex_agent_runtime_files()
+    validate_cicd_policy_gate_files()
     validate_framework_runtime_files()
     validate_python_imports()
     print("metatate-examples validation passed")
@@ -137,6 +146,36 @@ def validate_framework_runtime_files() -> None:
     assert "13_langgraph_governed_sql_agent_runtime.ipynb" in langgraph_notebook_runner
 
 
+def validate_cicd_policy_gate_files() -> None:
+    fixture_path = ROOT / "cicd_policy_gate" / "changes" / "pull_request_042.json"
+    with fixture_path.open("r", encoding="utf-8") as handle:
+        change_set = json.load(handle)
+    assert change_set["changes"], "CI/CD policy gate fixture has no changes"
+    for change in change_set["changes"]:
+        for marker in ("change_id", "kind", "description"):
+            assert marker in change, f"CI/CD gate change missing {marker}: {change}"
+
+    gate = (ROOT / "cicd_policy_gate" / "gate.py").read_text(encoding="utf-8")
+    for marker in (
+        "validate_query_context",
+        "authorize_use",
+        "DEFAULT_CHANGESET_PATH",
+        "fail_on_controls",
+        "METATATE_CI_GATE_STRICT",
+    ):
+        assert marker in gate, f"CI/CD policy gate missing {marker}"
+
+    acceptance = (ROOT / "cicd_policy_gate" / "acceptance.py").read_text(encoding="utf-8")
+    for marker in ("EXPECTED_GATES", "release_allowed is False", "evidence_id"):
+        assert marker in acceptance, f"CI/CD gate acceptance missing {marker}"
+
+    runner = (ROOT / "scripts" / "run_cicd_policy_gate.sh").read_text(encoding="utf-8")
+    assert "python3 -m cicd_policy_gate.cli" in runner, "CI/CD gate runner does not call the gate CLI"
+
+    acceptance_runner = (ROOT / "scripts" / "run_cicd_policy_gate_acceptance.sh").read_text(encoding="utf-8")
+    assert "cicd_policy_gate/acceptance.py" in acceptance_runner, "CI/CD acceptance runner missing script"
+
+
 def validate_cortex_agent_runtime_files() -> None:
     runner = (ROOT / "scripts" / "run_cortex_agent_runtime_acceptance.sh").read_text(encoding="utf-8")
     assert "cortex_agent_runtime/acceptance.py" in runner, "Cortex runner missing acceptance script"
@@ -160,6 +199,9 @@ def validate_python_imports() -> None:
     common = importlib.import_module("common")
     for name in ("OfflineMetatateClient", "ManagedMCPMetatateClient", "get_client"):
         assert hasattr(common, name), f"common missing {name}"
+    cicd_policy_gate = importlib.import_module("cicd_policy_gate")
+    for name in ("evaluate_changes", "load_changes", "DEFAULT_CHANGESET_PATH"):
+        assert hasattr(cicd_policy_gate, name), f"cicd_policy_gate missing {name}"
 
 
 if __name__ == "__main__":

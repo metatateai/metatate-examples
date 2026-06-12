@@ -633,126 +633,73 @@ def ci_gate_notebook() -> dict:
                 """
                 # 06 - CI Gate For Data And AI Changes
 
-                This notebook models Metatate as a release gate. A proposed SQL model, export job, prompt, or AI workflow change is checked before it ships.
+                This notebook models Metatate as a release gate. A proposed SQL model, export job, or AI workflow change is checked before it ships.
 
-                The example is notebook-first, but the same pattern can run in GitHub Actions, dbt, Airflow, or an internal deployment pipeline.
+                The notebook uses the same `cicd_policy_gate` package as the command-line runner, so the walkthrough and the CI job exercise the same implementation.
                 """
             ),
             code(SETUP_CELL),
-            markdown("## Proposed changes"),
+            markdown("## Load a pull request change set"),
             code(
                 """
-                proposed_changes = [
-                    {
-                        "change_id": "chg-001",
-                        "kind": "sql_model",
-                        "description": "Revenue dashboard aggregates active ARR by region.",
-                        "sql": "SELECT region, account_status, SUM(arr) AS arr FROM ACMECLOUD_DEMO.PUBLIC.CUSTOMERS WHERE account_status = 'active' GROUP BY region, account_status",
-                        "operation": "read",
-                        "intended_use": "analytics",
-                        "actor_role": "DATA_ANALYST",
-                    },
-                    {
-                        "change_id": "chg-002",
-                        "kind": "sql_model",
-                        "description": "Marketing activation model selects names and emails.",
-                        "sql": "SELECT customer_name, email FROM ACMECLOUD_DEMO.PUBLIC.CUSTOMERS WHERE account_status = 'active'",
-                        "operation": "read",
-                        "intended_use": "marketing",
-                        "actor_role": "GROWTH_ANALYST",
-                    },
-                    {
-                        "change_id": "chg-003",
-                        "kind": "export_job",
-                        "description": "CRM sync sends approved customer fields to Salesforce.",
-                        "table_name": "ACMECLOUD_DEMO.PUBLIC.CUSTOMERS",
-                        "operation": "export",
-                        "intended_use": "external_sharing",
-                        "actor_role": "DATA_ENGINEER",
-                        "columns": ["CUSTOMER_ID", "CUSTOMER_NAME", "EMAIL", "ACCOUNT_STATUS"],
-                        "destination": {"system": "SALESFORCE", "jurisdiction": "US"},
-                        "consumer_jurisdiction": "EU",
-                    },
+                from cicd_policy_gate import DEFAULT_CHANGESET_PATH, evaluate_changes, load_changes
+                from cicd_policy_gate.gate import print_summary
+
+                change_set = load_changes(DEFAULT_CHANGESET_PATH)
+                print(f"{change_set['change_set_id']}: {change_set['description']}")
+                pd.DataFrame(change_set["changes"])[
+                    ["change_id", "kind", "source_path", "description"]
                 ]
                 """
             ),
-            markdown("## Evaluate the gate"),
+            markdown("## Evaluate each change through Metatate"),
             code(
                 """
-                def evaluate_change(change):
-                    if change["kind"] == "sql_model":
-                        response = client.validate_query_context(
-                            change["sql"],
-                            operation=change["operation"],
-                            intended_use=change["intended_use"],
-                            actor_role=change.get("actor_role"),
-                        )
-                        decision = response["data"].get("decision", {}).get("decision")
-                        rationale = response["data"].get("decision", {}).get("rationale")
-                        action = response["data"].get("agent_action", {}).get("message")
-                    else:
-                        response = client.authorize_use(
-                            change["table_name"],
-                            operation=change["operation"],
-                            intended_use=change["intended_use"],
-                            actor_role=change.get("actor_role"),
-                            columns=change.get("columns"),
-                            destination=change.get("destination"),
-                            consumer_jurisdiction=change.get("consumer_jurisdiction"),
-                        )
-                        decision = response["data"].get("decision")
-                        rationale = response["data"].get("rationale")
-                        action = response["data"].get("agent_action", {}).get("message")
+                strict = os.getenv("METATATE_EXAMPLES_STRICT_CI_GATE") == "1"
+                fail_on_controls = os.getenv("METATATE_EXAMPLES_FAIL_ON_CONTROLS") == "1"
 
-                    if decision == "DENY":
-                        gate = "fail"
-                    elif decision == "CONDITIONAL":
-                        gate = "needs_controls"
-                    else:
-                        gate = "pass"
-
-                    return {
-                        "change_id": change["change_id"],
-                        "kind": change["kind"],
-                        "decision": decision,
-                        "gate": gate,
-                        "rationale": rationale,
-                        "action": action,
-                    }
-
-                gate_results = pd.DataFrame([evaluate_change(change) for change in proposed_changes])
-                gate_results[["change_id", "kind", "decision", "gate", "rationale"]]
+                summary = evaluate_changes(
+                    client,
+                    change_set,
+                    strict=strict,
+                    fail_on_controls=fail_on_controls,
+                )
+                gate_results = pd.DataFrame(summary.to_dict()["results"])
+                gate_results[
+                    ["change_id", "kind", "decision", "gate", "evidence_id", "rationale"]
+                ]
                 """
             ),
             code(
                 """
-                blocking = gate_results[gate_results["gate"] == "fail"]
-                controls = gate_results[gate_results["gate"] == "needs_controls"]
+                print_summary(summary)
 
-                print("Release gate summary")
-                print(f"pass: {(gate_results['gate'] == 'pass').sum()}")
-                print(f"needs_controls: {len(controls)}")
-                print(f"fail: {len(blocking)}")
+                if strict and not summary.release_allowed:
+                    raise AssertionError("Release gate failed. Resolve denied changes before deployment.")
 
-                if len(blocking):
-                    print("\\nBlocking changes")
-                    print(blocking[["change_id", "decision", "action"]].to_string(index=False))
-                    if os.getenv("METATATE_EXAMPLES_STRICT_CI_GATE") == "1":
-                        raise AssertionError("Release gate failed. Resolve denied changes before deployment.")
-                    print("\\nStrict mode is off. Set METATATE_EXAMPLES_STRICT_CI_GATE=1 to make this cell fail like CI.")
+                if not strict:
+                    print("\\nStrict mode is off. Set METATATE_EXAMPLES_STRICT_CI_GATE=1 to make this notebook fail like CI.")
                 """
             ),
-            markdown("## CI-friendly non-throwing summary"),
+            markdown("## Machine-readable CI report"),
             code(
                 """
-                # CI systems often want a machine-readable payload even when a gate fails.
-                # This cell does not raise; it prints the same result as JSON for logging.
-                print(json.dumps(gate_results.to_dict(orient="records"), indent=2))
+                report = summary.to_dict()
+                print(json.dumps(report, indent=2))
                 """
             ),
             markdown(
                 """
-                In a real pipeline, the failing change would stop the deployment. Conditional changes can create approval tasks or require anonymization before the release continues.
+                The same implementation can run outside notebooks:
+
+                ```bash
+                scripts/run_cicd_policy_gate.sh --strict
+                ```
+                """
+            ),
+            markdown(
+                """
+                In a real pipeline, denied changes stop the deployment. Conditional changes can create approval tasks, require anonymization, or fail the gate when `--fail-on-controls` is enabled.
                 """
             ),
         ]

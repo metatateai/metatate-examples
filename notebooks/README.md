@@ -22,6 +22,8 @@ server instead.
 13. `12_snowflake_cortex_agent_runtime.ipynb`
 14. `13_langgraph_governed_sql_agent_runtime.ipynb`
 
+Notebook `06_ci_gate_for_data_ai_changes.ipynb` uses the reusable `cicd_policy_gate` package. The same gate can be run from CI with `scripts/run_cicd_policy_gate.sh`.
+
 Notebook `12_snowflake_cortex_agent_runtime.ipynb` is live-only. It creates and runs Snowflake Cortex Agent objects and is executed separately with `scripts/run_cortex_agent_runtime_notebook.sh`.
 
 Notebook `13_langgraph_governed_sql_agent_runtime.ipynb` requires `requirements-framework.txt` and is executed separately with `scripts/run_langgraph_runtime_notebook.sh`.
