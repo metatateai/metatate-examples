@@ -55,4 +55,4 @@ Each script verifies that:
 
 - OpenAI model loop execution. The OpenAI check proves the tool runtime, not model behavior.
 - LlamaIndex agent LLM planning. The LlamaIndex check proves the tool runtime, not LLM tool selection.
-- deployed Snowflake Cortex Agent objects. Cortex runtime acceptance should be added separately.
+- Snowflake Cortex Agent object runtime. Use [cortex-agent-runtime-acceptance.md](cortex-agent-runtime-acceptance.md) for the live Cortex Agent check.

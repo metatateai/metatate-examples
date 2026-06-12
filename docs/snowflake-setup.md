@@ -61,6 +61,8 @@ app_data.deployed_data_meaning
 
 This mirrors the Native App model used by the canonical `core.*` MCP tools and Snowflake Intelligence `core.agent_*` wrappers.
 
+The Cortex Agent runtime acceptance check also uses these Snowflake Intelligence wrappers. It creates an examples-only stored procedure that delegates to `core.agent_validate_query_context`, then exposes that procedure as a Cortex Agent generic custom tool. See [cortex-agent-runtime-acceptance.md](cortex-agent-runtime-acceptance.md).
+
 ## Cleanup
 
 ```bash

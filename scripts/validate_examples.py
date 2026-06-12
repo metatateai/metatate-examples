@@ -20,10 +20,13 @@ def main() -> None:
         "docs/live-mode.md",
         "docs/snowflake-setup.md",
         "common/metatate_client.py",
+        "cortex_agent_runtime/acceptance.py",
         "framework_runtime/scenarios.py",
         "framework_runtime/openai_agents_acceptance.py",
         "framework_runtime/llamaindex_acceptance.py",
+        "docs/cortex-agent-runtime-acceptance.md",
         "scripts/create_mcp_pat_user.sh",
+        "scripts/run_cortex_agent_runtime_acceptance.sh",
         "scripts/run_framework_runtime_acceptance.sh",
         "scripts/run_notebook_pack.sh",
         "sql/setup_acmecloud_demo.sql",
@@ -39,6 +42,7 @@ def main() -> None:
     validate_policy_files()
     validate_notebooks()
     validate_sql_fixture()
+    validate_cortex_agent_runtime_files()
     validate_framework_runtime_files()
     validate_python_imports()
     print("metatate-examples validation passed")
@@ -111,6 +115,21 @@ def validate_framework_runtime_files() -> None:
         "SAFE_ANALYTICS_SQL",
     ):
         assert marker in scenarios, f"framework scenarios missing {marker}"
+
+
+def validate_cortex_agent_runtime_files() -> None:
+    runner = (ROOT / "scripts" / "run_cortex_agent_runtime_acceptance.sh").read_text(encoding="utf-8")
+    assert "cortex_agent_runtime/acceptance.py" in runner, "Cortex runner missing acceptance script"
+
+    acceptance = (ROOT / "cortex_agent_runtime" / "acceptance.py").read_text(encoding="utf-8")
+    for marker in (
+        "AGENT_VALIDATE_QUERY_CONTEXT",
+        "validate_query_with_metatate",
+        "METATATE_GOVERNED_SQL_AGENT",
+        "/api/v2/statements",
+        ":run",
+    ):
+        assert marker in acceptance, f"Cortex acceptance missing {marker}"
 
 
 def validate_python_imports() -> None:

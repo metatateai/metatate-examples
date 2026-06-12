@@ -58,11 +58,12 @@ The notebook pack is fully executed in offline mode and live mode through the Sn
 Framework runtime coverage is separate from notebook execution:
 
 - `02_governed_sql_agent_langgraph.ipynb` uses LangGraph when `langgraph` is installed; otherwise it runs the same graph steps as plain Python.
-- `08_snowflake_cortex_agent_tool_preflight.ipynb` is a Cortex-style custom-tool preflight pattern, not a deployed Cortex Agent object test.
+- `08_snowflake_cortex_agent_tool_preflight.ipynb` is a Cortex-style custom-tool preflight pattern.
+- `scripts/run_cortex_agent_runtime_acceptance.sh` creates and runs a live Cortex Agent object with a server-side Metatate custom tool.
 - `09_openai_agents_tool_guard_pattern.ipynb` is paired with a deterministic OpenAI Agents SDK `FunctionTool` runtime acceptance script.
 - `11_llamaindex_governed_retrieval_pattern.ipynb` is paired with a deterministic LlamaIndex `FunctionTool` runtime acceptance script.
 
-The OpenAI and LlamaIndex runtime checks invoke real framework tool objects, but they intentionally do not call an LLM. Review [docs/framework-runtime-acceptance.md](docs/framework-runtime-acceptance.md) for the exact coverage.
+The OpenAI and LlamaIndex runtime checks invoke real framework tool objects, but they intentionally do not call an LLM. Cortex Agent runtime acceptance is live-only and calls Snowflake Cortex Agents. Review [docs/framework-runtime-acceptance.md](docs/framework-runtime-acceptance.md) and [docs/cortex-agent-runtime-acceptance.md](docs/cortex-agent-runtime-acceptance.md) for the exact coverage.
 
 ## Quick Start
 
@@ -90,6 +91,19 @@ scripts/run_framework_runtime_acceptance.sh
 ```
 
 Use Python 3.10 or newer for framework runtime acceptance.
+
+To run the live Cortex Agent object acceptance check:
+
+```bash
+export METATATE_EXAMPLES_PAT="$(cat /private/tmp/metatate_examples_mcp_pat)"
+
+METATATE_CORTEX_ACCOUNT_URL=https://<account-url> \
+SNOWFLAKE_ROLE=NAC \
+METATATE_CORTEX_WAREHOUSE=WH_NAC \
+scripts/run_cortex_agent_runtime_acceptance.sh
+```
+
+Review [docs/cortex-agent-runtime-acceptance.md](docs/cortex-agent-runtime-acceptance.md) before running it. This check creates scratch Snowflake objects and has no offline mode.
 
 ## Live Mode
 
@@ -128,6 +142,7 @@ For production use, deploy policies through Metatate. The SQL fixture is only fo
 ```text
 common/                         Shared Python client helpers
 docs/                           Setup, demo model, and troubleshooting
+cortex_agent_runtime/           Live Cortex Agent object acceptance helper
 notebooks/                      Notebook-first walkthroughs
 sample-data/acmecloud/tables/   Small synthetic CSV tables
 sample-data/acmecloud/policies/ Example policy YAML
