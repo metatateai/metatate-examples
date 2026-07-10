@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Added a live "saas" backend (`METATATE_MCP_BACKEND=saas`) that runs the full
+  notebook pack and acceptance scripts against the Metatate SaaS
+  cross-platform MCP endpoint with a workspace bearer token, including
+  destination-aware export decisions and native `explain_why` chaining
+  (see docs/live-mode-saas.md).
+- Added a manual live SaaS MCP validation workflow
+  (`.github/workflows/live-saas-mcp-validation.yml`).
 - Added GitHub Actions offline CI for pull requests.
 - Added a manual live managed MCP validation workflow for release candidates.
 - Added release process documentation for offline CI, live MCP validation, and public tags.

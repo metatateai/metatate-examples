@@ -1,5 +1,8 @@
 # Live Mode
 
+> Looking for the Metatate SaaS (cross-platform) endpoint instead? See
+> [live-mode-saas.md](live-mode-saas.md) — same notebooks, `METATATE_MCP_BACKEND=saas`.
+
 Live mode calls the Snowflake-managed Metatate MCP server. The notebooks do not open a direct SQL connector session for Metatate tool calls.
 
 Use live mode when you want the examples to exercise the same MCP surface used by external agents and MCP clients.
