@@ -90,3 +90,24 @@ Transfer authorization requires destination context:
 ```
 
 If destination or consumer jurisdiction is missing, Metatate may ask for more context instead of returning a final transfer decision.
+
+## SaaS backend (`METATATE_MCP_BACKEND=saas`)
+
+- **401 unauthorized** — uniform for missing/expired/revoked tokens. Token
+  format is `mtt_` + 64 hex characters; issue a fresh one in the workspace
+  MCP module → Tokens (shown once).
+- **429 rate limited** — per-token budget (default 120 calls/min); the client
+  honors `Retry-After`. The discovery enrichment fan-out is bounded and
+  cached, but tight loops in custom code can still trip it.
+- **`asset_not_found`** — SaaS identifiers are lowercase normalized names in
+  a structured reference; the client lowercases FQNs for you, so this
+  usually means the AcmeCloud demo fixture was not applied to the workspace
+  you are calling (metatate-saas: `./scripts/acmecloud-demo-fixtures.sh`).
+- **`not_enough_published_state`** — the tenant has no current publication
+  for that asset/scenario; publish the demo state first.
+- **`UNKNOWN` decisions on custom intents** — the server never guesses an
+  unmappable intent (`scenario_unresolved`); pass a supported
+  `intended_use` (analytics/reporting/support/marketing/ml_training/…) or a
+  canonical scenario key.
+- **GET /mcp returns 405** — the endpoint is POST-only JSON-RPC; the client
+  handles this, plain curl probes should POST.

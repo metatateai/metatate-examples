@@ -18,6 +18,9 @@ def main() -> None:
         ".github/CODEOWNERS",
         ".github/workflows/offline-ci.yml",
         ".github/workflows/live-mcp-validation.yml",
+        ".github/workflows/live-saas-mcp-validation.yml",
+        "common/saas_client.py",
+        "docs/live-mode-saas.md",
         "README.md",
         "docs/demo-data-model.md",
         "docs/ci-cd-policy-gate.md",
@@ -237,6 +240,25 @@ def validate_ci_workflows() -> None:
         "scripts/run_langgraph_runtime_notebook.sh",
     ):
         assert marker in live, f"live MCP workflow missing {marker}"
+
+    saas = (ROOT / ".github" / "workflows" / "live-saas-mcp-validation.yml").read_text(encoding="utf-8")
+    for marker in (
+        "workflow_dispatch",
+        "METATATE_MCP_BACKEND: saas",
+        "METATATE_SAAS_MCP_TOKEN",
+        "scripts/run_cicd_policy_gate_acceptance.sh",
+        "scripts/run_human_exception_workflow_acceptance.sh",
+        "scripts/run_framework_runtime_acceptance.sh",
+        "scripts/run_notebook_pack.sh",
+        "scripts/run_langgraph_runtime_notebook.sh",
+    ):
+        assert marker in saas, f"live SaaS MCP workflow missing {marker}"
+
+    client = (ROOT / "common" / "saas_client.py").read_text(encoding="utf-8")
+    for marker in ("SaasMcpMetatateClient", "structuredContent", "residency.cross_border_transfer"):
+        assert marker in client, f"saas client missing {marker}"
+    factory = (ROOT / "common" / "metatate_client.py").read_text(encoding="utf-8")
+    assert "METATATE_MCP_BACKEND" in factory, "get_client missing the backend selector"
 
 
 def validate_cortex_agent_runtime_files() -> None:
