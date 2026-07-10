@@ -344,11 +344,18 @@ class ManagedMCPMetatateClient:
         return min(self.retry_backoff_seconds * (2 ** (attempt - 1)), 8.0)
 
 
-def get_client() -> OfflineMetatateClient | ManagedMCPMetatateClient:
+def get_client() -> Any:
     if load_dotenv:
         load_dotenv(REPO_ROOT / ".env")
     mode = os.getenv("METATATE_EXAMPLES_MODE", "offline").strip().lower()
     if mode == "live":
+        backend = os.getenv("METATATE_MCP_BACKEND", "snowflake").strip().lower()
+        if backend == "saas":
+            from .saas_client import SaasMcpMetatateClient
+
+            return SaasMcpMetatateClient()
+        if backend != "snowflake":
+            raise ValueError("METATATE_MCP_BACKEND must be snowflake or saas")
         return ManagedMCPMetatateClient()
     if mode != "offline":
         raise ValueError("METATATE_EXAMPLES_MODE must be offline or live")

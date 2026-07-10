@@ -96,3 +96,13 @@ scripts/run_cortex_agent_runtime_notebook.sh
 ```
 
 Do not treat a framework as fully integrated until its runtime acceptance script passes.
+
+## Live (SaaS) lane
+
+`METATATE_EXAMPLES_MODE=live METATATE_MCP_BACKEND=saas` runs the same
+coverage against the Metatate SaaS cross-platform MCP endpoint
+(docs/live-mode-saas.md): notebooks 00–11 and 13 plus the CI/CD gate, human
+exception workflow, and framework runtime acceptance scripts. Notebook 12 is
+Snowflake Cortex-only and excluded. The manual workflow is
+`.github/workflows/live-saas-mcp-validation.yml` (secrets
+`METATATE_SAAS_MCP_URL`, `METATATE_SAAS_MCP_TOKEN`).

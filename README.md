@@ -52,12 +52,13 @@ The core notebooks run in two modes:
 
 - **Offline:** default; uses committed JSON fixtures and needs no Snowflake account.
 - **Live:** calls the Snowflake-managed Metatate MCP server with a role-restricted PAT.
+- **Live (SaaS):** the same pack against the Metatate SaaS cross-platform MCP endpoint with a workspace bearer token (`METATATE_MCP_BACKEND=saas` — see [docs/live-mode-saas.md](docs/live-mode-saas.md)).
 
 Notebook `12_snowflake_cortex_agent_runtime.ipynb` is live-only because it creates and runs Snowflake Cortex Agent objects. Notebook `13_langgraph_governed_sql_agent_runtime.ipynb` requires the framework dependencies from `requirements-framework.txt`.
 
 ## Validation Scope
 
-The notebook pack is fully executed in offline mode and live mode through the Snowflake-managed Metatate MCP server.
+The notebook pack is fully executed in offline mode and live mode through the Snowflake-managed Metatate MCP server, and in live SaaS mode through the Metatate SaaS cross-platform MCP endpoint (manual workflow `.github/workflows/live-saas-mcp-validation.yml`).
 
 Pull requests run the offline validation workflow in `.github/workflows/offline-ci.yml`. Release candidates should also run the manual live MCP workflow in `.github/workflows/live-mcp-validation.yml`.
 
