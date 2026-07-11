@@ -9,6 +9,35 @@ Installable integration plugins live in separate repositories:
 - `metatate-claude-plugins` for the Claude Code plugin
 - `metatate-cortex-code-plugin` for the Cortex Code plugin
 
+## Run It Live In 5 Minutes
+
+Offline mode works with zero setup, but the fastest way to feel the decision
+layer is to run these notebooks against a **live governed workspace of your
+own**:
+
+1. **Create a free Metatate account** at
+   [app.getmetatate.com/sign-up?ref=examples](https://app.getmetatate.com/sign-up?ref=examples)
+   and create a workspace (the free plan covers everything these examples do).
+2. In your workspace, open **Onboarding → "Load the AcmeCloud demo"** — one
+   click provisions the exact governed domain this repo uses (five tables,
+   three policies, one live publication).
+3. Open **MCP Tools → Tokens** and issue an access token (shown once).
+4. Point the notebooks at your workspace:
+
+   ```bash
+   export METATATE_EXAMPLES_MODE=live
+   export METATATE_MCP_BACKEND=saas
+   export METATATE_MCP_URL=https://<your-workspace-mcp-endpoint>/mcp   # MCP Tools → Connect
+   export METATATE_SAAS_MCP_TOKEN=mtt_...
+   export METATATE_MCP_PAT_ENV=METATATE_SAAS_MCP_TOKEN
+   ```
+
+Full details (and the local-stack path for contributors) are in
+[docs/live-mode-saas.md](docs/live-mode-saas.md).
+
+Running on Snowflake? The same pack runs against the Snowflake-managed
+Metatate Native App instead — see [docs/live-mode.md](docs/live-mode.md).
+
 ## Demo Domain
 
 AcmeCloud covers customer operations, revenue, product usage, support, and prepared exports.
