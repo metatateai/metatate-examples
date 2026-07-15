@@ -31,11 +31,12 @@ Optional: `METATATE_MCP_TOKEN_ENV` renames the token variable;
 The workspace must serve the AcmeCloud demo publication.
 
 **Self-serve (recommended):** create a free account at
-[app.getmetatate.com/sign-up?ref=examples](https://app.getmetatate.com/sign-up?ref=examples),
-create a workspace, then open **Onboarding → "Load the AcmeCloud demo"**. One
-click provisions the whole domain (a sample connector that never syncs, the
-three AcmeCloud policies, and a live publication) and it is fully reversible
-via "Remove demo". Then issue a token in **MCP Tools → Tokens**, copy the
+[app.getmetatate.com/sign-up?ref=examples](https://app.getmetatate.com/sign-up?ref=examples)
+and create a workspace. On the workspace dashboard, follow the **"New here?"
+banner → Load the demo**, then click **Load the AcmeCloud demo**. It
+provisions the whole domain (a sample connector that never syncs, the three
+AcmeCloud policies, and a live publication) and is fully reversible via
+"Remove demo". Then issue a token in **MCP Tools → Tokens**, copy the
 endpoint from **MCP Tools → Connect**, and export the environment above.
 
 **Local stack (contributors / operators):** in the metatate-saas repo:

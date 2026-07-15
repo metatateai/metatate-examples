@@ -1,13 +1,19 @@
 # Metatate Examples
 
+![Animated terminal: the AcmeCloud examples asking Metatate for decisions — marketing use of customer PII is denied, an EU Salesforce export is conditional on approval and anonymization, and an aggregate analytics query passes.](docs/assets/readme-hero.svg)
+
 Metatate is a programmable decision layer for governed data. It gives agents and workflows structured context about meaning, policy, allowed use, transfer rules, and decision rationale before they touch data.
 
 This repository is the public examples cookbook. It uses one synthetic B2B SaaS company, AcmeCloud, so every notebook builds on the same tables, policies, and expected decisions.
 
-Installable integration plugins live in separate repositories:
+Prefer these workflows inside your coding agent? Installable integration
+plugins live in separate repositories:
 
-- `metatate-claude-plugins` for the Claude Code plugin
-- `metatate-cortex-code-plugin` for the Cortex Code plugin
+- [metatate-claude-plugins](https://github.com/metatateai/metatate-claude-plugins) —
+  Claude Code plugins: `metatate` for Metatate Cloud and `metatate-snow` for
+  the Snowflake Native App.
+- [metatate-cortex-code-plugin](https://github.com/metatateai/metatate-cortex-code-plugin) —
+  the same decision workflows for Snowflake Cortex Code.
 
 ## Run It Live In 5 Minutes
 
@@ -18,9 +24,10 @@ own**:
 1. **Create a free Metatate account** at
    [app.getmetatate.com/sign-up?ref=examples](https://app.getmetatate.com/sign-up?ref=examples)
    and create a workspace (the free plan covers everything these examples do).
-2. In your workspace, open **Onboarding → "Load the AcmeCloud demo"** — one
-   click provisions the exact governed domain this repo uses (five tables,
-   three policies, one live publication).
+2. On your new workspace's dashboard, follow the **"New here?" banner → Load
+   the demo**, then click **Load the AcmeCloud demo** — it provisions the
+   exact governed domain this repo uses (five tables, three policies, one
+   live publication).
 3. Open **MCP Tools → Tokens** and issue an access token (shown once).
 4. Point the notebooks at your workspace:
 
@@ -238,6 +245,5 @@ sql/                            Snowflake demo table and Metatate fixture SQL
 ## Links
 
 - Metatate docs: https://docs.getmetatate.com
-- MCP cookbook: https://docs.getmetatate.com/mcp/cookbook
-- Learn use cases: https://www.getmetatate.com/learn
+- Metatate App: https://app.getmetatate.com
 - Snowflake Marketplace listing: https://app.snowflake.com/marketplace/listing/GZ2FTZU03OAS
