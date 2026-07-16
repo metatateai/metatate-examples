@@ -1,0 +1,37 @@
+# AcmeCloud estate spec — embedding and automated-decisioning guardrails.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: acme-ml-embedding
+  version: 1.0.0
+  description: >-
+    Feature vectors may be stored in embedding indexes; fully automated
+    decisioning on churn scores is prohibited without human review.
+  tags: [ml]
+  businessContext:
+    domain: Machine Learning
+    owner: ML Platform
+    steward: ml-platform@example.com
+    purpose: Embedding-storage and automated-decisioning guardrails.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [acmecloud_demo]
+    schemas: [public]
+    tables: [ml_feature_store]
+  classification:
+    sensitivity: internal
+    category: operational
+  usage:
+    permittedUses: [embedding_storage]
+    prohibitedUses: [automated_decisioning]
+extensions:
+  displayName: AcmeCloud ML embedding guardrails
+  scenarioMap:
+    "usage_guidance:spec.usage.permittedUses:permitted":
+      scenarioKey: ai.embedding_storage
+      source: user_confirmed
+    "usage_guidance:spec.usage.prohibitedUses:prohibited":
+      scenarioKey: ai.automated_decisioning
+      source: user_confirmed

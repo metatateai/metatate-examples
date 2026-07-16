@@ -5,22 +5,19 @@
       "column": null,
       "database": "acmecloud_demo",
       "schema": "public",
-      "table": "support_tickets"
+      "table": "ml_feature_store"
     },
     "can_proceed_now": true,
     "conditions": [],
     "context_facts": {
-      "category": "pii",
-      "masking": {
-        "exempt_roles": [],
-        "type": "redact"
-      },
-      "pii": true,
-      "sensitivity": "confidential",
+      "category": "operational",
+      "masking": null,
+      "pii": false,
+      "sensitivity": "internal",
       "subcategory": null
     },
     "decision": "allow",
-    "decision_id": "accef000-0000-4000-8000-000000000029",
+    "decision_id": "accef000-0000-4000-8000-000000000046",
     "instructions": [
       {
         "category": "advisory",
@@ -28,25 +25,23 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "allow",
-        "decision_id": "accef000-0000-4000-8000-000000000029",
-        "decision_reason": "acme-customer-use v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.support_tickets",
+        "decision_id": "accef000-0000-4000-8000-000000000046",
+        "decision_reason": "acme-ml-embedding v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.ml_feature_store",
         "enforcement_mode": "enforce",
         "instruction_family": "usage_guidance",
         "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
         "parameters": {
           "kind": "permitted",
           "uses": [
-            "analytics",
-            "reporting",
-            "support"
+            "embedding_storage"
           ]
         },
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000006",
-          "policy_name": "AcmeCloud customer use guardrails",
-          "policy_version_id": "accef000-0000-4000-8000-000000000007",
+          "policy_id": "accef000-0000-4000-8000-000000000047",
+          "policy_name": "AcmeCloud ML embedding guardrails",
+          "policy_version_id": "accef000-0000-4000-8000-000000000048",
           "version_number": 1
         },
         "resolution_paths": [
@@ -55,13 +50,13 @@
             "source": "selector"
           }
         ],
-        "scenario_key": "purpose.allowed_use",
-        "scenario_lane": "human",
+        "scenario_key": "ai.embedding_storage",
+        "scenario_lane": "agent",
         "scope": {
           "column": null,
           "database": "acmecloud_demo",
           "schema": "public",
-          "table": "support_tickets"
+          "table": "ml_feature_store"
         },
         "weight": 1
       }
@@ -75,20 +70,20 @@
       "publication_id": "accef000-0000-4000-8000-000000000001",
       "published_at": "2026-07-16T00:00:00.000Z"
     },
-    "reason": "acme-customer-use v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.support_tickets",
-    "scenario_key": "purpose.allowed_use",
-    "scenario_lane": "human",
+    "reason": "acme-ml-embedding v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.ml_feature_store",
+    "scenario_key": "ai.embedding_storage",
+    "scenario_lane": "agent",
     "state": "answered"
   },
   "arguments": {
     "asset": {
       "database": "acmecloud_demo",
       "schema": "public",
-      "table": "support_tickets"
+      "table": "ml_feature_store"
     },
-    "scenario_key": "purpose.allowed_use",
-    "use": "triage open support tickets"
+    "scenario_key": "ai.embedding_storage",
+    "use": "index feature vectors in the embedding store"
   },
-  "case_id": "support-tickets-allow",
+  "case_id": "ml-embedding-storage-allow",
   "tool": "authorize_use"
 }

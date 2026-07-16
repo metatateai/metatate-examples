@@ -1,0 +1,35 @@
+{
+  "answer": {
+    "classification": {
+      "category": "pii.contact",
+      "sensitivity": "confidential",
+      "subcategory": null
+    },
+    "data_type": "text",
+    "masking": {
+      "exempt_roles": [
+        "DATA_STEWARD",
+        "PRIVACY_ADMIN"
+      ],
+      "type": "partial"
+    },
+    "meaning": null,
+    "pii": true,
+    "ref": {
+      "column": "work_email",
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "employees"
+    }
+  },
+  "arguments": {
+    "ref": {
+      "column": "work_email",
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "employees"
+    }
+  },
+  "case_id": "meaning_employees_work_email",
+  "tool": "inspect_data_meaning"
+}

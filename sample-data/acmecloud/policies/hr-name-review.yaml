@@ -1,0 +1,35 @@
+# AcmeCloud estate spec — monitor-mode custom masking (review path).
+# A `custom.` masking type has no deterministic engine mapping, so the
+# serving row is decision `require_review` — the honest "a human must
+# decide" state, here in monitor mode. Targets full_name (no competing
+# column rows), so the review state is the effective answer.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: acme-hr-name-review
+  version: 1.0.0
+  description: >-
+    Employee display-name protection is under evaluation with a custom vault
+    masking routine; served as review-required while monitored.
+  tags: [hr, monitor]
+  businessContext:
+    domain: People Operations
+    owner: People Operations
+    steward: hr-data@example.com
+    purpose: Monitored rollout of a custom masking routine for display names.
+spec:
+  enforcementMode: monitor
+  priority: 300
+  selector:
+    databases: [acmecloud_demo]
+    schemas: [public]
+    columns:
+      - acmecloud_demo.public.employees.full_name
+  classification:
+    sensitivity: confidential
+    category: pii
+  accessControl:
+    masking:
+      type: custom.vault_mask
+extensions:
+  displayName: AcmeCloud HR name review masking

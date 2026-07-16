@@ -5,46 +5,43 @@
       "column": null,
       "database": "acmecloud_demo",
       "schema": "public",
-      "table": "support_tickets"
+      "table": "ml_feature_store"
     },
-    "can_proceed_now": false,
+    "can_proceed_now": true,
     "conditions": [],
     "context_facts": {
-      "category": "pii",
-      "masking": {
-        "exempt_roles": [],
-        "type": "redact"
-      },
-      "pii": true,
-      "sensitivity": "confidential",
+      "category": "operational",
+      "masking": null,
+      "pii": false,
+      "sensitivity": "internal",
       "subcategory": null
     },
-    "decision": "deny",
-    "decision_id": "accef000-0000-4000-8000-000000000030",
+    "decision": "allow",
+    "decision_id": "accef000-0000-4000-8000-000000000042",
     "instructions": [
       {
         "category": "advisory",
         "conflict_group_id": null,
         "conflict_status": "none",
         "conflicts_with": [],
-        "decision": "deny",
-        "decision_id": "accef000-0000-4000-8000-000000000030",
-        "decision_reason": "acme-customer-use v1 ai_governance:spec.aiGovernance:training \u2192 deny on acmecloud_demo.public.support_tickets",
+        "decision": "allow",
+        "decision_id": "accef000-0000-4000-8000-000000000042",
+        "decision_reason": "acme-ml-features v1 ai_governance:spec.aiGovernance:training \u2192 allow on acmecloud_demo.public.ml_feature_store",
         "enforcement_mode": "enforce",
         "instruction_family": "ai_governance",
         "instruction_key": "ai_governance:spec.aiGovernance:training",
         "parameters": {
           "allowInference": true,
-          "allowTraining": false,
-          "requiresAnonymization": true,
+          "allowTraining": true,
+          "requiresAnonymization": null,
           "restrictions": []
         },
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000006",
-          "policy_name": "AcmeCloud customer use guardrails",
-          "policy_version_id": "accef000-0000-4000-8000-000000000007",
+          "policy_id": "accef000-0000-4000-8000-000000000043",
+          "policy_name": "AcmeCloud ML feature AI lifecycle",
+          "policy_version_id": "accef000-0000-4000-8000-000000000044",
           "version_number": 1
         },
         "resolution_paths": [
@@ -59,28 +56,21 @@
           "column": null,
           "database": "acmecloud_demo",
           "schema": "public",
-          "table": "support_tickets"
+          "table": "ml_feature_store"
         },
         "weight": 1
       }
     ],
     "next_actions": [
-      "Do not proceed with this use.",
-      "Request an approved exception or an alternative asset from the data steward."
+      "Proceed \u2014 the current published instructions allow this use."
     ],
     "obligations": [],
-    "prohibitions": [
-      {
-        "detail": "acme-customer-use v1 ai_governance:spec.aiGovernance:training \u2192 deny on acmecloud_demo.public.support_tickets",
-        "required_by_policy": "AcmeCloud customer use guardrails",
-        "source": "ai_governance"
-      }
-    ],
+    "prohibitions": [],
     "publication": {
       "publication_id": "accef000-0000-4000-8000-000000000001",
       "published_at": "2026-07-16T00:00:00.000Z"
     },
-    "reason": "acme-customer-use v1 ai_governance:spec.aiGovernance:training \u2192 deny on acmecloud_demo.public.support_tickets",
+    "reason": "acme-ml-features v1 ai_governance:spec.aiGovernance:training \u2192 allow on acmecloud_demo.public.ml_feature_store",
     "scenario_key": "ai.training",
     "scenario_lane": "agent",
     "state": "answered"
@@ -89,11 +79,11 @@
     "asset": {
       "database": "acmecloud_demo",
       "schema": "public",
-      "table": "support_tickets"
+      "table": "ml_feature_store"
     },
     "scenario_key": "ai.training",
-    "use": "fine-tune a support assistant on ticket text"
+    "use": "train the churn model on derived features"
   },
-  "case_id": "train-support-tickets-deny",
+  "case_id": "ml-training-features-allow",
   "tool": "authorize_use"
 }

@@ -893,6 +893,176 @@ def langgraph_governed_sql_agent_runtime_notebook() -> dict:
     )
 
 
+def governance_states_notebook() -> dict:
+    return notebook(
+        [
+            markdown(
+                """
+                # 12 - Governance States And The Wider Estate
+
+                Metatate's typed answers are honest about uncertainty, and the estate is big
+                enough to prove it: a deliberately UNGOVERNED legacy table, a monitored custom
+                masking routine served as review-required, role-gated HR data, PCI-scope
+                payment instruments, AI-lifecycle rules on an ML feature store, and
+                taxonomy-targeted masking that follows the classification — not a column list.
+                """
+            ),
+            code(SETUP_CELL),
+            markdown(
+                """
+                ## 1. The honest states
+
+                An ungoverned asset is a typed `not_enough_published_state` — never an empty
+                pass. A custom masking routine the engine cannot map deterministically is a
+                typed `review_required` — a human must decide.
+                """
+            ),
+            code(
+                """
+                ungoverned = client.authorize_use(
+                    asset("legacy_customer_backup"),
+                    use="report on the legacy customer backup",
+                    scenario_key="purpose.allowed_use",
+                )
+                print(f"legacy_customer_backup -> {ungoverned['state']} ({ungoverned.get('reason_code')})")
+                for action in ungoverned.get("next_actions") or []:
+                    print(f"  next: {action}")
+                """
+            ),
+            code(
+                """
+                review = client.authorize_use(
+                    asset("employees", "full_name"),
+                    use="display employee names in the people directory",
+                    scenario_key="masking.display",
+                )
+                print(f"employees.full_name masking -> {review['state']} ({review.get('reason_code')})")
+                """
+            ),
+            markdown(
+                """
+                ## 2. Role-gated access and public-sharing prohibitions
+
+                `access.read` on employee records cites BOTH role rules — the deny wins, and
+                the allow for people-ops roles is right there in the citations.
+                """
+            ),
+            code(
+                """
+                hr_read = client.authorize_use(
+                    asset("employees"),
+                    use="browse employee records",
+                    scenario_key="access.read",
+                )
+                print_answer(hr_read)
+                for instruction in hr_read["instructions"]:
+                    print(f"  cited: {instruction['instruction_key']} -> {instruction['decision']}")
+                """
+            ),
+            code(
+                """
+                sharing = client.authorize_use(
+                    asset("employees"),
+                    use="publish the org chart externally",
+                    scenario_key="sharing.public",
+                )
+                print(f"sharing.public -> {sharing['decision']}")
+                """
+            ),
+            markdown(
+                """
+                ## 3. The AI lifecycle, scenario by scenario
+
+                Training on RAW ticket text is denied — but training on DERIVED features is
+                allowed. Retrieval context and embedding storage are permitted; vendor
+                transfer and fully automated decisioning are not.
+                """
+            ),
+            code(
+                """
+                lifecycle = [
+                    ("raw tickets, ai.training", client.authorize_use(
+                        asset("support_tickets"),
+                        use="fine-tune a support assistant on ticket text",
+                        scenario_key="ai.training",
+                    )),
+                    ("features, ai.training", client.authorize_use(
+                        asset("ml_feature_store"),
+                        use="train the churn model on derived features",
+                        scenario_key="ai.training",
+                    )),
+                    ("features, ai.retrieval_context", client.authorize_use(
+                        asset("ml_feature_store"),
+                        use="feed churn features into agent retrieval context",
+                        scenario_key="ai.retrieval_context",
+                    )),
+                    ("features, ai.embedding_storage", client.authorize_use(
+                        asset("ml_feature_store"),
+                        use="index feature vectors in the embedding store",
+                        scenario_key="ai.embedding_storage",
+                    )),
+                    ("features, ai.vendor_transfer", client.authorize_use(
+                        asset("ml_feature_store"),
+                        use="share churn features with an external AI vendor",
+                        scenario_key="ai.vendor_transfer",
+                    )),
+                    ("features, ai.automated_decisioning", client.authorize_use(
+                        asset("ml_feature_store"),
+                        use="auto-cancel accounts from churn scores",
+                        scenario_key="ai.automated_decisioning",
+                    )),
+                ]
+                for name, answer in lifecycle:
+                    print(f"{name:40s} -> {answer_label(answer)}")
+                """
+            ),
+            markdown(
+                """
+                ## 4. Taxonomy-targeted masking: classify once, govern everywhere
+
+                One policy targets the taxonomy type `pii.contact.email` — no column lists.
+                The engine resolved it to every column the catalog classifies as an email,
+                including the HR table nobody edited the policy for.
+                """
+            ),
+            code(
+                """
+                work_email = client.validate_query_context(
+                    "SELECT work_email FROM employees",
+                    scenario_key="purpose.allowed_use",
+                    default_database="acmecloud_demo",
+                    default_schema="public",
+                )
+                print(f"SELECT work_email -> {work_email['verdict']}")
+                for finding in work_email["findings"]:
+                    for instruction in finding["instructions"]:
+                        paths = ",".join(p["source"] for p in instruction.get("resolution_paths") or [])
+                        print(f"  {instruction['decision']} via [{paths}] {instruction.get('decision_reason')}")
+                """
+            ),
+            markdown("## 5. PCI-scope payment data and intent-less reads"),
+            code(
+                """
+                card = client.validate_query_context(
+                    "SELECT card_last4 FROM payment_methods",
+                    scenario_key="purpose.allowed_use",
+                    default_database="acmecloud_demo",
+                    default_schema="public",
+                )
+                print(f"card_last4 (analytics intent) -> {card['verdict']} (tokenized column referenced)")
+
+                salary = client.validate_query_context(
+                    "SELECT salary FROM employees",
+                    default_database="acmecloud_demo",
+                    default_schema="public",
+                )
+                print(f"salary (NO stated intent)    -> {salary['verdict']} (role-gated read applies to any SQL)")
+                """
+            ),
+        ]
+    )
+
+
 NOTEBOOKS = {
     "00_setup_live_or_offline.ipynb": setup_notebook,
     "01_decision_layer_cookbook.ipynb": cookbook_notebook,
@@ -906,6 +1076,7 @@ NOTEBOOKS = {
     "09_human_approval_packet_for_conditional_export.ipynb": approval_workflow_notebook,
     "10_llamaindex_governed_retrieval_pattern.ipynb": llamaindex_retrieval_notebook,
     "11_langgraph_governed_sql_agent_runtime.ipynb": langgraph_governed_sql_agent_runtime_notebook,
+    "12_governance_states_and_the_wider_estate.ipynb": governance_states_notebook,
 }
 
 

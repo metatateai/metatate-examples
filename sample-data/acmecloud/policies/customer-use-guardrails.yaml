@@ -7,6 +7,7 @@ kind: DataPolicy
 metadata:
   name: acme-customer-use
   version: 1.0.0
+  sourceType: crm_sync
   description: >-
     Customer data supports analytics, reporting, and support workflows;
     marketing, advertising, personalization, and model training are
@@ -26,6 +27,7 @@ spec:
     databases: [acmecloud_demo]
     schemas: [public]
     tables: [customers, support_tickets, product_usage_events]
+    tags: [privacy_sensitive]
   classification:
     sensitivity: confidential
     category: pii

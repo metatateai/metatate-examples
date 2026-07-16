@@ -26,8 +26,9 @@ own**:
    and create a workspace (the free plan covers everything these examples do).
 2. On your new workspace's dashboard, follow the **"New here?" banner → Load
    the demo**, then click **Load the AcmeCloud demo** — it provisions the
-   exact governed domain this repo specifies (five classified tables, six
-   policies, one live publication).
+   exact governed domain this repo specifies (eight governed tables plus a
+   deliberately ungoverned legacy corner, fourteen policies, one live
+   publication).
 3. Open **MCP Tools → Tokens** and issue an access token (shown once).
 4. Point the notebooks at your workspace:
 
@@ -54,11 +55,18 @@ engine, so what these examples document is exactly what the engine serves.
 
 Governed tables:
 
-- `ACMECLOUD_DEMO.PUBLIC.CUSTOMERS`
-- `ACMECLOUD_DEMO.PUBLIC.SUBSCRIPTIONS`
-- `ACMECLOUD_DEMO.PUBLIC.PRODUCT_USAGE_EVENTS`
-- `ACMECLOUD_DEMO.PUBLIC.SUPPORT_TICKETS`
-- `ACMECLOUD_DEMO.PUBLIC.CUSTOMER_EXPORTS`
+- `acmecloud_demo.public.customers`
+- `acmecloud_demo.public.subscriptions`
+- `acmecloud_demo.public.product_usage_events`
+- `acmecloud_demo.public.support_tickets`
+- `acmecloud_demo.public.customer_exports`
+- `acmecloud_demo.public.payment_methods` (PCI scope)
+- `acmecloud_demo.public.employees` (HR)
+- `acmecloud_demo.public.ml_feature_store` (AI lifecycle)
+
+Plus `acmecloud_demo.public.legacy_customer_backup` — cataloged but
+**deliberately ungoverned**, so the typed `not_enough_published_state`
+answer and coverage-gap reviews have something real to point at.
 
 Demo policy behavior:
 
@@ -67,7 +75,10 @@ Demo policy behavior:
 - customer records and support tickets are blocked for model training
 - customer exports require destination-aware authorization
 - Salesforce exports are conditional; advertising-platform and external-LLM-vendor exports are denied
-- email, ticket free-text, and device identifiers carry column-level masking policies
+- email masking is TAXONOMY-targeted (`pii.contact.email`) — it follows the classification to every email column, including HR
+- payment instruments are PCI-scope and tokenized at critical priority
+- employee records are role-gated with row-level regional scoping, GDPR context, and a monitored custom mask served as review-required
+- the ML feature store carries AI-lifecycle rules: training/retrieval/embedding allowed, vendor transfer and automated decisioning denied
 
 ## Notebook Pack
 
@@ -85,6 +96,7 @@ Demo policy behavior:
 | `09_human_approval_packet_for_conditional_export.ipynb` | Human-in-the-loop exception workflow for safe, conditional, and denied requests. |
 | `10_llamaindex_governed_retrieval_pattern.ipynb` | A governed retrieval function that can be wrapped as a LlamaIndex tool. |
 | `11_langgraph_governed_sql_agent_runtime.ipynb` | LangGraph runtime SQL agent with approve, revise, and block routes. |
+| `12_governance_states_and_the_wider_estate.ipynb` | Honest states (ungoverned, review-required), role gating, the AI lifecycle, and taxonomy-targeted masking. |
 
 The notebooks run in two modes:
 
