@@ -1,0 +1,95 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "customers"
+    },
+    "can_proceed_now": true,
+    "conditions": [],
+    "context_facts": {
+      "category": "pii",
+      "masking": {
+        "exempt_roles": [
+          "DATA_STEWARD",
+          "PRIVACY_ADMIN"
+        ],
+        "type": "partial"
+      },
+      "pii": true,
+      "sensitivity": "restricted",
+      "subcategory": null
+    },
+    "decision": "allow",
+    "decision_id": "accef000-0000-4000-8000-000000000019",
+    "instructions": [
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "allow",
+        "decision_id": "accef000-0000-4000-8000-000000000019",
+        "decision_reason": "acme-customer-use v1 ai_governance:spec.aiGovernance:inference \u2192 allow on acmecloud_demo.public.customers",
+        "enforcement_mode": "enforce",
+        "instruction_family": "ai_governance",
+        "instruction_key": "ai_governance:spec.aiGovernance:inference",
+        "parameters": {
+          "allowInference": true,
+          "allowTraining": false,
+          "requiresAnonymization": true,
+          "restrictions": []
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000006",
+          "policy_name": "AcmeCloud customer use guardrails",
+          "policy_version_id": "accef000-0000-4000-8000-000000000007",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "ai.inference",
+        "scenario_lane": "agent",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "customers"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "Proceed \u2014 the current published instructions allow this use."
+    ],
+    "obligations": [],
+    "prohibitions": [],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "acme-customer-use v1 ai_governance:spec.aiGovernance:inference \u2192 allow on acmecloud_demo.public.customers",
+    "scenario_key": "ai.inference",
+    "scenario_lane": "agent",
+    "state": "answered"
+  },
+  "arguments": {
+    "asset": {
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "customers"
+    },
+    "scenario_key": "ai.inference",
+    "use": "summarize customer accounts with an LLM"
+  },
+  "case_id": "inference-customers-allow",
+  "tool": "authorize_use"
+}

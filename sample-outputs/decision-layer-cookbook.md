@@ -1,22 +1,75 @@
-# Decision Layer Cookbook Output
+# Expected Output — Decision Layer Cookbook
 
-The AcmeCloud offline fixture demonstrates the expected decision flow.
+Captured from the executed OFFLINE notebook (`notebooks/01_decision_layer_cookbook.ipynb`), which replays
+recorded Metatate Cloud answers — live mode against a workspace serving the
+AcmeCloud demo publication produces the same decisions.
 
-## Discover
 
-Metatate returns five governed AcmeCloud tables. `CUSTOMERS`, `SUPPORT_TICKETS`, and `CUSTOMER_EXPORTS` contain PII or privacy-sensitive context.
+```text
+state: answered  effective: mask_partial
+{
+  "domain": "Customer Data",
+  "owner": "Revenue Operations",
+  "purpose": "Customer master data used for approved reporting, analytics, support, and controlled operational exports.",
+  "steward": "privacy-review@example.com"
+}
+```
 
-## Inspect
+```text
+{
+  "classification": {
+    "category": "pii",
+    "sensitivity": "restricted",
+    "subcategory": null
+  },
+  "data_type": "text",
+  "masking": {
+    "exempt_roles": [
+      "DATA_STEWARD",
+      "PRIVACY_ADMIN"
+    ],
+    "type": "partial"
+  },
+  "meaning": "Primary contact email address for the customer.",
+  "pii": true,
+  "ref": {
+    "column": "email",
+    "database": "acmecloud_demo",
+    "schema": "public",
+    "table": "customers"
+  }
+}
+```
 
-`EMAIL` is classified as an email address with high sensitivity and partial masking. `CUSTOMER_NAME` is person-name PII and should be redacted or minimized for broad analytics.
+```text
+state:    answered
+decision: allow
+reason:   acme-customer-use v1 usage_guidance:spec.usage.permittedUses:permitted → allow on acmecloud_demo.public.customers
+can_proceed_now: True
+```
 
-## Authorize
+```text
+state:    answered
+decision: deny
+reason:   acme-customer-use v1 usage_guidance:spec.usage.prohibitedUses:prohibited → deny on acmecloud_demo.public.customers
+prohibition: acme-customer-use v1 usage_guidance:spec.usage.prohibitedUses:prohibited → deny on acmecloud_demo.public.customers
+can_proceed_now: False
+```
 
-Analytics on `CUSTOMERS` returns `CONDITIONAL`: the use is allowed only with minimization and masking.
+```text
+aggregate query -> pass
+detail query    -> warn (a masked column is referenced)
+  mask_partial: acme-email-masking v1 masking:spec.accessControl.masking → mask_partial on acmecloud_demo.public.customers.email
+  allow: acme-customer-use v1 usage_guidance:spec.usage.permittedUses:permitted → allow on acmecloud_demo.public.customers
+```
 
-Direct marketing on `CUSTOMERS` returns `DENY`.
-
-## Validate SQL
-
-A query selecting `EMAIL` for analytics returns a warning and asks the agent to revise the query unless direct contact is required.
-
+```text
+current: True
+Decision 'allow' on acmecloud_demo.public.customers was produced by policy 'AcmeCloud customer use guardrails' v1 (instruction 'usage_guidance:spec.usage.permittedUses:permitted', scenario 'purpose.allowed_use', current publication): acme-customer-use v1 usage_guidance:spec.usage.permittedUses:permitted → allow on acmecloud_demo.public.customers
+{
+  "policy_id": "accef000-0000-4000-8000-000000000006",
+  "policy_name": "AcmeCloud customer use guardrails",
+  "policy_version_id": "accef000-0000-4000-8000-000000000007",
+  "version_number": 1
+}
+```

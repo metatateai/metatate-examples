@@ -1,0 +1,32 @@
+{
+  "answer": {
+    "classification": {
+      "category": "pii",
+      "sensitivity": "confidential",
+      "subcategory": null
+    },
+    "data_type": "text",
+    "masking": {
+      "exempt_roles": [],
+      "type": "redact"
+    },
+    "meaning": "Free-text ticket body written by the customer.",
+    "pii": true,
+    "ref": {
+      "column": "ticket_text",
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "support_tickets"
+    }
+  },
+  "arguments": {
+    "ref": {
+      "column": "ticket_text",
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "support_tickets"
+    }
+  },
+  "case_id": "meaning_support_tickets_ticket_text",
+  "tool": "inspect_data_meaning"
+}

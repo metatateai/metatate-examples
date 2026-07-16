@@ -1,8 +1,11 @@
-# OpenAI Agents Tool Guard Pattern Output
+# Expected Output — OpenAI Agents SDK Tool Guard Pattern
 
-The tool guard evaluates proposed export tool calls:
+Captured from the executed OFFLINE notebook (`notebooks/08_openai_agents_tool_guard_pattern.ipynb`), which replays
+recorded Metatate Cloud answers — live mode against a workspace serving the
+AcmeCloud demo publication produces the same decisions.
 
-- Salesforce export returns `CONDITIONAL` and is deferred until controls are completed
-- advertising-platform export returns `DENY` and is blocked
 
-The pattern keeps the agent free to plan, but Metatate decides whether data-moving tools can execute.
+```text
+{'executed': True, 'decision': 'allow', 'evidence': 'accef000-0000-4000-8000-000000000020'}
+{'executed': False, 'decision': 'deny', 'reason': 'acme-customer-use v1 usage_guidance:spec.usage.prohibitedUses:prohibited → deny on acmecloud_demo.public.customers'}
+```

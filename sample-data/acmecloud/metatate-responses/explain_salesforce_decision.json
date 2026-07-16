@@ -1,0 +1,87 @@
+{
+  "answer": {
+    "current": true,
+    "explanation": "Decision 'conditional' on acmecloud_demo.public.customers was produced by policy 'AcmeCloud transfer guardrails' v1 (instruction 'transfer_governance:spec.transferGovernance', scenario 'residency.cross_border_transfer', current publication): acme-transfer v1 transfer_governance:spec.transferGovernance \u2192 conditional on acmecloud_demo.public.customers",
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "record": {
+      "category": "advisory",
+      "conflict_group_id": null,
+      "conflict_status": "none",
+      "conflicts_with": [],
+      "decision": "conditional",
+      "decision_id": "accef000-0000-4000-8000-000000000010",
+      "decision_reason": "acme-transfer v1 transfer_governance:spec.transferGovernance \u2192 conditional on acmecloud_demo.public.customers",
+      "enforcement_mode": "enforce",
+      "instruction_family": "transfer_governance",
+      "instruction_key": "transfer_governance:spec.transferGovernance",
+      "parameters": {
+        "defaultEffect": "conditional",
+        "rules": [
+          {
+            "consumerJurisdictions": [
+              "EU"
+            ],
+            "destinationJurisdictions": [
+              "US"
+            ],
+            "destinationSystems": [
+              "SALESFORCE"
+            ],
+            "effect": "conditional",
+            "operations": [
+              "export"
+            ],
+            "requiredRole": "PRIVACY_ADMIN",
+            "requiresAnonymization": true,
+            "requiresApproval": true
+          },
+          {
+            "destinationSystems": [
+              "ADS_PLATFORM"
+            ],
+            "effect": "deny"
+          },
+          {
+            "destinationSystems": [
+              "EXTERNAL_LLM_VENDOR"
+            ],
+            "effect": "deny"
+          }
+        ]
+      },
+      "primary_resolution_source": "selector",
+      "priority": 2,
+      "provenance": {
+        "policy_id": "accef000-0000-4000-8000-000000000011",
+        "policy_name": "AcmeCloud transfer guardrails",
+        "policy_version_id": "accef000-0000-4000-8000-000000000012",
+        "version_number": 1
+      },
+      "resolution_paths": [
+        {
+          "ref": null,
+          "source": "selector"
+        }
+      ],
+      "scenario_key": "residency.cross_border_transfer",
+      "scenario_lane": "platform",
+      "scope": {
+        "column": null,
+        "database": "acmecloud_demo",
+        "schema": "public",
+        "table": "customers"
+      },
+      "weight": 1
+    },
+    "state": "answered"
+  },
+  "arguments": {
+    "decision_id": "accef000-0000-4000-8000-000000000010",
+    "kind": "decision"
+  },
+  "case_id": "explain_salesforce_decision",
+  "tool": "explain_why"
+}

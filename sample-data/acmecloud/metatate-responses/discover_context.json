@@ -1,86 +1,146 @@
 {
-  "request_id": "offline-discover-acmecloud",
-  "snapshot_id": "offline-acmecloud-v1",
-  "as_of": "2026-05-26T00:00:00Z",
-  "status": "ok",
-  "data": {
-    "total": 5,
-    "tables": [
+  "answer": {
+    "assets": [
       {
-        "full_table_name": "ACMECLOUD_DEMO.PUBLIC.CUSTOMERS",
-        "database_name": "ACMECLOUD_DEMO",
-        "schema_name": "PUBLIC",
-        "table_name": "CUSTOMERS",
-        "sensitivity": "confidential",
-        "enforcement_mode": "enforce",
-        "policy_names": ["Customer Use Guardrails", "Transfer Guardrails"],
-        "tags": ["acmecloud", "customer", "privacy_sensitive"],
-        "compliance_frameworks": ["privacy_sensitive", "restricted_transfer", "ai_training_blocked"],
-        "has_pii": true,
-        "pii_column_count": 3,
-        "domain": "Customer Data",
-        "owner": "Revenue Operations"
+        "instruction_count": 5,
+        "ref": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "customer_exports"
+        },
+        "scenario_keys": [
+          "classification.sensitivity",
+          "metadata.domain",
+          "residency.cross_border_transfer"
+        ]
       },
       {
-        "full_table_name": "ACMECLOUD_DEMO.PUBLIC.SUBSCRIPTIONS",
-        "database_name": "ACMECLOUD_DEMO",
-        "schema_name": "PUBLIC",
-        "table_name": "SUBSCRIPTIONS",
-        "sensitivity": "internal",
-        "enforcement_mode": "advisory",
-        "policy_names": ["Revenue Retention Guardrails"],
-        "tags": ["acmecloud", "revenue"],
-        "compliance_frameworks": ["commercial_sensitive", "retention_required"],
-        "has_pii": false,
-        "pii_column_count": 0,
-        "domain": "Revenue Operations",
-        "owner": "Finance Analytics"
+        "instruction_count": 1,
+        "ref": {
+          "column": "email",
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "customer_exports"
+        },
+        "scenario_keys": [
+          "masking.display"
+        ]
       },
       {
-        "full_table_name": "ACMECLOUD_DEMO.PUBLIC.PRODUCT_USAGE_EVENTS",
-        "database_name": "ACMECLOUD_DEMO",
-        "schema_name": "PUBLIC",
-        "table_name": "PRODUCT_USAGE_EVENTS",
-        "sensitivity": "internal",
-        "enforcement_mode": "monitor",
-        "policy_names": ["Customer Use Guardrails"],
-        "tags": ["acmecloud", "behavioral_events"],
-        "compliance_frameworks": ["privacy_sensitive", "retention_required"],
-        "has_pii": true,
-        "pii_column_count": 1,
-        "domain": "Product Analytics",
-        "owner": "Product Analytics"
+        "instruction_count": 12,
+        "ref": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "customers"
+        },
+        "scenario_keys": [
+          "ai.inference",
+          "ai.training",
+          "classification.sensitivity",
+          "metadata.domain",
+          "protection.anonymization",
+          "purpose.allowed_use",
+          "purpose.prohibited_use",
+          "residency.cross_border_transfer"
+        ]
       },
       {
-        "full_table_name": "ACMECLOUD_DEMO.PUBLIC.SUPPORT_TICKETS",
-        "database_name": "ACMECLOUD_DEMO",
-        "schema_name": "PUBLIC",
-        "table_name": "SUPPORT_TICKETS",
-        "sensitivity": "confidential",
-        "enforcement_mode": "enforce",
-        "policy_names": ["Customer Use Guardrails"],
-        "tags": ["acmecloud", "support"],
-        "compliance_frameworks": ["privacy_sensitive", "ai_training_blocked"],
-        "has_pii": true,
-        "pii_column_count": 2,
-        "domain": "Customer Data",
-        "owner": "Support Operations"
+        "instruction_count": 1,
+        "ref": {
+          "column": "email",
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "customers"
+        },
+        "scenario_keys": [
+          "masking.display"
+        ]
       },
       {
-        "full_table_name": "ACMECLOUD_DEMO.PUBLIC.CUSTOMER_EXPORTS",
-        "database_name": "ACMECLOUD_DEMO",
-        "schema_name": "PUBLIC",
-        "table_name": "CUSTOMER_EXPORTS",
-        "sensitivity": "restricted",
-        "enforcement_mode": "enforce",
-        "policy_names": ["Transfer Guardrails"],
-        "tags": ["acmecloud", "exports", "privacy_sensitive"],
-        "compliance_frameworks": ["restricted_transfer", "privacy_sensitive"],
-        "has_pii": true,
-        "pii_column_count": 2,
-        "domain": "Customer Data",
-        "owner": "Data Platform"
+        "instruction_count": 9,
+        "ref": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "product_usage_events"
+        },
+        "scenario_keys": [
+          "ai.inference",
+          "ai.training",
+          "classification.sensitivity",
+          "metadata.domain",
+          "protection.anonymization",
+          "purpose.allowed_use",
+          "purpose.prohibited_use"
+        ]
+      },
+      {
+        "instruction_count": 1,
+        "ref": {
+          "column": "device_id",
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "product_usage_events"
+        },
+        "scenario_keys": [
+          "masking.display"
+        ]
+      },
+      {
+        "instruction_count": 4,
+        "ref": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "subscriptions"
+        },
+        "scenario_keys": [
+          "classification.sensitivity",
+          "metadata.domain",
+          "purpose.allowed_use",
+          "retention.lifecycle"
+        ]
+      },
+      {
+        "instruction_count": 9,
+        "ref": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "support_tickets"
+        },
+        "scenario_keys": [
+          "ai.inference",
+          "ai.training",
+          "classification.sensitivity",
+          "metadata.domain",
+          "protection.anonymization",
+          "purpose.allowed_use",
+          "purpose.prohibited_use"
+        ]
+      },
+      {
+        "instruction_count": 1,
+        "ref": {
+          "column": "ticket_text",
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "support_tickets"
+        },
+        "scenario_keys": [
+          "masking.display"
+        ]
       }
-    ]
-  }
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "state": "answered"
+  },
+  "arguments": {},
+  "case_id": "discover_context",
+  "tool": "discover_context"
 }

@@ -41,7 +41,7 @@ def main() -> None:
     @function_tool(name_override="metatate_validate_sql", failure_error_function=None)
     def metatate_validate_sql(
         sql_text: str,
-        intended_use: str = "analytics",
+        scenario_key: str = "purpose.allowed_use",
         operation: str = "read",
         actor_role: str = "DATA_ANALYST",
     ) -> str:
@@ -50,7 +50,7 @@ def main() -> None:
         result = validate_sql_for_agent(
             client,
             sql_text=sql_text,
-            intended_use=intended_use,
+            scenario_key=scenario_key,
             operation=operation,
             actor_role=actor_role,
         )
@@ -70,15 +70,15 @@ def main() -> None:
             {
                 "safe": {
                     "sql_text": SAFE_ANALYTICS_SQL,
-                    "intended_use": "analytics",
+                    "scenario_key": "purpose.allowed_use",
                 },
                 "unsafe": {
                     "sql_text": UNSAFE_ANALYTICS_SQL,
-                    "intended_use": "analytics",
+                    "scenario_key": "purpose.allowed_use",
                 },
                 "blocked": {
                     "sql_text": MARKETING_SQL,
-                    "intended_use": "marketing",
+                    "scenario_key": "purpose.prohibited_use",
                 },
             },
         )
@@ -145,7 +145,7 @@ def _assert_schema(tool: Any) -> None:
     schema = tool.params_json_schema
     properties = schema.get("properties", {})
     assert "sql_text" in properties, schema
-    assert "intended_use" in properties, schema
+    assert "scenario_key" in properties, schema
 
 
 if __name__ == "__main__":

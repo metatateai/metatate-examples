@@ -1,10 +1,15 @@
-# Agent Red-Team Evaluation Output
+# Expected Output — Agent Red-Team Evaluation Harness
 
-The red-team harness evaluates four requests:
+Captured from the executed OFFLINE notebook (`notebooks/05_agent_red_team_evaluation_harness.ipynb`), which replays
+recorded Metatate Cloud answers — live mode against a workspace serving the
+AcmeCloud demo publication produces the same decisions.
 
-- direct marketing with customer emails is denied
-- model training on support ticket text is denied
-- advertising-platform export of customer PII is denied
-- aggregate ARR analytics without identifiers is allowed
 
-All cases are machine-checkable, so future policy changes can add regression expectations instead of relying on manual demos.
+```text
+PASS marketing exfil: expected deny, got deny
+PASS ticket fine-tune: expected deny, got deny
+PASS LLM vendor export: expected deny, got deny
+PASS safe control (analytics): expected allow, got allow
+
+All red-team expectations hold.
+```

@@ -5,12 +5,13 @@ endpoint with plain bearer-token auth. This repo's live mode runs every
 notebook, gate, and acceptance script against it — same `get_client()` seam,
 no notebook changes.
 
-The SaaS server speaks the v2 typed-answer contract (snake_case keys,
-structured `asset {database, schema, table, column?}` references, typed
+Metatate Cloud speaks the typed-answer contract (snake_case keys, structured
+`asset {database, schema, table, column?}` references, typed
 `answered / review_required / not_enough_published_state` states,
-destination-aware transfer authorization). `common/saas_client.py` translates
-the notebooks' v1-style calls onto that contract and maps the typed answers
-back to the canonical payload shape. Decisions are always server-derived.
+destination-aware transfer authorization). `common/saas_client.py` is NATIVE:
+it passes those arguments through verbatim and returns each tool's typed
+answer untouched — and the offline recordings replay the same shapes, so
+offline output is byte-shaped like the live endpoint's.
 
 ## Environment
 
@@ -70,30 +71,27 @@ CI: `.github/workflows/live-saas-mcp-validation.yml`
 
 ## Semantics worth knowing
 
-- **Scenario routing.** The client sends an explicit canonical scenario key
-  derived from `operation`/`intended_use` (marketing → `purpose.prohibited_use`,
-  train → `ai.training`, export/destination → `residency.cross_border_transfer`,
-  analytics/reporting/support → `purpose.allowed_use`). Unmapped intents let
-  the server's deterministic mapper decide; a use it cannot map is the typed
-  `scenario_unresolved` answer (`UNKNOWN`), never a guess.
+- **Scenario routing.** The notebooks pass canonical scenario keys explicitly
+  (`purpose.allowed_use`, `ai.training`, `residency.cross_border_transfer`, …).
+  Omit `scenario_key` and the SERVER's deterministic mapper resolves your
+  free-text `use`; a use it cannot map is the typed `scenario_unresolved`
+  answer — never a guess.
 - **Destination-aware exports.** `destination {system, jurisdiction}`,
   `consumer_jurisdiction`, and `operation` flow to the server, which evaluates
   the authored transfer rules per destination (SALESFORCE → CONDITIONAL with
-  approval + anonymization, ADS_PLATFORM / EXTERNAL_LLM_VENDOR → DENY on the
-  AcmeCloud policy). On an older server without those inputs the client
-  retries once without them and returns the collapsed transfer verdict.
+  approval + anonymization, ADS_PLATFORM / EXTERNAL_LLM_VENDOR → deny on the
+  AcmeCloud policy).
 - **`explain_why` chains natively.** `data.decision_id` on authorize answers
   is the real serving-row uuid; `explain_why(decision_id=...)` resolves it
   server-side. Validation records have no server-side explain surface.
-- **Query validation is server-verdict.** The SaaS validate is intent- and
-  column-aware; the client passes the intent and reads `pass`/`warn`/`fail`
-  as ALLOW/CONDITIONAL/DENY. `validation_id` is client-minted (the server
-  keeps no validation records).
-- **Discovery enrichment.** `discover_context` / `get_decision_context`
-  compose their table summaries from a small fan-out (`inspect_data_meaning`,
-  `get_decision_context` per table, cached per client instance) — well under
-  the default 120 calls/min token budget. Lineage is empty with a note (not
-  part of the SaaS governed context yet).
+- **Query validation is server-verdict.** Validation is intent- and
+  column-aware; the typed answer carries `verdict: pass | warn | fail` plus
+  per-ref findings citing the participating instructions. The server keeps no
+  validation records (only authorize `decision_id`s are explainable).
+- **Offline parity.** `scripts/record_offline_fixtures.py` replays the
+  canonical case set (`common/fixture_cases.py`) against a live workspace and
+  commits the typed answers — uuid-normalized but internally consistent, so
+  `decision_id` chaining into `explain_why` works offline too.
 
 ## Errors
 

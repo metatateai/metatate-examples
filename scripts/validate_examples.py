@@ -20,6 +20,8 @@ def main() -> None:
         ".github/workflows/offline-ci.yml",
         ".github/workflows/live-saas-mcp-validation.yml",
         "common/saas_client.py",
+        "common/fixture_cases.py",
+        "scripts/record_offline_fixtures.py",
         "docs/live-mode-saas.md",
         "README.md",
         "docs/demo-data-model.md",
@@ -70,11 +72,22 @@ def main() -> None:
 
 
 def validate_json_files() -> None:
-    for path in (ROOT / "sample-data" / "acmecloud" / "metatate-responses").glob("*.json"):
+    # Recorded typed answers: every file is {case_id, tool, arguments, answer}
+    # and every case in common/fixture_cases.py has a recording.
+    sys.path.insert(0, str(ROOT))
+    from common.fixture_cases import CASES
+
+    fixture_dir = ROOT / "sample-data" / "acmecloud" / "metatate-responses"
+    recorded = set()
+    for path in fixture_dir.glob("*.json"):
         with path.open("r", encoding="utf-8") as handle:
             payload = json.load(handle)
-        assert "status" in payload, f"{path} missing status"
-        assert "data" in payload, f"{path} missing data"
+        for key in ("case_id", "tool", "arguments", "answer"):
+            assert key in payload, f"{path} missing {key}"
+        assert payload["case_id"] == path.stem, f"{path} case_id mismatch"
+        recorded.add(path.stem)
+    missing = {str(case["id"]) for case in CASES} - recorded
+    assert not missing, f"cases without recordings: {sorted(missing)}"
 
 
 def validate_csv_files() -> None:
@@ -226,8 +239,10 @@ def validate_ci_workflows() -> None:
         assert marker in saas, f"live SaaS MCP workflow missing {marker}"
 
     client = (ROOT / "common" / "saas_client.py").read_text(encoding="utf-8")
-    for marker in ("SaasMcpMetatateClient", "structuredContent", "residency.cross_border_transfer"):
+    for marker in ("MetatateCloudClient", "residency.cross_border_transfer"):
         assert marker in client, f"saas client missing {marker}"
+    transport = (ROOT / "common" / "metatate_client.py").read_text(encoding="utf-8")
+    assert "structuredContent" in transport, "transport missing structuredContent handling"
     factory = (ROOT / "common" / "metatate_client.py").read_text(encoding="utf-8")
     assert "METATATE_MCP_BACKEND" in factory, "get_client missing the backend selector"
 
@@ -235,7 +250,7 @@ def validate_ci_workflows() -> None:
 def validate_python_imports() -> None:
     sys.path.insert(0, str(ROOT))
     common = importlib.import_module("common")
-    for name in ("OfflineMetatateClient", "ManagedMCPMetatateClient", "get_client"):
+    for name in ("OfflineMetatateClient", "ManagedMCPMetatateClient", "MetatateCloudClient", "get_client"):
         assert hasattr(common, name), f"common missing {name}"
     cicd_policy_gate = importlib.import_module("cicd_policy_gate")
     for name in ("evaluate_changes", "load_changes", "DEFAULT_CHANGESET_PATH"):

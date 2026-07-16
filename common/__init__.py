@@ -1,9 +1,15 @@
-from .metatate_client import ManagedMCPMetatateClient, OfflineMetatateClient, get_client
-from .saas_client import SaasMcpMetatateClient
+from .metatate_client import (
+    ManagedMCPMetatateClient,
+    MetatateToolError,
+    OfflineMetatateClient,
+    get_client,
+)
+from .saas_client import MetatateCloudClient
 
 __all__ = [
     "ManagedMCPMetatateClient",
+    "MetatateCloudClient",
+    "MetatateToolError",
     "OfflineMetatateClient",
-    "SaasMcpMetatateClient",
     "get_client",
 ]

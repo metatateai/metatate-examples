@@ -1,0 +1,139 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "customer_exports"
+    },
+    "can_proceed_now": false,
+    "conditions": [
+      {
+        "kind": "approval_required",
+        "required_by_policy": "AcmeCloud transfer guardrails",
+        "required_role": null,
+        "requirement": "No transfer rule matched to INTERNAL_WAREHOUSE (US) for consumer jurisdiction US; default effect conditional applies (policy AcmeCloud transfer guardrails).",
+        "satisfied_by": null
+      }
+    ],
+    "context_facts": {
+      "category": "pii",
+      "masking": {
+        "exempt_roles": [
+          "DATA_STEWARD",
+          "PRIVACY_ADMIN"
+        ],
+        "type": "partial"
+      },
+      "pii": true,
+      "sensitivity": "restricted",
+      "subcategory": null
+    },
+    "decision": "conditional",
+    "decision_id": "accef000-0000-4000-8000-000000000022",
+    "instructions": [
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "conditional",
+        "decision_id": "accef000-0000-4000-8000-000000000022",
+        "decision_reason": "No transfer rule matched to INTERNAL_WAREHOUSE (US) for consumer jurisdiction US; default effect conditional applies (policy AcmeCloud transfer guardrails).",
+        "enforcement_mode": "enforce",
+        "instruction_family": "transfer_governance",
+        "instruction_key": "transfer_governance:spec.transferGovernance",
+        "parameters": {
+          "defaultEffect": "conditional",
+          "rules": [
+            {
+              "consumerJurisdictions": [
+                "EU"
+              ],
+              "destinationJurisdictions": [
+                "US"
+              ],
+              "destinationSystems": [
+                "SALESFORCE"
+              ],
+              "effect": "conditional",
+              "operations": [
+                "export"
+              ],
+              "requiredRole": "PRIVACY_ADMIN",
+              "requiresAnonymization": true,
+              "requiresApproval": true
+            },
+            {
+              "destinationSystems": [
+                "ADS_PLATFORM"
+              ],
+              "effect": "deny"
+            },
+            {
+              "destinationSystems": [
+                "EXTERNAL_LLM_VENDOR"
+              ],
+              "effect": "deny"
+            }
+          ]
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000011",
+          "policy_name": "AcmeCloud transfer guardrails",
+          "policy_version_id": "accef000-0000-4000-8000-000000000012",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "residency.cross_border_transfer",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "customer_exports"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "You may proceed only after satisfying the stated condition(s) below (e.g. obtain the named approval, anonymize first, or act as a granted role).",
+      "If the condition cannot be met, treat this use as denied."
+    ],
+    "obligations": [],
+    "prohibitions": [],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "No transfer rule matched to INTERNAL_WAREHOUSE (US) for consumer jurisdiction US; default effect conditional applies (policy AcmeCloud transfer guardrails).",
+    "scenario_key": "residency.cross_border_transfer",
+    "scenario_lane": "platform",
+    "state": "answered"
+  },
+  "arguments": {
+    "asset": {
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "customer_exports"
+    },
+    "consumer_jurisdiction": "US",
+    "destination": {
+      "jurisdiction": "US",
+      "system": "INTERNAL_WAREHOUSE"
+    },
+    "operation": "export",
+    "scenario_key": "residency.cross_border_transfer",
+    "use": "stage the export batch in the internal warehouse"
+  },
+  "case_id": "export-unmatched-destination-default",
+  "tool": "authorize_use"
+}

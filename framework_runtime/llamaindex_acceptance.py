@@ -36,11 +36,11 @@ def main() -> None:
     def metatate_governed_retrieval(query: str) -> str:
         """Plan governed retrieval only after validating the implied data access."""
 
-        sql_text, intended_use = retrieval_prompt_to_sql(query)
+        sql_text, scenario_key = retrieval_prompt_to_sql(query)
         result = validate_sql_for_agent(
             client,
             sql_text=sql_text,
-            intended_use=intended_use,
+            scenario_key=scenario_key,
             operation="read",
             actor_role="DATA_ANALYST",
         )

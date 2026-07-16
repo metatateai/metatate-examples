@@ -1,0 +1,599 @@
+{
+  "answer": {
+    "asset": {
+      "column": null,
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "customers"
+    },
+    "business_context": {
+      "domain": "Customer Data",
+      "owner": "Revenue Operations",
+      "purpose": "Customer master data used for approved reporting, analytics, support, and controlled operational exports.",
+      "steward": "privacy-review@example.com"
+    },
+    "decisions": [
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "mask_partial",
+        "decision_id": "accef000-0000-4000-8000-000000000002",
+        "decision_reason": "acme-email-masking v1 masking:spec.accessControl.masking \u2192 mask_partial on acmecloud_demo.public.customers.email",
+        "enforcement_mode": "enforce",
+        "instruction_family": "masking",
+        "instruction_key": "masking:spec.accessControl.masking",
+        "parameters": {
+          "exemptRoles": [
+            "DATA_STEWARD",
+            "PRIVACY_ADMIN"
+          ],
+          "type": "partial"
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000003",
+          "policy_name": "AcmeCloud customer email masking",
+          "policy_version_id": "accef000-0000-4000-8000-000000000004",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "masking.display",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": "email",
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "customers"
+        },
+        "weight": 1
+      },
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "deny",
+        "decision_id": "accef000-0000-4000-8000-000000000005",
+        "decision_reason": "acme-customer-use v1 ai_governance:spec.aiGovernance:training \u2192 deny on acmecloud_demo.public.customers",
+        "enforcement_mode": "enforce",
+        "instruction_family": "ai_governance",
+        "instruction_key": "ai_governance:spec.aiGovernance:training",
+        "parameters": {
+          "allowInference": true,
+          "allowTraining": false,
+          "requiresAnonymization": true,
+          "restrictions": []
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000006",
+          "policy_name": "AcmeCloud customer use guardrails",
+          "policy_version_id": "accef000-0000-4000-8000-000000000007",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "ai.training",
+        "scenario_lane": "agent",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "customers"
+        },
+        "weight": 1
+      },
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "deny",
+        "decision_id": "accef000-0000-4000-8000-000000000008",
+        "decision_reason": "acme-customer-use v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on acmecloud_demo.public.customers",
+        "enforcement_mode": "enforce",
+        "instruction_family": "usage_guidance",
+        "instruction_key": "usage_guidance:spec.usage.prohibitedUses:prohibited",
+        "parameters": {
+          "kind": "prohibited",
+          "uses": [
+            "marketing",
+            "advertising",
+            "personalization",
+            "ml_training"
+          ]
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000006",
+          "policy_name": "AcmeCloud customer use guardrails",
+          "policy_version_id": "accef000-0000-4000-8000-000000000007",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "purpose.prohibited_use",
+        "scenario_lane": "human",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "customers"
+        },
+        "weight": 1
+      },
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "conditional",
+        "decision_id": "accef000-0000-4000-8000-000000000009",
+        "decision_reason": "acme-customer-use v1 ai_governance:spec.aiGovernance:anonymization \u2192 conditional on acmecloud_demo.public.customers",
+        "enforcement_mode": "enforce",
+        "instruction_family": "ai_governance",
+        "instruction_key": "ai_governance:spec.aiGovernance:anonymization",
+        "parameters": {
+          "allowInference": true,
+          "allowTraining": false,
+          "requiresAnonymization": true,
+          "restrictions": []
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000006",
+          "policy_name": "AcmeCloud customer use guardrails",
+          "policy_version_id": "accef000-0000-4000-8000-000000000007",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "protection.anonymization",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "customers"
+        },
+        "weight": 1
+      },
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "conditional",
+        "decision_id": "accef000-0000-4000-8000-000000000010",
+        "decision_reason": "acme-transfer v1 transfer_governance:spec.transferGovernance \u2192 conditional on acmecloud_demo.public.customers",
+        "enforcement_mode": "enforce",
+        "instruction_family": "transfer_governance",
+        "instruction_key": "transfer_governance:spec.transferGovernance",
+        "parameters": {
+          "defaultEffect": "conditional",
+          "rules": [
+            {
+              "consumerJurisdictions": [
+                "EU"
+              ],
+              "destinationJurisdictions": [
+                "US"
+              ],
+              "destinationSystems": [
+                "SALESFORCE"
+              ],
+              "effect": "conditional",
+              "operations": [
+                "export"
+              ],
+              "requiredRole": "PRIVACY_ADMIN",
+              "requiresAnonymization": true,
+              "requiresApproval": true
+            },
+            {
+              "destinationSystems": [
+                "ADS_PLATFORM"
+              ],
+              "effect": "deny"
+            },
+            {
+              "destinationSystems": [
+                "EXTERNAL_LLM_VENDOR"
+              ],
+              "effect": "deny"
+            }
+          ]
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000011",
+          "policy_name": "AcmeCloud transfer guardrails",
+          "policy_version_id": "accef000-0000-4000-8000-000000000012",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "residency.cross_border_transfer",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "customers"
+        },
+        "weight": 1
+      },
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000013",
+        "decision_reason": "acme-customer-use v1 business_context:metadata.businessContext \u2192 log_only on acmecloud_demo.public.customers",
+        "enforcement_mode": "enforce",
+        "instruction_family": "business_context",
+        "instruction_key": "business_context:metadata.businessContext",
+        "parameters": {
+          "domain": "Customer Data",
+          "owner": "Revenue Operations",
+          "purpose": "Customer master data used for approved reporting, analytics, support, and controlled operational exports.",
+          "steward": "privacy-review@example.com"
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000006",
+          "policy_name": "AcmeCloud customer use guardrails",
+          "policy_version_id": "accef000-0000-4000-8000-000000000007",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "metadata.domain",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "customers"
+        },
+        "weight": 1
+      },
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000014",
+        "decision_reason": "acme-customer-use v1 classification:spec.classification \u2192 log_only on acmecloud_demo.public.customers",
+        "enforcement_mode": "enforce",
+        "instruction_family": "classification",
+        "instruction_key": "classification:spec.classification",
+        "parameters": {
+          "category": "pii",
+          "sensitivity": "confidential",
+          "subcategory": null
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000006",
+          "policy_name": "AcmeCloud customer use guardrails",
+          "policy_version_id": "accef000-0000-4000-8000-000000000007",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "classification.sensitivity",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "customers"
+        },
+        "weight": 1
+      },
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000015",
+        "decision_reason": "acme-email-masking v1 business_context:metadata.businessContext \u2192 log_only on acmecloud_demo.public.customers",
+        "enforcement_mode": "enforce",
+        "instruction_family": "business_context",
+        "instruction_key": "business_context:metadata.businessContext",
+        "parameters": {
+          "domain": "Customer Data",
+          "owner": "Privacy Office",
+          "purpose": "Display protection for customer contact email addresses.",
+          "steward": "privacy-review@example.com"
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000003",
+          "policy_name": "AcmeCloud customer email masking",
+          "policy_version_id": "accef000-0000-4000-8000-000000000004",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "metadata.domain",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "customers"
+        },
+        "weight": 1
+      },
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000016",
+        "decision_reason": "acme-email-masking v1 classification:spec.classification \u2192 log_only on acmecloud_demo.public.customers",
+        "enforcement_mode": "enforce",
+        "instruction_family": "classification",
+        "instruction_key": "classification:spec.classification",
+        "parameters": {
+          "category": "pii.contact",
+          "sensitivity": "confidential",
+          "subcategory": null
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000003",
+          "policy_name": "AcmeCloud customer email masking",
+          "policy_version_id": "accef000-0000-4000-8000-000000000004",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "classification.sensitivity",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "customers"
+        },
+        "weight": 1
+      },
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000017",
+        "decision_reason": "acme-transfer v1 business_context:metadata.businessContext \u2192 log_only on acmecloud_demo.public.customers",
+        "enforcement_mode": "enforce",
+        "instruction_family": "business_context",
+        "instruction_key": "business_context:metadata.businessContext",
+        "parameters": {
+          "domain": "Customer Data",
+          "owner": "Data Platform",
+          "purpose": "Prepared customer exports under destination-aware transfer governance.",
+          "steward": "privacy-review@example.com"
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000011",
+          "policy_name": "AcmeCloud transfer guardrails",
+          "policy_version_id": "accef000-0000-4000-8000-000000000012",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "metadata.domain",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "customers"
+        },
+        "weight": 1
+      },
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000018",
+        "decision_reason": "acme-transfer v1 classification:spec.classification \u2192 log_only on acmecloud_demo.public.customers",
+        "enforcement_mode": "enforce",
+        "instruction_family": "classification",
+        "instruction_key": "classification:spec.classification",
+        "parameters": {
+          "category": "pii",
+          "sensitivity": "restricted",
+          "subcategory": null
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000011",
+          "policy_name": "AcmeCloud transfer guardrails",
+          "policy_version_id": "accef000-0000-4000-8000-000000000012",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "classification.sensitivity",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "customers"
+        },
+        "weight": 1
+      },
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "allow",
+        "decision_id": "accef000-0000-4000-8000-000000000019",
+        "decision_reason": "acme-customer-use v1 ai_governance:spec.aiGovernance:inference \u2192 allow on acmecloud_demo.public.customers",
+        "enforcement_mode": "enforce",
+        "instruction_family": "ai_governance",
+        "instruction_key": "ai_governance:spec.aiGovernance:inference",
+        "parameters": {
+          "allowInference": true,
+          "allowTraining": false,
+          "requiresAnonymization": true,
+          "restrictions": []
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000006",
+          "policy_name": "AcmeCloud customer use guardrails",
+          "policy_version_id": "accef000-0000-4000-8000-000000000007",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "ai.inference",
+        "scenario_lane": "agent",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "customers"
+        },
+        "weight": 1
+      },
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "allow",
+        "decision_id": "accef000-0000-4000-8000-000000000020",
+        "decision_reason": "acme-customer-use v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.customers",
+        "enforcement_mode": "enforce",
+        "instruction_family": "usage_guidance",
+        "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+        "parameters": {
+          "kind": "permitted",
+          "uses": [
+            "analytics",
+            "reporting",
+            "support"
+          ]
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000006",
+          "policy_name": "AcmeCloud customer use guardrails",
+          "policy_version_id": "accef000-0000-4000-8000-000000000007",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "purpose.allowed_use",
+        "scenario_lane": "human",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "customers"
+        },
+        "weight": 1
+      }
+    ],
+    "effective_decision": "mask_partial",
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "scenario_key": null,
+    "state": "answered"
+  },
+  "arguments": {
+    "asset": {
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "customers"
+    }
+  },
+  "case_id": "decision_context_customers",
+  "tool": "get_decision_context"
+}

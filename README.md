@@ -88,7 +88,8 @@ Demo policy behavior:
 
 The notebooks run in two modes:
 
-- **Offline:** default; uses committed JSON fixtures and needs no account.
+- **Offline:** default; replays RECORDED Metatate Cloud answers (typed-answer
+  shapes identical to the live endpoint) and needs no account.
 - **Live:** the same pack against your Metatate Cloud workspace's MCP endpoint
   with a workspace bearer token (see
   [docs/live-mode-saas.md](docs/live-mode-saas.md)).

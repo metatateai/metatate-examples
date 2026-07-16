@@ -1,8 +1,17 @@
-# Governed RAG And Embedding Ingestion Gate Output
+# Expected Output — Governed RAG And Embedding Ingestion Gate
 
-The ingestion gate evaluates two candidate sources before indexing:
+Captured from the executed OFFLINE notebook (`notebooks/07_governed_rag_embedding_ingestion_gate.ipynb`), which replays
+recorded Metatate Cloud answers — live mode against a workspace serving the
+AcmeCloud demo publication produces the same decisions.
 
-- support ticket text for model training is denied
-- aggregate customer ARR by region is allowed for analytics retrieval
 
-The safe retrieval scope contains only the aggregate customer context. Support ticket text is blocked before it can be embedded or copied into a retrieval index.
+```text
+SKIP support ticket bodies (fine-tune) -> deny
+  acme-customer-use v1 ai_governance:spec.aiGovernance:training → deny on acmecloud_demo.public.support_tickets
+INGEST customer account summaries (LLM inference) -> allow
+  acme-customer-use v1 ai_governance:spec.aiGovernance:inference → allow on acmecloud_demo.public.customers
+```
+
+```text
+retrieval query verdict: pass
+```
