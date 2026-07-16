@@ -1,0 +1,36 @@
+# AcmeCloud estate spec — customer email masking.
+# Column-scoped policy: the selector names the two governed email columns,
+# so the engine materializes column-level mask_partial rows on exactly those
+# columns (and table-level classification context on their parent tables).
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: acme-email-masking
+  version: 1.0.0
+  description: >-
+    Customer email addresses are partially masked outside exempt data-steward
+    roles, wherever they appear in the governed estate.
+  tags: [pii, privacy_sensitive]
+  businessContext:
+    domain: Customer Data
+    owner: Privacy Office
+    steward: privacy-review@example.com
+    purpose: Display protection for customer contact email addresses.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [acmecloud_demo]
+    schemas: [public]
+    columns:
+      - acmecloud_demo.public.customers.email
+      - acmecloud_demo.public.customer_exports.email
+  classification:
+    sensitivity: confidential
+    category: pii.contact
+  accessControl:
+    masking:
+      type: partial
+      exemptRoles: [DATA_STEWARD, PRIVACY_ADMIN]
+extensions:
+  displayName: AcmeCloud customer email masking

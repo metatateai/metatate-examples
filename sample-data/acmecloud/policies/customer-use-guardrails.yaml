@@ -1,72 +1,44 @@
+# AcmeCloud estate spec — customer data use guardrails.
+# Real Metatate Cloud policy DSL: this exact document is what the demo
+# workspace authors, approves, and publishes; the served instruction rows
+# are derived from it by the real governance engine.
 apiVersion: metatate.io/v1
 kind: DataPolicy
 metadata:
   name: acme-customer-use
   version: 1.0.0
-  description: Customer data may support analytics and reporting, but direct marketing and model training are blocked in the base policy.
-  labels:
-    demo: acmecloud
-    domain: customer-data
-  tags:
-    - privacy_sensitive
-    - ai_training_blocked
+  description: >-
+    Customer data supports analytics, reporting, and support workflows;
+    marketing, advertising, personalization, and model training are
+    prohibited. AI training is blocked and inference requires anonymization.
+  tags: [pii, privacy_sensitive, ai_training_blocked]
+  businessContext:
+    domain: Customer Data
+    owner: Revenue Operations
+    steward: privacy-review@example.com
+    purpose: >-
+      Customer master data used for approved reporting, analytics, support,
+      and controlled operational exports.
 spec:
   enforcementMode: enforce
-  priority: 150
+  priority: 550
   selector:
-    tables:
-      - ACMECLOUD_DEMO.PUBLIC.CUSTOMERS
-      - ACMECLOUD_DEMO.PUBLIC.SUPPORT_TICKETS
+    databases: [acmecloud_demo]
+    schemas: [public]
+    tables: [customers, support_tickets, product_usage_events]
   classification:
     sensitivity: confidential
     category: pii
-  accessControl:
-    masking:
-      type: partial
-      config:
-        showFirst: 1
-        showLast: 0
-        maskChar: "*"
-        preserveFormat: true
-      exemptRoles:
-        - DATA_STEWARD
-        - PRIVACY_ADMIN
-  meaningLayer:
-    permittedUses:
-      - analytics
-      - reporting
-      - support
-    prohibitedUses:
-      - marketing
-      - advertising
-      - personalization
-      - ml_training
-    businessContext:
-      owner: Revenue Operations
-      steward: privacy-review@example.com
-      domain: Customer Data
-      purpose: Customer master and support data used for approved reporting, analytics, and support workflows.
-      definitions:
-        customer: An organization or contact with an active or historical commercial relationship with AcmeCloud.
-        privacy_sensitive: Customer-defined control tag for data requiring extra handling.
-    aiGovernance:
-      allowTraining: false
-      allowInference: true
-      requiresAnonymization: true
-      restrictions:
-        - Do not use customer records or support text to train internal or external models.
-        - Use only minimized or masked fields for analytics.
-    retention:
-      period: 7 years
-      trigger: account closure
-      action: archive
-    lineage:
-      sources:
-        - CRM.CONTACTS
-        - SUPPORT.CASES
-      transformations:
-        - identity_resolution
-        - consent_enrichment
-      dependentSystems:
-        - SUBSCRIPTIONS
-        - CUSTOMER_EXPORTS
+  usage:
+    permittedUses: [analytics, reporting, support]
+    prohibitedUses: [marketing, advertising, personalization, ml_training]
+  aiGovernance:
+    allowTraining: false
+    allowInference: true
+    requiresAnonymization: true
+extensions:
+  displayName: AcmeCloud customer use guardrails
+  scenarioMap:
+    "usage_guidance:spec.usage.prohibitedUses:prohibited":
+      scenarioKey: purpose.prohibited_use
+      source: user_confirmed

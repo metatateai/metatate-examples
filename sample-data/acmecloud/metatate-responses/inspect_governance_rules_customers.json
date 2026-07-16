@@ -8,14 +8,21 @@
     "usage_rules": [
       {
         "rule_type": "permitted_use",
-        "uses": ["analytics", "reporting"],
+        "uses": [
+          "analytics",
+          "reporting"
+        ],
         "effect": "allow",
         "policy_name": "Customer Use Guardrails",
         "enforcement_mode": "enforce"
       },
       {
         "rule_type": "prohibited_use",
-        "uses": ["marketing", "advertising", "personalization"],
+        "uses": [
+          "marketing",
+          "advertising",
+          "personalization"
+        ],
         "effect": "deny",
         "policy_name": "Customer Use Guardrails",
         "enforcement_mode": "enforce"
@@ -34,7 +41,9 @@
         "rule_type": "column_masking",
         "rule_id": "acme-mask-email",
         "rule_config": {
-          "columns": ["EMAIL"],
+          "columns": [
+            "EMAIL"
+          ],
           "type": "partial_mask"
         },
         "enforcement_mode": "enforce",
@@ -54,10 +63,18 @@
       {
         "rule_id": "acme-transfer-salesforce-conditional",
         "effect": "conditional",
-        "operations": ["EXPORT"],
-        "destination_systems": ["SALESFORCE"],
-        "destination_jurisdictions": ["US"],
-        "consumer_jurisdictions": ["EU"],
+        "operations": [
+          "EXPORT"
+        ],
+        "destination_systems": [
+          "SALESFORCE"
+        ],
+        "destination_jurisdictions": [
+          "US"
+        ],
+        "consumer_jurisdictions": [
+          "EU"
+        ],
         "requires_approval": true,
         "requires_anonymization": true,
         "policy_name": "Transfer Guardrails"
@@ -65,10 +82,37 @@
       {
         "rule_id": "acme-transfer-ad-platform-deny",
         "effect": "deny",
-        "operations": ["EXPORT"],
-        "destination_systems": ["ADS_PLATFORM"],
-        "destination_jurisdictions": ["US"],
-        "consumer_jurisdictions": ["US"],
+        "operations": [
+          "EXPORT"
+        ],
+        "destination_systems": [
+          "ADS_PLATFORM"
+        ],
+        "destination_jurisdictions": [
+          "US"
+        ],
+        "consumer_jurisdictions": [
+          "US"
+        ],
+        "requires_approval": false,
+        "requires_anonymization": false,
+        "policy_name": "Transfer Guardrails"
+      },
+      {
+        "rule_id": "acme-transfer-ad-platform-deny",
+        "effect": "deny",
+        "operations": [
+          "EXPORT"
+        ],
+        "destination_systems": [
+          "EXTERNAL_LLM_VENDOR"
+        ],
+        "destination_jurisdictions": [
+          "US"
+        ],
+        "consumer_jurisdictions": [
+          "US"
+        ],
         "requires_approval": false,
         "requires_anonymization": false,
         "policy_name": "Transfer Guardrails"

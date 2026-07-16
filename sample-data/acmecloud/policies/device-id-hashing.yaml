@@ -1,0 +1,30 @@
+# AcmeCloud estate spec — device identifier hashing.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: acme-device-hashing
+  version: 1.0.0
+  description: >-
+    Device identifiers in product telemetry are hashed before analytical use.
+  tags: [telemetry, privacy_sensitive]
+  businessContext:
+    domain: Product Analytics
+    owner: Product Analytics
+    steward: product-data@example.com
+    purpose: Product telemetry for feature analytics and support diagnostics.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [acmecloud_demo]
+    schemas: [public]
+    columns:
+      - acmecloud_demo.public.product_usage_events.device_id
+  classification:
+    sensitivity: confidential
+    category: operational.telemetry
+  accessControl:
+    masking:
+      type: hash
+extensions:
+  displayName: AcmeCloud device identifier hashing

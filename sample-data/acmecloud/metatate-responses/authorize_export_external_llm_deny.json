@@ -1,0 +1,35 @@
+{
+  "request_id": "offline-authorize-export-llm",
+  "snapshot_id": "offline-acmecloud-v1",
+  "as_of": "2026-05-26T00:00:00Z",
+  "status": "ok",
+  "data": {
+    "decision_id": "offline-decision-transfer-003",
+    "table_name": "ACMECLOUD_DEMO.PUBLIC.CUSTOMERS",
+    "operation": "export",
+    "intended_use": "external_sharing",
+    "decision": "DENY",
+    "reason_codes": ["TRANSFER_DENIED"],
+    "rationale": "Customer PII cannot be exported to an external LLM vendor destination.",
+    "matched_instructions": [
+      {
+        "id": "acme-customers-transfer-conditions",
+        "title": "Require controls before customer export",
+        "description": "Customer exports require approval and anonymization when sent to approved external systems.",
+        "policy_name": "Transfer Guardrails"
+      }
+    ],
+    "conditions": [],
+    "prohibitions": ["Do not export customer PII to EXTERNAL_LLM_VENDOR."],
+    "obligations": [],
+    "agent_action": {
+      "type": "block",
+      "message": "Block the export; external LLM vendors are a denied destination for customer PII."
+    },
+    "destination": {
+      "system": "EXTERNAL_LLM_VENDOR",
+      "jurisdiction": "US"
+    },
+    "consumer_jurisdiction": "US"
+  }
+}
