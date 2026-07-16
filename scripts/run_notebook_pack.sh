@@ -17,6 +17,7 @@ NOTEBOOKS=(
   notebooks/08_openai_agents_tool_guard_pattern.ipynb
   notebooks/09_human_approval_packet_for_conditional_export.ipynb
   notebooks/10_llamaindex_governed_retrieval_pattern.ipynb
+  notebooks/12_governance_states_and_the_wider_estate.ipynb
 )
 
 if [[ "${METATATE_EXAMPLES_MODE}" == "live" ]]; then

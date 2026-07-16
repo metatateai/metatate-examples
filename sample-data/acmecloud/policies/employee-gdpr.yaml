@@ -1,0 +1,40 @@
+# AcmeCloud estate spec — GDPR compliance context for employee data.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: acme-employee-gdpr
+  version: 1.0.0
+  description: >-
+    Employee records carry GDPR obligations: retention until employment end
+    plus seven years, and no public sharing.
+  tags: [hr, gdpr]
+  sourceType: hris_sync
+  businessContext:
+    domain: People Operations
+    owner: People Operations
+    steward: privacy-review@example.com
+    purpose: Regulatory context for employee personal data.
+spec:
+  enforcementMode: advisory
+  priority: 90
+  selector:
+    databases: [acmecloud_demo]
+    schemas: [public]
+    tables: [employees]
+  classification:
+    sensitivity: confidential
+    category: pii
+  compliance:
+    regulations: [GDPR]
+  retention:
+    period: 7 years
+    trigger: employment end
+    action: delete
+  usage:
+    prohibitedUses: [public_sharing]
+extensions:
+  displayName: AcmeCloud employee GDPR context
+  scenarioMap:
+    "usage_guidance:spec.usage.prohibitedUses:prohibited":
+      scenarioKey: sharing.public
+      source: user_confirmed

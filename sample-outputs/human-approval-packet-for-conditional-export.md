@@ -21,7 +21,7 @@ req-002: resumed_with_controls (conditional) evidence=accef000-0000-4000-8000-00
   rationale: Transfer to SALESFORCE (US) for consumer jurisdiction EU requires approval and anonymization and role PRIVACY_ADMIN (policy AcmeCloud transfer guardrails).
   reviewer: privacy-review@example.com -> approve
   resume: resume_controlled_workflow
-req-003: blocked_by_policy (deny) evidence=accef000-0000-4000-8000-000000000028
+req-003: blocked_by_policy (deny) evidence=accef000-0000-4000-8000-000000000030
   rationale: acme-customer-use v1 ai_governance:spec.aiGovernance:training → deny on acmecloud_demo.public.support_tickets
 ```
 

@@ -1,0 +1,32 @@
+# AcmeCloud estate spec — row-level access on employee records.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: acme-employee-rows
+  version: 1.0.0
+  description: >-
+    People-operations users see only their own region's employee rows.
+  tags: [hr, row_access]
+  businessContext:
+    domain: People Operations
+    owner: People Operations
+    steward: hr-data@example.com
+    purpose: Regional row-level scoping for employee reads.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [acmecloud_demo]
+    schemas: [public]
+    tables: [employees]
+  classification:
+    sensitivity: confidential
+    category: pii
+  rowFilter:
+    description: Scope employee rows to the requester's region.
+    rules:
+      - roles: [PEOPLE_OPS]
+        expression: "region = current_setting('app.user_region')"
+        description: People-ops users are limited to their assigned region.
+extensions:
+  displayName: AcmeCloud employee region rows

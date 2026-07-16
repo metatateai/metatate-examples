@@ -28,7 +28,7 @@
         ]
       },
       {
-        "instruction_count": 12,
+        "instruction_count": 14,
         "ref": {
           "column": null,
           "database": "acmecloud_demo",
@@ -39,7 +39,9 @@
           "ai.inference",
           "ai.training",
           "classification.sensitivity",
+          "classification.taxonomy",
           "metadata.domain",
+          "metadata.lineage",
           "protection.anonymization",
           "purpose.allowed_use",
           "purpose.prohibited_use",
@@ -59,7 +61,131 @@
         ]
       },
       {
-        "instruction_count": 9,
+        "instruction_count": 21,
+        "ref": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "employees"
+        },
+        "scenario_keys": [
+          "access.read",
+          "access.row_filter",
+          "classification.sensitivity",
+          "compliance.regulatory",
+          "metadata.domain",
+          "metadata.lineage",
+          "purpose.allowed_use",
+          "retention.lifecycle",
+          "sharing.public"
+        ]
+      },
+      {
+        "instruction_count": 1,
+        "ref": {
+          "column": "full_name",
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "employees"
+        },
+        "scenario_keys": [
+          "masking.display"
+        ]
+      },
+      {
+        "instruction_count": 1,
+        "ref": {
+          "column": "national_id",
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "employees"
+        },
+        "scenario_keys": [
+          "masking.display"
+        ]
+      },
+      {
+        "instruction_count": 1,
+        "ref": {
+          "column": "salary",
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "employees"
+        },
+        "scenario_keys": [
+          "masking.display"
+        ]
+      },
+      {
+        "instruction_count": 1,
+        "ref": {
+          "column": "work_email",
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "employees"
+        },
+        "scenario_keys": [
+          "masking.display"
+        ]
+      },
+      {
+        "instruction_count": 10,
+        "ref": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "ml_feature_store"
+        },
+        "scenario_keys": [
+          "ai.automated_decisioning",
+          "ai.embedding_storage",
+          "ai.inference",
+          "ai.retrieval_context",
+          "ai.training",
+          "ai.vendor_transfer",
+          "classification.sensitivity",
+          "metadata.domain"
+        ]
+      },
+      {
+        "instruction_count": 2,
+        "ref": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "payment_methods"
+        },
+        "scenario_keys": [
+          "classification.sensitivity",
+          "metadata.domain"
+        ]
+      },
+      {
+        "instruction_count": 1,
+        "ref": {
+          "column": "card_last4",
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "payment_methods"
+        },
+        "scenario_keys": [
+          "masking.display"
+        ]
+      },
+      {
+        "instruction_count": 1,
+        "ref": {
+          "column": "card_token",
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "payment_methods"
+        },
+        "scenario_keys": [
+          "masking.display"
+        ]
+      },
+      {
+        "instruction_count": 11,
         "ref": {
           "column": null,
           "database": "acmecloud_demo",
@@ -70,7 +196,9 @@
           "ai.inference",
           "ai.training",
           "classification.sensitivity",
+          "classification.taxonomy",
           "metadata.domain",
+          "metadata.lineage",
           "protection.anonymization",
           "purpose.allowed_use",
           "purpose.prohibited_use"
@@ -104,7 +232,7 @@
         ]
       },
       {
-        "instruction_count": 9,
+        "instruction_count": 11,
         "ref": {
           "column": null,
           "database": "acmecloud_demo",
@@ -115,7 +243,9 @@
           "ai.inference",
           "ai.training",
           "classification.sensitivity",
+          "classification.taxonomy",
           "metadata.domain",
+          "metadata.lineage",
           "protection.anonymization",
           "purpose.allowed_use",
           "purpose.prohibited_use"

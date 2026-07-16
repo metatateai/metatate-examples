@@ -156,6 +156,103 @@ CASES: list[dict[str, Any]] = [
             "consumer_jurisdiction": "US",
         },
     },
+    # ---- estate v2: HR / PCI / ML / ungoverned --------------------------------
+    {
+        "id": "hr-read-role-gated-deny",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("employees"),
+            "scenario_key": "access.read",
+            "use": "browse employee records",
+        },
+    },
+    {
+        "id": "hr-name-custom-mask-review",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("employees", "full_name"),
+            "scenario_key": "masking.display",
+            "use": "display employee names in the people directory",
+        },
+    },
+    {
+        "id": "employee-public-sharing-deny",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("employees"),
+            "scenario_key": "sharing.public",
+            "use": "publish the org chart externally",
+        },
+    },
+    {
+        "id": "ml-training-features-allow",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("ml_feature_store"),
+            "scenario_key": "ai.training",
+            "use": "train the churn model on derived features",
+        },
+    },
+    {
+        "id": "ml-retrieval-context-allow",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("ml_feature_store"),
+            "scenario_key": "ai.retrieval_context",
+            "use": "feed churn features into agent retrieval context",
+        },
+    },
+    {
+        "id": "ml-embedding-storage-allow",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("ml_feature_store"),
+            "scenario_key": "ai.embedding_storage",
+            "use": "index feature vectors in the embedding store",
+        },
+    },
+    {
+        "id": "ml-vendor-transfer-deny",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("ml_feature_store"),
+            "scenario_key": "ai.vendor_transfer",
+            "use": "share churn features with an external AI vendor",
+        },
+    },
+    {
+        "id": "ml-automated-decisioning-deny",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("ml_feature_store"),
+            "scenario_key": "ai.automated_decisioning",
+            "use": "auto-cancel accounts from churn scores",
+        },
+    },
+    {
+        "id": "legacy-backup-ungoverned",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("legacy_customer_backup"),
+            "scenario_key": "purpose.allowed_use",
+            "use": "report on the legacy customer backup",
+        },
+    },
+    {
+        "id": "rules_employees",
+        "tool": "inspect_governance_rules",
+        "arguments": {"asset": asset("employees")},
+    },
+    {
+        "id": "meaning_payment_methods_card_token",
+        "tool": "inspect_data_meaning",
+        "arguments": {"ref": asset("payment_methods", "card_token")},
+    },
+    {
+        "id": "meaning_employees_work_email",
+        "tool": "inspect_data_meaning",
+        "arguments": {"ref": asset("employees", "work_email")},
+    },
     # ---- validate (ids mirror expected-decisions.yaml) ------------------------
     {
         "id": "safe-aggregate-pass",
@@ -193,6 +290,35 @@ CASES: list[dict[str, Any]] = [
         "arguments": {
             "sql": "SELECT ticket_text FROM support_tickets",
             "scenario_key": "ai.training",
+            "default_database": DATABASE,
+            "default_schema": SCHEMA,
+        },
+    },
+    {
+        "id": "card-last4-detail-warn",
+        "tool": "validate_query_context",
+        "arguments": {
+            "sql": "SELECT card_last4 FROM payment_methods",
+            "scenario_key": "purpose.allowed_use",
+            "default_database": DATABASE,
+            "default_schema": SCHEMA,
+        },
+    },
+    {
+        "id": "employee-no-intent-fail",
+        "tool": "validate_query_context",
+        "arguments": {
+            "sql": "SELECT salary FROM employees",
+            "default_database": DATABASE,
+            "default_schema": SCHEMA,
+        },
+    },
+    {
+        "id": "work-email-taxonomy-mask-warn",
+        "tool": "validate_query_context",
+        "arguments": {
+            "sql": "SELECT work_email FROM employees",
+            "scenario_key": "purpose.allowed_use",
             "default_database": DATABASE,
             "default_schema": SCHEMA,
         },

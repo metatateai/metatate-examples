@@ -19,6 +19,7 @@ endpoint instead (see `docs/live-mode-saas.md`).
 10. `09_human_approval_packet_for_conditional_export.ipynb`
 11. `10_llamaindex_governed_retrieval_pattern.ipynb`
 12. `11_langgraph_governed_sql_agent_runtime.ipynb`
+13. `12_governance_states_and_the_wider_estate.ipynb`
 
 Notebook `06_ci_gate_for_data_ai_changes.ipynb` uses the reusable `cicd_policy_gate` package. The same gate can be run from CI with `scripts/run_cicd_policy_gate.sh`.
 

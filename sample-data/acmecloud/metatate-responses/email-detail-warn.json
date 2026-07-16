@@ -25,18 +25,18 @@
               ],
               "type": "partial"
             },
-            "primary_resolution_source": "selector",
+            "primary_resolution_source": "taxonomy",
             "priority": 2,
             "provenance": {
               "policy_id": "accef000-0000-4000-8000-000000000003",
-              "policy_name": "AcmeCloud customer email masking",
+              "policy_name": "AcmeCloud email masking (taxonomy)",
               "policy_version_id": "accef000-0000-4000-8000-000000000004",
               "version_number": 1
             },
             "resolution_paths": [
               {
-                "ref": null,
-                "source": "selector"
+                "ref": "pii.contact.email",
+                "source": "taxonomy"
               }
             ],
             "scenario_key": "masking.display",

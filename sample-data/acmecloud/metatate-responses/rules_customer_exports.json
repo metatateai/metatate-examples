@@ -17,7 +17,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "mask_partial",
-        "decision_id": "accef000-0000-4000-8000-000000000021",
+        "decision_id": "accef000-0000-4000-8000-000000000023",
         "decision_reason": "acme-email-masking v1 masking:spec.accessControl.masking \u2192 mask_partial on acmecloud_demo.public.customer_exports.email",
         "enforcement_mode": "enforce",
         "instruction_family": "masking",
@@ -29,18 +29,18 @@
           ],
           "type": "partial"
         },
-        "primary_resolution_source": "selector",
+        "primary_resolution_source": "taxonomy",
         "priority": 2,
         "provenance": {
           "policy_id": "accef000-0000-4000-8000-000000000003",
-          "policy_name": "AcmeCloud customer email masking",
+          "policy_name": "AcmeCloud email masking (taxonomy)",
           "policy_version_id": "accef000-0000-4000-8000-000000000004",
           "version_number": 1
         },
         "resolution_paths": [
           {
-            "ref": null,
-            "source": "selector"
+            "ref": "pii.contact.email",
+            "source": "taxonomy"
           }
         ],
         "scenario_key": "masking.display",
@@ -59,7 +59,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "conditional",
-        "decision_id": "accef000-0000-4000-8000-000000000022",
+        "decision_id": "accef000-0000-4000-8000-000000000024",
         "decision_reason": "acme-transfer v1 transfer_governance:spec.transferGovernance \u2192 conditional on acmecloud_demo.public.customer_exports",
         "enforcement_mode": "enforce",
         "instruction_family": "transfer_governance",
@@ -114,87 +114,6 @@
           }
         ],
         "scenario_key": "residency.cross_border_transfer",
-        "scenario_lane": "platform",
-        "scope": {
-          "column": null,
-          "database": "acmecloud_demo",
-          "schema": "public",
-          "table": "customer_exports"
-        },
-        "weight": 1
-      },
-      {
-        "category": "advisory",
-        "conflict_group_id": null,
-        "conflict_status": "none",
-        "conflicts_with": [],
-        "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000023",
-        "decision_reason": "acme-email-masking v1 business_context:metadata.businessContext \u2192 log_only on acmecloud_demo.public.customer_exports",
-        "enforcement_mode": "enforce",
-        "instruction_family": "business_context",
-        "instruction_key": "business_context:metadata.businessContext",
-        "parameters": {
-          "domain": "Customer Data",
-          "owner": "Privacy Office",
-          "purpose": "Display protection for customer contact email addresses.",
-          "steward": "privacy-review@example.com"
-        },
-        "primary_resolution_source": "selector",
-        "priority": 2,
-        "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000003",
-          "policy_name": "AcmeCloud customer email masking",
-          "policy_version_id": "accef000-0000-4000-8000-000000000004",
-          "version_number": 1
-        },
-        "resolution_paths": [
-          {
-            "ref": null,
-            "source": "selector"
-          }
-        ],
-        "scenario_key": "metadata.domain",
-        "scenario_lane": "platform",
-        "scope": {
-          "column": null,
-          "database": "acmecloud_demo",
-          "schema": "public",
-          "table": "customer_exports"
-        },
-        "weight": 1
-      },
-      {
-        "category": "enforceable",
-        "conflict_group_id": null,
-        "conflict_status": "none",
-        "conflicts_with": [],
-        "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000024",
-        "decision_reason": "acme-email-masking v1 classification:spec.classification \u2192 log_only on acmecloud_demo.public.customer_exports",
-        "enforcement_mode": "enforce",
-        "instruction_family": "classification",
-        "instruction_key": "classification:spec.classification",
-        "parameters": {
-          "category": "pii.contact",
-          "sensitivity": "confidential",
-          "subcategory": null
-        },
-        "primary_resolution_source": "selector",
-        "priority": 2,
-        "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000003",
-          "policy_name": "AcmeCloud customer email masking",
-          "policy_version_id": "accef000-0000-4000-8000-000000000004",
-          "version_number": 1
-        },
-        "resolution_paths": [
-          {
-            "ref": null,
-            "source": "selector"
-          }
-        ],
-        "scenario_key": "classification.sensitivity",
         "scenario_lane": "platform",
         "scope": {
           "column": null,
@@ -273,6 +192,87 @@
           {
             "ref": null,
             "source": "selector"
+          }
+        ],
+        "scenario_key": "classification.sensitivity",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "customer_exports"
+        },
+        "weight": 1
+      },
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000027",
+        "decision_reason": "acme-email-masking v1 business_context:metadata.businessContext \u2192 log_only on acmecloud_demo.public.customer_exports",
+        "enforcement_mode": "enforce",
+        "instruction_family": "business_context",
+        "instruction_key": "business_context:metadata.businessContext",
+        "parameters": {
+          "domain": "Customer Data",
+          "owner": "Privacy Office",
+          "purpose": "Display protection for customer contact email addresses.",
+          "steward": "privacy-review@example.com"
+        },
+        "primary_resolution_source": "taxonomy",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000003",
+          "policy_name": "AcmeCloud email masking (taxonomy)",
+          "policy_version_id": "accef000-0000-4000-8000-000000000004",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": "pii.contact.email",
+            "source": "taxonomy"
+          }
+        ],
+        "scenario_key": "metadata.domain",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "customer_exports"
+        },
+        "weight": 1
+      },
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000028",
+        "decision_reason": "acme-email-masking v1 classification:spec.classification \u2192 log_only on acmecloud_demo.public.customer_exports",
+        "enforcement_mode": "enforce",
+        "instruction_family": "classification",
+        "instruction_key": "classification:spec.classification",
+        "parameters": {
+          "category": "pii.contact",
+          "sensitivity": "confidential",
+          "subcategory": null
+        },
+        "primary_resolution_source": "taxonomy",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000003",
+          "policy_name": "AcmeCloud email masking (taxonomy)",
+          "policy_version_id": "accef000-0000-4000-8000-000000000004",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": "pii.contact.email",
+            "source": "taxonomy"
           }
         ],
         "scenario_key": "classification.sensitivity",

@@ -1,0 +1,42 @@
+# AcmeCloud estate spec — AI lifecycle rules for the feature store.
+# Training on derived features is ALLOWED (contrast with raw ticket text);
+# retrieval into agent context is permitted; vendor transfer is prohibited.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: acme-ml-features
+  version: 1.0.0
+  description: >-
+    Derived model features may train internal models and feed retrieval
+    context; sending features to external AI vendors is prohibited.
+  tags: [ml]
+  businessContext:
+    domain: Machine Learning
+    owner: ML Platform
+    steward: ml-platform@example.com
+    purpose: AI-lifecycle governance for derived customer features.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [acmecloud_demo]
+    schemas: [public]
+    tables: [ml_feature_store]
+  classification:
+    sensitivity: internal
+    category: operational
+  usage:
+    permittedUses: [retrieval_context]
+    prohibitedUses: [vendor_transfer]
+  aiGovernance:
+    allowTraining: true
+    allowInference: true
+extensions:
+  displayName: AcmeCloud ML feature AI lifecycle
+  scenarioMap:
+    "usage_guidance:spec.usage.permittedUses:permitted":
+      scenarioKey: ai.retrieval_context
+      source: user_confirmed
+    "usage_guidance:spec.usage.prohibitedUses:prohibited":
+      scenarioKey: ai.vendor_transfer
+      source: user_confirmed

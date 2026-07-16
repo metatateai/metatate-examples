@@ -73,3 +73,18 @@ The examples use customer-defined control tags instead of named legal articles:
 
 That keeps the examples focused on the decision layer rather than legal interpretation.
 
+## Estate v2 additions
+
+- `payment_methods` — PCI-scope payment instruments; `card_token`/`card_last4`
+  classified `financial.credit_card` and tokenized at critical priority.
+- `employees` — HR records: role-gated (`HR_ADMIN`/`PEOPLE_OPS` allowed,
+  `PUBLIC` denied), regional row-level scoping, GDPR compliance + retention
+  context, full masking on `salary`/`national_id`, and a monitored custom
+  mask on `full_name` served as review-required.
+- `ml_feature_store` — derived features with AI-lifecycle rules
+  (training/retrieval/embedding permitted; vendor transfer and automated
+  decisioning prohibited) and the `custom.churn_risk_score` type.
+- `legacy_customer_backup` — cataloged but ungoverned on purpose: the
+  `not_enough_published_state` answer and coverage-gap stories point here.
+- Email masking is taxonomy-targeted (`pii.contact.email`): one policy, every
+  email column, no per-column selector maintenance.

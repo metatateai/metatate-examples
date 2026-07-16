@@ -1,0 +1,178 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "employees"
+    },
+    "can_proceed_now": false,
+    "conditions": [],
+    "context_facts": {
+      "category": "pii.contact",
+      "masking": {
+        "exempt_roles": [
+          "DATA_STEWARD",
+          "PRIVACY_ADMIN"
+        ],
+        "type": "partial"
+      },
+      "pii": true,
+      "sensitivity": "confidential",
+      "subcategory": null
+    },
+    "decision": "deny",
+    "decision_id": "accef000-0000-4000-8000-000000000031",
+    "instructions": [
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "deny",
+        "decision_id": "accef000-0000-4000-8000-000000000031",
+        "decision_reason": "acme-employee-access v1 role_grant:spec.accessControl.deniedRoles:public:deny \u2192 deny on acmecloud_demo.public.employees",
+        "enforcement_mode": "enforce",
+        "instruction_family": "role_grant",
+        "instruction_key": "role_grant:spec.accessControl.deniedRoles:public:deny",
+        "parameters": {
+          "action": "deny",
+          "role": "PUBLIC"
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000032",
+          "policy_name": "AcmeCloud employee data access",
+          "policy_version_id": "accef000-0000-4000-8000-000000000033",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "access.read",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "employees"
+        },
+        "weight": 1
+      },
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "allow",
+        "decision_id": "accef000-0000-4000-8000-000000000034",
+        "decision_reason": "acme-employee-access v1 role_grant:spec.accessControl.allowedRoles:hr_admin:allow \u2192 allow on acmecloud_demo.public.employees",
+        "enforcement_mode": "enforce",
+        "instruction_family": "role_grant",
+        "instruction_key": "role_grant:spec.accessControl.allowedRoles:hr_admin:allow",
+        "parameters": {
+          "action": "allow",
+          "role": "HR_ADMIN"
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000032",
+          "policy_name": "AcmeCloud employee data access",
+          "policy_version_id": "accef000-0000-4000-8000-000000000033",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "access.read",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "employees"
+        },
+        "weight": 1
+      },
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "allow",
+        "decision_id": "accef000-0000-4000-8000-000000000035",
+        "decision_reason": "acme-employee-access v1 role_grant:spec.accessControl.allowedRoles:people_ops:allow \u2192 allow on acmecloud_demo.public.employees",
+        "enforcement_mode": "enforce",
+        "instruction_family": "role_grant",
+        "instruction_key": "role_grant:spec.accessControl.allowedRoles:people_ops:allow",
+        "parameters": {
+          "action": "allow",
+          "role": "PEOPLE_OPS"
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000032",
+          "policy_name": "AcmeCloud employee data access",
+          "policy_version_id": "accef000-0000-4000-8000-000000000033",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "access.read",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "employees"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "Do not proceed with this use.",
+      "Request an approved exception or an alternative asset from the data steward."
+    ],
+    "obligations": [],
+    "prohibitions": [
+      {
+        "detail": "acme-employee-access v1 role_grant:spec.accessControl.deniedRoles:public:deny \u2192 deny on acmecloud_demo.public.employees",
+        "required_by_policy": "AcmeCloud employee data access",
+        "source": "deny_decision"
+      }
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "acme-employee-access v1 role_grant:spec.accessControl.deniedRoles:public:deny \u2192 deny on acmecloud_demo.public.employees",
+    "scenario_key": "access.read",
+    "scenario_lane": "platform",
+    "state": "answered"
+  },
+  "arguments": {
+    "asset": {
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "employees"
+    },
+    "scenario_key": "access.read",
+    "use": "browse employee records"
+  },
+  "case_id": "hr-read-role-gated-deny",
+  "tool": "authorize_use"
+}

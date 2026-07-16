@@ -1,0 +1,31 @@
+# AcmeCloud estate spec — full masking for high-risk employee columns.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: acme-salary-masking
+  version: 1.0.0
+  description: >-
+    Salary and national identifiers are fully masked outside payroll.
+  tags: [hr, pii]
+  businessContext:
+    domain: People Operations
+    owner: People Operations
+    steward: hr-data@example.com
+    purpose: Display protection for compensation and government identifiers.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [acmecloud_demo]
+    schemas: [public]
+    columns:
+      - acmecloud_demo.public.employees.salary
+      - acmecloud_demo.public.employees.national_id
+  classification:
+    sensitivity: restricted
+    category: pii
+  accessControl:
+    masking:
+      type: full
+extensions:
+  displayName: AcmeCloud salary and identifier masking

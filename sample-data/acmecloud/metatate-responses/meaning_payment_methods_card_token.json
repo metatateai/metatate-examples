@@ -1,0 +1,32 @@
+{
+  "answer": {
+    "classification": {
+      "category": "pci",
+      "sensitivity": "restricted",
+      "subcategory": null
+    },
+    "data_type": "text",
+    "masking": {
+      "exempt_roles": [],
+      "type": "tokenize"
+    },
+    "meaning": "Vault token referencing the stored card (never the PAN).",
+    "pii": false,
+    "ref": {
+      "column": "card_token",
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "payment_methods"
+    }
+  },
+  "arguments": {
+    "ref": {
+      "column": "card_token",
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "payment_methods"
+    }
+  },
+  "case_id": "meaning_payment_methods_card_token",
+  "tool": "inspect_data_meaning"
+}

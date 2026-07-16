@@ -36,6 +36,11 @@ customTypes:
     description: Customer-authored free text that may embed personal data.
     sensitivity: confidential
     isPii: true
+  - id: custom.churn_risk_score
+    label: Churn risk score
+    description: Model-derived churn propensity for a customer account.
+    sensitivity: internal
+    isPii: false
 
 tables:
   - name: customers
@@ -158,3 +163,86 @@ tables:
       - name: exported_at
         dataType: timestamptz
         nullable: false
+  - name: payment_methods
+    description: Stored payment instruments for customer billing (tokenized).
+    tags: [pci, billing]
+    columns:
+      - name: payment_method_id
+        dataType: uuid
+        nullable: false
+      - name: customer_id
+        dataType: uuid
+        nullable: false
+      - name: card_token
+        dataType: text
+        nullable: false
+        description: Vault token referencing the stored card (never the PAN).
+        tags: [pci]
+        classification: { dataTypeId: financial.credit_card, sensitivity: restricted, isPii: true, source: pattern }
+      - name: card_last4
+        dataType: text
+        nullable: false
+        classification: { dataTypeId: financial.credit_card, sensitivity: confidential, isPii: true, source: pattern }
+      - name: created_at
+        dataType: timestamptz
+        nullable: false
+  - name: employees
+    description: AcmeCloud employee records for people operations.
+    tags: [hr, pii]
+    columns:
+      - name: employee_id
+        dataType: uuid
+        nullable: false
+      - name: full_name
+        dataType: text
+        nullable: false
+        classification: { dataTypeId: pii.identity.full_name, sensitivity: confidential, isPii: true, source: pattern }
+      - name: work_email
+        dataType: text
+        nullable: false
+        classification: { dataTypeId: pii.contact.email, sensitivity: confidential, isPii: true, source: pattern }
+      - name: national_id
+        dataType: text
+        nullable: true
+        classification: { dataTypeId: pii.government_id.national_id, sensitivity: restricted, isPii: true, source: manual }
+      - name: salary
+        dataType: numeric
+        nullable: true
+        classification: { dataTypeId: financial.salary, sensitivity: restricted, isPii: true, source: pattern }
+      - name: region
+        dataType: text
+        nullable: true
+        classification: { dataTypeId: custom.sales_region, sensitivity: internal, isPii: false, source: manual }
+  - name: ml_feature_store
+    description: Model features derived from product usage and revenue signals.
+    tags: [ml, telemetry]
+    columns:
+      - name: feature_id
+        dataType: uuid
+        nullable: false
+      - name: customer_id
+        dataType: uuid
+        nullable: false
+      - name: churn_score
+        dataType: numeric
+        nullable: false
+        classification: { dataTypeId: custom.churn_risk_score, sensitivity: internal, isPii: false, source: manual }
+      - name: computed_at
+        dataType: timestamptz
+        nullable: false
+  - name: legacy_customer_backup
+    description: ""
+    tags: []
+    columns:
+      - name: customer_id
+        dataType: uuid
+        nullable: false
+      - name: customer_name
+        dataType: text
+        nullable: false
+      - name: email
+        dataType: text
+        nullable: false
+      - name: exported_at
+        dataType: timestamptz
+        nullable: true

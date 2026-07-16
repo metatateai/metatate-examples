@@ -58,6 +58,42 @@ authorize:
     destination: { system: INTERNAL_WAREHOUSE, jurisdiction: US }
     consumer_jurisdiction: US
     expect: { state: answered, decision: conditional }
+  - id: hr-read-role-gated-deny
+    asset: { table: employees }
+    scenario_key: access.read
+    expect: { state: answered, decision: deny }
+  - id: hr-name-custom-mask-review
+    asset: { table: employees, column: full_name }
+    scenario_key: masking.display
+    expect: { state: review_required }
+  - id: ml-training-features-allow
+    asset: { table: ml_feature_store }
+    scenario_key: ai.training
+    expect: { state: answered, decision: allow }
+  - id: ml-retrieval-context-allow
+    asset: { table: ml_feature_store }
+    scenario_key: ai.retrieval_context
+    expect: { state: answered, decision: allow }
+  - id: ml-embedding-storage-allow
+    asset: { table: ml_feature_store }
+    scenario_key: ai.embedding_storage
+    expect: { state: answered, decision: allow }
+  - id: ml-vendor-transfer-deny
+    asset: { table: ml_feature_store }
+    scenario_key: ai.vendor_transfer
+    expect: { state: answered, decision: deny }
+  - id: ml-automated-decisioning-deny
+    asset: { table: ml_feature_store }
+    scenario_key: ai.automated_decisioning
+    expect: { state: answered, decision: deny }
+  - id: legacy-backup-ungoverned
+    asset: { table: legacy_customer_backup }
+    scenario_key: purpose.allowed_use
+    expect: { state: not_enough_published_state }
+  - id: employee-public-sharing-deny
+    asset: { table: employees }
+    scenario_key: sharing.public
+    expect: { state: answered, decision: deny }
 
 validate:
   - id: safe-aggregate-pass
@@ -80,3 +116,17 @@ validate:
     scenario_key: ai.training
     columns: [ticket_text]
     expect: { verdict: fail }
+  - id: card-last4-detail-warn
+    sql: SELECT card_last4 FROM payment_methods
+    scenario_key: purpose.allowed_use
+    columns: [card_last4]
+    expect: { verdict: warn }
+  - id: employee-no-intent-fail
+    sql: SELECT salary FROM employees
+    columns: [salary]
+    expect: { verdict: fail }
+  - id: work-email-taxonomy-mask-warn
+    sql: SELECT work_email FROM employees
+    scenario_key: purpose.allowed_use
+    columns: [work_email]
+    expect: { verdict: warn }

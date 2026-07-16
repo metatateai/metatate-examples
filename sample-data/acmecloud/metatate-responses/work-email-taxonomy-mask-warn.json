@@ -5,7 +5,7 @@
       {
         "conflict": null,
         "decision": "mask_partial",
-        "decision_reason": "acme-email-masking v1 masking:spec.accessControl.masking \u2192 mask_partial on acmecloud_demo.public.customers.email",
+        "decision_reason": "acme-email-masking v1 masking:spec.accessControl.masking \u2192 mask_partial on acmecloud_demo.public.employees.work_email",
         "instructions": [
           {
             "category": "enforceable",
@@ -13,8 +13,8 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "mask_partial",
-            "decision_id": "accef000-0000-4000-8000-000000000002",
-            "decision_reason": "acme-email-masking v1 masking:spec.accessControl.masking \u2192 mask_partial on acmecloud_demo.public.customers.email",
+            "decision_id": "accef000-0000-4000-8000-000000000055",
+            "decision_reason": "acme-email-masking v1 masking:spec.accessControl.masking \u2192 mask_partial on acmecloud_demo.public.employees.work_email",
             "enforcement_mode": "enforce",
             "instruction_family": "masking",
             "instruction_key": "masking:spec.accessControl.masking",
@@ -42,10 +42,10 @@
             "scenario_key": "masking.display",
             "scenario_lane": "platform",
             "scope": {
-              "column": "email",
+              "column": "work_email",
               "database": "acmecloud_demo",
               "schema": "public",
-              "table": "customers"
+              "table": "employees"
             },
             "weight": 1
           },
@@ -54,27 +54,24 @@
             "conflict_group_id": null,
             "conflict_status": "none",
             "conflicts_with": [],
-            "decision": "deny",
-            "decision_id": "accef000-0000-4000-8000-000000000008",
-            "decision_reason": "acme-customer-use v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on acmecloud_demo.public.customers",
+            "decision": "allow",
+            "decision_id": "accef000-0000-4000-8000-000000000070",
+            "decision_reason": "acme-employee-access v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.employees",
             "enforcement_mode": "enforce",
             "instruction_family": "usage_guidance",
-            "instruction_key": "usage_guidance:spec.usage.prohibitedUses:prohibited",
+            "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
             "parameters": {
-              "kind": "prohibited",
+              "kind": "permitted",
               "uses": [
-                "marketing",
-                "advertising",
-                "personalization",
-                "ml_training"
+                "reporting"
               ]
             },
             "primary_resolution_source": "selector",
             "priority": 2,
             "provenance": {
-              "policy_id": "accef000-0000-4000-8000-000000000006",
-              "policy_name": "AcmeCloud customer use guardrails",
-              "policy_version_id": "accef000-0000-4000-8000-000000000007",
+              "policy_id": "accef000-0000-4000-8000-000000000032",
+              "policy_name": "AcmeCloud employee data access",
+              "policy_version_id": "accef000-0000-4000-8000-000000000033",
               "version_number": 1
             },
             "resolution_paths": [
@@ -83,13 +80,13 @@
                 "source": "selector"
               }
             ],
-            "scenario_key": "purpose.prohibited_use",
+            "scenario_key": "purpose.allowed_use",
             "scenario_lane": "human",
             "scope": {
               "column": null,
               "database": "acmecloud_demo",
               "schema": "public",
-              "table": "customers"
+              "table": "employees"
             },
             "weight": 1
           }
@@ -99,7 +96,7 @@
           "column": null,
           "database": "acmecloud_demo",
           "schema": "public",
-          "table": "customers"
+          "table": "employees"
         },
         "status": "evaluated"
       }
@@ -109,14 +106,14 @@
       "published_at": "2026-07-16T00:00:00.000Z"
     },
     "state": "answered",
-    "verdict": "fail"
+    "verdict": "warn"
   },
   "arguments": {
     "default_database": "acmecloud_demo",
     "default_schema": "public",
-    "scenario_key": "purpose.prohibited_use",
-    "sql": "SELECT customer_name, email FROM customers WHERE marketing_consent = 'opted_in'"
+    "scenario_key": "purpose.allowed_use",
+    "sql": "SELECT work_email FROM employees"
   },
-  "case_id": "marketing-detail-fail",
+  "case_id": "work-email-taxonomy-mask-warn",
   "tool": "validate_query_context"
 }

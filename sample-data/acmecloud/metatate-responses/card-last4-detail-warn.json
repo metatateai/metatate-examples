@@ -1,0 +1,74 @@
+{
+  "answer": {
+    "advisory": true,
+    "findings": [
+      {
+        "conflict": null,
+        "decision": "mask_full",
+        "decision_reason": "acme-payment-protection v1 masking:spec.accessControl.masking \u2192 mask_full on acmecloud_demo.public.payment_methods.card_last4",
+        "instructions": [
+          {
+            "category": "enforceable",
+            "conflict_group_id": null,
+            "conflict_status": "none",
+            "conflicts_with": [],
+            "decision": "mask_full",
+            "decision_id": "accef000-0000-4000-8000-000000000078",
+            "decision_reason": "acme-payment-protection v1 masking:spec.accessControl.masking \u2192 mask_full on acmecloud_demo.public.payment_methods.card_last4",
+            "enforcement_mode": "enforce",
+            "instruction_family": "masking",
+            "instruction_key": "masking:spec.accessControl.masking",
+            "parameters": {
+              "type": "tokenize"
+            },
+            "primary_resolution_source": "selector",
+            "priority": 3,
+            "provenance": {
+              "policy_id": "accef000-0000-4000-8000-000000000079",
+              "policy_name": "AcmeCloud payment data protection",
+              "policy_version_id": "accef000-0000-4000-8000-000000000080",
+              "version_number": 1
+            },
+            "resolution_paths": [
+              {
+                "ref": null,
+                "source": "selector"
+              }
+            ],
+            "scenario_key": "masking.display",
+            "scenario_lane": "platform",
+            "scope": {
+              "column": "card_last4",
+              "database": "acmecloud_demo",
+              "schema": "public",
+              "table": "payment_methods"
+            },
+            "weight": 1
+          }
+        ],
+        "reason_code": null,
+        "ref": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "payment_methods"
+        },
+        "status": "evaluated"
+      }
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "state": "answered",
+    "verdict": "warn"
+  },
+  "arguments": {
+    "default_database": "acmecloud_demo",
+    "default_schema": "public",
+    "scenario_key": "purpose.allowed_use",
+    "sql": "SELECT card_last4 FROM payment_methods"
+  },
+  "case_id": "card-last4-detail-warn",
+  "tool": "validate_query_context"
+}

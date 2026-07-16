@@ -1,0 +1,33 @@
+# AcmeCloud estate spec — PCI payment-instrument protection.
+# Critical-priority policy: card data is tokenized (mask_full) everywhere.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: acme-payment-protection
+  version: 1.0.0
+  description: >-
+    Stored payment-instrument data is tokenized; raw card references never
+    leave the billing vault.
+  tags: [pci, billing]
+  businessContext:
+    domain: Billing
+    owner: Billing Engineering
+    steward: security@example.com
+    purpose: PCI-scope protection for stored payment instruments.
+spec:
+  enforcementMode: enforce
+  priority: 850
+  selector:
+    databases: [acmecloud_demo]
+    schemas: [public]
+    columns:
+      - acmecloud_demo.public.payment_methods.card_token
+      - acmecloud_demo.public.payment_methods.card_last4
+  classification:
+    sensitivity: restricted
+    category: pci
+  accessControl:
+    masking:
+      type: tokenize
+extensions:
+  displayName: AcmeCloud payment data protection
