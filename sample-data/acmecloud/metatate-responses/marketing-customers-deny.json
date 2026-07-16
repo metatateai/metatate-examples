@@ -1,0 +1,105 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "customers"
+    },
+    "can_proceed_now": false,
+    "conditions": [],
+    "context_facts": {
+      "category": "pii",
+      "masking": {
+        "exempt_roles": [
+          "DATA_STEWARD",
+          "PRIVACY_ADMIN"
+        ],
+        "type": "partial"
+      },
+      "pii": true,
+      "sensitivity": "restricted",
+      "subcategory": null
+    },
+    "decision": "deny",
+    "decision_id": "accef000-0000-4000-8000-000000000008",
+    "instructions": [
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "deny",
+        "decision_id": "accef000-0000-4000-8000-000000000008",
+        "decision_reason": "acme-customer-use v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on acmecloud_demo.public.customers",
+        "enforcement_mode": "enforce",
+        "instruction_family": "usage_guidance",
+        "instruction_key": "usage_guidance:spec.usage.prohibitedUses:prohibited",
+        "parameters": {
+          "kind": "prohibited",
+          "uses": [
+            "marketing",
+            "advertising",
+            "personalization",
+            "ml_training"
+          ]
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000006",
+          "policy_name": "AcmeCloud customer use guardrails",
+          "policy_version_id": "accef000-0000-4000-8000-000000000007",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "purpose.prohibited_use",
+        "scenario_lane": "human",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "customers"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "Do not proceed with this use.",
+      "Request an approved exception or an alternative asset from the data steward."
+    ],
+    "obligations": [],
+    "prohibitions": [
+      {
+        "detail": "acme-customer-use v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on acmecloud_demo.public.customers",
+        "required_by_policy": "AcmeCloud customer use guardrails",
+        "source": "prohibited_use"
+      }
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "acme-customer-use v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on acmecloud_demo.public.customers",
+    "scenario_key": "purpose.prohibited_use",
+    "scenario_lane": "human",
+    "state": "answered"
+  },
+  "arguments": {
+    "asset": {
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "customers"
+    },
+    "scenario_key": "purpose.prohibited_use",
+    "use": "launch a marketing campaign on customer contact data"
+  },
+  "case_id": "marketing-customers-deny",
+  "tool": "authorize_use"
+}

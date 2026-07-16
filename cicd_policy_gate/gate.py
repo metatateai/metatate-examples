@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
-"""Reusable CI/CD policy gate for Metatate examples.
+"""Reusable CI/CD policy gate for Metatate examples — native typed answers.
 
-The gate intentionally depends only on the shared examples client. In offline
-mode it reads committed fixtures. In live mode every decision goes through the
-Metatate Cloud workspace MCP endpoint.
+The gate depends only on the shared examples client. In offline mode it
+replays recorded Metatate Cloud answers; in live mode every decision goes
+through your workspace's MCP endpoint. Change sets carry canonical
+`scenario_key`s (the same vocabulary the server speaks) — the gate is the
+worked example of mapping CI metadata onto the decision layer and turning
+typed answers (`state`, `decision`/`verdict`, `conditions`, `obligations`)
+into pass / needs_controls / fail gates with reviewable reason codes.
 """
 
 from __future__ import annotations
@@ -22,9 +26,23 @@ from common import get_client
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CHANGESET_PATH = ROOT / "cicd_policy_gate" / "changes" / "pull_request_042.json"
 
-ALLOW_DECISIONS = {"ALLOW", "APPROVE", "APPROVED"}
-CONDITIONAL_DECISIONS = {"CONDITIONAL", "REVIEW", "WARN", "WARNING"}
-DENY_DECISIONS = {"DENY", "BLOCK", "BLOCKED", "REJECT"}
+SQL_KINDS = {"sql_model", "migration_sql", "ad_hoc_sql"}
+USE_KINDS = {"export_job", "ai_training_job", "tool_use", "data_job"}
+
+PASS_DECISIONS = {"allow", "log_only", "retain"}
+CONTROL_DECISIONS = {"conditional", "mask_full", "mask_partial"}
+
+DENY_SCENARIO_CODES = {
+    "purpose.prohibited_use": "PROHIBITED_USE",
+    "ai.training": "AI_TRAINING_BLOCKED",
+    "residency.cross_border_transfer": "TRANSFER_DENIED",
+}
+CONDITION_CODES = {
+    "approval_required": "APPROVAL_REQUIRED",
+    "anonymize_first": "ANONYMIZATION_REQUIRED",
+    "role_restricted": "ROLE_RESTRICTED",
+    "ai_restriction": "AI_RESTRICTION",
+}
 
 
 GateChange = dict[str, Any]
@@ -118,15 +136,22 @@ def evaluate_changes(
 
 def evaluate_change(client: Any, change: GateChange) -> GateResult:
     kind = str(change.get("kind") or "").strip()
-    if kind in {"sql_model", "migration_sql", "ad_hoc_sql"}:
-        response = _validate_sql_change(client, change)
-    elif kind in {"export_job", "ai_training_job", "tool_use", "data_job"}:
-        response = _authorize_use_change(client, change)
+    if kind in SQL_KINDS:
+        answer = _validate_sql_change(client, change)
+        decision, gate = _gate_for_validation(answer)
+        evidence = _publication_id(answer)
+        reason_codes = _validation_reason_codes(answer)
+        controls = _validation_controls(answer)
+        rationale = _validation_rationale(answer)
+    elif kind in USE_KINDS:
+        answer = _authorize_use_change(client, change)
+        decision, gate = _gate_for_authorization(answer)
+        evidence = answer.get("decision_id") or _publication_id(answer)
+        reason_codes = _authorization_reason_codes(answer)
+        controls = _authorization_controls(answer)
+        rationale = str(answer.get("reason") or "")
     else:
         raise ValueError(f"Unsupported change kind {kind!r} for {change.get('change_id')}")
-
-    decision = _decision_label(response)
-    gate = _gate_for_decision(decision)
 
     return GateResult(
         change_id=str(change.get("change_id") or "unknown"),
@@ -135,11 +160,11 @@ def evaluate_change(client: Any, change: GateChange) -> GateResult:
         description=str(change.get("description") or ""),
         decision=decision,
         gate=gate,
-        evidence_id=_evidence_id(response),
-        reason_codes=_reason_codes(response),
-        required_controls=[] if decision in ALLOW_DECISIONS else _required_controls(response),
-        action=_action_for_decision(decision, response),
-        rationale=_rationale(response),
+        evidence_id=evidence,
+        reason_codes=reason_codes,
+        required_controls=[] if gate == "pass" else controls,
+        action=_action(gate, answer),
+        rationale=rationale,
     )
 
 
@@ -166,10 +191,17 @@ def print_summary(summary: GateSummary) -> None:
             print(f"  action: {result.action}")
         if result.required_controls:
             print(f"  controls: {'; '.join(result.required_controls)}")
+        if result.reason_codes:
+            print(f"  reason_codes: {', '.join(result.reason_codes)}")
 
     if summary.strict:
         print("")
         print(f"Release allowed: {str(summary.release_allowed).lower()}")
+
+
+# ---------------------------------------------------------------------------
+# Tool calls (native argument shapes)
+# ---------------------------------------------------------------------------
 
 
 def _validate_sql_change(client: Any, change: GateChange) -> dict[str, Any]:
@@ -178,114 +210,160 @@ def _validate_sql_change(client: Any, change: GateChange) -> dict[str, Any]:
         raise ValueError(f"{change.get('change_id')} is a SQL change but does not include sql.")
     return client.validate_query_context(
         sql,
-        operation=change.get("operation") or "read",
-        intended_use=change.get("intended_use") or "analytics",
-        actor_role=change.get("actor_role"),
-        destination_system=change.get("destination_system"),
-        destination_jurisdiction=change.get("destination_jurisdiction"),
+        scenario_key=change.get("scenario_key"),
+        use=change.get("use"),
+        default_database=change.get("default_database"),
+        default_schema=change.get("default_schema"),
+        operation=change.get("operation"),
+        destination=change.get("destination"),
         consumer_jurisdiction=change.get("consumer_jurisdiction"),
     )
 
 
 def _authorize_use_change(client: Any, change: GateChange) -> dict[str, Any]:
-    table_name = change.get("table_name")
-    if not table_name:
-        raise ValueError(f"{change.get('change_id')} requires table_name.")
+    asset = change.get("asset")
+    if not isinstance(asset, dict):
+        raise ValueError(f"{change.get('change_id')} requires an asset reference.")
     return client.authorize_use(
-        table_name,
-        operation=change.get("operation") or "read",
-        intended_use=change.get("intended_use") or "analytics",
-        actor_role=change.get("actor_role"),
-        columns=change.get("columns"),
+        asset,
+        use=str(change.get("use") or change.get("description") or ""),
+        scenario_key=change.get("scenario_key"),
+        operation=change.get("operation"),
         destination=change.get("destination"),
-        destination_system=change.get("destination_system"),
-        destination_jurisdiction=change.get("destination_jurisdiction"),
         consumer_jurisdiction=change.get("consumer_jurisdiction"),
-        raw_request_text=change.get("description"),
-        context={"source_path": change.get("source_path"), "change_id": change.get("change_id")},
     )
 
 
-def _decision_label(response: dict[str, Any]) -> str:
-    data = response.get("data", {})
-    decision = data.get("decision")
-    if isinstance(decision, dict):
-        return str(decision.get("decision") or decision.get("overall_decision") or "UNKNOWN").upper()
-    return str(decision or data.get("overall_decision") or "UNKNOWN").upper()
+# ---------------------------------------------------------------------------
+# Typed answer -> gate
+# ---------------------------------------------------------------------------
 
 
-def _gate_for_decision(decision: str) -> str:
-    if decision in ALLOW_DECISIONS:
-        return "pass"
-    if decision in CONDITIONAL_DECISIONS:
-        return "needs_controls"
-    if decision in DENY_DECISIONS:
-        return "fail"
-    return "needs_review"
+def _gate_for_validation(answer: dict[str, Any]) -> tuple[str, str]:
+    state = str(answer.get("state") or "")
+    if state != "answered":
+        return state or "unknown", "needs_review"
+    verdict = str(answer.get("verdict") or "")
+    gate = {"pass": "pass", "warn": "needs_controls", "fail": "fail"}.get(verdict, "needs_review")
+    return verdict or "unknown", gate
 
 
-def _evidence_id(response: dict[str, Any]) -> str | None:
-    data = response.get("data", {})
-    return data.get("validation_id") or data.get("decision_id") or response.get("request_id")
+def _gate_for_authorization(answer: dict[str, Any]) -> tuple[str, str]:
+    state = str(answer.get("state") or "")
+    if state != "answered":
+        return state or "unknown", "needs_review"
+    decision = str(answer.get("decision") or "")
+    if decision in PASS_DECISIONS:
+        return decision, "pass"
+    if decision in CONTROL_DECISIONS:
+        return decision, "needs_controls"
+    if decision == "deny":
+        return decision, "fail"
+    return decision or "unknown", "needs_review"
 
 
-def _reason_codes(response: dict[str, Any]) -> list[str]:
-    data = response.get("data", {})
-    decision = data.get("decision")
-    if isinstance(decision, dict):
-        return [str(code) for code in decision.get("reason_codes") or []]
-    return [str(code) for code in data.get("reason_codes") or []]
+def _validation_findings(answer: dict[str, Any]) -> list[dict[str, Any]]:
+    findings = answer.get("findings")
+    return [f for f in findings if isinstance(f, dict)] if isinstance(findings, list) else []
 
 
-def _required_controls(response: dict[str, Any]) -> list[str]:
-    data = response.get("data", {})
+def _validation_reason_codes(answer: dict[str, Any]) -> list[str]:
+    codes: list[str] = []
+    for finding in _validation_findings(answer):
+        if finding.get("status") == "not_enough_published_state":
+            _append(codes, "NO_PUBLISHED_STATE")
+            continue
+        for instruction in finding.get("instructions") or []:
+            decision = instruction.get("decision")
+            scenario = str(instruction.get("scenario_key") or "")
+            if decision == "deny":
+                _append(codes, DENY_SCENARIO_CODES.get(scenario, "USE_DENIED"))
+            elif decision in {"mask_full", "mask_partial"}:
+                _append(codes, "MASKING_REQUIRED")
+    if not codes and str(answer.get("verdict")) == "pass":
+        codes.append("NO_RESTRICTED_USE_DETECTED")
+    return codes
+
+
+def _validation_controls(answer: dict[str, Any]) -> list[str]:
     controls: list[str] = []
-    for key in ("conditions", "obligations", "required_controls"):
-        values = data.get(key) or []
-        if isinstance(values, str):
-            controls.append(values)
-        else:
-            controls.extend(_control_text(value) for value in values)
+    for finding in _validation_findings(answer):
+        for instruction in finding.get("instructions") or []:
+            if instruction.get("decision") in {"mask_full", "mask_partial"}:
+                scope = instruction.get("scope") or {}
+                column = scope.get("column") or "the flagged columns"
+                _append(controls, f"Mask or drop {column} before shipping this query.")
+    return controls
 
-    return _unique(controls)
+
+def _validation_rationale(answer: dict[str, Any]) -> str:
+    worst = ""
+    for finding in _validation_findings(answer):
+        for instruction in finding.get("instructions") or []:
+            reason = str(instruction.get("decision_reason") or "")
+            if instruction.get("decision") == "deny":
+                return reason
+            if not worst and instruction.get("decision") in {"mask_full", "mask_partial"}:
+                worst = reason
+    return worst
 
 
-def _action_for_decision(decision: str, response: dict[str, Any]) -> str:
-    if decision in ALLOW_DECISIONS:
+def _authorization_reason_codes(answer: dict[str, Any]) -> list[str]:
+    codes: list[str] = []
+    decision = str(answer.get("decision") or "")
+    scenario = str(answer.get("scenario_key") or "")
+    if decision == "deny":
+        _append(codes, DENY_SCENARIO_CODES.get(scenario, "USE_DENIED"))
+    if decision == "conditional" and scenario == "residency.cross_border_transfer":
+        _append(codes, "TRANSFER_CONDITIONAL")
+    for condition in answer.get("conditions") or []:
+        code = CONDITION_CODES.get(str(condition.get("kind") or ""))
+        if code:
+            _append(codes, code)
+    if any(o.get("type") == "mask" for o in answer.get("obligations") or []):
+        _append(codes, "MASKING_REQUIRED")
+    if not codes and decision in PASS_DECISIONS:
+        codes.append("PERMITTED_USE")
+    return codes
+
+
+def _authorization_controls(answer: dict[str, Any]) -> list[str]:
+    controls: list[str] = []
+    for condition in answer.get("conditions") or []:
+        requirement = str(condition.get("requirement") or "").strip()
+        if requirement:
+            _append(controls, requirement)
+    for obligation in answer.get("obligations") or []:
+        if obligation.get("type") == "mask":
+            method = f" ({obligation['method']})" if obligation.get("method") else ""
+            _append(controls, f"Mask {obligation.get('target')}{method}.")
+    return controls
+
+
+def _action(gate: str, answer: dict[str, Any]) -> str:
+    next_actions = answer.get("next_actions")
+    if isinstance(next_actions, list) and next_actions:
+        return str(next_actions[0])
+    if gate == "pass":
         return "Proceed and record the Metatate evidence ID with the workflow."
-    return _agent_action_message(response)
+    if gate == "needs_controls":
+        return "Satisfy the stated conditions/obligations, then re-run the gate."
+    if gate == "fail":
+        return "Block the change; published policy prohibits this use."
+    return "Route to governance review — the published state cannot answer this."
 
 
-def _agent_action_message(response: dict[str, Any]) -> str:
-    action = response.get("data", {}).get("agent_action")
-    if isinstance(action, dict):
-        return str(action.get("message") or action.get("safe_next_step") or action.get("suggested_next_tool") or "")
-    return ""
+def _publication_id(answer: dict[str, Any]) -> str | None:
+    publication = answer.get("publication")
+    if isinstance(publication, dict):
+        value = publication.get("publication_id")
+        return str(value) if value else None
+    return None
 
 
-def _rationale(response: dict[str, Any]) -> str:
-    data = response.get("data", {})
-    decision = data.get("decision")
-    if isinstance(decision, dict):
-        return str(decision.get("rationale") or data.get("summary") or "")
-    return str(data.get("rationale") or data.get("summary") or "")
-
-
-def _unique(values: list[str]) -> list[str]:
-    seen = set()
-    result = []
-    for value in values:
-        normalized = value.strip()
-        if normalized and normalized not in seen:
-            result.append(normalized)
-            seen.add(normalized)
-    return result
-
-
-def _control_text(value: Any) -> str:
-    if isinstance(value, (dict, list)):
-        return json.dumps(value, sort_keys=True)
-    return str(value)
+def _append(values: list[str], value: str) -> None:
+    if value and value not in values:
+        values.append(value)
 
 
 def _env_flag(name: str, default: bool = False) -> bool:

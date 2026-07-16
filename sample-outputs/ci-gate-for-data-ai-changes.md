@@ -1,17 +1,27 @@
-# CI Gate For Data And AI Changes Output
+# Expected Output — CI Gate For Data And AI Changes
 
-The CI/CD gate evaluates five proposed pull request changes:
+Captured from the executed OFFLINE notebook (`notebooks/06_ci_gate_for_data_ai_changes.ipynb`), which replays
+recorded Metatate Cloud answers — live mode against a workspace serving the
+AcmeCloud demo publication produces the same decisions.
 
-- an aggregate revenue dashboard passes
-- an analytics detail model with identifiers requires controls
-- a marketing activation SQL model fails
-- a Salesforce export requires controls
-- a support-ticket training job fails
 
-The notebook prints denied changes without failing by default so readers can run it end to end. Set `METATATE_EXAMPLES_STRICT_CI_GATE=1` to make denied changes raise the same way a CI job would fail.
+```text
+pass=1 needs_controls=2 fail=2
+release_allowed: False
+```
 
-The command-line version is:
-
-```bash
-scripts/run_cicd_policy_gate.sh --strict
+```text
+chg-001: pass (pass)
+  reason_codes: NO_RESTRICTED_USE_DETECTED
+chg-002: needs_controls (warn)
+  reason_codes: MASKING_REQUIRED
+  controls: Mask or drop email before shipping this query.
+chg-003: fail (fail)
+  reason_codes: MASKING_REQUIRED, PROHIBITED_USE
+  controls: Mask or drop email before shipping this query.
+chg-004: needs_controls (conditional)
+  reason_codes: TRANSFER_CONDITIONAL, ANONYMIZATION_REQUIRED, APPROVAL_REQUIRED
+  controls: This data must be anonymized before the transfer.; Transfer to SALESFORCE (US) for consumer jurisdiction EU requires approval and anonymization and role PRIVACY_ADMIN (policy AcmeCloud transfer guardrails).
+chg-005: fail (deny)
+  reason_codes: AI_TRAINING_BLOCKED
 ```

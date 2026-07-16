@@ -27,7 +27,7 @@ from framework_runtime.scenarios import (  # noqa: E402
 
 class AgentState(TypedDict, total=False):
     sql_text: str
-    intended_use: str
+    scenario_key: str
     result: dict[str, Any]
 
 
@@ -43,9 +43,7 @@ def main() -> None:
         result = validate_sql_for_agent(
             client,
             sql_text=state["sql_text"],
-            intended_use=state.get("intended_use", "analytics"),
-            operation="read",
-            actor_role="DATA_ANALYST",
+            scenario_key=state.get("scenario_key", "purpose.allowed_use"),
         )
         return {**state, "result": result}
 
@@ -56,9 +54,9 @@ def main() -> None:
     app = graph.compile()
 
     results = {
-        "safe": app.invoke({"sql_text": SAFE_ANALYTICS_SQL, "intended_use": "analytics"})["result"],
-        "unsafe": app.invoke({"sql_text": UNSAFE_ANALYTICS_SQL, "intended_use": "analytics"})["result"],
-        "blocked": app.invoke({"sql_text": MARKETING_SQL, "intended_use": "marketing"})["result"],
+        "safe": app.invoke({"sql_text": SAFE_ANALYTICS_SQL, "scenario_key": "purpose.allowed_use"})["result"],
+        "unsafe": app.invoke({"sql_text": UNSAFE_ANALYTICS_SQL, "scenario_key": "purpose.allowed_use"})["result"],
+        "blocked": app.invoke({"sql_text": MARKETING_SQL, "scenario_key": "purpose.prohibited_use"})["result"],
     }
 
     assert_guard_behavior(results, len(client.calls))

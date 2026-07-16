@@ -2,6 +2,8 @@
 
 The framework-specific scripts import this module, wrap the callables in their
 own tool runtime, and then assert that Metatate decisions change the outcome.
+Everything speaks the native typed-answer contract: canonical `scenario_key`s
+in, `state`/`verdict` out.
 """
 
 from __future__ import annotations
@@ -12,26 +14,16 @@ from typing import Any
 from common import get_client
 
 
-TABLE_NAME = "ACMECLOUD_DEMO.PUBLIC.CUSTOMERS"
+DATABASE = "acmecloud_demo"
+SCHEMA = "public"
+TABLE_NAME = f"{DATABASE}.{SCHEMA}.customers"
 
-UNSAFE_ANALYTICS_SQL = (
-    "SELECT customer_id, email, arr "
-    "FROM ACMECLOUD_DEMO.PUBLIC.CUSTOMERS "
-    "WHERE region = 'EU'"
-)
-
-SAFE_ANALYTICS_SQL = (
-    "SELECT region, account_status, SUM(arr) AS arr "
-    "FROM ACMECLOUD_DEMO.PUBLIC.CUSTOMERS "
-    "WHERE account_status = 'active' "
-    "GROUP BY region, account_status"
-)
-
-MARKETING_SQL = (
-    "SELECT customer_name, email "
-    "FROM ACMECLOUD_DEMO.PUBLIC.CUSTOMERS "
-    "WHERE account_status = 'active'"
-)
+# The three recorded validation cases (sample-data/acmecloud/metatate-responses):
+# a safe aggregate (pass), a PII detail read (warn — masked column referenced),
+# and a prohibited marketing read (fail).
+SAFE_ANALYTICS_SQL = "SELECT region, SUM(arr) FROM customers GROUP BY region"
+UNSAFE_ANALYTICS_SQL = "SELECT customer_name, email FROM customers WHERE region = 'EU'"
+MARKETING_SQL = "SELECT customer_name, email FROM customers WHERE marketing_consent = 'opted_in'"
 
 
 class RecordingMetatateClient:
@@ -49,52 +41,50 @@ class RecordingMetatateClient:
 def validate_sql_for_agent(
     client: RecordingMetatateClient,
     sql_text: str,
-    intended_use: str = "analytics",
-    operation: str = "read",
-    actor_role: str = "DATA_ANALYST",
+    scenario_key: str = "purpose.allowed_use",
 ) -> dict[str, Any]:
     """Validate SQL through Metatate and return the agent-facing decision."""
 
-    validation = client.validate_query_context(
+    answer = client.validate_query_context(
         sql_text,
-        operation=operation,
-        intended_use=intended_use,
-        actor_role=actor_role,
+        scenario_key=scenario_key,
+        default_database=DATABASE,
+        default_schema=SCHEMA,
     )
-    decision = _decision_label(validation)
-    action = _agent_action(validation)
+    state = str(answer.get("state") or "")
+    verdict = str(answer.get("verdict") or "") if state == "answered" else state
 
     status = "approved"
     final_sql: str | None = sql_text
-    if decision == "DENY":
+    if verdict == "fail":
         status = "blocked"
         final_sql = None
-    elif decision != "ALLOW":
+    elif verdict != "pass":
         status = "revised"
         final_sql = SAFE_ANALYTICS_SQL
 
     return {
         "table_name": TABLE_NAME,
-        "decision": decision,
+        "verdict": verdict,
         "status": status,
-        "action_type": action.get("type"),
-        "message": action.get("message"),
-        "validation_id": validation.get("data", {}).get("validation_id"),
-        "reason_codes": _reason_codes(validation),
+        "publication_id": _publication_id(answer),
+        "flagged_reasons": _flagged_reasons(answer),
         "original_sql": sql_text,
         "final_sql": final_sql,
     }
 
 
 def retrieval_prompt_to_sql(prompt: str) -> tuple[str, str]:
-    """Small deterministic planner used by retrieval framework tests."""
+    """Small deterministic planner used by retrieval framework tests.
+
+    Returns (sql, canonical scenario_key)."""
 
     normalized = prompt.lower()
     if "marketing" in normalized or "email campaign" in normalized:
-        return MARKETING_SQL, "marketing"
+        return MARKETING_SQL, "purpose.prohibited_use"
     if "email" in normalized or "identify" in normalized:
-        return UNSAFE_ANALYTICS_SQL, "analytics"
-    return SAFE_ANALYTICS_SQL, "analytics"
+        return UNSAFE_ANALYTICS_SQL, "purpose.allowed_use"
+    return SAFE_ANALYTICS_SQL, "purpose.allowed_use"
 
 
 def assert_guard_behavior(results: dict[str, dict[str, Any]], call_count: int) -> None:
@@ -103,40 +93,36 @@ def assert_guard_behavior(results: dict[str, dict[str, Any]], call_count: int) -
     assert call_count >= 3, f"expected at least three Metatate calls, got {call_count}"
 
     safe = results["safe"]
-    assert safe["decision"] == "ALLOW", safe
+    assert safe["verdict"] == "pass", safe
     assert safe["status"] == "approved", safe
     assert safe["final_sql"] == SAFE_ANALYTICS_SQL, safe
 
     unsafe = results["unsafe"]
-    assert unsafe["decision"] in {"CONDITIONAL", "REVIEW", "WARN"}, unsafe
+    assert unsafe["verdict"] == "warn", unsafe
     assert unsafe["status"] == "revised", unsafe
     assert unsafe["final_sql"] == SAFE_ANALYTICS_SQL, unsafe
-    assert "EMAIL" not in unsafe["final_sql"].upper(), unsafe
+    assert "email" not in unsafe["final_sql"].lower(), unsafe
 
     blocked = results["blocked"]
-    assert blocked["decision"] == "DENY", blocked
+    assert blocked["verdict"] == "fail", blocked
     assert blocked["status"] == "blocked", blocked
     assert blocked["final_sql"] is None, blocked
 
 
-def _decision_label(response: dict[str, Any]) -> str:
-    data = response.get("data", {})
-    decision = data.get("decision")
-    if isinstance(decision, dict):
-        return str(decision.get("decision") or decision.get("overall_decision") or "UNKNOWN").upper()
-    return str(decision or data.get("overall_decision") or "UNKNOWN").upper()
+def _publication_id(answer: dict[str, Any]) -> str | None:
+    publication = answer.get("publication")
+    if isinstance(publication, dict):
+        value = publication.get("publication_id")
+        return str(value) if value else None
+    return None
 
 
-def _agent_action(response: dict[str, Any]) -> dict[str, Any]:
-    action = response.get("data", {}).get("agent_action")
-    if isinstance(action, dict):
-        return action
-    return {}
-
-
-def _reason_codes(response: dict[str, Any]) -> list[str]:
-    data = response.get("data", {})
-    decision = data.get("decision")
-    if isinstance(decision, dict):
-        return list(decision.get("reason_codes") or [])
-    return list(data.get("reason_codes") or [])
+def _flagged_reasons(answer: dict[str, Any]) -> list[str]:
+    reasons: list[str] = []
+    for finding in answer.get("findings") or []:
+        for instruction in finding.get("instructions") or []:
+            if instruction.get("decision") in {"deny", "mask_full", "mask_partial"}:
+                reason = str(instruction.get("decision_reason") or "")
+                if reason and reason not in reasons:
+                    reasons.append(reason)
+    return reasons

@@ -41,7 +41,7 @@ def main() -> None:
     assert states["unsafe"]["final_sql"] == SAFE_ANALYTICS_SQL, states["unsafe"]
     assert states["blocked"]["route"] == "block", states["blocked"]
     assert states["blocked"]["final_sql"] is None, states["blocked"]
-    assert all(state.get("validation_id") for state in states.values()), states
+    assert all(state.get("publication_id") for state in states.values()), states
 
     print(
         json.dumps(

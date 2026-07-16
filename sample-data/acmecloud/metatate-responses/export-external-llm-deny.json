@@ -1,0 +1,137 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "customers"
+    },
+    "can_proceed_now": false,
+    "conditions": [],
+    "context_facts": {
+      "category": "pii",
+      "masking": {
+        "exempt_roles": [
+          "DATA_STEWARD",
+          "PRIVACY_ADMIN"
+        ],
+        "type": "partial"
+      },
+      "pii": true,
+      "sensitivity": "restricted",
+      "subcategory": null
+    },
+    "decision": "deny",
+    "decision_id": "accef000-0000-4000-8000-000000000010",
+    "instructions": [
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "deny",
+        "decision_id": "accef000-0000-4000-8000-000000000010",
+        "decision_reason": "Transfer to EXTERNAL_LLM_VENDOR (US) for consumer jurisdiction US is denied by policy AcmeCloud transfer guardrails.",
+        "enforcement_mode": "enforce",
+        "instruction_family": "transfer_governance",
+        "instruction_key": "transfer_governance:spec.transferGovernance",
+        "parameters": {
+          "defaultEffect": "conditional",
+          "rules": [
+            {
+              "consumerJurisdictions": [
+                "EU"
+              ],
+              "destinationJurisdictions": [
+                "US"
+              ],
+              "destinationSystems": [
+                "SALESFORCE"
+              ],
+              "effect": "conditional",
+              "operations": [
+                "export"
+              ],
+              "requiredRole": "PRIVACY_ADMIN",
+              "requiresAnonymization": true,
+              "requiresApproval": true
+            },
+            {
+              "destinationSystems": [
+                "ADS_PLATFORM"
+              ],
+              "effect": "deny"
+            },
+            {
+              "destinationSystems": [
+                "EXTERNAL_LLM_VENDOR"
+              ],
+              "effect": "deny"
+            }
+          ]
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000011",
+          "policy_name": "AcmeCloud transfer guardrails",
+          "policy_version_id": "accef000-0000-4000-8000-000000000012",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "residency.cross_border_transfer",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "customers"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "Do not proceed with this use.",
+      "Request an approved exception or an alternative asset from the data steward."
+    ],
+    "obligations": [],
+    "prohibitions": [
+      {
+        "detail": "Transfer to EXTERNAL_LLM_VENDOR (US) for consumer jurisdiction US is denied by policy AcmeCloud transfer guardrails.",
+        "required_by_policy": "AcmeCloud transfer guardrails",
+        "source": "deny_decision"
+      }
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "Transfer to EXTERNAL_LLM_VENDOR (US) for consumer jurisdiction US is denied by policy AcmeCloud transfer guardrails.",
+    "scenario_key": "residency.cross_border_transfer",
+    "scenario_lane": "platform",
+    "state": "answered"
+  },
+  "arguments": {
+    "asset": {
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "customers"
+    },
+    "consumer_jurisdiction": "US",
+    "destination": {
+      "jurisdiction": "US",
+      "system": "EXTERNAL_LLM_VENDOR"
+    },
+    "operation": "export",
+    "scenario_key": "residency.cross_border_transfer",
+    "use": "send the customer batch to an external LLM vendor"
+  },
+  "case_id": "export-external-llm-deny",
+  "tool": "authorize_use"
+}

@@ -81,11 +81,18 @@ Transfer authorization requires destination context:
 
 If destination or consumer jurisdiction is missing, Metatate may ask for more context instead of returning a final transfer decision.
 
-## `UNKNOWN` decisions on custom intents
+## `offline_fixture_missing`
 
-The server never guesses an unmappable intent (`scenario_unresolved`); pass a
-supported `intended_use` (analytics/reporting/support/marketing/ml_training/…)
-or a canonical scenario key.
+Offline mode replays the recorded case set in `common/fixture_cases.py` — an
+ad-hoc call that matches no recorded case raises this typed error instead of
+inventing a governance answer. Use live mode for ad-hoc questions, or add the
+case and re-run `scripts/record_offline_fixtures.py` against a live workspace.
+
+## `scenario_unresolved` on custom intents
+
+The server never guesses an unmappable free-text `use`; pass a canonical
+`scenario_key` (`purpose.allowed_use`, `ai.training`,
+`residency.cross_border_transfer`, …) for deterministic routing.
 
 ## Notebook edits disappear after regeneration
 

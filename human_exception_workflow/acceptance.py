@@ -27,14 +27,14 @@ def main() -> None:
     assert run.rejected_by_reviewer == 0, run
 
     safe = items["req-001"]
-    assert safe.decision == "ALLOW", safe
+    assert safe.decision == "pass", safe
     assert safe.status == "ready_without_exception", safe
     assert safe.evidence_id, safe
     assert safe.review is None, safe
     assert safe.resume_payload is None, safe
 
     conditional = items["req-002"]
-    assert conditional.decision == "CONDITIONAL", conditional
+    assert conditional.decision == "conditional", conditional
     assert conditional.status == "resumed_with_controls", conditional
     assert conditional.evidence_id, conditional
     assert conditional.review is not None, conditional
@@ -45,7 +45,7 @@ def main() -> None:
         assert attestation in conditional.review.controls_attested, conditional
 
     blocked = items["req-003"]
-    assert blocked.decision == "DENY", blocked
+    assert blocked.decision == "deny", blocked
     assert blocked.status == "blocked_by_policy", blocked
     assert blocked.evidence_id, blocked
     assert blocked.review is None, blocked

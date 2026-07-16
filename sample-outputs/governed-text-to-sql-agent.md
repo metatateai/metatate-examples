@@ -1,9 +1,15 @@
-# Governed Text-to-SQL Agent Output
+# Expected Output — Governed Text-to-SQL Agent
 
-The text-to-SQL example starts from a business question about active ARR by region.
+Captured from the executed OFFLINE notebook (`notebooks/04_governed_text_to_sql_agent.ipynb`), which replays
+recorded Metatate Cloud answers — live mode against a workspace serving the
+AcmeCloud demo publication produces the same decisions.
 
-The first draft selects `CUSTOMER_NAME` and `EMAIL`, so Metatate returns a conditional decision and flags direct identifiers.
 
-The agent revises the query to aggregate by `REGION` and `ACCOUNT_STATUS`, then validates the revised SQL. The final decision is `ALLOW` in offline mode.
-
-The key point is that the agent does not rely on prompt instructions alone. It checks governed context before returning executable SQL.
+```text
+How does ARR break down by region?
+  verdict: pass  sql: SELECT region, SUM(arr) FROM customers GROUP BY region
+List EU customers with their email addresses.
+  verdict: warn  sql: SELECT region, SUM(arr) FROM customers GROUP BY region
+Build an email list for the marketing campaign.
+  verdict: fail  sql: None
+```

@@ -1,0 +1,34 @@
+{
+  "answer": {
+    "classification": {
+      "category": "pii",
+      "sensitivity": "restricted",
+      "subcategory": null
+    },
+    "data_type": null,
+    "masking": {
+      "exempt_roles": [
+        "DATA_STEWARD",
+        "PRIVACY_ADMIN"
+      ],
+      "type": "partial"
+    },
+    "meaning": "Customer master data for the AcmeCloud demo domain.",
+    "pii": true,
+    "ref": {
+      "column": null,
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "customers"
+    }
+  },
+  "arguments": {
+    "ref": {
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "customers"
+    }
+  },
+  "case_id": "meaning_customers",
+  "tool": "inspect_data_meaning"
+}

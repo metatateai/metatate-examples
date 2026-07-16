@@ -13,7 +13,7 @@ from framework_runtime.scenarios import MARKETING_SQL, SAFE_ANALYTICS_SQL, UNSAF
 
 class GovernedSqlAgentState(TypedDict, total=False):
     question: str
-    intended_use: str
+    scenario_key: str
     draft_sql: str
     validation: dict[str, Any]
     decision: str
@@ -21,7 +21,7 @@ class GovernedSqlAgentState(TypedDict, total=False):
     final_sql: str | None
     answer: str
     notes: list[str]
-    validation_id: str | None
+    publication_id: str | None
 
 
 def build_governed_sql_agent(client: Any) -> Any:
@@ -33,15 +33,15 @@ def build_governed_sql_agent(client: Any) -> Any:
         raise RuntimeError("Install requirements-framework.txt to run the LangGraph runtime example") from exc
 
     def plan_sql(state: GovernedSqlAgentState) -> GovernedSqlAgentState:
-        sql_text, intended_use = plan_question(state["question"])
-        return {**state, "draft_sql": sql_text, "intended_use": intended_use, "notes": []}
+        sql_text, scenario_key = plan_question(state["question"])
+        return {**state, "draft_sql": sql_text, "scenario_key": scenario_key, "notes": []}
 
     def validate_with_metatate(state: GovernedSqlAgentState) -> GovernedSqlAgentState:
         validation = client.validate_query_context(
             state["draft_sql"],
-            operation="read",
-            intended_use=state["intended_use"],
-            actor_role="DATA_ANALYST",
+            scenario_key=state["scenario_key"],
+            default_database="acmecloud_demo",
+            default_schema="public",
         )
         decision = decision_label(validation)
         route = route_for_decision(decision)
@@ -50,7 +50,7 @@ def build_governed_sql_agent(client: Any) -> Any:
             "validation": validation,
             "decision": decision,
             "route": route,
-            "validation_id": validation_id(validation),
+            "publication_id": publication_id(validation),
         }
 
     def approve_sql(state: GovernedSqlAgentState) -> GovernedSqlAgentState:
@@ -101,20 +101,20 @@ def build_governed_sql_agent(client: Any) -> Any:
 
 
 def plan_question(question: str) -> tuple[str, str]:
-    """Map a user question to a deterministic SQL draft and intended use."""
+    """Map a user question to a deterministic SQL draft and canonical scenario."""
 
     normalized = question.lower()
     if "marketing" in normalized or "email campaign" in normalized:
-        return MARKETING_SQL, "marketing"
+        return MARKETING_SQL, "purpose.prohibited_use"
     if "email" in normalized or "identify" in normalized:
-        return UNSAFE_ANALYTICS_SQL, "analytics"
-    return SAFE_ANALYTICS_SQL, "analytics"
+        return UNSAFE_ANALYTICS_SQL, "purpose.allowed_use"
+    return SAFE_ANALYTICS_SQL, "purpose.allowed_use"
 
 
-def route_for_decision(decision: str) -> str:
-    if decision == "DENY":
+def route_for_decision(verdict: str) -> str:
+    if verdict == "fail":
         return "block"
-    if decision == "ALLOW":
+    if verdict == "pass":
         return "approve"
     return "revise"
 
@@ -124,8 +124,8 @@ def summarize_state(state: GovernedSqlAgentState) -> dict[str, Any]:
         "question": state["question"],
         "route": state.get("route"),
         "decision": state.get("decision"),
-        "intended_use": state.get("intended_use"),
-        "validation_id": state.get("validation_id"),
+        "scenario_key": state.get("scenario_key"),
+        "publication_id": state.get("publication_id"),
         "draft_sql": state.get("draft_sql"),
         "final_sql": state.get("final_sql"),
         "answer": state.get("answer"),
@@ -137,29 +137,25 @@ def acceptance_result(state: GovernedSqlAgentState) -> dict[str, Any]:
     route = state["route"]
     status = {"approve": "approved", "revise": "revised", "block": "blocked"}[route]
     return {
-        "decision": state["decision"],
+        "verdict": state["decision"],
         "status": status,
         "original_sql": state["draft_sql"],
         "final_sql": state.get("final_sql"),
-        "validation_id": state.get("validation_id"),
+        "publication_id": state.get("publication_id"),
         "route": route,
         "answer": state.get("answer"),
     }
 
 
-def decision_label(response: dict[str, Any]) -> str:
-    data = response.get("data", {})
-    decision = data.get("decision")
-    if isinstance(decision, dict):
-        return str(decision.get("decision") or decision.get("overall_decision") or "UNKNOWN").upper()
-    return str(decision or data.get("overall_decision") or "UNKNOWN").upper()
+def decision_label(answer: dict[str, Any]) -> str:
+    state = str(answer.get("state") or "")
+    if state and state != "answered":
+        return state
+    return str(answer.get("verdict") or "unknown")
 
 
-def validation_id(response: dict[str, Any]) -> str | None:
-    data = response.get("data", {})
-    action = data.get("agent_action")
-    if data.get("validation_id"):
-        return str(data["validation_id"])
-    if isinstance(action, dict) and action.get("validation_id"):
-        return str(action["validation_id"])
+def publication_id(answer: dict[str, Any]) -> str | None:
+    publication = answer.get("publication")
+    if isinstance(publication, dict) and publication.get("publication_id"):
+        return str(publication["publication_id"])
     return None

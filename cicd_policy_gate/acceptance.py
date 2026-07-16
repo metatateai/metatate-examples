@@ -15,11 +15,18 @@ from common import get_client  # noqa: E402
 
 
 EXPECTED_GATES = {
-    "chg-001": "pass",
-    "chg-002": "needs_controls",
-    "chg-003": "fail",
-    "chg-004": "needs_controls",
-    "chg-005": "fail",
+    "chg-001": ("pass", "pass"),
+    "chg-002": ("warn", "needs_controls"),
+    "chg-003": ("fail", "fail"),
+    "chg-004": ("conditional", "needs_controls"),
+    "chg-005": ("deny", "fail"),
+}
+
+EXPECTED_REASON_CODES = {
+    "chg-002": {"MASKING_REQUIRED"},
+    "chg-003": {"PROHIBITED_USE"},
+    "chg-004": {"TRANSFER_CONDITIONAL", "APPROVAL_REQUIRED", "ANONYMIZATION_REQUIRED"},
+    "chg-005": {"AI_TRAINING_BLOCKED"},
 }
 
 
@@ -35,15 +42,19 @@ def main() -> None:
     assert summary.release_allowed is False, summary
     assert set(results) == set(EXPECTED_GATES), results
 
-    for change_id, expected_gate in EXPECTED_GATES.items():
+    for change_id, (expected_decision, expected_gate) in EXPECTED_GATES.items():
         result = results[change_id]
+        assert result.decision == expected_decision, result
         assert result.gate == expected_gate, result
-        assert result.decision in {"ALLOW", "CONDITIONAL", "DENY"}, result
         assert result.evidence_id, result
         if expected_gate == "fail":
             assert result.action, result
         if expected_gate == "needs_controls":
             assert result.action or result.required_controls, result
+
+    for change_id, expected_codes in EXPECTED_REASON_CODES.items():
+        codes = set(results[change_id].reason_codes)
+        assert expected_codes <= codes, (change_id, codes)
 
     print(json.dumps(summary.to_dict(), indent=2, sort_keys=True))
 

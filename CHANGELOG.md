@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- The pack is NATIVE to the Metatate Cloud typed-answer contract: notebooks,
+  the CI/CD gate, the human-exception workflow, and the framework harness all
+  send structured asset refs + canonical scenario keys and read typed answers
+  (`state`, lowercase decisions, `verdict`, structured conditions/obligations,
+  cited instructions, publication provenance). The client translation layer is
+  gone.
+- Offline fixtures are RECORDED from a live workspace
+  (`scripts/record_offline_fixtures.py` over the canonical case set in
+  `common/fixture_cases.py`), uuid-normalized but internally consistent —
+  offline `explain_why` chains real recorded `decision_id`s.
+- `sample-outputs/` is regenerated from the executed offline notebooks.
 - Split the repository: this repo is now the Metatate Cloud examples cookbook.
   The Snowflake Native App pack (Cortex notebooks and runtime acceptance,
   `sql/` fixtures, PAT tooling, live managed-MCP validation) is frozen at

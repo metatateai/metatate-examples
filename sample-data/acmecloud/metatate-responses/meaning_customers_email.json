@@ -1,0 +1,35 @@
+{
+  "answer": {
+    "classification": {
+      "category": "pii",
+      "sensitivity": "restricted",
+      "subcategory": null
+    },
+    "data_type": "text",
+    "masking": {
+      "exempt_roles": [
+        "DATA_STEWARD",
+        "PRIVACY_ADMIN"
+      ],
+      "type": "partial"
+    },
+    "meaning": "Primary contact email address for the customer.",
+    "pii": true,
+    "ref": {
+      "column": "email",
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "customers"
+    }
+  },
+  "arguments": {
+    "ref": {
+      "column": "email",
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "customers"
+    }
+  },
+  "case_id": "meaning_customers_email",
+  "tool": "inspect_data_meaning"
+}
