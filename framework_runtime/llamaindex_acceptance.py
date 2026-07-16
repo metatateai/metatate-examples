@@ -41,8 +41,6 @@ def main() -> None:
             client,
             sql_text=sql_text,
             scenario_key=scenario_key,
-            operation="read",
-            actor_role="DATA_ANALYST",
         )
         result["query"] = query
         return json.dumps(result, sort_keys=True)

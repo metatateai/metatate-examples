@@ -44,8 +44,6 @@ def main() -> None:
             client,
             sql_text=state["sql_text"],
             scenario_key=state.get("scenario_key", "purpose.allowed_use"),
-            operation="read",
-            actor_role="DATA_ANALYST",
         )
         return {**state, "result": result}
 

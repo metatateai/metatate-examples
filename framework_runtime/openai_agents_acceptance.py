@@ -51,8 +51,6 @@ def main() -> None:
             client,
             sql_text=sql_text,
             scenario_key=scenario_key,
-            operation=operation,
-            actor_role=actor_role,
         )
         return json.dumps(result, sort_keys=True)
 
