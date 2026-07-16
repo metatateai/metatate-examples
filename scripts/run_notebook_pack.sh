@@ -14,18 +14,17 @@ NOTEBOOKS=(
   notebooks/05_agent_red_team_evaluation_harness.ipynb
   notebooks/06_ci_gate_for_data_ai_changes.ipynb
   notebooks/07_governed_rag_embedding_ingestion_gate.ipynb
-  notebooks/08_snowflake_cortex_agent_tool_preflight.ipynb
-  notebooks/09_openai_agents_tool_guard_pattern.ipynb
-  notebooks/10_human_approval_packet_for_conditional_export.ipynb
-  notebooks/11_llamaindex_governed_retrieval_pattern.ipynb
+  notebooks/08_openai_agents_tool_guard_pattern.ipynb
+  notebooks/09_human_approval_packet_for_conditional_export.ipynb
+  notebooks/10_llamaindex_governed_retrieval_pattern.ipynb
 )
 
 if [[ "${METATATE_EXAMPLES_MODE}" == "live" ]]; then
   : "${METATATE_MCP_URL:?METATATE_MCP_URL is required in live mode}"
-  : "${METATATE_MCP_PAT_ENV:=METATATE_EXAMPLES_PAT}"
+  : "${METATATE_MCP_PAT_ENV:=METATATE_SAAS_MCP_TOKEN}"
   token_value="${!METATATE_MCP_PAT_ENV:-}"
   if [[ -z "${token_value}" ]]; then
-    echo "${METATATE_MCP_PAT_ENV} must contain the Snowflake PAT secret in live mode" >&2
+    echo "${METATATE_MCP_PAT_ENV} must contain the Metatate MCP access token in live mode" >&2
     exit 1
   fi
 fi

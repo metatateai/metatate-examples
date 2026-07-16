@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Split the repository: this repo is now the Metatate Cloud examples cookbook.
+  The Snowflake Native App pack (Cortex notebooks and runtime acceptance,
+  `sql/` fixtures, PAT tooling, live managed-MCP validation) is frozen at
+  [metatate-snowflake-examples](https://github.com/metatateai/metatate-snowflake-examples).
+  Live mode now defaults to the Metatate Cloud backend; the notebook pack is
+  renumbered `00`–`11`.
+- Notebooks are validated against `scripts/build_notebooks.py` in CI
+  (`--check`): hand edits to generated `.ipynb` files now fail validation
+  instead of being silently lost on the next regeneration.
 - Added a live "saas" backend (`METATATE_MCP_BACKEND=saas`) that runs the full
   notebook pack and acceptance scripts against the Metatate SaaS
   cross-platform MCP endpoint with a workspace bearer token, including

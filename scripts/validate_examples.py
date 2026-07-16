@@ -6,6 +6,7 @@ from __future__ import annotations
 import csv
 import importlib
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -17,7 +18,6 @@ def main() -> None:
     required = [
         ".github/CODEOWNERS",
         ".github/workflows/offline-ci.yml",
-        ".github/workflows/live-mcp-validation.yml",
         ".github/workflows/live-saas-mcp-validation.yml",
         "common/saas_client.py",
         "docs/live-mode-saas.md",
@@ -27,16 +27,12 @@ def main() -> None:
         "docs/human-exception-workflow.md",
         "docs/release-process.md",
         "docs/validation-matrix.md",
-        "docs/live-mode.md",
-        "docs/snowflake-setup.md",
         "common/metatate_client.py",
         "cicd_policy_gate/__init__.py",
         "cicd_policy_gate/cli.py",
         "cicd_policy_gate/gate.py",
         "cicd_policy_gate/acceptance.py",
         "cicd_policy_gate/changes/pull_request_042.json",
-        "cortex_agent_runtime/acceptance.py",
-        "cortex_agent_runtime/__init__.py",
         "framework_runtime/langgraph_acceptance.py",
         "framework_runtime/langgraph_agent_acceptance.py",
         "framework_runtime/langgraph_governed_sql_agent.py",
@@ -47,10 +43,6 @@ def main() -> None:
         "human_exception_workflow/cli.py",
         "human_exception_workflow/workflow.py",
         "human_exception_workflow/acceptance.py",
-        "docs/cortex-agent-runtime-acceptance.md",
-        "scripts/create_mcp_pat_user.sh",
-        "scripts/run_cortex_agent_runtime_acceptance.sh",
-        "scripts/run_cortex_agent_runtime_notebook.sh",
         "scripts/run_cicd_policy_gate.sh",
         "scripts/run_cicd_policy_gate_acceptance.sh",
         "scripts/run_human_exception_workflow.sh",
@@ -58,9 +50,6 @@ def main() -> None:
         "scripts/run_framework_runtime_acceptance.sh",
         "scripts/run_langgraph_runtime_notebook.sh",
         "scripts/run_notebook_pack.sh",
-        "sql/setup_acmecloud_demo.sql",
-        "sql/smoke_acmecloud_demo.sql",
-        "sql/cleanup_acmecloud_demo.sql",
         "requirements-framework.txt",
     ]
     for relative in required:
@@ -70,8 +59,6 @@ def main() -> None:
     validate_csv_files()
     validate_policy_files()
     validate_notebooks()
-    validate_sql_fixture()
-    validate_cortex_agent_runtime_files()
     validate_cicd_policy_gate_files()
     validate_human_exception_workflow_files()
     validate_ci_workflows()
@@ -104,7 +91,7 @@ def validate_policy_files() -> None:
 
 def validate_notebooks() -> None:
     notebooks = sorted((ROOT / "notebooks").glob("*.ipynb"))
-    assert len(notebooks) == 14, "expected fourteen starter notebooks"
+    assert len(notebooks) == 12, "expected twelve starter notebooks"
     for path in notebooks:
         with path.open("r", encoding="utf-8") as handle:
             payload = json.load(handle)
@@ -113,22 +100,17 @@ def validate_notebooks() -> None:
         for cell in payload["cells"]:
             assert cell.get("id"), f"{path} has a cell without an id"
 
-
-def validate_sql_fixture() -> None:
-    setup_sql = (ROOT / "sql" / "setup_acmecloud_demo.sql").read_text(encoding="utf-8")
-    for table in (
-        "app_data.governed_tables",
-        "app_data.deployed_instructions",
-        "app_data.deployed_usage_rules",
-        "app_data.deployed_transfer_rules",
-        "app_data.deployed_validation_rules",
-        "app_data.deployed_column_details",
-        "app_data.deployed_data_meaning",
-    ):
-        assert table in setup_sql, f"setup SQL missing {table}"
-
-    for rule_type in ("permitted_use", "prohibited_use", "ai_governance", "column_masking"):
-        assert rule_type in setup_sql, f"setup SQL missing rule type {rule_type}"
+    # Notebooks are generated artifacts: hand edits get silently lost on the
+    # next regeneration, so drift from the generator is a validation failure.
+    check = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "build_notebooks.py"), "--check"],
+        capture_output=True,
+        text=True,
+    )
+    assert check.returncode == 0, (
+        "notebooks drifted from scripts/build_notebooks.py:\n"
+        f"{check.stdout}{check.stderr}"
+    )
 
 
 def validate_framework_runtime_files() -> None:
@@ -159,7 +141,7 @@ def validate_framework_runtime_files() -> None:
         assert marker in langgraph_agent, f"LangGraph agent acceptance missing {marker}"
 
     langgraph_notebook_runner = (ROOT / "scripts" / "run_langgraph_runtime_notebook.sh").read_text(encoding="utf-8")
-    assert "13_langgraph_governed_sql_agent_runtime.ipynb" in langgraph_notebook_runner
+    assert "11_langgraph_governed_sql_agent_runtime.ipynb" in langgraph_notebook_runner
 
 
 def validate_cicd_policy_gate_files() -> None:
@@ -228,19 +210,6 @@ def validate_ci_workflows() -> None:
     ):
         assert marker in offline, f"offline CI workflow missing {marker}"
 
-    live = (ROOT / ".github" / "workflows" / "live-mcp-validation.yml").read_text(encoding="utf-8")
-    for marker in (
-        "workflow_dispatch",
-        "METATATE_MCP_URL",
-        "METATATE_EXAMPLES_PAT",
-        "scripts/run_cicd_policy_gate_acceptance.sh",
-        "scripts/run_human_exception_workflow_acceptance.sh",
-        "scripts/run_framework_runtime_acceptance.sh",
-        "scripts/run_notebook_pack.sh",
-        "scripts/run_langgraph_runtime_notebook.sh",
-    ):
-        assert marker in live, f"live MCP workflow missing {marker}"
-
     saas = (ROOT / ".github" / "workflows" / "live-saas-mcp-validation.yml").read_text(encoding="utf-8")
     for marker in (
         "workflow_dispatch",
@@ -259,24 +228,6 @@ def validate_ci_workflows() -> None:
         assert marker in client, f"saas client missing {marker}"
     factory = (ROOT / "common" / "metatate_client.py").read_text(encoding="utf-8")
     assert "METATATE_MCP_BACKEND" in factory, "get_client missing the backend selector"
-
-
-def validate_cortex_agent_runtime_files() -> None:
-    runner = (ROOT / "scripts" / "run_cortex_agent_runtime_acceptance.sh").read_text(encoding="utf-8")
-    assert "cortex_agent_runtime/acceptance.py" in runner, "Cortex runner missing acceptance script"
-
-    notebook_runner = (ROOT / "scripts" / "run_cortex_agent_runtime_notebook.sh").read_text(encoding="utf-8")
-    assert "12_snowflake_cortex_agent_runtime.ipynb" in notebook_runner, "Cortex notebook runner missing notebook"
-
-    acceptance = (ROOT / "cortex_agent_runtime" / "acceptance.py").read_text(encoding="utf-8")
-    for marker in (
-        "AGENT_VALIDATE_QUERY_CONTEXT",
-        "validate_query_with_metatate",
-        "METATATE_GOVERNED_SQL_AGENT",
-        "/api/v2/statements",
-        ":run",
-    ):
-        assert marker in acceptance, f"Cortex acceptance missing {marker}"
 
 
 def validate_python_imports() -> None:

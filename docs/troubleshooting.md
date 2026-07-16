@@ -1,6 +1,6 @@
 # Troubleshooting
 
-## The notebooks show offline responses after I configured Snowflake
+## The notebooks show offline responses after I configured live mode
 
 Set live mode in the same shell where Jupyter starts:
 
@@ -12,32 +12,34 @@ Restart the notebook kernel after changing environment variables.
 
 ## The MCP endpoint does not exist
 
-Check `METATATE_MCP_URL`. The endpoint should look like:
+Check `METATATE_MCP_URL`. It is the full endpoint from the workspace MCP
+module's **Connect** tab and should look like:
 
 ```text
-https://<account-url>/api/v2/databases/METATATE_APP/schemas/CORE/mcp-servers/METATATE_MCP
+https://<your-workspace-mcp-host>/mcp
 ```
 
-If your app, schema, or MCP server uses a different name, either set `METATATE_MCP_URL` directly or configure:
+Plain `curl` probes should POST — `GET /mcp` returns 405 (the endpoint is
+POST-only JSON-RPC); the client handles this for you.
 
-```text
-METATATE_MCP_ACCOUNT_URL
-METATATE_APP_NAME
-METATATE_MCP_SCHEMA
-METATATE_MCP_SERVER_NAME
-```
+## 401 unauthorized
 
-## The PAT is invalid
-
+The response is uniform for missing, malformed, expired, and revoked tokens.
 Confirm:
 
-- `METATATE_MCP_PAT_ENV` names the environment variable that contains the PAT
-- the PAT is exported in the same shell where Jupyter starts
-- `SNOWFLAKE_ROLE` matches the PAT `ROLE_RESTRICTION`
-- the PAT belongs to the same Snowflake account as the MCP endpoint
-- the PAT has not expired or been removed
+- the token is exported in the same shell where Jupyter starts (default
+  variable `METATATE_SAAS_MCP_TOKEN`; `METATATE_MCP_PAT_ENV` renames it)
+- the token format is `mtt_` + 64 hex characters
+- the token belongs to the workspace behind `METATATE_MCP_URL`
 
-Do not put the PAT secret in `.env`.
+Issue a fresh token in the workspace MCP module → Tokens (shown once). Do not
+put the token in `.env`.
+
+## 429 rate limited
+
+Per-token budget (default 120 calls/min); the client honors `Retry-After`.
+The discovery enrichment fan-out is bounded and cached, but tight loops in
+custom code can still trip it.
 
 ## Live notebook execution fails with a transient MCP connection error
 
@@ -48,32 +50,20 @@ export METATATE_MCP_TIMEOUT_SECONDS=180
 scripts/run_notebook_pack.sh
 ```
 
-## Snowflake says network policy is required or the IP/token is not allowed
+## The examples return no governed tables / `asset_not_found`
 
-The request reached Snowflake, but the PAT user is blocked by network policy.
+Identifiers are lowercase normalized names in a structured reference (the
+client lowercases FQNs for you), so this usually means the workspace you are
+calling does not serve the AcmeCloud demo publication. Load it with the
+one-click **Load the AcmeCloud demo** action on the workspace dashboard;
+contributors on the local `metatate-saas` stack run
+`./scripts/acmecloud-demo-fixtures.sh` instead.
 
-Use the dedicated service-user flow:
+## `not_enough_published_state`
 
-```bash
-SNOW_CONNECTION=<profile> scripts/create_mcp_pat_user.sh
-```
-
-That script creates a user-level `/32` allowlist for the current public IP. Do not attach this policy to a human/admin user.
-
-## The setup SQL cannot insert into `app_data.*`
-
-The fixture script requires a role that can use the application and write demo fixture rows. For demos, run it with an administrative Snowflake profile or adjust the variables at the top of `sql/setup_acmecloud_demo.sql`.
-
-Production policies should be deployed through Metatate, not direct fixture inserts.
-
-## The examples return no governed tables
-
-In live mode, either seed the AcmeCloud fixture or update the notebooks to use governed tables already deployed in your account.
-
-```bash
-snow sql -f sql/setup_acmecloud_demo.sql -c <profile>
-snow sql -f sql/smoke_acmecloud_demo.sql -c <profile>
-```
+The workspace has no current publication for that asset or scenario. Live MCP
+answers only change on publish: load the demo publication (or author, approve,
+and publish your own policies) first.
 
 ## The transfer example returns UNKNOWN
 
@@ -91,23 +81,14 @@ Transfer authorization requires destination context:
 
 If destination or consumer jurisdiction is missing, Metatate may ask for more context instead of returning a final transfer decision.
 
-## SaaS backend (`METATATE_MCP_BACKEND=saas`)
+## `UNKNOWN` decisions on custom intents
 
-- **401 unauthorized** — uniform for missing/expired/revoked tokens. Token
-  format is `mtt_` + 64 hex characters; issue a fresh one in the workspace
-  MCP module → Tokens (shown once).
-- **429 rate limited** — per-token budget (default 120 calls/min); the client
-  honors `Retry-After`. The discovery enrichment fan-out is bounded and
-  cached, but tight loops in custom code can still trip it.
-- **`asset_not_found`** — SaaS identifiers are lowercase normalized names in
-  a structured reference; the client lowercases FQNs for you, so this
-  usually means the AcmeCloud demo fixture was not applied to the workspace
-  you are calling (metatate-saas: `./scripts/acmecloud-demo-fixtures.sh`).
-- **`not_enough_published_state`** — the tenant has no current publication
-  for that asset/scenario; publish the demo state first.
-- **`UNKNOWN` decisions on custom intents** — the server never guesses an
-  unmappable intent (`scenario_unresolved`); pass a supported
-  `intended_use` (analytics/reporting/support/marketing/ml_training/…) or a
-  canonical scenario key.
-- **GET /mcp returns 405** — the endpoint is POST-only JSON-RPC; the client
-  handles this, plain curl probes should POST.
+The server never guesses an unmappable intent (`scenario_unresolved`); pass a
+supported `intended_use` (analytics/reporting/support/marketing/ml_training/…)
+or a canonical scenario key.
+
+## Notebook edits disappear after regeneration
+
+The `.ipynb` files are generated. Edit `scripts/build_notebooks.py` and rerun
+it; `scripts/build_notebooks.py --check` (run by CI) fails while a notebook
+and the generator disagree.

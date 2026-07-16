@@ -55,19 +55,17 @@ export METATATE_CI_GATE_FAIL_ON_CONTROLS=1
 
 ## Live MCP Mode
 
-Offline mode uses committed fixtures. Live mode sends every decision request through the Snowflake-managed Metatate MCP server.
+Offline mode uses committed fixtures. Live mode sends every decision request to your Metatate Cloud workspace's MCP endpoint.
 
 ```bash
 export METATATE_EXAMPLES_MODE=live
-export METATATE_MCP_URL=https://<account-url>/api/v2/databases/METATATE_APP/schemas/CORE/mcp-servers/METATATE_MCP
-export SNOWFLAKE_ROLE=NAC
-export METATATE_MCP_PAT_ENV=METATATE_EXAMPLES_PAT
-export METATATE_EXAMPLES_PAT='<snowflake-pat-secret>'
+export METATATE_MCP_URL=https://<your-workspace-mcp-endpoint>/mcp
+export METATATE_SAAS_MCP_TOKEN=mtt_...
 
 scripts/run_cicd_policy_gate.sh --strict
 ```
 
-Use a dedicated Snowflake service user and role-restricted PAT. See `docs/live-mode.md`.
+Use a workspace-issued MCP access token (MCP module → Tokens). See `docs/live-mode-saas.md`.
 
 ## GitHub Actions Shape
 
@@ -94,9 +92,7 @@ jobs:
         env:
           METATATE_EXAMPLES_MODE: live
           METATATE_MCP_URL: ${{ secrets.METATATE_MCP_URL }}
-          METATATE_MCP_PAT_ENV: METATATE_EXAMPLES_PAT
-          METATATE_EXAMPLES_PAT: ${{ secrets.METATATE_EXAMPLES_PAT }}
-          SNOWFLAKE_ROLE: NAC
+          METATATE_SAAS_MCP_TOKEN: ${{ secrets.METATATE_SAAS_MCP_TOKEN }}
 ```
 
 Teams usually generate the change-set JSON from dbt model diffs, migration files, export-job definitions, or agent workflow manifests before this step runs.

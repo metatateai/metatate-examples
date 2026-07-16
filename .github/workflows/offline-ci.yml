@@ -46,7 +46,6 @@ jobs:
           python -m compileall \
             common \
             cicd_policy_gate \
-            cortex_agent_runtime \
             framework_runtime \
             human_exception_workflow \
             scripts/build_notebooks.py \

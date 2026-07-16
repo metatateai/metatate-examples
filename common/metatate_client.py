@@ -1,7 +1,8 @@
 """Small Metatate client helpers used by the notebooks.
 
-Offline mode reads committed fixture responses. Live mode calls the Snowflake-
-managed Metatate MCP server.
+Offline mode reads committed fixture responses. Live mode calls your Metatate
+Cloud workspace's MCP endpoint (see docs/live-mode-saas.md). Snowflake Native
+App examples live in the metatate-snowflake-examples repository.
 """
 
 from __future__ import annotations
@@ -159,16 +160,18 @@ class OfflineMetatateClient:
 
 
 class ManagedMCPMetatateClient:
-    """Live client for the Snowflake-managed Metatate MCP server."""
+    """Shared MCP-over-HTTP transport (handshake, retries, SSE-or-JSON parsing).
+
+    The concrete live client is :class:`common.saas_client.SaasMcpMetatateClient`,
+    which layers the Metatate Cloud tool surface on top of this transport.
+    """
 
     def __init__(self, endpoint: str | None = None) -> None:
         if load_dotenv:
             load_dotenv(REPO_ROOT / ".env")
 
         self.endpoint = endpoint or _mcp_endpoint_from_env()
-        self.role = os.getenv("METATATE_MCP_ROLE") or os.getenv("SNOWFLAKE_ROLE")
-        self.token_type = os.getenv("METATATE_MCP_TOKEN_TYPE", "PROGRAMMATIC_ACCESS_TOKEN")
-        self.token_env = os.getenv("METATATE_MCP_PAT_ENV", "METATATE_EXAMPLES_PAT")
+        self.token_env = os.getenv("METATATE_MCP_PAT_ENV", "METATATE_SAAS_MCP_TOKEN")
         self.timeout_seconds = int(os.getenv("METATATE_MCP_TIMEOUT_SECONDS", "120"))
         self.retry_attempts = max(1, int(os.getenv("METATATE_MCP_RETRY_ATTEMPTS", "4")))
         self.retry_backoff_seconds = float(os.getenv("METATATE_MCP_RETRY_BACKOFF_SECONDS", "1"))
@@ -186,100 +189,19 @@ class ManagedMCPMetatateClient:
             token = os.getenv(self.token_env)
             if not token:
                 raise RuntimeError(
-                    f"Live mode requires a Snowflake PAT in ${self.token_env}. "
+                    f"Live mode requires a Metatate MCP access token in ${self.token_env}. "
                     "Set METATATE_MCP_PAT_ENV to use a different environment variable."
                 )
 
             self._session = requests.Session()
-            headers = {
-                "Authorization": f"Bearer {token}",
-                "X-Snowflake-Authorization-Token-Type": self.token_type,
-                "Content-Type": "application/json",
-                "Accept": "application/json, text/event-stream",
-            }
-            if self.role:
-                headers["X-Snowflake-Role"] = self.role
-            self._session.headers.update(headers)
-        return self._session
-
-    def discover_context(self, **params: Any) -> dict[str, Any]:
-        compliance_any = params.get("compliance_any") or []
-        if isinstance(compliance_any, str):
-            compliance_framework = compliance_any
-        else:
-            compliance_framework = next(iter(compliance_any), None)
-
-        return self._call_tool(
-            "discover-context",
-            _drop_none(
+            self._session.headers.update(
                 {
-                    "database_name": params.get("database_name") or params.get("database"),
-                    "schema_name": params.get("schema_name") or params.get("schema"),
-                    "min_sensitivity": params.get("min_sensitivity"),
-                    "compliance_framework": params.get("compliance_framework") or compliance_framework,
-                    "has_pii": params.get("has_pii"),
-                    "domain": params.get("domain"),
+                    "Authorization": f"Bearer {token}",
+                    "Content-Type": "application/json",
+                    "Accept": "application/json, text/event-stream",
                 }
-            ),
-        )
-
-    def get_decision_context(self, table_name: str) -> dict[str, Any]:
-        return self._call_tool("get-decision-context", {"table_name": table_name})
-
-    def inspect_data_meaning(self, table_name: str, columns: list[str] | None = None) -> dict[str, Any]:
-        response = self._call_tool(
-            "inspect-data-meaning",
-            _column_scoped_arguments(table_name, columns),
-        )
-        return _normalize_data_meaning_response(_filter_columns(response, columns))
-
-    def inspect_governance_rules(self, table_name: str, columns: list[str] | None = None) -> dict[str, Any]:
-        return self._call_tool(
-            "inspect-governance-rules",
-            _column_scoped_arguments(table_name, columns),
-        )
-
-    def authorize_use(self, table_name: str, operation: str, intended_use: str, **params: Any) -> dict[str, Any]:
-        destination = params.get("destination") or {}
-        payload: dict[str, Any] = {
-            "table_name": table_name,
-            "operation": operation,
-            "intended_use": intended_use,
-            "actor_role": params.get("actor_role"),
-            "columns_csv": _csv(params.get("columns")),
-            "destination_system": params.get("destination_system") or destination.get("system"),
-            "destination_jurisdiction": params.get("destination_jurisdiction") or destination.get("jurisdiction"),
-            "consumer_jurisdiction": params.get("consumer_jurisdiction"),
-            "context_json": _json_string(params.get("context")),
-            "raw_request_text": params.get("raw_request_text"),
-            "normalized_request_json": _json_string(params.get("normalized_request")),
-            "normalization_meta_json": _json_string(params.get("normalization_meta")),
-        }
-        return self._call_tool("authorize-use", _drop_none(payload))
-
-    def validate_query_context(self, sql: str, **params: Any) -> dict[str, Any]:
-        payload = {
-            "sql_text": sql,
-            "operation": params.get("operation"),
-            "intended_use": params.get("intended_use"),
-            "actor_role": params.get("actor_role"),
-            "destination_system": params.get("destination_system"),
-            "destination_jurisdiction": params.get("destination_jurisdiction"),
-            "consumer_jurisdiction": params.get("consumer_jurisdiction"),
-        }
-        return _normalize_validation_response(self._call_tool("validate-query-context", _drop_none(payload)))
-
-    def explain_why(
-        self,
-        decision_id: str | None = None,
-        validation_id: str | None = None,
-    ) -> dict[str, Any]:
-        return self._call_tool("explain-why", _drop_none({"decision_id": decision_id, "validation_id": validation_id}))
-
-    def _call_tool(self, name: str, arguments: dict[str, Any]) -> dict[str, Any]:
-        self._ensure_initialized()
-        response = self._request("tools/call", {"name": name, "arguments": arguments})
-        return _extract_mcp_payload(response)
+            )
+        return self._session
 
     def _ensure_initialized(self) -> None:
         if self._initialized:
@@ -349,14 +271,16 @@ def get_client() -> Any:
         load_dotenv(REPO_ROOT / ".env")
     mode = os.getenv("METATATE_EXAMPLES_MODE", "offline").strip().lower()
     if mode == "live":
-        backend = os.getenv("METATATE_MCP_BACKEND", "snowflake").strip().lower()
-        if backend == "saas":
-            from .saas_client import SaasMcpMetatateClient
+        backend = os.getenv("METATATE_MCP_BACKEND", "saas").strip().lower()
+        if backend != "saas":
+            raise ValueError(
+                "This repo's live mode targets Metatate Cloud (METATATE_MCP_BACKEND=saas). "
+                "Snowflake Native App examples: "
+                "https://github.com/metatateai/metatate-snowflake-examples"
+            )
+        from .saas_client import SaasMcpMetatateClient
 
-            return SaasMcpMetatateClient()
-        if backend != "snowflake":
-            raise ValueError("METATATE_MCP_BACKEND must be snowflake or saas")
-        return ManagedMCPMetatateClient()
+        return SaasMcpMetatateClient()
     if mode != "offline":
         raise ValueError("METATATE_EXAMPLES_MODE must be offline or live")
     return OfflineMetatateClient()
@@ -364,22 +288,12 @@ def get_client() -> Any:
 
 def _mcp_endpoint_from_env() -> str:
     endpoint = os.getenv("METATATE_MCP_URL")
-    if endpoint:
-        return endpoint.rstrip("/")
-
-    account_url = os.getenv("METATATE_MCP_ACCOUNT_URL") or os.getenv("SNOWFLAKE_ACCOUNT_URL")
-    if not account_url:
+    if not endpoint:
         raise RuntimeError(
-            "Live mode requires METATATE_MCP_URL, or METATATE_MCP_ACCOUNT_URL plus app/schema/server names."
+            "Live mode requires METATATE_MCP_URL — the full MCP endpoint from the "
+            "workspace MCP module's Connect tab, e.g. https://<your-workspace-mcp-host>/mcp."
         )
-
-    app_name = os.getenv("METATATE_APP_NAME", "METATATE_APP")
-    schema_name = os.getenv("METATATE_MCP_SCHEMA", "CORE")
-    server_name = os.getenv("METATATE_MCP_SERVER_NAME", "METATATE_MCP")
-    return (
-        account_url.rstrip("/")
-        + f"/api/v2/databases/{app_name}/schemas/{schema_name}/mcp-servers/{server_name}"
-    )
+    return endpoint.rstrip("/")
 
 
 def _parse_sse_or_json(text: str) -> dict[str, Any]:
@@ -405,82 +319,8 @@ def _extract_mcp_payload(response: dict[str, Any]) -> dict[str, Any]:
     return json.loads(text)
 
 
-def _column_scoped_arguments(table_name: str, columns: list[str] | None) -> dict[str, Any]:
-    payload = {"table_name": table_name}
-    if columns and len(columns) == 1:
-        payload["column_name"] = columns[0]
-    return payload
-
-
-def _filter_columns(response: dict[str, Any], columns: list[str] | None) -> dict[str, Any]:
-    if not columns or len(columns) == 1:
-        return response
-    wanted = {_upper_or_none(column) for column in columns}
-    result = deepcopy(response)
-    result["data"]["columns"] = [
-        column for column in response.get("data", {}).get("columns", []) if column.get("column_name") in wanted
-    ]
-    return result
-
-
-def _normalize_data_meaning_response(response: dict[str, Any]) -> dict[str, Any]:
-    result = deepcopy(response)
-    for column in result.get("data", {}).get("columns", []):
-        if "masking_type" not in column:
-            masking = column.get("masking") or {}
-            column["masking_type"] = masking.get("type")
-    return result
-
-
-def _normalize_validation_response(response: dict[str, Any]) -> dict[str, Any]:
-    result = deepcopy(response)
-    data = result.setdefault("data", {})
-
-    decision = data.get("decision")
-    if isinstance(decision, dict):
-        if "decision" not in decision and data.get("overall_decision"):
-            decision["decision"] = data["overall_decision"]
-        if "rationale" not in decision and data.get("summary"):
-            decision["rationale"] = data["summary"]
-    elif data.get("overall_decision"):
-        data["decision"] = {"decision": data["overall_decision"], "rationale": data.get("summary")}
-
-    action = data.setdefault("agent_action", {})
-    if "message" not in action:
-        action["message"] = action.get("safe_next_step") or action.get("suggested_next_tool") or "Review the validation result before proceeding."
-    if "type" not in action:
-        if data.get("overall_decision") == "DENY":
-            action["type"] = "block"
-        elif action.get("rewrite_required"):
-            action["type"] = "revise_query"
-        elif data.get("overall_decision") == "ALLOW":
-            action["type"] = "proceed"
-        else:
-            action["type"] = "review_controls"
-    if "validation_id" not in data and action.get("validation_id"):
-        data["validation_id"] = action["validation_id"]
-
-    return result
-
-
 def _drop_none(payload: dict[str, Any]) -> dict[str, Any]:
     return {key: value for key, value in payload.items() if value is not None}
-
-
-def _csv(value: Any) -> str | None:
-    if not value:
-        return None
-    if isinstance(value, str):
-        return value
-    return ",".join(str(item) for item in value)
-
-
-def _json_string(value: Any) -> str | None:
-    if value is None:
-        return None
-    if isinstance(value, str):
-        return value
-    return json.dumps(value)
 
 
 def _normalize_table(table_name: str) -> str:

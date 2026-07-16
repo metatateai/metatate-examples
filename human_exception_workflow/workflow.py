@@ -2,7 +2,7 @@
 """Human-in-the-loop exception workflow for Metatate examples.
 
 The workflow is deterministic and local, but every policy decision comes from
-Metatate. Offline mode uses fixtures. Live mode calls the Snowflake-managed
+Metatate. Offline mode uses fixtures. Live mode calls the Metatate Cloud
 MCP server through the shared examples client.
 """
 

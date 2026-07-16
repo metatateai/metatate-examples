@@ -3,33 +3,36 @@
 This repository separates examples from runtime acceptance tests.
 
 - **Developer example:** a notebook or walkthrough a developer can read and run.
-- **Offline notebook:** executes with committed fixture responses and no Snowflake account.
-- **Live MCP notebook:** executes against the Snowflake-managed Metatate MCP server.
-- **Framework/runtime acceptance:** invokes the real framework or hosted runtime surface and asserts that Metatate changes the outcome.
+- **Offline notebook:** executes with committed fixture responses and no account.
+- **Live notebook:** executes against a Metatate Cloud workspace's MCP endpoint
+  (`METATATE_EXAMPLES_MODE=live`, see docs/live-mode-saas.md).
+- **Framework/runtime acceptance:** invokes the real framework object and
+  asserts that Metatate changes the outcome.
 
-| Example | Developer example | Offline notebook | Live MCP notebook | Runtime acceptance |
+| Example | Developer example | Offline notebook | Live notebook | Runtime acceptance |
 | --- | --- | --- | --- | --- |
 | Setup and context discovery | `00_setup_live_or_offline.ipynb` | Yes | Yes | Not applicable |
 | Decision layer cookbook | `01_decision_layer_cookbook.ipynb` | Yes | Yes | Not applicable |
 | LangGraph governed SQL agent | `02_governed_sql_agent_langgraph.ipynb` | Yes | Yes | `framework_runtime/langgraph_acceptance.py` |
-| LangGraph governed SQL agent runtime | `13_langgraph_governed_sql_agent_runtime.ipynb` | Yes; requires framework deps | Yes; requires framework deps and MCP env | `framework_runtime/langgraph_agent_acceptance.py` |
 | Transfer governance before export | `03_transfer_governance_before_export.ipynb` | Yes | Yes | Covered by notebook execution |
 | Governed text-to-SQL | `04_governed_text_to_sql_agent.ipynb` | Yes | Yes | Covered by notebook execution |
 | Agent red-team evaluation | `05_agent_red_team_evaluation_harness.ipynb` | Yes | Yes | Covered by notebook execution |
 | CI/CD policy gate for data and AI changes | `06_ci_gate_for_data_ai_changes.ipynb` | Yes | Yes | `cicd_policy_gate/acceptance.py` |
 | Governed RAG ingestion gate | `07_governed_rag_embedding_ingestion_gate.ipynb` | Yes | Yes | Covered by notebook execution |
-| Cortex Agent custom-tool preflight | `08_snowflake_cortex_agent_tool_preflight.ipynb` | Yes | Yes | Pattern only; use the Cortex runtime notebook for hosted runtime proof |
-| OpenAI Agents SDK tool guard | `09_openai_agents_tool_guard_pattern.ipynb` | Yes | Yes | `framework_runtime/openai_agents_acceptance.py` |
-| Human-in-the-loop exception workflow | `10_human_approval_packet_for_conditional_export.ipynb` | Yes | Yes | `human_exception_workflow/acceptance.py` |
-| LlamaIndex governed retrieval | `11_llamaindex_governed_retrieval_pattern.ipynb` | Yes | Yes | `framework_runtime/llamaindex_acceptance.py` |
-| Cortex Agent hosted runtime | `12_snowflake_cortex_agent_runtime.ipynb` | Live-only | No; uses Snowflake Cortex Agents directly | `cortex_agent_runtime/acceptance.py` |
+| OpenAI Agents SDK tool guard | `08_openai_agents_tool_guard_pattern.ipynb` | Yes | Yes | `framework_runtime/openai_agents_acceptance.py` |
+| Human-in-the-loop exception workflow | `09_human_approval_packet_for_conditional_export.ipynb` | Yes | Yes | `human_exception_workflow/acceptance.py` |
+| LlamaIndex governed retrieval | `10_llamaindex_governed_retrieval_pattern.ipynb` | Yes | Yes | `framework_runtime/llamaindex_acceptance.py` |
+| LangGraph governed SQL agent runtime | `11_langgraph_governed_sql_agent_runtime.ipynb` | Yes; requires framework deps | Yes; requires framework deps and MCP env | `framework_runtime/langgraph_agent_acceptance.py` |
 
 ## Test Commands
 
 GitHub Actions:
 
 - `.github/workflows/offline-ci.yml` runs the offline PR gate.
-- `.github/workflows/live-mcp-validation.yml` runs the manual live managed MCP release gate.
+- `.github/workflows/live-saas-mcp-validation.yml` runs the manual live release
+  gate against a Metatate Cloud workspace (secrets `METATATE_SAAS_MCP_URL`,
+  `METATATE_SAAS_MCP_TOKEN`; the workspace must serve the AcmeCloud demo
+  publication).
 
 Run the core notebook pack offline:
 
@@ -37,13 +40,12 @@ Run the core notebook pack offline:
 scripts/run_notebook_pack.sh
 ```
 
-Run the core notebook pack live through the managed MCP server:
+Run the core notebook pack live against your workspace:
 
 ```bash
 METATATE_EXAMPLES_MODE=live \
-METATATE_MCP_URL=https://<account-url>/api/v2/databases/METATATE_APP/schemas/CORE/mcp-servers/METATATE_MCP \
-SNOWFLAKE_ROLE=NAC \
-METATATE_MCP_PAT_ENV=METATATE_EXAMPLES_PAT \
+METATATE_MCP_URL=https://<your-workspace-mcp-endpoint>/mcp \
+METATATE_SAAS_MCP_TOKEN=mtt_... \
 scripts/run_notebook_pack.sh
 ```
 
@@ -83,26 +85,11 @@ Run the LangGraph runtime notebook:
 scripts/run_langgraph_runtime_notebook.sh
 ```
 
-Run hosted Cortex Agent runtime acceptance:
-
-```bash
-scripts/run_cortex_agent_runtime_acceptance.sh
-```
-
-Run the hosted Cortex Agent notebook:
-
-```bash
-scripts/run_cortex_agent_runtime_notebook.sh
-```
-
 Do not treat a framework as fully integrated until its runtime acceptance script passes.
 
-## Live (SaaS) lane
+## Snowflake Native App lane
 
-`METATATE_EXAMPLES_MODE=live METATATE_MCP_BACKEND=saas` runs the same
-coverage against the Metatate SaaS cross-platform MCP endpoint
-(docs/live-mode-saas.md): notebooks 00–11 and 13 plus the CI/CD gate, human
-exception workflow, and framework runtime acceptance scripts. Notebook 12 is
-Snowflake Cortex-only and excluded. The manual workflow is
-`.github/workflows/live-saas-mcp-validation.yml` (secrets
-`METATATE_SAAS_MCP_URL`, `METATATE_SAAS_MCP_TOKEN`).
+The Snowflake-managed MCP validation lane (Cortex preflight and hosted Cortex
+Agent runtime included) lives in the frozen
+[metatate-snowflake-examples](https://github.com/metatateai/metatate-snowflake-examples)
+repository.

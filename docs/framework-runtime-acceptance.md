@@ -1,6 +1,6 @@
 # Framework Runtime Acceptance
 
-The notebook pack proves the Metatate decision workflow in offline mode and through the Snowflake-managed MCP server. The framework runtime acceptance scripts add a narrower proof: the framework's actual tool object invokes the Metatate-backed callable and changes its output when Metatate returns a restrictive decision.
+The notebook pack proves the Metatate decision workflow in offline mode and against a live Metatate Cloud workspace. The framework runtime acceptance scripts add a narrower proof: the framework's actual tool object invokes the Metatate-backed callable and changes its output when Metatate returns a restrictive decision.
 
 These checks are deterministic. They do not call an LLM and do not require an OpenAI API key.
 
@@ -25,19 +25,16 @@ Offline mode uses committed Metatate response fixtures.
 
 ## Run Live Through MCP
 
-Live mode uses the same environment as the notebooks. Seed the AcmeCloud fixture, create a role-restricted PAT for the dedicated service user, and export the PAT before running the framework checks.
+Live mode uses the same environment as the notebooks: a workspace serving the AcmeCloud demo publication, its MCP endpoint, and a workspace-issued access token.
 
 ```bash
-export METATATE_EXAMPLES_PAT="$(cat /private/tmp/metatate_examples_mcp_pat)"
-
 METATATE_EXAMPLES_MODE=live \
-METATATE_MCP_URL=https://<account-url>/api/v2/databases/METATATE_APP/schemas/CORE/mcp-servers/METATATE_MCP \
-SNOWFLAKE_ROLE=NAC \
-METATATE_MCP_PAT_ENV=METATATE_EXAMPLES_PAT \
+METATATE_MCP_URL=https://<your-workspace-mcp-endpoint>/mcp \
+METATATE_SAAS_MCP_TOKEN=mtt_... \
 scripts/run_framework_runtime_acceptance.sh
 ```
 
-Use the PAT setup in [live-mode.md](live-mode.md). Do not attach notebook or examples network policies to a human/admin user.
+See [live-mode-saas.md](live-mode-saas.md) for the full setup. Keep the token in your shell, never in `.env` or the repository.
 
 ## What Is Covered
 
@@ -58,4 +55,6 @@ Each script verifies that:
 - OpenAI model loop execution. The OpenAI check proves the tool runtime, not model behavior.
 - LLM-generated LangGraph planning. The LangGraph checks prove graph runtime invocation and deterministic conditional routing, not model planning quality.
 - LlamaIndex agent LLM planning. The LlamaIndex check proves the tool runtime, not LLM tool selection.
-- Snowflake Cortex Agent object runtime. Use [cortex-agent-runtime-acceptance.md](cortex-agent-runtime-acceptance.md) for the live Cortex Agent check.
+- Snowflake Cortex Agent object runtime. That check lives in the
+  [metatate-snowflake-examples](https://github.com/metatateai/metatate-snowflake-examples)
+  repository.
