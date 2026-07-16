@@ -99,9 +99,17 @@ Demo policy behavior:
 | `11_langgraph_governed_sql_agent_runtime.ipynb` | LangGraph runtime SQL agent with approve, revise, and block routes. |
 | `12_governance_states_and_the_wider_estate.ipynb` | Honest states (ungoverned, review-required), role gating, the AI lifecycle, collection targeting, and taxonomy-targeted masking. |
 
-Want the sharpest serving-model demo? [docs/walkthrough-publish-flip.md](docs/walkthrough-publish-flip.md)
-walks the live loop: author (nothing changes) → approve (still nothing) →
-**publish (the answer flips)** → explain the old decision (`current: false`).
+## Walkthroughs (live, beyond the notebooks)
+
+- [docs/walkthrough-publish-flip.md](docs/walkthrough-publish-flip.md) — the
+  serving model: author (nothing changes) → approve (still nothing) →
+  **publish (the answer flips)** → explain the old decision (`current: false`).
+- [docs/walkthrough-claude-code.md](docs/walkthrough-claude-code.md) — the
+  hero demo: Claude Code with the `metatate` plugin making governed decisions
+  against your workspace (discover → deny → allow → explain → validate).
+- [docs/walkthrough-coverage-review.md](docs/walkthrough-coverage-review.md) —
+  the governance-lead loop: find the deliberately ungoverned corner, see it
+  answer honestly, govern or retire it, gate the release.
 
 The notebooks run in two modes:
 
