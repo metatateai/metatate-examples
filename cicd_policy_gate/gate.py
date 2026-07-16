@@ -3,7 +3,7 @@
 
 The gate intentionally depends only on the shared examples client. In offline
 mode it reads committed fixtures. In live mode every decision goes through the
-Snowflake-managed Metatate MCP endpoint.
+Metatate Cloud workspace MCP endpoint.
 """
 
 from __future__ import annotations

@@ -3,7 +3,7 @@ kind: DataPolicy
 metadata:
   name: acme-transfer
   version: 1.0.0
-  description: Customer exports require destination-aware authorization before leaving Snowflake.
+  description: Customer exports require destination-aware authorization before leaving the platform.
   labels:
     demo: acmecloud
     domain: customer-data

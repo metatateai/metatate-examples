@@ -2,9 +2,7 @@
 
 .github/ @carloskiron @seanmetatate
 cicd_policy_gate/ @carloskiron @seanmetatate
-cortex_agent_runtime/ @carloskiron @seanmetatate
 framework_runtime/ @carloskiron @seanmetatate
 human_exception_workflow/ @carloskiron @seanmetatate
 notebooks/ @carloskiron @seanmetatate
 scripts/ @carloskiron @seanmetatate
-sql/ @carloskiron @seanmetatate

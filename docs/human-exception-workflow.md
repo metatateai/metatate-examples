@@ -8,7 +8,7 @@ It covers three outcomes:
 - conditional Salesforce export creates an exception packet and resumes only after reviewer controls are attested
 - blocked support-ticket training remains blocked and does not resume
 
-The workflow is implemented in `human_exception_workflow/` and used by notebook `10_human_approval_packet_for_conditional_export.ipynb`.
+The workflow is implemented in `human_exception_workflow/` and used by notebook `09_human_approval_packet_for_conditional_export.ipynb`.
 
 ## Run Locally
 
@@ -27,19 +27,17 @@ scripts/run_human_exception_workflow.sh --fail-on-blocked
 
 ## Live MCP Mode
 
-Offline mode uses committed fixtures. Live mode sends every Metatate decision request through the Snowflake-managed MCP server.
+Offline mode uses committed fixtures. Live mode sends every Metatate decision request to your Metatate Cloud workspace's MCP endpoint.
 
 ```bash
 export METATATE_EXAMPLES_MODE=live
-export METATATE_MCP_URL=https://<account-url>/api/v2/databases/METATATE_APP/schemas/CORE/mcp-servers/METATATE_MCP
-export SNOWFLAKE_ROLE=NAC
-export METATATE_MCP_PAT_ENV=METATATE_EXAMPLES_PAT
-export METATATE_EXAMPLES_PAT='<snowflake-pat-secret>'
+export METATATE_MCP_URL=https://<your-workspace-mcp-endpoint>/mcp
+export METATATE_SAAS_MCP_TOKEN=mtt_...
 
 scripts/run_human_exception_workflow_acceptance.sh
 ```
 
-Use a dedicated Snowflake service user and role-restricted PAT. See `docs/live-mode.md`.
+Use a workspace-issued MCP access token (MCP module → Tokens). See `docs/live-mode-saas.md`.
 
 ## Workflow Model
 

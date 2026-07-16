@@ -67,8 +67,16 @@ sys.path.insert(0, str(repo_root))
 
 from common import get_client
 
-client = get_client()
 mode = os.getenv("METATATE_EXAMPLES_MODE", "offline")
+if mode == "live" and not os.getenv("METATATE_MCP_URL"):
+    print("Live mode needs a Metatate endpoint. Fastest path (about 5 minutes):")
+    print("  1. Create a free account: https://app.getmetatate.com/sign-up?ref=examples")
+    print("  2. Workspace dashboard: 'Load the demo' banner -> 'Load the AcmeCloud demo'")
+    print("  3. MCP Tools -> Tokens: issue a token; Connect tab has your endpoint URL")
+    print("  4. export METATATE_MCP_URL=... METATATE_SAAS_MCP_TOKEN=...")
+    print("     (full steps: docs/live-mode-saas.md)")
+
+client = get_client()
 print(f"Metatate examples mode: {mode}")
 
 
@@ -105,9 +113,9 @@ def setup_notebook() -> dict:
 
                 This notebook checks the AcmeCloud fixture and initializes the shared Metatate client.
 
-                Offline mode is the default. It reads committed response fixtures and requires no Snowflake account.
+                Offline mode is the default. It reads committed response fixtures and requires no account or endpoint.
 
-                Live mode calls the Snowflake-managed Metatate MCP server. Set `METATATE_EXAMPLES_MODE=live`, configure `.env`, and export the PAT before starting Jupyter.
+                Live mode calls your Metatate Cloud workspace's MCP endpoint (no account yet? create one free at [app.getmetatate.com/sign-up?ref=examples](https://app.getmetatate.com/sign-up?ref=examples) and load the AcmeCloud demo from the dashboard's **"New here?" banner → Load the demo**). Set `METATATE_EXAMPLES_MODE=live`, export `METATATE_MCP_URL` and your access token, then start Jupyter — see [docs/live-mode-saas.md](../docs/live-mode-saas.md).
                 """
             ),
             code(SETUP_CELL),
@@ -805,103 +813,12 @@ def governed_rag_ingestion_gate_notebook() -> dict:
     )
 
 
-def cortex_agent_preflight_notebook() -> dict:
-    return notebook(
-        [
-            markdown(
-                """
-                # 08 - Snowflake Cortex Agent Tool Preflight
-
-                This notebook models a Cortex Agent custom-tool pattern: before the agent answers with data or invokes an operational tool, it calls Metatate through managed MCP and records the decision.
-
-                The notebook runs locally for repeatability, but the contract is the same one a Snowflake-hosted custom tool can enforce.
-                """
-            ),
-            code(SETUP_CELL),
-            markdown("## Tool requests from an agent"),
-            code(
-                """
-                tool_requests = [
-                    {
-                        "request_id": "cortex-001",
-                        "tool_name": "run_revenue_sql",
-                        "sql": "SELECT region, account_status, SUM(arr) AS arr FROM ACMECLOUD_DEMO.PUBLIC.CUSTOMERS WHERE account_status = 'active' GROUP BY region, account_status",
-                        "operation": "read",
-                        "intended_use": "analytics",
-                        "actor_role": "DATA_ANALYST",
-                    },
-                    {
-                        "request_id": "cortex-002",
-                        "tool_name": "prepare_growth_campaign",
-                        "table_name": "ACMECLOUD_DEMO.PUBLIC.CUSTOMERS",
-                        "operation": "read",
-                        "intended_use": "marketing",
-                        "actor_role": "GROWTH_ANALYST",
-                        "columns": ["CUSTOMER_NAME", "EMAIL"],
-                    },
-                ]
-                """
-            ),
-            markdown("## Preflight wrapper"),
-            code(
-                """
-                def cortex_tool_preflight(request):
-                    if "sql" in request:
-                        response = client.validate_query_context(
-                            request["sql"],
-                            operation=request["operation"],
-                            intended_use=request["intended_use"],
-                            actor_role=request["actor_role"],
-                        )
-                    else:
-                        response = client.authorize_use(
-                            request["table_name"],
-                            operation=request["operation"],
-                            intended_use=request["intended_use"],
-                            actor_role=request["actor_role"],
-                            columns=request.get("columns"),
-                        )
-
-                    decision = decision_label(response)
-                    return {
-                        "request_id": request["request_id"],
-                        "tool_name": request["tool_name"],
-                        "decision": decision,
-                        "invoke_tool": decision != "DENY",
-                        "metatate_action": agent_action_text(response),
-                        "decision_id": response.get("data", {}).get("decision_id") or response.get("data", {}).get("validation_id"),
-                    }
-
-                preflight_results = pd.DataFrame([cortex_tool_preflight(request) for request in tool_requests])
-                preflight_results
-                """
-            ),
-            code(
-                """
-                allowed = preflight_results[preflight_results["invoke_tool"]]
-                blocked = preflight_results[~preflight_results["invoke_tool"]]
-
-                print("Tools the agent may invoke:")
-                print(allowed[["request_id", "tool_name", "decision"]].to_string(index=False))
-                print("\\nTools blocked before invocation:")
-                print(blocked[["request_id", "tool_name", "decision", "metatate_action"]].to_string(index=False))
-                """
-            ),
-            markdown(
-                """
-                This pattern keeps the agent runtime simple: every tool invocation gets a Metatate preflight decision, and denied tools never receive the data request.
-                """
-            ),
-        ]
-    )
-
-
 def openai_agents_tool_guard_notebook() -> dict:
     return notebook(
         [
             markdown(
                 """
-                # 09 - OpenAI Agents SDK Tool Guard Pattern
+                # 08 - OpenAI Agents SDK Tool Guard Pattern
 
                 This notebook shows how to put Metatate in front of tools an agent might call. The example is deterministic and does not call an LLM, so it can run offline and in CI.
 
@@ -993,7 +910,7 @@ def approval_workflow_notebook() -> dict:
         [
             markdown(
                 """
-                # 10 - Human-in-the-Loop Exception Workflow
+                # 09 - Human-in-the-Loop Exception Workflow
 
                 Metatate decisions are operational. Safe requests can proceed, conditional requests should become reviewer-ready exception packets, and denied requests should remain blocked.
 
@@ -1077,7 +994,7 @@ def llamaindex_retrieval_notebook() -> dict:
         [
             markdown(
                 """
-                # 11 - LlamaIndex Governed Retrieval Pattern
+                # 10 - LlamaIndex Governed Retrieval Pattern
 
                 This notebook demonstrates a LlamaIndex-style retrieval tool. The retrieval function searches policy context, then checks Metatate before returning data-bearing context to the agent.
 
@@ -1165,130 +1082,12 @@ def llamaindex_retrieval_notebook() -> dict:
     )
 
 
-def cortex_agent_runtime_notebook() -> dict:
-    return notebook(
-        [
-            markdown(
-                """
-                # 12 - Snowflake Cortex Agent Runtime
-
-                This live-only notebook creates a Snowflake Cortex Agent object with a server-side custom tool. The custom tool delegates to the Metatate Native App Snowflake Intelligence wrapper before the agent answers a SQL validation request.
-
-                Unlike the offline notebook pack, this notebook has no fixture fallback. It needs a Snowflake account with Cortex Agents enabled, the AcmeCloud fixture seeded, and a role-restricted PAT for a dedicated service user.
-                """
-            ),
-            markdown("## Configure the live runtime"),
-            code(
-                """
-                from pathlib import Path
-                import json
-                import sys
-
-                repo_root = Path.cwd()
-                if repo_root.name == "notebooks":
-                    repo_root = repo_root.parent
-                sys.path.insert(0, str(repo_root))
-
-                from cortex_agent_runtime.acceptance import (
-                    TOOL_NAME,
-                    SnowflakeClient,
-                    assert_agent_result,
-                    create_and_run_agent,
-                    decision_label,
-                    load_config,
-                    run_direct_tool_smoke,
-                    setup_runtime_objects,
-                    validate_config,
-                )
-
-                config = load_config()
-                validate_config(config)
-                client = SnowflakeClient(config)
-
-                print(f"Account URL: {config.account_url}")
-                print(f"Role: {config.role}")
-                print(f"Warehouse: {config.warehouse}")
-                print(f"Runtime schema: {config.database}.{config.schema}")
-                print(f"Agent: {config.agent_name}")
-                print(f"Tool: {TOOL_NAME}")
-                """
-            ),
-            markdown("## Create the server-side Metatate tool"),
-            code(
-                """
-                setup_runtime_objects(client, config)
-
-                print("Created or replaced:")
-                print(f"- {config.procedure_fqn}")
-                print()
-                print("The procedure delegates to:")
-                print(f"- {config.metatate_validate_fqn}")
-                """
-            ),
-            markdown("## Smoke-test the tool before adding the agent"),
-            code(
-                """
-                def summarize_metatate_result(payload):
-                    data = payload.get("data", {})
-                    action = data.get("agent_action", {})
-                    return {
-                        "decision": decision_label(payload),
-                        "can_execute_query": action.get("can_execute_query"),
-                        "suggested_next_tool": action.get("suggested_next_tool"),
-                        "extracted_columns": data.get("extracted_columns"),
-                        "summary": data.get("summary"),
-                    }
-
-
-                direct_result = run_direct_tool_smoke(client, config)
-                print(json.dumps(summarize_metatate_result(direct_result), indent=2))
-                """
-            ),
-            markdown("## Create and run the Cortex Agent"),
-            code(
-                """
-                agent_response = create_and_run_agent(client, config)
-                agent_result = assert_agent_result(agent_response)
-
-                tool_use = next(
-                    item["tool_use"]
-                    for item in agent_response["content"]
-                    if item.get("tool_use")
-                )
-                tool_result = next(
-                    item["tool_result"]
-                    for item in agent_response["content"]
-                    if item.get("tool_result")
-                )
-
-                print("Cortex Agent tool use:")
-                print(json.dumps({
-                    "name": tool_use["name"],
-                    "server_side": tool_use.get("client_side_execute") is False,
-                    "input": tool_use["input"],
-                }, indent=2))
-                print()
-                print("Metatate decision returned through the agent:")
-                print(json.dumps(summarize_metatate_result(agent_result), indent=2))
-                print()
-                print(f"Tool result status: {tool_result.get('status')}")
-                """
-            ),
-            markdown(
-                """
-                The important runtime behavior is the `tool_use` plus server-side `tool_result`. The agent did not execute the governed SQL; it validated the SQL string through Metatate and returned the decision before any data access happened.
-                """
-            ),
-        ]
-    )
-
-
 def langgraph_governed_sql_agent_runtime_notebook() -> dict:
     return notebook(
         [
             markdown(
                 """
-                # 13 - LangGraph Governed SQL Agent Runtime
+                # 11 - LangGraph Governed SQL Agent Runtime
 
                 This notebook uses a real LangGraph `StateGraph` to model a governed SQL agent. The graph plans a SQL draft, validates it with Metatate, and then routes to one of three outcomes:
 
@@ -1371,21 +1170,47 @@ NOTEBOOKS = {
     "05_agent_red_team_evaluation_harness.ipynb": red_team_notebook,
     "06_ci_gate_for_data_ai_changes.ipynb": ci_gate_notebook,
     "07_governed_rag_embedding_ingestion_gate.ipynb": governed_rag_ingestion_gate_notebook,
-    "08_snowflake_cortex_agent_tool_preflight.ipynb": cortex_agent_preflight_notebook,
-    "09_openai_agents_tool_guard_pattern.ipynb": openai_agents_tool_guard_notebook,
-    "10_human_approval_packet_for_conditional_export.ipynb": approval_workflow_notebook,
-    "11_llamaindex_governed_retrieval_pattern.ipynb": llamaindex_retrieval_notebook,
-    "12_snowflake_cortex_agent_runtime.ipynb": cortex_agent_runtime_notebook,
-    "13_langgraph_governed_sql_agent_runtime.ipynb": langgraph_governed_sql_agent_runtime_notebook,
+    "08_openai_agents_tool_guard_pattern.ipynb": openai_agents_tool_guard_notebook,
+    "09_human_approval_packet_for_conditional_export.ipynb": approval_workflow_notebook,
+    "10_llamaindex_governed_retrieval_pattern.ipynb": llamaindex_retrieval_notebook,
+    "11_langgraph_governed_sql_agent_runtime.ipynb": langgraph_governed_sql_agent_runtime_notebook,
 }
 
 
 def main() -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="verify the committed notebooks match this generator instead of writing",
+    )
+    args = parser.parse_args()
+
     NOTEBOOK_DIR.mkdir(parents=True, exist_ok=True)
+    stale: list[str] = []
     for filename, factory in NOTEBOOKS.items():
         path = NOTEBOOK_DIR / filename
-        path.write_text(json.dumps(factory(), indent=2) + "\n", encoding="utf-8")
+        rendered = json.dumps(factory(), indent=2) + "\n"
+        if args.check:
+            if not path.exists() or path.read_text(encoding="utf-8") != rendered:
+                stale.append(filename)
+            continue
+        path.write_text(rendered, encoding="utf-8")
         print(f"wrote {path.relative_to(ROOT)}")
+
+    if args.check:
+        extras = sorted(
+            path.name for path in NOTEBOOK_DIR.glob("*.ipynb") if path.name not in NOTEBOOKS
+        )
+        if stale or extras:
+            for name in stale:
+                print(f"stale (edit scripts/build_notebooks.py, then regenerate): {name}")
+            for name in extras:
+                print(f"not produced by the generator: {name}")
+            raise SystemExit(1)
+        print(f"{len(NOTEBOOKS)} notebooks match scripts/build_notebooks.py")
 
 
 if __name__ == "__main__":

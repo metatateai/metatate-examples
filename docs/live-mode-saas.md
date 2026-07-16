@@ -1,9 +1,9 @@
-# Live mode against the Metatate SaaS MCP server
+# Live Mode (Metatate Cloud)
 
-The SaaS (cross-platform) Metatate product exposes the same seven governance
-tools at a single `POST /mcp` endpoint with plain bearer-token auth. This
-repo's `saas` backend runs every notebook, gate, and acceptance script against
-it — same `get_client()` seam, no notebook changes.
+Metatate Cloud exposes the seven governance tools at a single `POST /mcp`
+endpoint with plain bearer-token auth. This repo's live mode runs every
+notebook, gate, and acceptance script against it — same `get_client()` seam,
+no notebook changes.
 
 The SaaS server speaks the v2 typed-answer contract (snake_case keys,
 structured `asset {database, schema, table, column?}` references, typed
@@ -16,11 +16,12 @@ back to the canonical payload shape. Decisions are always server-derived.
 
 ```bash
 export METATATE_EXAMPLES_MODE=live
-export METATATE_MCP_BACKEND=saas          # default: snowflake (back-compat)
 export METATATE_MCP_URL=https://<your-workspace-mcp-host>/mcp   # full path incl. /mcp
 export METATATE_SAAS_MCP_TOKEN=mtt_...    # MCP module → Tokens (shown once)
-export METATATE_MCP_PAT_ENV=METATATE_SAAS_MCP_TOKEN   # satisfies run_notebook_pack.sh's live gate
 ```
+
+`METATATE_MCP_BACKEND=saas` is the default (and the only backend in this
+repo); exporting it is harmless but no longer required.
 
 Optional: `METATATE_MCP_TOKEN_ENV` renames the token variable;
 `METATATE_SAAS_DEFAULT_DATABASE` / `METATATE_SAAS_DEFAULT_SCHEMA` (default
@@ -60,12 +61,11 @@ deterministic local one.
 scripts/run_cicd_policy_gate_acceptance.sh
 scripts/run_human_exception_workflow_acceptance.sh
 scripts/run_framework_runtime_acceptance.sh    # needs Python 3.10+
-scripts/run_notebook_pack.sh                   # notebooks 00–11
-scripts/run_langgraph_runtime_notebook.sh      # notebook 13
+scripts/run_notebook_pack.sh                   # notebooks 00–10
+scripts/run_langgraph_runtime_notebook.sh      # notebook 11 (framework deps)
 ```
 
-Notebook 12 (Snowflake Cortex Agents) is Snowflake-only and excluded from
-saas mode. CI: `.github/workflows/live-saas-mcp-validation.yml`
+CI: `.github/workflows/live-saas-mcp-validation.yml`
 (workflow_dispatch; secrets `METATATE_SAAS_MCP_URL`, `METATATE_SAAS_MCP_TOKEN`).
 
 ## Semantics worth knowing

@@ -10,7 +10,12 @@ policies/             Example Metatate policy YAML
 metatate-responses/   Offline response fixtures for the notebooks
 ```
 
-The CSV data is intentionally small. The Metatate response fixtures represent the decision-layer output that would be produced after equivalent policies are deployed and materialized by the Native App.
+The CSV data is intentionally small. The Metatate response fixtures represent
+the decision-layer output produced after equivalent policies are deployed and
+published in a Metatate Cloud workspace.
 
-Use `sql/setup_acmecloud_demo.sql` to create the live Snowflake version.
-
+To run against this domain live, load it into your own workspace with the
+one-click **Load the AcmeCloud demo** action (dashboard → "New here?" banner);
+contributors running the local `metatate-saas` stack can apply
+`metatate-saas/scripts/acmecloud-demo-fixtures.sh` instead. See
+`docs/live-mode-saas.md`.
