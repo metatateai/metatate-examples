@@ -27,7 +27,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "require_review",
-        "decision_id": "accef000-0000-4000-8000-000000000036",
+        "decision_id": "accef000-0000-4000-8000-000000000045",
         "decision_reason": "acme-hr-name-review v1 masking:spec.accessControl.masking \u2192 require_review on acmecloud_demo.public.employees.full_name",
         "enforcement_mode": "monitor",
         "instruction_family": "masking",
@@ -38,9 +38,9 @@
         "primary_resolution_source": "selector",
         "priority": 1,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000037",
+          "policy_id": "accef000-0000-4000-8000-000000000046",
           "policy_name": "AcmeCloud HR name review masking",
-          "policy_version_id": "accef000-0000-4000-8000-000000000038",
+          "policy_version_id": "accef000-0000-4000-8000-000000000047",
           "version_number": 1
         },
         "resolution_paths": [

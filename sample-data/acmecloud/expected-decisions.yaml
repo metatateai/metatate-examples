@@ -94,6 +94,10 @@ authorize:
     asset: { table: employees }
     scenario_key: sharing.public
     expect: { state: answered, decision: deny }
+  - id: customer-360-internal-sharing-allow
+    asset: { table: subscriptions }
+    scenario_key: sharing.internal
+    expect: { state: answered, decision: allow }
 
 validate:
   - id: safe-aggregate-pass

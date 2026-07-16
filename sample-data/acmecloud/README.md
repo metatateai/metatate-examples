@@ -13,6 +13,9 @@ tables/                 CSV source tables for offline inspection
 metatate-responses/     Offline response fixtures for the notebooks
 ```
 
+`catalog.yaml` also declares the demo's catalog COLLECTIONS ("Customer 360"),
+which the collection-targeted policy references by id.
+
 `catalog.yaml`, `policies/`, and `expected-decisions.yaml` together are the
 **estate spec** — the single source of truth for the demo domain. The
 Metatate Cloud one-click demo is derived from this spec by the product's

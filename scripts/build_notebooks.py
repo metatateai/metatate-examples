@@ -1040,7 +1040,29 @@ def governance_states_notebook() -> dict:
                         print(f"  {instruction['decision']} via [{paths}] {instruction.get('decision_reason')}")
                 """
             ),
-            markdown("## 5. PCI-scope payment data and intent-less reads"),
+            markdown(
+                """
+                ## 5. Collections: govern the named set, not a table list
+
+                The "Customer 360" COLLECTION groups five tables; one policy targets the
+                collection by id. The answer's citations carry a `collection` resolution
+                path — add a table to the collection and the policy follows it.
+                """
+            ),
+            code(
+                """
+                sharing = client.authorize_use(
+                    asset("subscriptions"),
+                    use="share account health summaries with the success team",
+                    scenario_key="sharing.internal",
+                )
+                print(f"sharing.internal on subscriptions -> {sharing['decision']}")
+                for instruction in sharing["instructions"]:
+                    paths = ",".join(p["source"] for p in instruction.get("resolution_paths") or [])
+                    print(f"  cited via [{paths}]: {instruction['provenance']['policy_name']}")
+                """
+            ),
+            markdown("## 6. PCI-scope payment data and intent-less reads"),
             code(
                 """
                 card = client.validate_query_context(

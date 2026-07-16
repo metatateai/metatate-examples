@@ -5,22 +5,19 @@
       "column": null,
       "database": "acmecloud_demo",
       "schema": "public",
-      "table": "support_tickets"
+      "table": "subscriptions"
     },
     "can_proceed_now": true,
     "conditions": [],
     "context_facts": {
       "category": "pii",
-      "masking": {
-        "exempt_roles": [],
-        "type": "redact"
-      },
+      "masking": null,
       "pii": true,
       "sensitivity": "confidential",
       "subcategory": null
     },
     "decision": "allow",
-    "decision_id": "accef000-0000-4000-8000-000000000038",
+    "decision_id": "accef000-0000-4000-8000-000000000084",
     "instructions": [
       {
         "category": "advisory",
@@ -28,40 +25,38 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "allow",
-        "decision_id": "accef000-0000-4000-8000-000000000038",
-        "decision_reason": "acme-customer-use v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.support_tickets",
+        "decision_id": "accef000-0000-4000-8000-000000000084",
+        "decision_reason": "acme-customer-360 v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.subscriptions",
         "enforcement_mode": "enforce",
         "instruction_family": "usage_guidance",
         "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
         "parameters": {
           "kind": "permitted",
           "uses": [
-            "analytics",
-            "reporting",
-            "support"
+            "customer_360_reporting"
           ]
         },
-        "primary_resolution_source": "selector",
+        "primary_resolution_source": "collection",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000006",
-          "policy_name": "AcmeCloud customer use guardrails",
-          "policy_version_id": "accef000-0000-4000-8000-000000000007",
+          "policy_id": "accef000-0000-4000-8000-000000000022",
+          "policy_name": "AcmeCloud Customer 360 context",
+          "policy_version_id": "accef000-0000-4000-8000-000000000023",
           "version_number": 1
         },
         "resolution_paths": [
           {
-            "ref": null,
-            "source": "selector"
+            "ref": "accef000-0000-4000-8000-000000000024",
+            "source": "collection"
           }
         ],
-        "scenario_key": "purpose.allowed_use",
+        "scenario_key": "sharing.internal",
         "scenario_lane": "human",
         "scope": {
           "column": null,
           "database": "acmecloud_demo",
           "schema": "public",
-          "table": "support_tickets"
+          "table": "subscriptions"
         },
         "weight": 1
       }
@@ -75,8 +70,8 @@
       "publication_id": "accef000-0000-4000-8000-000000000001",
       "published_at": "2026-07-16T00:00:00.000Z"
     },
-    "reason": "acme-customer-use v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.support_tickets",
-    "scenario_key": "purpose.allowed_use",
+    "reason": "acme-customer-360 v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.subscriptions",
+    "scenario_key": "sharing.internal",
     "scenario_lane": "human",
     "state": "answered"
   },
@@ -84,11 +79,11 @@
     "asset": {
       "database": "acmecloud_demo",
       "schema": "public",
-      "table": "support_tickets"
+      "table": "subscriptions"
     },
-    "scenario_key": "purpose.allowed_use",
-    "use": "triage open support tickets"
+    "scenario_key": "sharing.internal",
+    "use": "share account health summaries with the success team"
   },
-  "case_id": "support-tickets-allow",
+  "case_id": "customer-360-internal-sharing-allow",
   "tool": "authorize_use"
 }

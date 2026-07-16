@@ -46,6 +46,11 @@ SELECT work_email -> warn
 ```
 
 ```text
+sharing.internal on subscriptions -> allow
+  cited via [collection]: AcmeCloud Customer 360 context
+```
+
+```text
 card_last4 (analytics intent) -> warn (tokenized column referenced)
 salary (NO stated intent)    -> fail (role-gated read applies to any SQL)
 ```

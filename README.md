@@ -79,6 +79,7 @@ Demo policy behavior:
 - payment instruments are PCI-scope and tokenized at critical priority
 - employee records are role-gated with row-level regional scoping, GDPR context, and a monitored custom mask served as review-required
 - the ML feature store carries AI-lifecycle rules: training/retrieval/embedding allowed, vendor transfer and automated decisioning denied
+- the "Customer 360" COLLECTION groups five tables; one policy targets the collection by id and every answer cites a `collection` resolution path
 
 ## Notebook Pack
 
@@ -96,7 +97,11 @@ Demo policy behavior:
 | `09_human_approval_packet_for_conditional_export.ipynb` | Human-in-the-loop exception workflow for safe, conditional, and denied requests. |
 | `10_llamaindex_governed_retrieval_pattern.ipynb` | A governed retrieval function that can be wrapped as a LlamaIndex tool. |
 | `11_langgraph_governed_sql_agent_runtime.ipynb` | LangGraph runtime SQL agent with approve, revise, and block routes. |
-| `12_governance_states_and_the_wider_estate.ipynb` | Honest states (ungoverned, review-required), role gating, the AI lifecycle, and taxonomy-targeted masking. |
+| `12_governance_states_and_the_wider_estate.ipynb` | Honest states (ungoverned, review-required), role gating, the AI lifecycle, collection targeting, and taxonomy-targeted masking. |
+
+Want the sharpest serving-model demo? [docs/walkthrough-publish-flip.md](docs/walkthrough-publish-flip.md)
+walks the live loop: author (nothing changes) → approve (still nothing) →
+**publish (the answer flips)** → explain the old decision (`current: false`).
 
 The notebooks run in two modes:
 

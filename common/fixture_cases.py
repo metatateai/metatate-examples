@@ -253,6 +253,15 @@ CASES: list[dict[str, Any]] = [
         "tool": "inspect_data_meaning",
         "arguments": {"ref": asset("employees", "work_email")},
     },
+    {
+        "id": "customer-360-internal-sharing-allow",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("subscriptions"),
+            "scenario_key": "sharing.internal",
+            "use": "share account health summaries with the success team",
+        },
+    },
     # ---- validate (ids mirror expected-decisions.yaml) ------------------------
     {
         "id": "safe-aggregate-pass",

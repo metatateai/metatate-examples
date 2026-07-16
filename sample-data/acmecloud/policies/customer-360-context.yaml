@@ -1,0 +1,36 @@
+# AcmeCloud estate spec — the Customer 360 collection policy.
+# Targets the COLLECTION by id: governance follows the named set of tables,
+# and every served row carries a `collection` resolution path.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: acme-customer-360
+  version: 1.0.0
+  description: >-
+    Tables in the Customer 360 view may be shared internally for
+    account-level reporting across teams.
+  tags: [customer_360]
+  businessContext:
+    domain: Customer 360
+    owner: Revenue Operations
+    steward: privacy-review@example.com
+    purpose: Cross-team internal sharing rules for the customer 360 view.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [acmecloud_demo]
+    schemas: [public]
+    collections:
+      - acce9101-0000-4000-8000-000000000001
+  classification:
+    sensitivity: confidential
+    category: pii
+  usage:
+    permittedUses: [customer_360_reporting]
+extensions:
+  displayName: AcmeCloud Customer 360 context
+  scenarioMap:
+    "usage_guidance:spec.usage.permittedUses:permitted":
+      scenarioKey: sharing.internal
+      source: user_confirmed
