@@ -1,74 +1,42 @@
+# AcmeCloud estate spec — destination-aware transfer governance.
 apiVersion: metatate.io/v1
 kind: DataPolicy
 metadata:
   name: acme-transfer
   version: 1.0.0
-  description: Customer exports require destination-aware authorization before leaving the platform.
-  labels:
-    demo: acmecloud
-    domain: customer-data
-  tags:
-    - restricted_transfer
-    - privacy_sensitive
+  description: >-
+    Customer exports require destination-aware authorization before leaving
+    the platform.
+  tags: [pii, restricted_transfer]
+  businessContext:
+    domain: Customer Data
+    owner: Data Platform
+    steward: privacy-review@example.com
+    purpose: Prepared customer exports under destination-aware transfer governance.
 spec:
   enforcementMode: enforce
-  priority: 200
+  priority: 600
   selector:
-    tables:
-      - ACMECLOUD_DEMO.PUBLIC.CUSTOMERS
-      - ACMECLOUD_DEMO.PUBLIC.CUSTOMER_EXPORTS
+    databases: [acmecloud_demo]
+    schemas: [public]
+    tables: [customers, customer_exports]
   classification:
     sensitivity: restricted
     category: pii
   transferGovernance:
     defaultEffect: conditional
     rules:
-      - id: acmecloud-salesforce-conditional
-        effect: conditional
-        operations:
-          - export
-        destinationSystems:
-          - SALESFORCE
-        destinationJurisdictions:
-          - US
-        consumerJurisdictions:
-          - EU
+      - effect: conditional
+        operations: [export]
+        destinationSystems: [SALESFORCE]
+        destinationJurisdictions: [US]
+        consumerJurisdictions: [EU]
         requiresApproval: true
         requiresAnonymization: true
-      - id: acmecloud-ad-platform-deny
-        effect: deny
-        operations:
-          - export
-        destinationSystems:
-          - ADS_PLATFORM
-        destinationJurisdictions:
-          - US
-        consumerJurisdictions:
-          - US
-        requiresApproval: false
-        requiresAnonymization: false
-      - id: acmecloud-external-llm-training-deny
-        effect: deny
-        operations:
-          - export
-        destinationSystems:
-          - EXTERNAL_LLM_VENDOR
-        destinationJurisdictions:
-          - US
-        consumerJurisdictions:
-          - US
-        requiresApproval: false
-        requiresAnonymization: false
-  meaningLayer:
-    permittedUses:
-      - external_sharing
-    prohibitedUses:
-      - advertising
-      - ml_training
-    businessContext:
-      owner: Data Platform
-      steward: data-platform@example.com
-      domain: Customer Data
-      purpose: Prepared customer exports for approved downstream operational systems.
-      definitions:
-        export_batch: A governed file-equivalent table staged for outbound transfer.
+        requiredRole: PRIVACY_ADMIN
+      - effect: deny
+        destinationSystems: [ADS_PLATFORM]
+      - effect: deny
+        destinationSystems: [EXTERNAL_LLM_VENDOR]
+extensions:
+  displayName: AcmeCloud transfer guardrails

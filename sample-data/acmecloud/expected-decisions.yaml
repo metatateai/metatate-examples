@@ -1,0 +1,82 @@
+# =============================================================================
+# AcmeCloud estate spec — expected decisions.
+#
+# The behavior contract for the demo estate: every case states a governed
+# question (as an MCP tool call shape) and the answer the ENGINE-derived
+# published state must produce. metatate-saas asserts this matrix in unit
+# tests by running the real materializer over catalog.yaml + policies/ and
+# evaluating the served rows through the same read-model logic the MCP
+# server uses. The examples acceptance scripts assert the same outcomes
+# against a live workspace.
+# =============================================================================
+
+authorize:
+  - id: marketing-customers-deny
+    asset: { table: customers }
+    scenario_key: purpose.prohibited_use
+    expect: { state: answered, decision: deny }
+  - id: analytics-customers-allow
+    asset: { table: customers }
+    scenario_key: purpose.allowed_use
+    expect: { state: answered, decision: allow }
+  - id: train-support-tickets-deny
+    asset: { table: support_tickets }
+    scenario_key: ai.training
+    expect: { state: answered, decision: deny }
+  - id: inference-customers-allow
+    asset: { table: customers }
+    scenario_key: ai.inference
+    expect: { state: answered, decision: allow }
+  - id: export-salesforce-conditional
+    asset: { table: customers }
+    scenario_key: residency.cross_border_transfer
+    operation: export
+    destination: { system: SALESFORCE, jurisdiction: US }
+    consumer_jurisdiction: EU
+    expect:
+      state: answered
+      decision: conditional
+      conditions_include: [approval_required, anonymize_first]
+  - id: export-ads-platform-deny
+    asset: { table: customers }
+    scenario_key: residency.cross_border_transfer
+    operation: export
+    destination: { system: ADS_PLATFORM, jurisdiction: US }
+    consumer_jurisdiction: US
+    expect: { state: answered, decision: deny }
+  - id: export-external-llm-deny
+    asset: { table: customers }
+    scenario_key: residency.cross_border_transfer
+    operation: export
+    destination: { system: EXTERNAL_LLM_VENDOR, jurisdiction: US }
+    consumer_jurisdiction: US
+    expect: { state: answered, decision: deny }
+  - id: export-unmatched-destination-default
+    asset: { table: customer_exports }
+    scenario_key: residency.cross_border_transfer
+    operation: export
+    destination: { system: INTERNAL_WAREHOUSE, jurisdiction: US }
+    consumer_jurisdiction: US
+    expect: { state: answered, decision: conditional }
+
+validate:
+  - id: safe-aggregate-pass
+    sql: SELECT region, SUM(arr) FROM customers GROUP BY region
+    scenario_key: purpose.allowed_use
+    columns: [region, arr]
+    expect: { verdict: pass }
+  - id: email-detail-warn
+    sql: SELECT customer_name, email FROM customers WHERE region = 'EU'
+    scenario_key: purpose.allowed_use
+    columns: [customer_name, email, region]
+    expect: { verdict: warn }
+  - id: marketing-detail-fail
+    sql: SELECT customer_name, email FROM customers WHERE marketing_consent = 'opted_in'
+    scenario_key: purpose.prohibited_use
+    columns: [customer_name, email, marketing_consent]
+    expect: { verdict: fail }
+  - id: training-ticket-text-fail
+    sql: SELECT ticket_text FROM support_tickets
+    scenario_key: ai.training
+    columns: [ticket_text]
+    expect: { verdict: fail }

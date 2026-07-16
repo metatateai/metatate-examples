@@ -27,6 +27,8 @@ def main() -> None:
         "docs/human-exception-workflow.md",
         "docs/release-process.md",
         "docs/validation-matrix.md",
+        "sample-data/acmecloud/catalog.yaml",
+        "sample-data/acmecloud/expected-decisions.yaml",
         "common/metatate_client.py",
         "cicd_policy_gate/__init__.py",
         "cicd_policy_gate/cli.py",

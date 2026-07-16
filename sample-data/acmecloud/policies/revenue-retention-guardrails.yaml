@@ -1,46 +1,35 @@
+# AcmeCloud estate spec — subscription revenue retention context.
 apiVersion: metatate.io/v1
 kind: DataPolicy
 metadata:
   name: acme-retention
   version: 1.0.0
-  description: Subscription and revenue facts support internal reporting with retention context.
-  labels:
-    demo: acmecloud
-    domain: revenue-operations
-  tags:
-    - commercial_sensitive
-    - retention_required
+  description: >-
+    Subscription and revenue facts support internal reporting with a
+    five-year retention window after subscription end.
+  tags: [retention_required, commercial_sensitive]
+  businessContext:
+    domain: Revenue Operations
+    owner: Finance Analytics
+    steward: finance-data@example.com
+    purpose: >-
+      Subscription revenue facts retained for renewal planning and financial
+      reporting.
 spec:
-  enforcementMode: advisory
+  enforcementMode: enforce
   priority: 90
   selector:
-    tables:
-      - ACMECLOUD_DEMO.PUBLIC.SUBSCRIPTIONS
+    databases: [acmecloud_demo]
+    schemas: [public]
+    tables: [subscriptions]
   classification:
     sensitivity: internal
     category: financial
-  meaningLayer:
-    permittedUses:
-      - analytics
-      - reporting
-      - renewal_planning
-    prohibitedUses:
-      - public_sharing
-    businessContext:
-      owner: Finance Analytics
-      steward: finance-data@example.com
-      domain: Revenue Operations
-      purpose: Subscription facts used for ARR reporting and renewal planning.
-      definitions:
-        arr: Annual recurring revenue associated with a subscription.
-    retention:
-      period: 5 years
-      trigger: subscription end
-      action: archive
-    lineage:
-      sources:
-        - BILLING.SUBSCRIPTIONS
-      transformations:
-        - currency_standardization
-      dependentSystems:
-        - CUSTOMERS
+  usage:
+    permittedUses: [analytics, reporting, renewal_planning]
+  retention:
+    period: 5 years
+    trigger: subscription end
+    action: archive
+extensions:
+  displayName: AcmeCloud revenue retention guardrails

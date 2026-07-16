@@ -105,12 +105,16 @@ class OfflineMetatateClient:
             return self._load("authorize_train_support_tickets_deny")
         if op == "export" and destination_system == "SALESFORCE":
             return self._load("authorize_export_salesforce_conditional")
-        if op == "export" and destination_system in {"ADS_PLATFORM", "EXTERNAL_LLM_VENDOR"}:
+        if op == "export" and destination_system == "ADS_PLATFORM":
             return self._load("authorize_export_ads_platform_deny")
+        if op == "export" and destination_system == "EXTERNAL_LLM_VENDOR":
+            return self._load("authorize_export_external_llm_deny")
         if use in {"marketing", "advertising", "personalization"}:
             return self._load("authorize_use_marketing_deny")
         if use in {"analytics", "reporting"}:
             return self._load("authorize_use_analytics_conditional")
+        if use == "support":
+            return self._load("authorize_use_support_allow")
         return {
             "request_id": "offline-authorize-unknown",
             "snapshot_id": "offline-acmecloud-v1",

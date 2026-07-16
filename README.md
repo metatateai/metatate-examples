@@ -26,8 +26,8 @@ own**:
    and create a workspace (the free plan covers everything these examples do).
 2. On your new workspace's dashboard, follow the **"New here?" banner → Load
    the demo**, then click **Load the AcmeCloud demo** — it provisions the
-   exact governed domain this repo uses (five tables, three policies, one
-   live publication).
+   exact governed domain this repo specifies (five classified tables, six
+   policies, one live publication).
 3. Open **MCP Tools → Tokens** and issue an access token (shown once).
 4. Point the notebooks at your workspace:
 
@@ -44,6 +44,14 @@ Full details (and the local-stack path for contributors) are in
 
 AcmeCloud covers customer operations, revenue, product usage, support, and prepared exports.
 
+The domain is defined as a machine-readable **estate spec** in
+`sample-data/acmecloud/` — `catalog.yaml` (tables, columns, descriptions,
+tags, and the initial column classification against the Metatate taxonomy,
+including tenant custom types), six real Metatate Cloud policy documents in
+`policies/`, and `expected-decisions.yaml` (the behavior contract). The
+product derives the demo workspace from this spec with its real governance
+engine, so what these examples document is exactly what the engine serves.
+
 Governed tables:
 
 - `ACMECLOUD_DEMO.PUBLIC.CUSTOMERS`
@@ -58,7 +66,8 @@ Demo policy behavior:
 - direct marketing and advertising are blocked unless a consent-specific workflow is added
 - customer records and support tickets are blocked for model training
 - customer exports require destination-aware authorization
-- Salesforce exports are conditional; advertising-platform exports are denied
+- Salesforce exports are conditional; advertising-platform and external-LLM-vendor exports are denied
+- email, ticket free-text, and device identifiers carry column-level masking policies
 
 ## Notebook Pack
 

@@ -1,0 +1,160 @@
+# =============================================================================
+# AcmeCloud estate spec — catalog layer.
+#
+# The single public source of truth for the AcmeCloud demo catalog: tables,
+# columns, business descriptions, tags, and the initial column classification
+# against the Metatate taxonomy (built-in `pii.* / financial.* / technical.*`
+# type ids, plus tenant custom types under the reserved `custom.` prefix).
+# metatate-saas vendors this file (packages/test-fixtures) and derives the
+# provisioned demo content from it with the REAL governance engine — nothing
+# downstream is hand-authored.
+# =============================================================================
+
+connector:
+  name: AcmeCloud sample warehouse
+  kind: postgres
+database: acmecloud_demo
+schema: public
+
+# Tenant custom data types (the `custom.` prefix is fenced — it can never
+# shadow a built-in taxonomy id). Provisioned alongside the demo so the
+# catalog shows taxonomy extensibility, and referenced by column
+# classifications below.
+customTypes:
+  - id: custom.sales_region
+    label: Sales region
+    description: AcmeCloud's internal sales-territory segmentation.
+    sensitivity: internal
+    isPii: false
+  - id: custom.consent_flag
+    label: Marketing consent flag
+    description: A customer's recorded marketing-consent choice.
+    sensitivity: confidential
+    isPii: true
+  - id: custom.support_free_text
+    label: Support free text
+    description: Customer-authored free text that may embed personal data.
+    sensitivity: confidential
+    isPii: true
+
+tables:
+  - name: customers
+    description: Customer master data for the AcmeCloud demo domain.
+    tags: [pii, privacy_sensitive]
+    columns:
+      - name: customer_id
+        dataType: uuid
+        nullable: false
+      - name: customer_name
+        dataType: text
+        nullable: false
+        classification: { dataTypeId: pii.identity.full_name, sensitivity: confidential, isPii: true, source: pattern }
+      - name: email
+        dataType: text
+        nullable: false
+        description: Primary contact email address for the customer.
+        tags: [contact, pii]
+        classification: { dataTypeId: pii.contact.email, sensitivity: confidential, isPii: true, source: pattern }
+      - name: account_status
+        dataType: text
+        nullable: false
+      - name: arr
+        dataType: numeric
+        nullable: true
+        classification: { dataTypeId: financial.revenue, sensitivity: internal, isPii: false, source: pattern }
+      - name: region
+        dataType: text
+        nullable: true
+        classification: { dataTypeId: custom.sales_region, sensitivity: internal, isPii: false, source: manual }
+      - name: marketing_consent
+        dataType: text
+        nullable: true
+        classification: { dataTypeId: custom.consent_flag, sensitivity: confidential, isPii: true, source: manual }
+      - name: created_at
+        dataType: timestamptz
+        nullable: false
+  - name: subscriptions
+    description: Subscription revenue facts (plan, ARR, term).
+    tags: [financial, retention_required]
+    columns:
+      - name: subscription_id
+        dataType: uuid
+        nullable: false
+      - name: customer_id
+        dataType: uuid
+        nullable: false
+      - name: plan
+        dataType: text
+        nullable: false
+      - name: arr
+        dataType: numeric
+        nullable: false
+        classification: { dataTypeId: financial.revenue, sensitivity: internal, isPii: false, source: pattern }
+      - name: start_date
+        dataType: date
+        nullable: false
+      - name: end_date
+        dataType: date
+        nullable: true
+  - name: product_usage_events
+    description: Product telemetry events keyed by customer and device.
+    tags: [telemetry]
+    columns:
+      - name: event_id
+        dataType: uuid
+        nullable: false
+      - name: customer_id
+        dataType: uuid
+        nullable: false
+      - name: device_id
+        dataType: text
+        nullable: true
+        classification: { dataTypeId: technical.device_id, sensitivity: confidential, isPii: true, source: pattern }
+      - name: event_name
+        dataType: text
+        nullable: false
+      - name: occurred_at
+        dataType: timestamptz
+        nullable: false
+  - name: support_tickets
+    description: Customer support tickets with free-text bodies.
+    tags: [support, ai_training_blocked]
+    columns:
+      - name: ticket_id
+        dataType: uuid
+        nullable: false
+      - name: customer_id
+        dataType: uuid
+        nullable: false
+      - name: ticket_text
+        dataType: text
+        nullable: false
+        description: Free-text ticket body written by the customer.
+        tags: [free_text, pii]
+        classification: { dataTypeId: custom.support_free_text, sensitivity: confidential, isPii: true, source: manual }
+      - name: priority
+        dataType: text
+        nullable: false
+      - name: opened_at
+        dataType: timestamptz
+        nullable: false
+  - name: customer_exports
+    description: Prepared customer export payloads awaiting destination-aware authorization.
+    tags: [restricted_transfer]
+    columns:
+      - name: export_id
+        dataType: uuid
+        nullable: false
+      - name: customer_id
+        dataType: uuid
+        nullable: false
+      - name: email
+        dataType: text
+        nullable: false
+        classification: { dataTypeId: pii.contact.email, sensitivity: restricted, isPii: true, source: pattern }
+      - name: destination_system
+        dataType: text
+        nullable: false
+      - name: exported_at
+        dataType: timestamptz
+        nullable: false
