@@ -2,7 +2,7 @@
   "answer": {
     "assets": [
       {
-        "instruction_count": 5,
+        "instruction_count": 8,
         "ref": {
           "column": null,
           "database": "acmecloud_demo",
@@ -12,7 +12,8 @@
         "scenario_keys": [
           "classification.sensitivity",
           "metadata.domain",
-          "residency.cross_border_transfer"
+          "residency.cross_border_transfer",
+          "sharing.internal"
         ]
       },
       {
@@ -28,7 +29,7 @@
         ]
       },
       {
-        "instruction_count": 14,
+        "instruction_count": 17,
         "ref": {
           "column": null,
           "database": "acmecloud_demo",
@@ -45,7 +46,8 @@
           "protection.anonymization",
           "purpose.allowed_use",
           "purpose.prohibited_use",
-          "residency.cross_border_transfer"
+          "residency.cross_border_transfer",
+          "sharing.internal"
         ]
       },
       {
@@ -129,7 +131,7 @@
         ]
       },
       {
-        "instruction_count": 10,
+        "instruction_count": 13,
         "ref": {
           "column": null,
           "database": "acmecloud_demo",
@@ -144,7 +146,8 @@
           "ai.training",
           "ai.vendor_transfer",
           "classification.sensitivity",
-          "metadata.domain"
+          "metadata.domain",
+          "sharing.internal"
         ]
       },
       {
@@ -217,7 +220,7 @@
         ]
       },
       {
-        "instruction_count": 4,
+        "instruction_count": 7,
         "ref": {
           "column": null,
           "database": "acmecloud_demo",
@@ -228,11 +231,12 @@
           "classification.sensitivity",
           "metadata.domain",
           "purpose.allowed_use",
-          "retention.lifecycle"
+          "retention.lifecycle",
+          "sharing.internal"
         ]
       },
       {
-        "instruction_count": 11,
+        "instruction_count": 14,
         "ref": {
           "column": null,
           "database": "acmecloud_demo",
@@ -248,7 +252,8 @@
           "metadata.lineage",
           "protection.anonymization",
           "purpose.allowed_use",
-          "purpose.prohibited_use"
+          "purpose.prohibited_use",
+          "sharing.internal"
         ]
       },
       {

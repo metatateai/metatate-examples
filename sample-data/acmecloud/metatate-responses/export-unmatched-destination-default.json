@@ -31,7 +31,7 @@
       "subcategory": null
     },
     "decision": "conditional",
-    "decision_id": "accef000-0000-4000-8000-000000000024",
+    "decision_id": "accef000-0000-4000-8000-000000000030",
     "instructions": [
       {
         "category": "advisory",
@@ -39,7 +39,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "conditional",
-        "decision_id": "accef000-0000-4000-8000-000000000024",
+        "decision_id": "accef000-0000-4000-8000-000000000030",
         "decision_reason": "No transfer rule matched to INTERNAL_WAREHOUSE (US) for consumer jurisdiction US; default effect conditional applies (policy AcmeCloud transfer guardrails).",
         "enforcement_mode": "enforce",
         "instruction_family": "transfer_governance",

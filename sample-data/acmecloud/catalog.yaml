@@ -42,6 +42,21 @@ customTypes:
     sensitivity: internal
     isPii: false
 
+# Catalog collections: reusable, named sets of tables a policy can target by
+# id. "Customer 360" is the everything-about-a-customer view — the
+# acme-customer-360 policy targets the COLLECTION, so governance follows the
+# set, not a hand-maintained table list.
+collections:
+  - id: acce9101-0000-4000-8000-000000000001
+    name: Customer 360
+    description: Every table that contributes to the 360-degree customer view.
+    members:
+      - customers
+      - subscriptions
+      - support_tickets
+      - customer_exports
+      - ml_feature_store
+
 tables:
   - name: customers
     description: Customer master data for the AcmeCloud demo domain.

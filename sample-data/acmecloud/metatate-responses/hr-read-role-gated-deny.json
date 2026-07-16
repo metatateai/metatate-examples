@@ -23,7 +23,7 @@
       "subcategory": null
     },
     "decision": "deny",
-    "decision_id": "accef000-0000-4000-8000-000000000031",
+    "decision_id": "accef000-0000-4000-8000-000000000040",
     "instructions": [
       {
         "category": "enforceable",
@@ -31,7 +31,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "deny",
-        "decision_id": "accef000-0000-4000-8000-000000000031",
+        "decision_id": "accef000-0000-4000-8000-000000000040",
         "decision_reason": "acme-employee-access v1 role_grant:spec.accessControl.deniedRoles:public:deny \u2192 deny on acmecloud_demo.public.employees",
         "enforcement_mode": "enforce",
         "instruction_family": "role_grant",
@@ -43,9 +43,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000032",
+          "policy_id": "accef000-0000-4000-8000-000000000041",
           "policy_name": "AcmeCloud employee data access",
-          "policy_version_id": "accef000-0000-4000-8000-000000000033",
+          "policy_version_id": "accef000-0000-4000-8000-000000000042",
           "version_number": 1
         },
         "resolution_paths": [
@@ -70,7 +70,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "allow",
-        "decision_id": "accef000-0000-4000-8000-000000000034",
+        "decision_id": "accef000-0000-4000-8000-000000000043",
         "decision_reason": "acme-employee-access v1 role_grant:spec.accessControl.allowedRoles:hr_admin:allow \u2192 allow on acmecloud_demo.public.employees",
         "enforcement_mode": "enforce",
         "instruction_family": "role_grant",
@@ -82,9 +82,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000032",
+          "policy_id": "accef000-0000-4000-8000-000000000041",
           "policy_name": "AcmeCloud employee data access",
-          "policy_version_id": "accef000-0000-4000-8000-000000000033",
+          "policy_version_id": "accef000-0000-4000-8000-000000000042",
           "version_number": 1
         },
         "resolution_paths": [
@@ -109,7 +109,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "allow",
-        "decision_id": "accef000-0000-4000-8000-000000000035",
+        "decision_id": "accef000-0000-4000-8000-000000000044",
         "decision_reason": "acme-employee-access v1 role_grant:spec.accessControl.allowedRoles:people_ops:allow \u2192 allow on acmecloud_demo.public.employees",
         "enforcement_mode": "enforce",
         "instruction_family": "role_grant",
@@ -121,9 +121,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000032",
+          "policy_id": "accef000-0000-4000-8000-000000000041",
           "policy_name": "AcmeCloud employee data access",
-          "policy_version_id": "accef000-0000-4000-8000-000000000033",
+          "policy_version_id": "accef000-0000-4000-8000-000000000042",
           "version_number": 1
         },
         "resolution_paths": [

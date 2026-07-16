@@ -13,7 +13,7 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "mask_full",
-            "decision_id": "accef000-0000-4000-8000-000000000075",
+            "decision_id": "accef000-0000-4000-8000-000000000085",
             "decision_reason": "acme-ticket-redaction v1 masking:spec.accessControl.masking \u2192 mask_full on acmecloud_demo.public.support_tickets.ticket_text",
             "enforcement_mode": "enforce",
             "instruction_family": "masking",
@@ -24,9 +24,9 @@
             "primary_resolution_source": "selector",
             "priority": 2,
             "provenance": {
-              "policy_id": "accef000-0000-4000-8000-000000000076",
+              "policy_id": "accef000-0000-4000-8000-000000000086",
               "policy_name": "AcmeCloud ticket free-text redaction",
-              "policy_version_id": "accef000-0000-4000-8000-000000000077",
+              "policy_version_id": "accef000-0000-4000-8000-000000000087",
               "version_number": 1
             },
             "resolution_paths": [
@@ -51,7 +51,7 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "deny",
-            "decision_id": "accef000-0000-4000-8000-000000000030",
+            "decision_id": "accef000-0000-4000-8000-000000000039",
             "decision_reason": "acme-customer-use v1 ai_governance:spec.aiGovernance:training \u2192 deny on acmecloud_demo.public.support_tickets",
             "enforcement_mode": "enforce",
             "instruction_family": "ai_governance",
