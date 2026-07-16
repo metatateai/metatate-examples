@@ -137,7 +137,7 @@ def acceptance_result(state: GovernedSqlAgentState) -> dict[str, Any]:
     route = state["route"]
     status = {"approve": "approved", "revise": "revised", "block": "blocked"}[route]
     return {
-        "decision": state["decision"],
+        "verdict": state["decision"],
         "status": status,
         "original_sql": state["draft_sql"],
         "final_sql": state.get("final_sql"),
