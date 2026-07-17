@@ -25,10 +25,12 @@ own**:
    [app.getmetatate.com/sign-up?ref=examples](https://app.getmetatate.com/sign-up?ref=examples)
    and create a workspace (the free plan covers everything these examples do).
 2. On your new workspace's dashboard, follow the **"New here?" banner → Load
-   the demo**, then click **Load the AcmeCloud demo** — it provisions the
-   exact governed domain this repo specifies (eight governed tables plus a
-   deliberately ungoverned legacy corner, fourteen policies, one live
-   publication).
+   the demo**, then click **Load the full estate** — the notebooks and
+   walkthroughs expect the complete governed domain this repo specifies
+   (eight governed tables plus a deliberately ungoverned legacy corner,
+   fifteen policies, one live publication). The smaller starter sample the
+   onboarding page also offers is a first-run product tour, not enough for
+   this cookbook.
 3. Open **MCP Tools → Tokens** and issue an access token (shown once).
 4. Point the notebooks at your workspace:
 
