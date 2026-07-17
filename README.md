@@ -50,7 +50,7 @@ AcmeCloud covers customer operations, revenue, product usage, support, and prepa
 The domain is defined as a machine-readable **estate spec** in
 `sample-data/acmecloud/` — `catalog.yaml` (tables, columns, descriptions,
 tags, and the initial column classification against the Metatate taxonomy,
-including tenant custom types), six real Metatate Cloud policy documents in
+including tenant custom types), fifteen real Metatate Cloud policy documents in
 `policies/`, and `expected-decisions.yaml` (the behavior contract). The
 product derives the demo workspace from this spec with its real governance
 engine, so what these examples document is exactly what the engine serves.
