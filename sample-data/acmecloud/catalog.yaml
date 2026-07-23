@@ -14,7 +14,7 @@ connector:
   name: AcmeCloud sample warehouse
   kind: postgres
 database: acmecloud_demo
-schema: public
+schema: public # default schema; a table may override with its own `schema:` key
 
 # Tenant custom data types (the `custom.` prefix is fenced — it can never
 # shadow a built-in taxonomy id). Provisioned alongside the demo so the
@@ -261,3 +261,75 @@ tables:
       - name: exported_at
         dataType: timestamptz
         nullable: true
+  # The GOVERNANCE-DEBT corner: two policies deliberately disagree about
+  # outreach on this table (see policies/prospect-outreach-*.yaml), so the
+  # estate serves a real conflicted answer — isolated here so every other
+  # case stays clean. contact_email picks up the taxonomy email mask.
+  - name: marketing_prospects
+    description: Inbound prospect list used by growth experiments.
+    tags: [marketing]
+    columns:
+      - name: prospect_id
+        dataType: uuid
+        nullable: false
+      - name: contact_email
+        dataType: text
+        nullable: false
+        description: Prospect contact email captured from inbound forms.
+        tags: [contact, pii]
+        classification: { dataTypeId: pii.contact.email, sensitivity: confidential, isPii: true, source: pattern }
+      - name: campaign_tag
+        dataType: text
+        nullable: true
+      - name: outreach_consent
+        dataType: text
+        nullable: true
+        classification: { dataTypeId: custom.consent_flag, sensitivity: confidential, isPii: true, source: manual }
+      - name: created_at
+        dataType: timestamptz
+        nullable: false
+  # The finance schema: multi-schema realism. These two tables live under
+  # `finance` (not the default `public`), and acme-finance-guardrails
+  # targets them through a schemas:[finance] selector.
+  - name: invoices
+    schema: finance
+    description: Issued customer invoices for revenue recognition.
+    tags: [financial]
+    columns:
+      - name: invoice_id
+        dataType: uuid
+        nullable: false
+      - name: customer_id
+        dataType: uuid
+        nullable: false
+      - name: amount
+        dataType: numeric
+        nullable: false
+        classification: { dataTypeId: financial.revenue, sensitivity: internal, isPii: false, source: pattern }
+      - name: issued_at
+        dataType: date
+        nullable: false
+      - name: status
+        dataType: text
+        nullable: false
+  - name: revenue_ledger
+    schema: finance
+    description: Posted ledger entries derived from invoices.
+    tags: [financial]
+    columns:
+      - name: entry_id
+        dataType: uuid
+        nullable: false
+      - name: invoice_id
+        dataType: uuid
+        nullable: false
+      - name: amount
+        dataType: numeric
+        nullable: false
+        classification: { dataTypeId: financial.revenue, sensitivity: internal, isPii: false, source: pattern }
+      - name: posted_at
+        dataType: timestamptz
+        nullable: false
+      - name: ledger_account
+        dataType: text
+        nullable: false

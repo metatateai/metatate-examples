@@ -1,0 +1,95 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "subscriptions"
+    },
+    "can_proceed_now": false,
+    "conditions": [],
+    "context_facts": {
+      "category": "pii",
+      "masking": null,
+      "pii": true,
+      "sensitivity": "confidential",
+      "subcategory": null
+    },
+    "decision": "retain",
+    "decision_id": "accef000-0000-4000-8000-000000000098",
+    "instructions": [
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "retain",
+        "decision_id": "accef000-0000-4000-8000-000000000098",
+        "decision_reason": "acme-retention v1 retention:spec.retention \u2192 retain on acmecloud_demo.public.subscriptions",
+        "enforcement_mode": "enforce",
+        "instruction_family": "retention",
+        "instruction_key": "retention:spec.retention",
+        "parameters": {
+          "action": "archive",
+          "period": "5 years",
+          "trigger": "subscription end"
+        },
+        "primary_resolution_source": "selector",
+        "priority": 1,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000099",
+          "policy_name": "AcmeCloud revenue retention guardrails",
+          "policy_version_id": "accef000-0000-4000-8000-000000000100",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "retention.lifecycle",
+        "scenario_lane": "human",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "subscriptions"
+        },
+        "weight": 0.55
+      }
+    ],
+    "next_actions": [
+      "Comply with the retention requirement the governing policy places on this data."
+    ],
+    "obligations": [
+      {
+        "method": null,
+        "required_by_policy": "AcmeCloud revenue retention guardrails",
+        "target": "acmecloud_demo.public.subscriptions",
+        "type": "retain"
+      }
+    ],
+    "prohibitions": [],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "acme-retention v1 retention:spec.retention \u2192 retain on acmecloud_demo.public.subscriptions",
+    "scenario_key": "retention.lifecycle",
+    "scenario_lane": "human",
+    "state": "answered"
+  },
+  "arguments": {
+    "asset": {
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "subscriptions"
+    },
+    "scenario_key": "retention.lifecycle",
+    "use": "confirm how long subscription revenue facts must be kept"
+  },
+  "case_id": "retention-subscriptions-retain",
+  "tool": "authorize_use"
+}

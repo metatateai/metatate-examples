@@ -1,0 +1,93 @@
+{
+  "answer": {
+    "advisory": true,
+    "findings": [
+      {
+        "conflict": null,
+        "decision": "allow",
+        "decision_reason": "acme-customer-use v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.customers",
+        "instructions": [
+          {
+            "category": "advisory",
+            "conflict_group_id": null,
+            "conflict_status": "none",
+            "conflicts_with": [],
+            "decision": "allow",
+            "decision_id": "accef000-0000-4000-8000-000000000020",
+            "decision_reason": "acme-customer-use v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.customers",
+            "enforcement_mode": "enforce",
+            "instruction_family": "usage_guidance",
+            "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+            "parameters": {
+              "kind": "permitted",
+              "uses": [
+                "analytics",
+                "reporting",
+                "support"
+              ]
+            },
+            "primary_resolution_source": "selector",
+            "priority": 2,
+            "provenance": {
+              "policy_id": "accef000-0000-4000-8000-000000000006",
+              "policy_name": "AcmeCloud customer use guardrails",
+              "policy_version_id": "accef000-0000-4000-8000-000000000007",
+              "version_number": 1
+            },
+            "resolution_paths": [
+              {
+                "ref": null,
+                "source": "selector"
+              }
+            ],
+            "scenario_key": "purpose.allowed_use",
+            "scenario_lane": "human",
+            "scope": {
+              "column": null,
+              "database": "acmecloud_demo",
+              "schema": "public",
+              "table": "customers"
+            },
+            "weight": 1
+          }
+        ],
+        "reason_code": null,
+        "ref": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "customers"
+        },
+        "status": "evaluated"
+      },
+      {
+        "conflict": null,
+        "decision": null,
+        "decision_reason": null,
+        "instructions": [],
+        "reason_code": "no_published_instruction_state",
+        "ref": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "legacy_customer_backup"
+        },
+        "status": "not_enough_published_state"
+      }
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "state": "answered",
+    "verdict": "warn"
+  },
+  "arguments": {
+    "default_database": "acmecloud_demo",
+    "default_schema": "public",
+    "scenario_key": "purpose.allowed_use",
+    "sql": "SELECT c.customer_name, l.exported_at FROM customers c JOIN legacy_customer_backup l ON l.customer_id = c.customer_id"
+  },
+  "case_id": "join-legacy-ungoverned-warn",
+  "tool": "validate_query_context"
+}

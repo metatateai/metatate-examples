@@ -1,0 +1,30 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "customers"
+    },
+    "message": "Not enough published governance state \u2014 review required.",
+    "next_actions": [
+      "Provide a canonical scenario_key \u2014 the proposed use could not be mapped to exactly one scenario.",
+      "Treat this use as review-required until the scenario is explicit."
+    ],
+    "reason_code": "scenario_unresolved",
+    "scenario_key": null,
+    "state": "not_enough_published_state",
+    "unresolved_targets": []
+  },
+  "arguments": {
+    "asset": {
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "customers"
+    },
+    "use": "compare ai.training and ai.inference guidance for customer data"
+  },
+  "case_id": "freetext-ambiguous-unresolved",
+  "tool": "authorize_use"
+}

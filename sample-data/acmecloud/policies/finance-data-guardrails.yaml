@@ -1,0 +1,40 @@
+# AcmeCloud estate spec — finance schema guardrails.
+#
+# Governs the two `finance`-schema tables (multi-schema realism): financial
+# reporting and audit support are permitted; external disclosure is
+# prohibited and remapped to the sharing.public scenario — the disciplined
+# counterpart to the deliberately-missing remap in
+# prospect-outreach-block.yaml.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: acme-finance-guardrails
+  version: 1.0.0
+  description: >-
+    Invoices and posted ledger entries support financial reporting and audit;
+    they are never disclosed externally.
+  tags: [financial]
+  businessContext:
+    domain: Finance
+    owner: Finance Analytics
+    steward: finance-data@example.com
+    purpose: Revenue recognition and audit support on the finance schema.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [acmecloud_demo]
+    schemas: [finance]
+    tables: [invoices, revenue_ledger]
+  classification:
+    sensitivity: internal
+    category: financial
+  usage:
+    permittedUses: [financial_reporting, audit_support]
+    prohibitedUses: [external_disclosure]
+extensions:
+  displayName: AcmeCloud finance data guardrails
+  scenarioMap:
+    "usage_guidance:spec.usage.prohibitedUses:prohibited":
+      scenarioKey: sharing.public
+      source: user_confirmed

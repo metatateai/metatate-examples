@@ -1,0 +1,35 @@
+{
+  "answer": {
+    "advisory": true,
+    "findings": [
+      {
+        "conflict": null,
+        "decision": null,
+        "decision_reason": null,
+        "instructions": [],
+        "reason_code": null,
+        "ref": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "payment_methods"
+        },
+        "status": "evaluated"
+      }
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "state": "answered",
+    "verdict": "pass"
+  },
+  "arguments": {
+    "default_database": "acmecloud_demo",
+    "default_schema": "public",
+    "scenario_key": "purpose.allowed_use",
+    "sql": "SELECT payment_method_id FROM payment_methods"
+  },
+  "case_id": "payment-id-only-pass",
+  "tool": "validate_query_context"
+}

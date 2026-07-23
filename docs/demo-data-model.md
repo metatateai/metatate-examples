@@ -3,7 +3,7 @@
 AcmeCloud is a synthetic B2B SaaS company. The dataset is intentionally small so the examples stay readable, but it includes enough variety to demonstrate policy-aware agent behavior.
 
 The machine-readable estate spec lives in `sample-data/acmecloud/`
-(`catalog.yaml`, fifteen policy DSL documents in `policies/`, and
+(`catalog.yaml`, eighteen policy DSL documents in `policies/`, and
 `expected-decisions.yaml`); this page is the narrative companion.
 
 ## Tables
@@ -88,3 +88,30 @@ That keeps the examples focused on the decision layer rather than legal interpre
   `not_enough_published_state` answer and coverage-gap stories point here.
 - Email masking is taxonomy-targeted (`pii.contact.email`): one policy, every
   email column, no per-column selector maintenance.
+
+## Estate v3 additions
+
+- `marketing_prospects` — the GOVERNANCE-DEBT corner: `acme-prospect-outreach`
+  (Growth Marketing) permits the exact use `acme-prospect-privacy` (Privacy
+  Office) prohibits, at the same priority, on the same scenario — the block
+  policy deliberately omits the prohibited-use scenario remap, so both rows
+  land on `purpose.allowed_use` and the engine serves a typed
+  `review_required(conflicted_published_state)` citing both sources. Isolated
+  to this table so every other case stays clean; `contact_email` picks up the
+  taxonomy email mask like any other classified email column.
+- `finance.invoices` + `finance.revenue_ledger` — a SECOND SCHEMA under the
+  same connector, governed by `acme-finance-guardrails` (financial reporting
+  and audit support permitted; external disclosure prohibited and remapped to
+  `sharing.public`). Schema-qualified assets and cross-schema SQL answer
+  exactly like `public` ones.
+- The wider decision vocabulary is now served and recorded: an honest
+  `retain` with a structured retain obligation (`retention.lifecycle` on
+  subscriptions), a `conditional` row-access answer with a `role_restricted`
+  condition (`access.row_filter` on employees), a `log_only` compliance
+  context answer (`compliance.regulatory`), and a `mask_full` answer whose
+  `mask` obligation names the tokenize method (`masking.display` on
+  `payment_methods.card_token`).
+- The free-text front door: `authorize_use` with no `scenario_key` maps
+  plain-English uses deterministically ("fine-tune a model on this data" →
+  `ai.training`), and text that names two canonical keys refuses with a typed
+  `scenario_unresolved` instead of guessing.

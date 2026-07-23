@@ -88,8 +88,8 @@ client = get_client()
 print(f"Metatate examples mode: {mode}")
 
 
-def asset(table, column=None):
-    ref = {"database": "acmecloud_demo", "schema": "public", "table": table}
+def asset(table, column=None, schema="public"):
+    ref = {"database": "acmecloud_demo", "schema": schema, "table": table}
     if column:
         ref["column"] = column
     return ref
@@ -952,8 +952,11 @@ def governance_states_notebook() -> dict:
                 Metatate's typed answers are honest about uncertainty, and the estate is big
                 enough to prove it: a deliberately UNGOVERNED legacy table, a monitored custom
                 masking routine served as review-required, role-gated HR data, PCI-scope
-                payment instruments, AI-lifecycle rules on an ML feature store, and
-                taxonomy-targeted masking that follows the classification — not a column list.
+                payment instruments, AI-lifecycle rules on an ML feature store,
+                taxonomy-targeted masking that follows the classification — not a column
+                list — plus a deliberately CONFLICTED policy pair, the retain/conditional/
+                log_only decision vocabulary, the free-text scenario front door, and a
+                second governed schema.
                 """
             ),
             code(SETUP_CELL),
@@ -1130,6 +1133,288 @@ def governance_states_notebook() -> dict:
                 print(f"salary (NO stated intent)    -> {salary['verdict']} (role-gated read applies to any SQL)")
                 """
             ),
+            markdown(
+                """
+                ## 7. Governance debt is a typed state, not a coin flip
+
+                Two policies deliberately disagree about outreach on
+                `marketing_prospects`: Growth Marketing permits the exact use the
+                Privacy Office prohibits, at the same priority, on the same scenario.
+                The engine refuses to pick a side — the answer is a typed
+                `review_required(conflicted_published_state)` citing BOTH sources.
+                """
+            ),
+            code(
+                """
+                conflict = client.authorize_use(
+                    asset("marketing_prospects"),
+                    use="run outreach against the prospect list",
+                    scenario_key="purpose.allowed_use",
+                )
+                print(f"marketing_prospects outreach -> {conflict['state']} ({conflict.get('reason_code')})")
+                for source in (conflict.get("conflict") or {}).get("sources") or []:
+                    print(f"  cited: {source['provenance']['policy_name']} -> {source['decision']}")
+                """
+            ),
+            markdown(
+                """
+                ## 8. The rest of the decision vocabulary
+
+                Not every answer is allow/deny. Retention serves an honest `retain`
+                (with a structured obligation), row-level access serves `conditional`
+                with a `role_restricted` condition, compliance context serves
+                `log_only`, and an enforced PCI mask serves `mask_full` with a `mask`
+                obligation naming the method.
+                """
+            ),
+            code(
+                """
+                retention = client.authorize_use(
+                    asset("subscriptions"),
+                    use="confirm how long subscription revenue facts must be kept",
+                    scenario_key="retention.lifecycle",
+                )
+                print_answer(retention)
+                """
+            ),
+            code(
+                """
+                rows = client.authorize_use(
+                    asset("employees"),
+                    use="read employee rows for my region",
+                    scenario_key="access.row_filter",
+                )
+                print_answer(rows)
+                """
+            ),
+            code(
+                """
+                gdpr = client.authorize_use(
+                    asset("employees"),
+                    use="review the GDPR context for employee records",
+                    scenario_key="compliance.regulatory",
+                )
+                print(f"compliance.regulatory -> {gdpr['decision']} (regulatory context, not a permission)")
+
+                pci = client.authorize_use(
+                    asset("payment_methods", "card_token"),
+                    use="display stored payment instruments in the support console",
+                    scenario_key="masking.display",
+                )
+                print_answer(pci)
+                """
+            ),
+            markdown(
+                """
+                ## 9. The free-text front door
+
+                No `scenario_key` at all: the server maps the plain-English use to a
+                canonical scenario deterministically — and when the text is ambiguous,
+                it refuses to guess with a typed `scenario_unresolved`.
+                """
+            ),
+            code(
+                """
+                mapped = client.authorize_use(
+                    asset("support_tickets"),
+                    use="fine-tune a model on this data",
+                )
+                print(f"free text, no scenario_key -> {mapped['state']} / {mapped.get('decision')} (mapped to {mapped.get('scenario_key')})")
+
+                ambiguous = client.authorize_use(
+                    asset("customers"),
+                    use="compare ai.training and ai.inference guidance for customer data",
+                )
+                print(f"ambiguous free text        -> {ambiguous['state']} ({ambiguous.get('reason_code')})")
+                """
+            ),
+            markdown(
+                """
+                ## 10. A second schema, same decision layer
+
+                The estate spans two schemas: `finance.invoices` and
+                `finance.revenue_ledger` are governed by their own guardrail policy —
+                schema-qualified assets answer exactly like `public` ones.
+                """
+            ),
+            code(
+                """
+                invoices = client.authorize_use(
+                    asset("invoices", schema="finance"),
+                    use="prepare the quarterly revenue recognition report",
+                    scenario_key="purpose.allowed_use",
+                )
+                print(f"finance.invoices reporting            -> {invoices['decision']}")
+
+                ledger = client.authorize_use(
+                    asset("revenue_ledger", schema="finance"),
+                    use="publish ledger extracts on the public status page",
+                    scenario_key="sharing.public",
+                )
+                print(f"finance.revenue_ledger public sharing -> {ledger['decision']}")
+                """
+            ),
+        ]
+    )
+
+
+def sql_gauntlet_notebook() -> dict:
+    return notebook(
+        [
+            markdown(
+                """
+                # 13 - The SQL Gauntlet: Intent- And Column-Aware Validation
+
+                `validate_query_context` does not grade SQL on vibes. Participation is
+                precise: COLUMN rows join the verdict only when the column is actually
+                referenced (or a star pulls everything), TABLE rows only when the
+                stated intent matches their scenario, and always-applicable read
+                controls apply to any SQL. This notebook runs real query shapes
+                through that model — JOINs, `SELECT *`, CTEs, a join into an
+                ungoverned table, byte-identical SQL under two intents, and a
+                cross-schema join.
+                """
+            ),
+            code(SETUP_CELL),
+            markdown(
+                """
+                ## 1. A JOIN is evaluated per referenced table
+
+                Both sides of the join get their own finding; the verdict aggregates
+                over every participating row.
+                """
+            ),
+            code(
+                """
+                joined = client.validate_query_context(
+                    "SELECT c.region, SUM(s.arr) FROM customers c JOIN subscriptions s ON s.customer_id = c.customer_id GROUP BY c.region",
+                    scenario_key="purpose.allowed_use",
+                    default_database="acmecloud_demo",
+                    default_schema="public",
+                )
+                print(f"customers JOIN subscriptions -> {joined['verdict']}")
+                for finding in joined["findings"]:
+                    print(f"  {finding['ref']['table']}: {finding['status']} ({finding.get('decision')})")
+                """
+            ),
+            markdown(
+                """
+                ## 2. `SELECT *` pulls every masked column into the verdict
+
+                The star is a projection signal: it makes ALL column rows participate.
+                Name only the columns you need and the same table can pass clean.
+                """
+            ),
+            code(
+                """
+                star = client.validate_query_context(
+                    "SELECT * FROM payment_methods LIMIT 5",
+                    scenario_key="purpose.allowed_use",
+                    default_database="acmecloud_demo",
+                    default_schema="public",
+                )
+                print(f"SELECT *                    -> {star['verdict']} (both tokenized card columns participate)")
+
+                narrow = client.validate_query_context(
+                    "SELECT payment_method_id FROM payment_methods",
+                    scenario_key="purpose.allowed_use",
+                    default_database="acmecloud_demo",
+                    default_schema="public",
+                )
+                print(f"SELECT payment_method_id    -> {narrow['verdict']} (no masked column referenced)")
+                """
+            ),
+            markdown(
+                """
+                ## 3. CTE names are not tables
+
+                `recent` is a WITH-alias — the parser excludes it, so the only
+                finding is the real `subscriptions` reference.
+                """
+            ),
+            code(
+                """
+                cte = client.validate_query_context(
+                    "WITH recent AS (SELECT customer_id, arr FROM subscriptions WHERE end_date IS NULL) SELECT customer_id, SUM(arr) FROM recent GROUP BY customer_id",
+                    scenario_key="purpose.allowed_use",
+                    default_database="acmecloud_demo",
+                    default_schema="public",
+                )
+                print(f"CTE aggregate -> {cte['verdict']}")
+                print(f"findings: {[finding['ref']['table'] for finding in cte['findings']]}")
+                """
+            ),
+            markdown(
+                """
+                ## 4. Joining an ungoverned table is called out, per ref
+
+                `legacy_customer_backup` is cataloged but ungoverned. The join still
+                gets an overall verdict — with an explicit per-ref
+                `not_enough_published_state` finding instead of a silent pass.
+                """
+            ),
+            code(
+                """
+                legacy = client.validate_query_context(
+                    "SELECT c.customer_name, l.exported_at FROM customers c JOIN legacy_customer_backup l ON l.customer_id = c.customer_id",
+                    scenario_key="purpose.allowed_use",
+                    default_database="acmecloud_demo",
+                    default_schema="public",
+                )
+                print(f"governed JOIN ungoverned -> {legacy['verdict']}")
+                for finding in legacy["findings"]:
+                    print(f"  {finding['ref']['table']}: {finding['status']} ({finding.get('reason_code')})")
+                """
+            ),
+            markdown(
+                """
+                ## 5. The intent flip: same SQL, opposite verdicts
+
+                Byte-identical SQL. Under an analytics intent the permitted-use row
+                participates and the query passes; under a marketing intent the
+                prohibited-use deny participates and the same query fails. Intent is
+                part of the question — not an afterthought.
+                """
+            ),
+            code(
+                """
+                analytics = client.validate_query_context(
+                    "SELECT region, COUNT(*) FROM customers GROUP BY region",
+                    scenario_key="purpose.allowed_use",
+                    default_database="acmecloud_demo",
+                    default_schema="public",
+                )
+                marketing = client.validate_query_context(
+                    "SELECT region, COUNT(*) FROM customers GROUP BY region",
+                    scenario_key="purpose.prohibited_use",
+                    default_database="acmecloud_demo",
+                    default_schema="public",
+                )
+                print(f"analytics intent -> {analytics['verdict']}")
+                print(f"marketing intent -> {marketing['verdict']} (same SQL, different question)")
+                """
+            ),
+            markdown(
+                """
+                ## 6. Cross-schema joins resolve like anything else
+
+                Two-part names qualify against the default database — the `finance`
+                schema's guardrails answer for their own tables.
+                """
+            ),
+            code(
+                """
+                finance = client.validate_query_context(
+                    "SELECT i.invoice_id, r.amount FROM finance.invoices i JOIN finance.revenue_ledger r ON r.invoice_id = i.invoice_id",
+                    scenario_key="purpose.allowed_use",
+                    default_database="acmecloud_demo",
+                    default_schema="public",
+                )
+                print(f"finance.invoices JOIN finance.revenue_ledger -> {finance['verdict']}")
+                for finding in finance["findings"]:
+                    print(f"  {finding['ref']['schema']}.{finding['ref']['table']}: {finding.get('decision')}")
+                """
+            ),
         ]
     )
 
@@ -1148,6 +1433,7 @@ NOTEBOOKS = {
     "10_llamaindex_governed_retrieval_pattern.ipynb": llamaindex_retrieval_notebook,
     "11_langgraph_governed_sql_agent_runtime.ipynb": langgraph_governed_sql_agent_runtime_notebook,
     "12_governance_states_and_the_wider_estate.ipynb": governance_states_notebook,
+    "13_sql_gauntlet_validate_query_context.ipynb": sql_gauntlet_notebook,
 }
 
 

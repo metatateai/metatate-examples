@@ -1,0 +1,245 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "marketing_prospects"
+    },
+    "can_proceed_now": false,
+    "conflict": {
+      "group_id": "accef000-0000-4000-8000-000000000094",
+      "sources": [
+        {
+          "category": "advisory",
+          "conflict_group_id": "accef000-0000-4000-8000-000000000094",
+          "conflict_status": "conflicted",
+          "conflicts_with": [
+            {
+              "decision": "allow",
+              "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+              "policy_version_id": "accef000-0000-4000-8000-000000000095"
+            }
+          ],
+          "decision": "deny",
+          "decision_id": "accef000-0000-4000-8000-000000000091",
+          "decision_reason": "acme-prospect-privacy v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on acmecloud_demo.public.marketing_prospects",
+          "enforcement_mode": "enforce",
+          "instruction_family": "usage_guidance",
+          "instruction_key": "usage_guidance:spec.usage.prohibitedUses:prohibited",
+          "parameters": {
+            "kind": "prohibited",
+            "uses": [
+              "prospect_outreach"
+            ]
+          },
+          "primary_resolution_source": "selector",
+          "priority": 2,
+          "provenance": {
+            "policy_id": "accef000-0000-4000-8000-000000000092",
+            "policy_name": "AcmeCloud prospect outreach privacy block",
+            "policy_version_id": "accef000-0000-4000-8000-000000000093",
+            "version_number": 1
+          },
+          "resolution_paths": [
+            {
+              "ref": null,
+              "source": "selector"
+            }
+          ],
+          "scenario_key": "purpose.allowed_use",
+          "scenario_lane": "human",
+          "scope": {
+            "column": null,
+            "database": "acmecloud_demo",
+            "schema": "public",
+            "table": "marketing_prospects"
+          },
+          "weight": 1
+        },
+        {
+          "category": "advisory",
+          "conflict_group_id": "accef000-0000-4000-8000-000000000094",
+          "conflict_status": "conflicted",
+          "conflicts_with": [
+            {
+              "decision": "deny",
+              "instruction_key": "usage_guidance:spec.usage.prohibitedUses:prohibited",
+              "policy_version_id": "accef000-0000-4000-8000-000000000093"
+            }
+          ],
+          "decision": "allow",
+          "decision_id": "accef000-0000-4000-8000-000000000096",
+          "decision_reason": "acme-prospect-outreach v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.marketing_prospects",
+          "enforcement_mode": "enforce",
+          "instruction_family": "usage_guidance",
+          "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+          "parameters": {
+            "kind": "permitted",
+            "uses": [
+              "prospect_outreach"
+            ]
+          },
+          "primary_resolution_source": "selector",
+          "priority": 2,
+          "provenance": {
+            "policy_id": "accef000-0000-4000-8000-000000000097",
+            "policy_name": "AcmeCloud prospect outreach enablement",
+            "policy_version_id": "accef000-0000-4000-8000-000000000095",
+            "version_number": 1
+          },
+          "resolution_paths": [
+            {
+              "ref": null,
+              "source": "selector"
+            }
+          ],
+          "scenario_key": "purpose.allowed_use",
+          "scenario_lane": "human",
+          "scope": {
+            "column": null,
+            "database": "acmecloud_demo",
+            "schema": "public",
+            "table": "marketing_prospects"
+          },
+          "weight": 1
+        }
+      ]
+    },
+    "context_facts": {
+      "category": "pii.contact",
+      "masking": {
+        "exempt_roles": [
+          "DATA_STEWARD",
+          "PRIVACY_ADMIN"
+        ],
+        "type": "partial"
+      },
+      "pii": true,
+      "sensitivity": "confidential",
+      "subcategory": null
+    },
+    "decision": "require_review",
+    "instructions": [
+      {
+        "category": "advisory",
+        "conflict_group_id": "accef000-0000-4000-8000-000000000094",
+        "conflict_status": "conflicted",
+        "conflicts_with": [
+          {
+            "decision": "allow",
+            "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+            "policy_version_id": "accef000-0000-4000-8000-000000000095"
+          }
+        ],
+        "decision": "deny",
+        "decision_id": "accef000-0000-4000-8000-000000000091",
+        "decision_reason": "acme-prospect-privacy v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on acmecloud_demo.public.marketing_prospects",
+        "enforcement_mode": "enforce",
+        "instruction_family": "usage_guidance",
+        "instruction_key": "usage_guidance:spec.usage.prohibitedUses:prohibited",
+        "parameters": {
+          "kind": "prohibited",
+          "uses": [
+            "prospect_outreach"
+          ]
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000092",
+          "policy_name": "AcmeCloud prospect outreach privacy block",
+          "policy_version_id": "accef000-0000-4000-8000-000000000093",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "purpose.allowed_use",
+        "scenario_lane": "human",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "marketing_prospects"
+        },
+        "weight": 1
+      },
+      {
+        "category": "advisory",
+        "conflict_group_id": "accef000-0000-4000-8000-000000000094",
+        "conflict_status": "conflicted",
+        "conflicts_with": [
+          {
+            "decision": "deny",
+            "instruction_key": "usage_guidance:spec.usage.prohibitedUses:prohibited",
+            "policy_version_id": "accef000-0000-4000-8000-000000000093"
+          }
+        ],
+        "decision": "allow",
+        "decision_id": "accef000-0000-4000-8000-000000000096",
+        "decision_reason": "acme-prospect-outreach v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.marketing_prospects",
+        "enforcement_mode": "enforce",
+        "instruction_family": "usage_guidance",
+        "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+        "parameters": {
+          "kind": "permitted",
+          "uses": [
+            "prospect_outreach"
+          ]
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000097",
+          "policy_name": "AcmeCloud prospect outreach enablement",
+          "policy_version_id": "accef000-0000-4000-8000-000000000095",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "purpose.allowed_use",
+        "scenario_lane": "human",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "marketing_prospects"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "Do not proceed on this answer \u2014 the published governance state is conflicted.",
+      "Resolve the conflicting policy instructions in Policies, then publish a new deployment."
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "Current published instructions for this asset and scenario disagree; review is required before proceeding.",
+    "reason_code": "conflicted_published_state",
+    "scenario_key": "purpose.allowed_use",
+    "scenario_lane": "human",
+    "state": "review_required"
+  },
+  "arguments": {
+    "asset": {
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "marketing_prospects"
+    },
+    "scenario_key": "purpose.allowed_use",
+    "use": "run outreach against the prospect list"
+  },
+  "case_id": "conflict-prospect-outreach-review",
+  "tool": "authorize_use"
+}

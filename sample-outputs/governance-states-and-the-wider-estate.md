@@ -54,3 +54,44 @@ sharing.internal on subscriptions -> allow
 card_last4 (analytics intent) -> warn (tokenized column referenced)
 salary (NO stated intent)    -> fail (role-gated read applies to any SQL)
 ```
+
+```text
+marketing_prospects outreach -> review_required (conflicted_published_state)
+  cited: AcmeCloud prospect outreach privacy block -> deny
+  cited: AcmeCloud prospect outreach enablement -> allow
+```
+
+```text
+state:    answered
+decision: retain
+reason:   acme-retention v1 retention:spec.retention → retain on acmecloud_demo.public.subscriptions
+obligation [retain]: acmecloud_demo.public.subscriptions
+can_proceed_now: False
+```
+
+```text
+state:    answered
+decision: conditional
+reason:   acme-employee-rows v1 row_access:spec.rowFilter.rules → conditional on acmecloud_demo.public.employees
+condition [role_restricted]: Row-level access is restricted to role(s): PEOPLE_OPS.
+can_proceed_now: False
+```
+
+```text
+compliance.regulatory -> log_only (regulatory context, not a permission)
+state:    answered
+decision: mask_full
+reason:   acme-payment-protection v1 masking:spec.accessControl.masking → mask_full on acmecloud_demo.public.payment_methods.card_token
+obligation [mask]: acmecloud_demo.public.payment_methods.card_token
+can_proceed_now: False
+```
+
+```text
+free text, no scenario_key -> answered / deny (mapped to ai.training)
+ambiguous free text        -> not_enough_published_state (scenario_unresolved)
+```
+
+```text
+finance.invoices reporting            -> allow
+finance.revenue_ledger public sharing -> deny
+```

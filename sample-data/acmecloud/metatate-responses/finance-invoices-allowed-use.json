@@ -1,0 +1,90 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "acmecloud_demo",
+      "schema": "finance",
+      "table": "invoices"
+    },
+    "can_proceed_now": true,
+    "conditions": [],
+    "context_facts": {
+      "category": "financial",
+      "masking": null,
+      "pii": false,
+      "sensitivity": "internal",
+      "subcategory": null
+    },
+    "decision": "allow",
+    "decision_id": "accef000-0000-4000-8000-000000000102",
+    "instructions": [
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "allow",
+        "decision_id": "accef000-0000-4000-8000-000000000102",
+        "decision_reason": "acme-finance-guardrails v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.finance.invoices",
+        "enforcement_mode": "enforce",
+        "instruction_family": "usage_guidance",
+        "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+        "parameters": {
+          "kind": "permitted",
+          "uses": [
+            "financial_reporting",
+            "audit_support"
+          ]
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000103",
+          "policy_name": "AcmeCloud finance data guardrails",
+          "policy_version_id": "accef000-0000-4000-8000-000000000104",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "purpose.allowed_use",
+        "scenario_lane": "human",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "finance",
+          "table": "invoices"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "Proceed \u2014 the current published instructions allow this use."
+    ],
+    "obligations": [],
+    "prohibitions": [],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "acme-finance-guardrails v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.finance.invoices",
+    "scenario_key": "purpose.allowed_use",
+    "scenario_lane": "human",
+    "state": "answered"
+  },
+  "arguments": {
+    "asset": {
+      "database": "acmecloud_demo",
+      "schema": "finance",
+      "table": "invoices"
+    },
+    "scenario_key": "purpose.allowed_use",
+    "use": "prepare the quarterly revenue recognition report"
+  },
+  "case_id": "finance-invoices-allowed-use",
+  "tool": "authorize_use"
+}

@@ -1,0 +1,108 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "employees"
+    },
+    "can_proceed_now": false,
+    "conditions": [
+      {
+        "kind": "role_restricted",
+        "required_by_policy": "AcmeCloud employee region rows",
+        "required_role": "PEOPLE_OPS",
+        "requirement": "Row-level access is restricted to role(s): PEOPLE_OPS.",
+        "satisfied_by": "Access only as an approved role (PEOPLE_OPS)."
+      }
+    ],
+    "context_facts": {
+      "category": "pii.contact",
+      "masking": {
+        "exempt_roles": [
+          "DATA_STEWARD",
+          "PRIVACY_ADMIN"
+        ],
+        "type": "partial"
+      },
+      "pii": true,
+      "sensitivity": "confidential",
+      "subcategory": null
+    },
+    "decision": "conditional",
+    "decision_id": "accef000-0000-4000-8000-000000000066",
+    "instructions": [
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "conditional",
+        "decision_id": "accef000-0000-4000-8000-000000000066",
+        "decision_reason": "acme-employee-rows v1 row_access:spec.rowFilter.rules \u2192 conditional on acmecloud_demo.public.employees",
+        "enforcement_mode": "enforce",
+        "instruction_family": "row_access",
+        "instruction_key": "row_access:spec.rowFilter.rules",
+        "parameters": {
+          "rules": [
+            {
+              "expression": "region = current_setting('app.user_region')",
+              "roles": [
+                "PEOPLE_OPS"
+              ]
+            }
+          ]
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000067",
+          "policy_name": "AcmeCloud employee region rows",
+          "policy_version_id": "accef000-0000-4000-8000-000000000068",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "access.row_filter",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "employees"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "You may proceed only after satisfying the stated condition(s) below (e.g. obtain the named approval, anonymize first, or act as a granted role).",
+      "If the condition cannot be met, treat this use as denied."
+    ],
+    "obligations": [],
+    "prohibitions": [],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "acme-employee-rows v1 row_access:spec.rowFilter.rules \u2192 conditional on acmecloud_demo.public.employees",
+    "scenario_key": "access.row_filter",
+    "scenario_lane": "platform",
+    "state": "answered"
+  },
+  "arguments": {
+    "asset": {
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "employees"
+    },
+    "scenario_key": "access.row_filter",
+    "use": "read employee rows for my region"
+  },
+  "case_id": "employee-region-rows-conditional",
+  "tool": "authorize_use"
+}
