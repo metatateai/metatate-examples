@@ -1,0 +1,35 @@
+# AcmeCloud estate spec — prospect outreach enablement (Growth Marketing).
+#
+# One half of the deliberate governance-debt pair on marketing_prospects:
+# Growth Marketing permits the exact use the Privacy Office prohibits (see
+# prospect-outreach-block.yaml). Same table, same priority, same scenario —
+# the engine marks both serving rows conflicted and MCP answers
+# review_required(conflicted_published_state) citing BOTH sources.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: acme-prospect-outreach
+  version: 1.0.0
+  description: >-
+    Growth Marketing runs outreach experiments against the inbound prospect
+    list.
+  tags: [marketing]
+  businessContext:
+    domain: Growth Marketing
+    owner: Growth Marketing
+    steward: growth@example.com
+    purpose: Outreach experimentation on inbound prospects.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [acmecloud_demo]
+    schemas: [public]
+    tables: [marketing_prospects]
+  classification:
+    sensitivity: confidential
+    category: pii
+  usage:
+    permittedUses: [prospect_outreach]
+extensions:
+  displayName: AcmeCloud prospect outreach enablement

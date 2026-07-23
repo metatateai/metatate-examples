@@ -1,0 +1,39 @@
+# AcmeCloud estate spec — prospect outreach privacy block (Privacy Office).
+#
+# The other half of the deliberate governance-debt pair (see
+# prospect-outreach-permit.yaml). The MISSING scenarioMap is the point:
+# without the prohibited-use remap, this prohibition lands on the same
+# purpose.allowed_use scenario as Growth Marketing's permit — the same
+# question answered twice with opposite decisions. The engine refuses to
+# pick a side: both rows are marked conflicted, and authorize_use returns
+# review_required(conflicted_published_state) with both sources cited.
+# Every disciplined policy in this estate (e.g. customer-use-guardrails)
+# carries the remap; this pair demonstrates what happens when one slips.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: acme-prospect-privacy
+  version: 1.0.0
+  description: >-
+    The Privacy Office blocks outreach against inbound prospects until a
+    documented consent basis exists.
+  tags: [privacy_sensitive]
+  businessContext:
+    domain: Privacy
+    owner: Privacy Office
+    steward: privacy-review@example.com
+    purpose: Consent-first control over prospect contact data.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [acmecloud_demo]
+    schemas: [public]
+    tables: [marketing_prospects]
+  classification:
+    sensitivity: confidential
+    category: pii
+  usage:
+    prohibitedUses: [prospect_outreach]
+extensions:
+  displayName: AcmeCloud prospect outreach privacy block

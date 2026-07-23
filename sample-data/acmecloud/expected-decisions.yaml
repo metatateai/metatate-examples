@@ -98,6 +98,49 @@ authorize:
     asset: { table: subscriptions }
     scenario_key: sharing.internal
     expect: { state: answered, decision: allow }
+  # ---- estate v3: conflict corner, decision vocabulary, free text, finance ----
+  - id: conflict-prospect-outreach-review
+    asset: { table: marketing_prospects }
+    scenario_key: purpose.allowed_use
+    expect:
+      state: review_required
+      reason_code: conflicted_published_state
+      conflict_sources: 2
+  - id: retention-subscriptions-retain
+    asset: { table: subscriptions }
+    scenario_key: retention.lifecycle
+    expect: { state: answered, decision: retain, obligations_include: [retain] }
+  - id: employee-region-rows-conditional
+    asset: { table: employees }
+    scenario_key: access.row_filter
+    expect: { state: answered, decision: conditional, conditions_include: [role_restricted] }
+  - id: employee-gdpr-context-log-only
+    asset: { table: employees }
+    scenario_key: compliance.regulatory
+    expect: { state: answered, decision: log_only }
+  - id: pci-card-token-mask-obligation
+    asset: { table: payment_methods, column: card_token }
+    scenario_key: masking.display
+    expect: { state: answered, decision: mask_full, obligations_include: [mask] }
+  # Free-text front door: no scenario_key — the server maps the use text.
+  - id: freetext-training-deny
+    asset: { table: support_tickets }
+    use: fine-tune a model on this data
+    expect: { state: answered, decision: deny }
+  # A use that names two canonical keys is deterministically unmappable —
+  # the server refuses to guess.
+  - id: freetext-ambiguous-unresolved
+    asset: { table: customers }
+    use: compare ai.training and ai.inference guidance for customer data
+    expect: { state: not_enough_published_state, reason_code: scenario_unresolved }
+  - id: finance-invoices-allowed-use
+    asset: { schema: finance, table: invoices }
+    scenario_key: purpose.allowed_use
+    expect: { state: answered, decision: allow }
+  - id: finance-ledger-public-sharing-deny
+    asset: { schema: finance, table: revenue_ledger }
+    scenario_key: sharing.public
+    expect: { state: answered, decision: deny }
 
 validate:
   - id: safe-aggregate-pass
@@ -134,3 +177,55 @@ validate:
     scenario_key: purpose.allowed_use
     columns: [work_email]
     expect: { verdict: warn }
+  # ---- estate v3: the SQL gauntlet (JOIN, star, CTE, per-ref honesty, intent flip) ----
+  # `tables` lists every catalog ref the SQL touches (schema-qualified when not
+  # public); `star: true` marks a projection star. Single-table cases without
+  # `tables` keep the legacy first-FROM extraction.
+  - id: join-customers-subscriptions-pass
+    sql: SELECT c.region, SUM(s.arr) FROM customers c JOIN subscriptions s ON s.customer_id = c.customer_id GROUP BY c.region
+    scenario_key: purpose.allowed_use
+    tables: [customers, subscriptions]
+    columns: [region, arr, customer_id]
+    expect: { verdict: pass }
+  - id: select-star-payment-methods-warn
+    sql: SELECT * FROM payment_methods LIMIT 5
+    scenario_key: purpose.allowed_use
+    tables: [payment_methods]
+    star: true
+    columns: []
+    expect: { verdict: warn }
+  - id: payment-id-only-pass
+    sql: SELECT payment_method_id FROM payment_methods
+    scenario_key: purpose.allowed_use
+    columns: [payment_method_id]
+    expect: { verdict: pass }
+  - id: cte-subscriptions-aggregate-pass
+    sql: WITH recent AS (SELECT customer_id, arr FROM subscriptions WHERE end_date IS NULL) SELECT customer_id, SUM(arr) FROM recent GROUP BY customer_id
+    scenario_key: purpose.allowed_use
+    tables: [subscriptions]
+    columns: [customer_id, arr, end_date]
+    expect: { verdict: pass }
+  - id: join-legacy-ungoverned-warn
+    sql: SELECT c.customer_name, l.exported_at FROM customers c JOIN legacy_customer_backup l ON l.customer_id = c.customer_id
+    scenario_key: purpose.allowed_use
+    tables: [customers, legacy_customer_backup]
+    columns: [customer_name, exported_at, customer_id]
+    expect: { verdict: warn, not_enough_tables: [legacy_customer_backup] }
+  # The intent flip: byte-identical SQL, opposite verdicts — participation is
+  # intent-aware, so the analytics ask passes and the marketing ask fails.
+  - id: same-sql-analytics-intent-pass
+    sql: SELECT region, COUNT(*) FROM customers GROUP BY region
+    scenario_key: purpose.allowed_use
+    columns: [region]
+    expect: { verdict: pass }
+  - id: same-sql-marketing-intent-fail
+    sql: SELECT region, COUNT(*) FROM customers GROUP BY region
+    scenario_key: purpose.prohibited_use
+    columns: [region]
+    expect: { verdict: fail }
+  - id: finance-cross-schema-join-pass
+    sql: SELECT i.invoice_id, r.amount FROM finance.invoices i JOIN finance.revenue_ledger r ON r.invoice_id = i.invoice_id
+    scenario_key: purpose.allowed_use
+    tables: [finance.invoices, finance.revenue_ledger]
+    columns: [invoice_id, amount]
+    expect: { verdict: pass }

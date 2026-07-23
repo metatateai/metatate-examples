@@ -1,0 +1,135 @@
+{
+  "answer": {
+    "advisory": true,
+    "findings": [
+      {
+        "conflict": null,
+        "decision": "allow",
+        "decision_reason": "acme-finance-guardrails v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.finance.invoices",
+        "instructions": [
+          {
+            "category": "advisory",
+            "conflict_group_id": null,
+            "conflict_status": "none",
+            "conflicts_with": [],
+            "decision": "allow",
+            "decision_id": "accef000-0000-4000-8000-000000000102",
+            "decision_reason": "acme-finance-guardrails v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.finance.invoices",
+            "enforcement_mode": "enforce",
+            "instruction_family": "usage_guidance",
+            "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+            "parameters": {
+              "kind": "permitted",
+              "uses": [
+                "financial_reporting",
+                "audit_support"
+              ]
+            },
+            "primary_resolution_source": "selector",
+            "priority": 2,
+            "provenance": {
+              "policy_id": "accef000-0000-4000-8000-000000000103",
+              "policy_name": "AcmeCloud finance data guardrails",
+              "policy_version_id": "accef000-0000-4000-8000-000000000104",
+              "version_number": 1
+            },
+            "resolution_paths": [
+              {
+                "ref": null,
+                "source": "selector"
+              }
+            ],
+            "scenario_key": "purpose.allowed_use",
+            "scenario_lane": "human",
+            "scope": {
+              "column": null,
+              "database": "acmecloud_demo",
+              "schema": "finance",
+              "table": "invoices"
+            },
+            "weight": 1
+          }
+        ],
+        "reason_code": null,
+        "ref": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "finance",
+          "table": "invoices"
+        },
+        "status": "evaluated"
+      },
+      {
+        "conflict": null,
+        "decision": "allow",
+        "decision_reason": "acme-finance-guardrails v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.finance.revenue_ledger",
+        "instructions": [
+          {
+            "category": "advisory",
+            "conflict_group_id": null,
+            "conflict_status": "none",
+            "conflicts_with": [],
+            "decision": "allow",
+            "decision_id": "accef000-0000-4000-8000-000000000107",
+            "decision_reason": "acme-finance-guardrails v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.finance.revenue_ledger",
+            "enforcement_mode": "enforce",
+            "instruction_family": "usage_guidance",
+            "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+            "parameters": {
+              "kind": "permitted",
+              "uses": [
+                "financial_reporting",
+                "audit_support"
+              ]
+            },
+            "primary_resolution_source": "selector",
+            "priority": 2,
+            "provenance": {
+              "policy_id": "accef000-0000-4000-8000-000000000103",
+              "policy_name": "AcmeCloud finance data guardrails",
+              "policy_version_id": "accef000-0000-4000-8000-000000000104",
+              "version_number": 1
+            },
+            "resolution_paths": [
+              {
+                "ref": null,
+                "source": "selector"
+              }
+            ],
+            "scenario_key": "purpose.allowed_use",
+            "scenario_lane": "human",
+            "scope": {
+              "column": null,
+              "database": "acmecloud_demo",
+              "schema": "finance",
+              "table": "revenue_ledger"
+            },
+            "weight": 1
+          }
+        ],
+        "reason_code": null,
+        "ref": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "finance",
+          "table": "revenue_ledger"
+        },
+        "status": "evaluated"
+      }
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "state": "answered",
+    "verdict": "pass"
+  },
+  "arguments": {
+    "default_database": "acmecloud_demo",
+    "default_schema": "public",
+    "scenario_key": "purpose.allowed_use",
+    "sql": "SELECT i.invoice_id, r.amount FROM finance.invoices i JOIN finance.revenue_ledger r ON r.invoice_id = i.invoice_id"
+  },
+  "case_id": "finance-cross-schema-join-pass",
+  "tool": "validate_query_context"
+}

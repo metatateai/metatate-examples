@@ -19,8 +19,8 @@ DATABASE = "acmecloud_demo"
 SCHEMA = "public"
 
 
-def asset(table: str, column: str | None = None) -> dict[str, str]:
-    ref: dict[str, str] = {"database": DATABASE, "schema": SCHEMA, "table": table}
+def asset(table: str, column: str | None = None, schema: str = SCHEMA) -> dict[str, str]:
+    ref: dict[str, str] = {"database": DATABASE, "schema": schema, "table": table}
     if column is not None:
         ref["column"] = column
     return ref
@@ -342,6 +342,169 @@ CASES: list[dict[str, Any]] = [
         "id": "explain_salesforce_decision",
         "tool": "explain_why",
         "arguments": {"kind": "decision", "decision_id": "@export-salesforce-conditional.decision_id"},
+    },
+    # ---- estate v3 (APPENDED — case order drives the recorder's uuid ---------
+    # numbering, so new cases always go at the end to keep every earlier
+    # recording byte-identical).
+    {
+        "id": "conflict-prospect-outreach-review",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("marketing_prospects"),
+            "scenario_key": "purpose.allowed_use",
+            "use": "run outreach against the prospect list",
+        },
+    },
+    {
+        "id": "retention-subscriptions-retain",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("subscriptions"),
+            "scenario_key": "retention.lifecycle",
+            "use": "confirm how long subscription revenue facts must be kept",
+        },
+    },
+    {
+        "id": "employee-region-rows-conditional",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("employees"),
+            "scenario_key": "access.row_filter",
+            "use": "read employee rows for my region",
+        },
+    },
+    {
+        "id": "employee-gdpr-context-log-only",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("employees"),
+            "scenario_key": "compliance.regulatory",
+            "use": "review the GDPR context for employee records",
+        },
+    },
+    {
+        "id": "pci-card-token-mask-obligation",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("payment_methods", "card_token"),
+            "scenario_key": "masking.display",
+            "use": "display stored payment instruments in the support console",
+        },
+    },
+    # Free-text front door: deliberately NO scenario_key on the next two.
+    {
+        "id": "freetext-training-deny",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("support_tickets"),
+            "use": "fine-tune a model on this data",
+        },
+    },
+    {
+        "id": "freetext-ambiguous-unresolved",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("customers"),
+            "use": "compare ai.training and ai.inference guidance for customer data",
+        },
+    },
+    {
+        "id": "finance-invoices-allowed-use",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("invoices", schema="finance"),
+            "scenario_key": "purpose.allowed_use",
+            "use": "prepare the quarterly revenue recognition report",
+        },
+    },
+    {
+        "id": "finance-ledger-public-sharing-deny",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("revenue_ledger", schema="finance"),
+            "scenario_key": "sharing.public",
+            "use": "publish ledger extracts on the public status page",
+        },
+    },
+    {
+        "id": "join-customers-subscriptions-pass",
+        "tool": "validate_query_context",
+        "arguments": {
+            "sql": "SELECT c.region, SUM(s.arr) FROM customers c JOIN subscriptions s ON s.customer_id = c.customer_id GROUP BY c.region",
+            "scenario_key": "purpose.allowed_use",
+            "default_database": DATABASE,
+            "default_schema": SCHEMA,
+        },
+    },
+    {
+        "id": "select-star-payment-methods-warn",
+        "tool": "validate_query_context",
+        "arguments": {
+            "sql": "SELECT * FROM payment_methods LIMIT 5",
+            "scenario_key": "purpose.allowed_use",
+            "default_database": DATABASE,
+            "default_schema": SCHEMA,
+        },
+    },
+    {
+        "id": "payment-id-only-pass",
+        "tool": "validate_query_context",
+        "arguments": {
+            "sql": "SELECT payment_method_id FROM payment_methods",
+            "scenario_key": "purpose.allowed_use",
+            "default_database": DATABASE,
+            "default_schema": SCHEMA,
+        },
+    },
+    {
+        "id": "cte-subscriptions-aggregate-pass",
+        "tool": "validate_query_context",
+        "arguments": {
+            "sql": "WITH recent AS (SELECT customer_id, arr FROM subscriptions WHERE end_date IS NULL) SELECT customer_id, SUM(arr) FROM recent GROUP BY customer_id",
+            "scenario_key": "purpose.allowed_use",
+            "default_database": DATABASE,
+            "default_schema": SCHEMA,
+        },
+    },
+    {
+        "id": "join-legacy-ungoverned-warn",
+        "tool": "validate_query_context",
+        "arguments": {
+            "sql": "SELECT c.customer_name, l.exported_at FROM customers c JOIN legacy_customer_backup l ON l.customer_id = c.customer_id",
+            "scenario_key": "purpose.allowed_use",
+            "default_database": DATABASE,
+            "default_schema": SCHEMA,
+        },
+    },
+    {
+        "id": "same-sql-analytics-intent-pass",
+        "tool": "validate_query_context",
+        "arguments": {
+            "sql": "SELECT region, COUNT(*) FROM customers GROUP BY region",
+            "scenario_key": "purpose.allowed_use",
+            "default_database": DATABASE,
+            "default_schema": SCHEMA,
+        },
+    },
+    {
+        "id": "same-sql-marketing-intent-fail",
+        "tool": "validate_query_context",
+        "arguments": {
+            "sql": "SELECT region, COUNT(*) FROM customers GROUP BY region",
+            "scenario_key": "purpose.prohibited_use",
+            "default_database": DATABASE,
+            "default_schema": SCHEMA,
+        },
+    },
+    {
+        "id": "finance-cross-schema-join-pass",
+        "tool": "validate_query_context",
+        "arguments": {
+            "sql": "SELECT i.invoice_id, r.amount FROM finance.invoices i JOIN finance.revenue_ledger r ON r.invoice_id = i.invoice_id",
+            "scenario_key": "purpose.allowed_use",
+            "default_database": DATABASE,
+            "default_schema": SCHEMA,
+        },
     },
 ]
 

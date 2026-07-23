@@ -27,8 +27,8 @@ own**:
 2. On your new workspace's dashboard, follow the **"New here?" banner → Load
    the demo**, then click **Load the full estate** — the notebooks and
    walkthroughs expect the complete governed domain this repo specifies
-   (eight governed tables plus a deliberately ungoverned legacy corner,
-   fifteen policies, one live publication). The smaller starter sample the
+   (eleven governed tables across two schemas plus a deliberately ungoverned
+   legacy corner, eighteen policies, one live publication). The smaller starter sample the
    onboarding page also offers is a first-run product tour, not enough for
    this cookbook.
 3. Open **MCP Tools → Tokens** and issue an access token (shown once).
@@ -50,7 +50,7 @@ AcmeCloud covers customer operations, revenue, product usage, support, and prepa
 The domain is defined as a machine-readable **estate spec** in
 `sample-data/acmecloud/` — `catalog.yaml` (tables, columns, descriptions,
 tags, and the initial column classification against the Metatate taxonomy,
-including tenant custom types), fifteen real Metatate Cloud policy documents in
+including tenant custom types), eighteen real Metatate Cloud policy documents in
 `policies/`, and `expected-decisions.yaml` (the behavior contract). The
 product derives the demo workspace from this spec with its real governance
 engine, so what these examples document is exactly what the engine serves.
@@ -65,6 +65,9 @@ Governed tables:
 - `acmecloud_demo.public.payment_methods` (PCI scope)
 - `acmecloud_demo.public.employees` (HR)
 - `acmecloud_demo.public.ml_feature_store` (AI lifecycle)
+- `acmecloud_demo.public.marketing_prospects` (the governance-debt corner)
+- `acmecloud_demo.finance.invoices` (second schema)
+- `acmecloud_demo.finance.revenue_ledger` (second schema)
 
 Plus `acmecloud_demo.public.legacy_customer_backup` — cataloged but
 **deliberately ungoverned**, so the typed `not_enough_published_state`
@@ -82,6 +85,10 @@ Demo policy behavior:
 - employee records are role-gated with row-level regional scoping, GDPR context, and a monitored custom mask served as review-required
 - the ML feature store carries AI-lifecycle rules: training/retrieval/embedding allowed, vendor transfer and automated decisioning denied
 - the "Customer 360" COLLECTION groups five tables; one policy targets the collection by id and every answer cites a `collection` resolution path
+- two policies deliberately CONFLICT about outreach on `marketing_prospects` — the answer is a typed review-required citing BOTH sources (governance debt, not a coin flip)
+- the wider decision vocabulary is served honestly: retention answers `retain` (with a structured obligation), row-level access answers `conditional` (`role_restricted`), compliance context answers `log_only`, and the enforced PCI mask carries a `mask` obligation naming the method
+- plain-English uses map deterministically to canonical scenarios with no `scenario_key` at all — and ambiguous text refuses with a typed `scenario_unresolved`
+- the `finance` schema (`invoices`, `revenue_ledger`) carries its own guardrails: a multi-schema estate, one decision layer
 
 ## Notebook Pack
 
@@ -99,7 +106,8 @@ Demo policy behavior:
 | `09_human_approval_packet_for_conditional_export.ipynb` | Human-in-the-loop exception workflow for safe, conditional, and denied requests. |
 | `10_llamaindex_governed_retrieval_pattern.ipynb` | A governed retrieval function that can be wrapped as a LlamaIndex tool. |
 | `11_langgraph_governed_sql_agent_runtime.ipynb` | LangGraph runtime SQL agent with approve, revise, and block routes. |
-| `12_governance_states_and_the_wider_estate.ipynb` | Honest states (ungoverned, review-required), role gating, the AI lifecycle, collection targeting, and taxonomy-targeted masking. |
+| `12_governance_states_and_the_wider_estate.ipynb` | Honest states (ungoverned, review-required, conflicted), the wider decision vocabulary, free-text scenario mapping, role gating, the AI lifecycle, collections, taxonomy masking, and the finance schema. |
+| `13_sql_gauntlet_validate_query_context.ipynb` | JOINs, `SELECT *`, CTEs, joins into ungoverned tables, and byte-identical SQL passing or failing on intent. |
 
 ## Walkthroughs (live, beyond the notebooks)
 

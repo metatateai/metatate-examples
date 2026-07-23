@@ -20,6 +20,7 @@ endpoint instead (see `docs/live-mode-saas.md`).
 11. `10_llamaindex_governed_retrieval_pattern.ipynb`
 12. `11_langgraph_governed_sql_agent_runtime.ipynb`
 13. `12_governance_states_and_the_wider_estate.ipynb`
+14. `13_sql_gauntlet_validate_query_context.ipynb`
 
 Notebook `06_ci_gate_for_data_ai_changes.ipynb` uses the reusable `cicd_policy_gate` package. The same gate can be run from CI with `scripts/run_cicd_policy_gate.sh`.
 

@@ -2,6 +2,36 @@
   "answer": {
     "assets": [
       {
+        "instruction_count": 4,
+        "ref": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "finance",
+          "table": "invoices"
+        },
+        "scenario_keys": [
+          "classification.sensitivity",
+          "metadata.domain",
+          "purpose.allowed_use",
+          "sharing.public"
+        ]
+      },
+      {
+        "instruction_count": 4,
+        "ref": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "finance",
+          "table": "revenue_ledger"
+        },
+        "scenario_keys": [
+          "classification.sensitivity",
+          "metadata.domain",
+          "purpose.allowed_use",
+          "sharing.public"
+        ]
+      },
+      {
         "instruction_count": 8,
         "ref": {
           "column": null,
@@ -125,6 +155,32 @@
           "database": "acmecloud_demo",
           "schema": "public",
           "table": "employees"
+        },
+        "scenario_keys": [
+          "masking.display"
+        ]
+      },
+      {
+        "instruction_count": 8,
+        "ref": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "marketing_prospects"
+        },
+        "scenario_keys": [
+          "classification.sensitivity",
+          "metadata.domain",
+          "purpose.allowed_use"
+        ]
+      },
+      {
+        "instruction_count": 1,
+        "ref": {
+          "column": "contact_email",
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "marketing_prospects"
         },
         "scenario_keys": [
           "masking.display"

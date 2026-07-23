@@ -36,7 +36,7 @@ The workspace must serve the AcmeCloud demo publication.
 [app.getmetatate.com/sign-up?ref=examples](https://app.getmetatate.com/sign-up?ref=examples)
 and create a workspace. On the workspace dashboard, follow the **"New here?"
 banner → Load the demo**, then click **Load the AcmeCloud demo**. It
-provisions the whole domain (a sample connector that never syncs, the three
+provisions the whole domain (a sample connector that never syncs, the
 AcmeCloud policies, and a live publication) and is fully reversible via
 "Remove demo". Then issue a token in **MCP Tools → Tokens**, copy the
 endpoint from **MCP Tools → Connect**, and export the environment above.

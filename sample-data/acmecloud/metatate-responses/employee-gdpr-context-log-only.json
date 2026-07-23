@@ -1,0 +1,92 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "employees"
+    },
+    "can_proceed_now": false,
+    "conditions": [],
+    "context_facts": {
+      "category": "pii.contact",
+      "masking": {
+        "exempt_roles": [
+          "DATA_STEWARD",
+          "PRIVACY_ADMIN"
+        ],
+        "type": "partial"
+      },
+      "pii": true,
+      "sensitivity": "confidential",
+      "subcategory": null
+    },
+    "decision": "log_only",
+    "decision_id": "accef000-0000-4000-8000-000000000073",
+    "instructions": [
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000073",
+        "decision_reason": "acme-employee-gdpr v1 compliance:spec.compliance.regulations:gdpr \u2192 log_only on acmecloud_demo.public.employees",
+        "enforcement_mode": "advisory",
+        "instruction_family": "compliance",
+        "instruction_key": "compliance:spec.compliance.regulations:gdpr",
+        "parameters": {
+          "regulation": "GDPR"
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000049",
+          "policy_name": "AcmeCloud employee GDPR context",
+          "policy_version_id": "accef000-0000-4000-8000-000000000050",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "compliance.regulatory",
+        "scenario_lane": "human",
+        "scope": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "employees"
+        },
+        "weight": 0.55
+      }
+    ],
+    "next_actions": [
+      "Proceed with logging/observation obligations \u2014 this instruction records advisory governance state."
+    ],
+    "obligations": [],
+    "prohibitions": [],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "acme-employee-gdpr v1 compliance:spec.compliance.regulations:gdpr \u2192 log_only on acmecloud_demo.public.employees",
+    "scenario_key": "compliance.regulatory",
+    "scenario_lane": "human",
+    "state": "answered"
+  },
+  "arguments": {
+    "asset": {
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "table": "employees"
+    },
+    "scenario_key": "compliance.regulatory",
+    "use": "review the GDPR context for employee records"
+  },
+  "case_id": "employee-gdpr-context-log-only",
+  "tool": "authorize_use"
+}
