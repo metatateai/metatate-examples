@@ -3,7 +3,7 @@
 AcmeCloud is a synthetic B2B SaaS company. The dataset is intentionally small so the examples stay readable, but it includes enough variety to demonstrate policy-aware agent behavior.
 
 The machine-readable estate spec lives in `sample-data/acmecloud/`
-(`catalog.yaml`, six policy DSL documents in `policies/`, and
+(`catalog.yaml`, fifteen policy DSL documents in `policies/`, and
 `expected-decisions.yaml`); this page is the narrative companion.
 
 ## Tables
