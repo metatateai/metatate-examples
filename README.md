@@ -109,6 +109,9 @@ Demo policy behavior:
 - [docs/walkthrough-claude-code.md](docs/walkthrough-claude-code.md) — the
   hero demo: Claude Code with the `metatate` plugin making governed decisions
   against your workspace (discover → deny → allow → explain → validate).
+- [docs/walkthrough-claude-desktop.md](docs/walkthrough-claude-desktop.md) —
+  the conversational client: Claude Desktop over plain remote MCP (bearer
+  token, no plugin) answering governance questions in chat.
 - [docs/walkthrough-coverage-review.md](docs/walkthrough-coverage-review.md) —
   the governance-lead loop: find the deliberately ungoverned corner, see it
   answer honestly, govern or retire it, gate the release.
