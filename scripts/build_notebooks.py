@@ -196,9 +196,10 @@ def cookbook_notebook() -> dict:
                 1. discover governed assets
                 2. get an asset's decision context and business context
                 3. inspect column meaning, classification, and masking facts
-                4. authorize a proposed use (allow AND deny)
-                5. validate generated SQL before execution
-                6. explain a decision by chaining its `decision_id`
+                4. read the full rulebook for an asset
+                5. authorize a proposed use (allow AND deny)
+                6. validate generated SQL before execution
+                7. explain a decision by chaining its `decision_id`
                 """
             ),
             code(SETUP_CELL),
@@ -253,7 +254,55 @@ def cookbook_notebook() -> dict:
             ),
             markdown(
                 """
-                ## 4. Authorize a proposed use
+                ## 4. Read the rulebook before you act
+
+                The tools above answer one question at a time. `inspect_governance_rules`
+                returns everything the CURRENT publication has to say about an asset in a
+                single call — every active rule with its family, scenario, decision,
+                enforcement mode, and provenance. Agents use it as a planning input:
+                read the rulebook first, then plan work that will not be blocked later.
+                """
+            ),
+            code(
+                """
+                rules = client.inspect_governance_rules(asset("customers"))
+                print(f"state: {rules['state']}  active rules: {len(rules['rules'])}")
+                pd.DataFrame(
+                    [
+                        {
+                            "family": rule["instruction_family"],
+                            "scenario": rule["scenario_key"],
+                            "decision": rule["decision"],
+                            "category": rule["category"],
+                            "policy": rule["provenance"]["policy_name"],
+                        }
+                        for rule in rules["rules"]
+                    ]
+                )
+                """
+            ),
+            markdown(
+                """
+                The rulebook carries the full destination-aware transfer matrix, so an
+                agent can see that a Salesforce export will be conditional and an
+                ads-platform export denied BEFORE attempting either (notebook 03
+                exercises those decisions).
+                """
+            ),
+            code(
+                """
+                transfer = next(
+                    rule
+                    for rule in rules["rules"]
+                    if rule["instruction_family"] == "transfer_governance"
+                )
+                print(f"transfer decision: {transfer['decision']} ({transfer['scenario_key']})")
+                print(json.dumps(transfer["parameters"], indent=2))
+                """
+            ),
+            markdown(
+                """
+                ## 5. Authorize a proposed use
 
                 Analytics is a permitted use — Metatate can also just say yes.
                 Marketing is prohibited: same asset, different scenario, typed deny.
@@ -279,7 +328,7 @@ def cookbook_notebook() -> dict:
                 print_answer(marketing)
                 """
             ),
-            markdown("## 5. Validate SQL before execution (intent- and column-aware)"),
+            markdown("## 6. Validate SQL before execution (intent- and column-aware)"),
             code(
                 """
                 safe = client.validate_query_context(
@@ -304,7 +353,7 @@ def cookbook_notebook() -> dict:
             ),
             markdown(
                 """
-                ## 6. Explain the decision
+                ## 7. Explain the decision
 
                 Every authorize answer carries the `decision_id` of the winning serving row.
                 `explain_why` resolves it server-side and tells you whether that row is still

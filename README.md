@@ -88,7 +88,7 @@ Demo policy behavior:
 | Notebook | What it shows |
 | --- | --- |
 | `00_setup_live_or_offline.ipynb` | Environment check and context discovery. |
-| `01_decision_layer_cookbook.ipynb` | Core Metatate flow: discover, inspect, authorize, validate, explain. |
+| `01_decision_layer_cookbook.ipynb` | Core Metatate flow: discover, inspect, read the rulebook, authorize, validate, explain. |
 | `02_governed_sql_agent_langgraph.ipynb` | A small governed SQL-agent pattern with optional LangGraph. |
 | `03_transfer_governance_before_export.ipynb` | Destination-aware transfer decisions before export. |
 | `04_governed_text_to_sql_agent.ipynb` | Text-to-SQL that validates and revises SQL before returning it. |

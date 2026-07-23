@@ -42,6 +42,49 @@ state: answered  effective: mask_partial
 ```
 
 ```text
+state: answered  active rules: 18
+```
+
+```text
+transfer decision: conditional (residency.cross_border_transfer)
+{
+  "defaultEffect": "conditional",
+  "rules": [
+    {
+      "consumerJurisdictions": [
+        "EU"
+      ],
+      "destinationJurisdictions": [
+        "US"
+      ],
+      "destinationSystems": [
+        "SALESFORCE"
+      ],
+      "effect": "conditional",
+      "operations": [
+        "export"
+      ],
+      "requiredRole": "PRIVACY_ADMIN",
+      "requiresAnonymization": true,
+      "requiresApproval": true
+    },
+    {
+      "destinationSystems": [
+        "ADS_PLATFORM"
+      ],
+      "effect": "deny"
+    },
+    {
+      "destinationSystems": [
+        "EXTERNAL_LLM_VENDOR"
+      ],
+      "effect": "deny"
+    }
+  ]
+}
+```
+
+```text
 state:    answered
 decision: allow
 reason:   acme-customer-use v1 usage_guidance:spec.usage.permittedUses:permitted → allow on acmecloud_demo.public.customers
