@@ -62,7 +62,7 @@ deterministic local one.
 scripts/run_cicd_policy_gate_acceptance.sh
 scripts/run_human_exception_workflow_acceptance.sh
 scripts/run_framework_runtime_acceptance.sh    # needs Python 3.10+
-scripts/run_notebook_pack.sh                   # notebooks 00–10
+scripts/run_notebook_pack.sh                   # notebooks 00–12, except 11
 scripts/run_langgraph_runtime_notebook.sh      # notebook 11 (framework deps)
 ```
 

@@ -115,6 +115,10 @@ Demo policy behavior:
 - [docs/walkthrough-coverage-review.md](docs/walkthrough-coverage-review.md) —
   the governance-lead loop: find the deliberately ungoverned corner, see it
   answer honestly, govern or retire it, gate the release.
+- [docs/walkthrough-collections.md](docs/walkthrough-collections.md) — group
+  once, govern the group: one collection-targeted policy, answers citing the
+  `collection` resolution path, and membership changes that deploy instead of
+  re-authoring.
 
 The notebooks run in two modes:
 
