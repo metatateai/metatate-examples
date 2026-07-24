@@ -22,8 +22,11 @@ endpoint instead (see `docs/live-mode-saas.md`).
 13. `12_governance_states_and_the_wider_estate.ipynb`
 14. `13_sql_gauntlet_validate_query_context.ipynb`
 15. `14_governed_agent_end_to_end.ipynb`
+16. `15_audit_evidence_packet.ipynb`
 
 Notebook `06_ci_gate_for_data_ai_changes.ipynb` uses the reusable `cicd_policy_gate` package. The same gate can be run from CI with `scripts/run_cicd_policy_gate.sh`.
+
+Notebook `15_audit_evidence_packet.ipynb` uses the reusable `audit_evidence` package. The same packet can be assembled from a terminal with `scripts/run_audit_evidence.sh`.
 
 Notebook `09_human_approval_packet_for_conditional_export.ipynb` uses the reusable `human_exception_workflow` package. The same workflow can be run from a terminal with `scripts/run_human_exception_workflow.sh`.
 

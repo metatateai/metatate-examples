@@ -1537,6 +1537,67 @@ def governed_agent_arc_notebook() -> dict:
     )
 
 
+def audit_evidence_notebook() -> dict:
+    return notebook(
+        [
+            markdown(
+                """
+                # 15 - The Audit Evidence Packet
+
+                "Advisory" does not mean unaccountable. Every Metatate answer carries a
+                `decision_id`, publication provenance, and cited policy versions — this
+                notebook turns a day of governed questions into a single audit-ready
+                report: decisions with receipts, the `explain_why` chain proving each
+                one is still CURRENT, and the honest corners where the estate refused
+                to guess. The reusable `audit_evidence` package does the assembly; the
+                server keeps its own corroborating ledger (MCP Tools → Tokens →
+                **View requests**).
+                """
+            ),
+            code(SETUP_CELL),
+            markdown("## A day of governed questions"),
+            code(
+                """
+                from audit_evidence import collect_evidence, render_markdown
+
+                packet = collect_evidence(client)
+                print(f"decisions: {packet.total}")
+                print(f"explained and current: {packet.current}/{packet.explained}")
+                print(f"honest corners: {packet.honest_corners}")
+                print(f"publication: {packet.publication_id}")
+                """
+            ),
+            markdown(
+                """
+                ## The packet, audit-ready
+
+                Per decision: asset, scenario, typed decision, the citing policy BY
+                NAME AND VERSION, evidence id, conditions and obligations — and the
+                explain-chain confirmation. Then the corners: the ungoverned legacy
+                table and the monitored custom mask, on the record instead of hidden.
+                """
+            ),
+            code(
+                """
+                print(render_markdown(packet))
+                """
+            ),
+            markdown(
+                """
+                ## Codify YOUR questions
+
+                `collect_evidence(client, questions=...)` takes any list shaped like
+                `DEFAULT_QUESTIONS` — codify the data-use questions your team answers
+                every quarter and regenerate this packet on a schedule. After a
+                republish, superseded decisions explain with `current: false` —
+                historical, honestly labeled, never rewritten (walkthrough:
+                publish-flip).
+                """
+            ),
+        ]
+    )
+
+
 NOTEBOOKS = {
     "00_setup_live_or_offline.ipynb": setup_notebook,
     "01_decision_layer_cookbook.ipynb": cookbook_notebook,
@@ -1553,6 +1614,7 @@ NOTEBOOKS = {
     "12_governance_states_and_the_wider_estate.ipynb": governance_states_notebook,
     "13_sql_gauntlet_validate_query_context.ipynb": sql_gauntlet_notebook,
     "14_governed_agent_end_to_end.ipynb": governed_agent_arc_notebook,
+    "15_audit_evidence_packet.ipynb": audit_evidence_notebook,
 }
 
 

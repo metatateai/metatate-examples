@@ -55,6 +55,13 @@ def main() -> None:
         "human_exception_workflow/cli.py",
         "human_exception_workflow/workflow.py",
         "human_exception_workflow/acceptance.py",
+        "audit_evidence/__init__.py",
+        "audit_evidence/evidence.py",
+        "audit_evidence/cli.py",
+        "audit_evidence/acceptance.py",
+        "docs/audit-evidence-packet.md",
+        "scripts/run_audit_evidence.sh",
+        "scripts/run_audit_evidence_acceptance.sh",
         "governed_agent_arc/__init__.py",
         "governed_agent_arc/arc.py",
         "governed_agent_arc/planner.py",
@@ -85,6 +92,7 @@ def main() -> None:
     validate_notebooks()
     validate_cicd_policy_gate_files()
     validate_dbt_adapter_files()
+    validate_audit_evidence_files()
     validate_human_exception_workflow_files()
     validate_governed_agent_arc_files()
     validate_readme_hero()
@@ -129,7 +137,7 @@ def validate_policy_files() -> None:
 
 def validate_notebooks() -> None:
     notebooks = sorted((ROOT / "notebooks").glob("*.ipynb"))
-    assert len(notebooks) == 15, "expected fifteen starter notebooks"
+    assert len(notebooks) == 16, "expected sixteen starter notebooks"
     for path in notebooks:
         with path.open("r", encoding="utf-8") as handle:
             payload = json.load(handle)
@@ -273,6 +281,35 @@ def validate_dbt_adapter_files() -> None:
     assert "cicd_policy_gate/dbt_acceptance.py" in runner, "dbt acceptance runner missing script"
 
 
+def validate_audit_evidence_files() -> None:
+    evidence = (ROOT / "audit_evidence" / "evidence.py").read_text(encoding="utf-8")
+    for marker in (
+        "DEFAULT_QUESTIONS",
+        "explain_why",
+        "publication_id",
+        "honest_corners",
+        "render_markdown",
+        "View requests",
+    ):
+        assert marker in evidence, f"audit evidence missing {marker}"
+
+    acceptance = (ROOT / "audit_evidence" / "acceptance.py").read_text(encoding="utf-8")
+    for marker in (
+        "collect_evidence",
+        "not_enough_published_state",
+        "review_required",
+        "honest_corners == 2",
+    ):
+        assert marker in acceptance, f"audit evidence acceptance missing {marker}"
+
+    runner = (ROOT / "scripts" / "run_audit_evidence.sh").read_text(encoding="utf-8")
+    assert "python3 -m audit_evidence.cli" in runner, "evidence runner does not call the CLI"
+    acceptance_runner = (ROOT / "scripts" / "run_audit_evidence_acceptance.sh").read_text(
+        encoding="utf-8"
+    )
+    assert "audit_evidence/acceptance.py" in acceptance_runner, "evidence acceptance runner missing script"
+
+
 def validate_governed_agent_arc_files() -> None:
     arc = (ROOT / "governed_agent_arc" / "arc.py").read_text(encoding="utf-8")
     for marker in (
@@ -329,6 +366,7 @@ def validate_ci_workflows() -> None:
         "scripts/run_cicd_policy_gate_acceptance.sh",
         "scripts/run_cicd_dbt_adapter_acceptance.sh",
         "scripts/run_human_exception_workflow_acceptance.sh",
+        "scripts/run_audit_evidence_acceptance.sh",
         "scripts/run_governed_agent_arc_acceptance.sh",
         "scripts/run_framework_runtime_acceptance.sh",
         "scripts/run_notebook_pack.sh",
@@ -343,6 +381,7 @@ def validate_ci_workflows() -> None:
         "scripts/run_cicd_policy_gate_acceptance.sh",
         "scripts/run_cicd_dbt_adapter_acceptance.sh",
         "scripts/run_human_exception_workflow_acceptance.sh",
+        "scripts/run_audit_evidence_acceptance.sh",
         "scripts/run_governed_agent_arc_acceptance.sh",
         "scripts/run_framework_runtime_acceptance.sh",
         "scripts/run_notebook_pack.sh",

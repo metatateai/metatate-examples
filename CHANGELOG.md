@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- The audit evidence packet (`audit_evidence/`, notebook
+  `15_audit_evidence_packet.ipynb`): a day of governed questions rendered as
+  an audit-ready report — decisions with policy-version citations and
+  evidence ids, the `explain_why` chain proving each decision is CURRENT,
+  and the honest corners (the ungoverned legacy table, the monitored custom
+  mask) on the record instead of hidden. `collect_evidence(client,
+  questions=…)` codifies a team's own recurring questions; the workspace's
+  request log (MCP Tools → Tokens → View requests) corroborates the packet
+  server-side.
+
 - Governance in the pull request: `cicd_policy_gate/dbt_adapter.py` turns a
   dbt `target/manifest.json` into the gate's change set (full /
   checksum-diff / changed-files selection; models validated with their own
