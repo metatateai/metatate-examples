@@ -1,0 +1,125 @@
+{
+  "_comment": "Minimal dbt manifest fixture (current run) — only the keys cicd_policy_gate/dbt_adapter.py reads. Model SQL is byte-equal to the recorded AcmeCloud fixture cases so the full flow replays offline. Regenerable with real dbt: dbt compile in cicd_policy_gate/dbt_project (any profile targeting acmecloud_demo.public).",
+  "metadata": {
+    "project_name": "acmecloud_analytics",
+    "dbt_schema_version": "https://schemas.getdbt.com/dbt/manifest/v12.json"
+  },
+  "nodes": {
+    "model.acmecloud_analytics.customer_arr_by_region": {
+      "unique_id": "model.acmecloud_analytics.customer_arr_by_region",
+      "resource_type": "model",
+      "name": "customer_arr_by_region",
+      "original_file_path": "models/marts/customer_arr_by_region.sql",
+      "patch_path": "acmecloud_analytics://models/schema.yml",
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "description": "Revenue dashboard aggregates ARR by region.",
+      "checksum": { "name": "sha256", "checksum": "arr-by-region-v1" },
+      "config": { "enabled": true, "materialized": "view", "meta": {} },
+      "meta": {},
+      "raw_code": "SELECT region, SUM(arr) FROM customers GROUP BY region",
+      "compiled_code": "SELECT region, SUM(arr) FROM customers GROUP BY region"
+    },
+    "model.acmecloud_analytics.eu_customer_arr_detail": {
+      "unique_id": "model.acmecloud_analytics.eu_customer_arr_detail",
+      "resource_type": "model",
+      "name": "eu_customer_arr_detail",
+      "original_file_path": "models/marts/eu_customer_arr_detail.sql",
+      "patch_path": "acmecloud_analytics://models/schema.yml",
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "description": "Analyst-facing customer detail model includes name and email.",
+      "checksum": { "name": "sha256", "checksum": "eu-detail-v2" },
+      "config": { "enabled": true, "materialized": "view", "meta": {} },
+      "meta": {},
+      "raw_code": "SELECT customer_name, email FROM customers WHERE region = 'EU'",
+      "compiled_code": "SELECT customer_name, email FROM customers WHERE region = 'EU'"
+    },
+    "model.acmecloud_analytics.active_customer_activation": {
+      "unique_id": "model.acmecloud_analytics.active_customer_activation",
+      "resource_type": "model",
+      "name": "active_customer_activation",
+      "original_file_path": "models/marketing/active_customer_activation.sql",
+      "patch_path": "acmecloud_analytics://models/schema.yml",
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "description": "Marketing activation model selects names and email addresses.",
+      "checksum": { "name": "sha256", "checksum": "activation-v1" },
+      "config": {
+        "enabled": true,
+        "materialized": "view",
+        "meta": { "metatate": { "scenario_key": "purpose.prohibited_use" } }
+      },
+      "meta": {},
+      "raw_code": "SELECT customer_name, email FROM customers WHERE marketing_consent = 'opted_in'",
+      "compiled_code": "SELECT customer_name, email FROM customers WHERE marketing_consent = 'opted_in'"
+    },
+    "model.acmecloud_analytics.stg_customers_ephemeral": {
+      "unique_id": "model.acmecloud_analytics.stg_customers_ephemeral",
+      "resource_type": "model",
+      "name": "stg_customers_ephemeral",
+      "original_file_path": "models/staging/stg_customers_ephemeral.sql",
+      "patch_path": "acmecloud_analytics://models/schema.yml",
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "description": "Ephemeral staging CTE — no queryable relation, the adapter skips it.",
+      "checksum": { "name": "sha256", "checksum": "stg-v1" },
+      "config": { "enabled": true, "materialized": "ephemeral", "meta": {} },
+      "meta": {},
+      "raw_code": "SELECT * FROM customers",
+      "compiled_code": "SELECT * FROM customers"
+    }
+  },
+  "exposures": {
+    "exposure.acmecloud_analytics.salesforce_customer_sync": {
+      "unique_id": "exposure.acmecloud_analytics.salesforce_customer_sync",
+      "resource_type": "exposure",
+      "name": "salesforce_customer_sync",
+      "label": "Salesforce customer sync",
+      "original_file_path": "models/exposures.yml",
+      "description": "CRM sync sends approved customer fields to Salesforce.",
+      "depends_on": { "nodes": ["model.acmecloud_analytics.eu_customer_arr_detail"] },
+      "config": { "enabled": true },
+      "meta": {
+        "metatate": {
+          "kind": "export_job",
+          "asset": { "database": "acmecloud_demo", "schema": "public", "table": "customers" },
+          "use": "sync approved customer fields to the CRM",
+          "scenario_key": "residency.cross_border_transfer",
+          "operation": "export",
+          "destination": { "system": "SALESFORCE", "jurisdiction": "US" },
+          "consumer_jurisdiction": "EU"
+        }
+      }
+    },
+    "exposure.acmecloud_analytics.support_assistant_finetune": {
+      "unique_id": "exposure.acmecloud_analytics.support_assistant_finetune",
+      "resource_type": "exposure",
+      "name": "support_assistant_finetune",
+      "label": "Support assistant fine-tune",
+      "original_file_path": "models/exposures.yml",
+      "description": "Fine-tune a support assistant on raw support ticket text.",
+      "depends_on": { "nodes": ["model.acmecloud_analytics.customer_arr_by_region"] },
+      "config": { "enabled": true },
+      "meta": {
+        "metatate": {
+          "kind": "ai_training_job",
+          "asset": { "database": "acmecloud_demo", "schema": "public", "table": "support_tickets" },
+          "use": "fine-tune a support assistant on ticket text",
+          "scenario_key": "ai.training"
+        }
+      }
+    },
+    "exposure.acmecloud_analytics.weekly_kpi_email": {
+      "unique_id": "exposure.acmecloud_analytics.weekly_kpi_email",
+      "resource_type": "exposure",
+      "name": "weekly_kpi_email",
+      "label": "Weekly KPI email",
+      "original_file_path": "models/exposures.yml",
+      "description": "Un-annotated exposure — the adapter reports it as skipped.",
+      "depends_on": { "nodes": ["model.acmecloud_analytics.customer_arr_by_region"] },
+      "config": { "enabled": true },
+      "meta": {}
+    }
+  }
+}

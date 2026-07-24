@@ -21,6 +21,10 @@ The examples are use-case first. Frameworks are included when they make the Meta
   planning, bounded SQL self-revision, exception-packet reuse, deny-reroute,
   explain chaining) with acceptance coverage pinning the exact decision sequence
   and an optional provider-neutral LLM planner for live mode
+- dbt manifest adapter for the CI/CD policy gate (full / checksum-diff /
+  changed-files selection, meta.metatate exposure annotations, skip reporting)
+  plus the reusable composite GitHub Action (adapter → gate → job summary →
+  PR comment upsert → strict enforcement) with acceptance coverage
 
 Snowflake Native App integrations (Cortex Agent preflight and hosted runtime
 acceptance) are maintained in
@@ -44,7 +48,8 @@ Framework runtime coverage is separate:
 - LlamaIndex FunctionAgent or AgentWorkflow LLM-planning smoke test
 - LangChain or CrewAI multi-agent handoff
 - Pydantic AI
-- dbt or Airflow adapters that generate change sets for the CI/CD policy gate
+- Airflow adapter that generates change sets for the CI/CD policy gate (the
+  dbt adapter shipped — see Implemented Pack)
 - evaluation dashboards for red-team and CI gate history
 
 ## Later Exploration

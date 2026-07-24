@@ -100,7 +100,7 @@ Demo policy behavior:
 | `03_transfer_governance_before_export.ipynb` | Destination-aware transfer decisions before export. |
 | `04_governed_text_to_sql_agent.ipynb` | Text-to-SQL that validates and revises SQL before returning it. |
 | `05_agent_red_team_evaluation_harness.ipynb` | Repeatable risky-prompt checks for governed agents. |
-| `06_ci_gate_for_data_ai_changes.ipynb` | A runnable CI/CD policy gate for SQL, export, and AI workflow changes. |
+| `06_ci_gate_for_data_ai_changes.ipynb` | A runnable CI/CD policy gate for SQL, export, and AI workflow changes — with a dbt manifest adapter and a reusable GitHub Action. |
 | `07_governed_rag_embedding_ingestion_gate.ipynb` | Pre-ingestion checks before data enters RAG or embedding workflows. |
 | `08_openai_agents_tool_guard_pattern.ipynb` | A deterministic tool guard pattern for OpenAI Agents SDK-style apps. |
 | `09_human_approval_packet_for_conditional_export.ipynb` | Human-in-the-loop exception workflow for safe, conditional, and denied requests. |
@@ -158,7 +158,7 @@ the AcmeCloud demo publication.
 
 Runtime coverage is separate from core notebook execution:
 
-- `06_ci_gate_for_data_ai_changes.ipynb` is backed by the reusable `cicd_policy_gate` package and an acceptance script.
+- `06_ci_gate_for_data_ai_changes.ipynb` is backed by the reusable `cicd_policy_gate` package and an acceptance script; the dbt manifest adapter and the reusable GitHub Action have their own acceptance script, and CI smoke-tests the action against the sample dbt project offline.
 - `02_governed_sql_agent_langgraph.ipynb` is paired with a deterministic LangGraph `StateGraph` runtime acceptance script.
 - `11_langgraph_governed_sql_agent_runtime.ipynb` is paired with a multi-node LangGraph agent runtime acceptance script.
 - `08_openai_agents_tool_guard_pattern.ipynb` is paired with a deterministic OpenAI Agents SDK `FunctionTool` runtime acceptance script.
@@ -191,6 +191,16 @@ scripts/run_cicd_policy_gate_acceptance.sh
 ```
 
 Use `scripts/run_cicd_policy_gate.sh --strict` for a CI-style non-zero exit when denied changes are present. See [docs/ci-cd-policy-gate.md](docs/ci-cd-policy-gate.md).
+
+For dbt projects, `cicd_policy_gate/dbt_adapter.py` generates the change set
+from `target/manifest.json`, and the repo root's `action.yml` is a reusable
+GitHub Action (adapter → gate → job summary → PR comment) — governance
+verdicts in the pull request. See
+[docs/ci-cd-policy-gate-dbt.md](docs/ci-cd-policy-gate-dbt.md).
+
+```bash
+scripts/run_cicd_dbt_adapter_acceptance.sh
+```
 
 To run the human-in-the-loop exception workflow locally:
 
@@ -252,8 +262,9 @@ Configure `.env` with your endpoint, keep the token in your shell, and see
 
 ```text
 .github/workflows/               Offline PR CI and manual live SaaS validation
+action.yml                      Reusable GitHub Action: dbt manifest -> gate -> PR comment
 common/                         Shared Python client helpers
-cicd_policy_gate/               Reusable CI/CD policy gate example
+cicd_policy_gate/               Reusable CI/CD policy gate + dbt adapter + sample dbt project
 docs/                           Setup, demo model, and troubleshooting
 governed_agent_arc/             The flagship one-brief-end-to-end agent arc
 human_exception_workflow/       Human review and exception workflow example

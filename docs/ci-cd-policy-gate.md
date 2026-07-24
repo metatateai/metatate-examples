@@ -95,7 +95,7 @@ jobs:
           METATATE_SAAS_MCP_TOKEN: ${{ secrets.METATATE_SAAS_MCP_TOKEN }}
 ```
 
-Teams usually generate the change-set JSON from dbt model diffs, migration files, export-job definitions, or agent workflow manifests before this step runs.
+For dbt projects the change set is GENERATED for you: `cicd_policy_gate/dbt_adapter.py` turns `target/manifest.json` into this format (full, checksum-diff, or changed-files selection), and the repo ships a reusable composite GitHub Action (`action.yml`) that runs adapter + gate + PR comment in one step — see [docs/ci-cd-policy-gate-dbt.md](ci-cd-policy-gate-dbt.md). For other pipelines (migration files, export-job definitions, agent workflow manifests), generate the JSON with your own tooling before this step runs.
 
 ## Report Fields
 

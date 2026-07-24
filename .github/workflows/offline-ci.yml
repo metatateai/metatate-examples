@@ -65,6 +65,23 @@ jobs:
           fi
           echo "Strict CI gate failed as expected for denied sample changes."
 
+      - name: dbt adapter acceptance
+        run: scripts/run_cicd_dbt_adapter_acceptance.sh
+
+      - name: Policy gate action self-smoke (offline dbt manifest)
+        id: gate-smoke
+        uses: ./
+        with:
+          mode: offline
+          dbt-manifest: cicd_policy_gate/dbt_project/artifacts/manifest.json
+          strict: "false"
+
+      - name: Assert action self-smoke outputs
+        run: |
+          test "${{ steps.gate-smoke.outputs.verdict }}" = "fail"
+          test "${{ steps.gate-smoke.outputs.release-allowed }}" = "false"
+          echo "Action refused the sample release as expected."
+
       - name: Human exception workflow acceptance
         run: scripts/run_human_exception_workflow_acceptance.sh
 

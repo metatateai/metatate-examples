@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: customer_arr_by_region
+    description: Revenue dashboard aggregates ARR by region.
+  - name: eu_customer_arr_detail
+    description: Analyst-facing customer detail model includes name and email.
+  - name: active_customer_activation
+    description: Marketing activation model selects names and email addresses.
+    config:
+      meta:
+        metatate:
+          # This model exists FOR marketing — ask the honest question and the
+          # gate fails it, instead of passing it under an analytics intent.
+          scenario_key: purpose.prohibited_use
+  - name: stg_customers_ephemeral
+    description: Ephemeral staging CTE — no queryable relation, the adapter skips it.

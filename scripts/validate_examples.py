@@ -37,6 +37,14 @@ def main() -> None:
         "cicd_policy_gate/gate.py",
         "cicd_policy_gate/acceptance.py",
         "cicd_policy_gate/changes/pull_request_042.json",
+        "cicd_policy_gate/dbt_adapter.py",
+        "cicd_policy_gate/dbt_acceptance.py",
+        "cicd_policy_gate/report_to_markdown.py",
+        "cicd_policy_gate/dbt_project/dbt_project.yml",
+        "cicd_policy_gate/dbt_project/artifacts/manifest.json",
+        "cicd_policy_gate/dbt_project/artifacts/manifest_previous.json",
+        "action.yml",
+        "docs/ci-cd-policy-gate-dbt.md",
         "framework_runtime/langgraph_acceptance.py",
         "framework_runtime/langgraph_agent_acceptance.py",
         "framework_runtime/langgraph_governed_sql_agent.py",
@@ -58,6 +66,7 @@ def main() -> None:
         "scripts/build_readme_hero.py",
         "scripts/run_cicd_policy_gate.sh",
         "scripts/run_cicd_policy_gate_acceptance.sh",
+        "scripts/run_cicd_dbt_adapter_acceptance.sh",
         "scripts/run_human_exception_workflow.sh",
         "scripts/run_human_exception_workflow_acceptance.sh",
         "scripts/run_governed_agent_arc.sh",
@@ -75,6 +84,7 @@ def main() -> None:
     validate_policy_files()
     validate_notebooks()
     validate_cicd_policy_gate_files()
+    validate_dbt_adapter_files()
     validate_human_exception_workflow_files()
     validate_governed_agent_arc_files()
     validate_readme_hero()
@@ -227,6 +237,42 @@ def validate_human_exception_workflow_files() -> None:
     assert "human_exception_workflow/acceptance.py" in acceptance_runner, "human exception acceptance runner missing script"
 
 
+def validate_dbt_adapter_files() -> None:
+    adapter = (ROOT / "cicd_policy_gate" / "dbt_adapter.py").read_text(encoding="utf-8")
+    for marker in (
+        "meta.metatate",
+        "compiled_code",
+        "changed_resource_ids",
+        "build_change_set",
+        "purpose.allowed_use",
+        "skip",
+    ):
+        assert marker in adapter, f"dbt adapter missing {marker}"
+
+    acceptance = (ROOT / "cicd_policy_gate" / "dbt_acceptance.py").read_text(encoding="utf-8")
+    for marker in (
+        "build_change_set",
+        "evaluate_changes",
+        "dbt-exposure-salesforce_customer_sync",
+        "AI_TRAINING_BLOCKED",
+        "release_allowed",
+    ):
+        assert marker in acceptance, f"dbt acceptance missing {marker}"
+
+    action = (ROOT / "action.yml").read_text(encoding="utf-8")
+    for marker in (
+        "cicd_policy_gate.dbt_adapter",
+        "cicd_policy_gate.cli",
+        "cicd_policy_gate.report_to_markdown",
+        "metatate-policy-gate",
+        "release-allowed",
+    ):
+        assert marker in action, f"action.yml missing {marker}"
+
+    runner = (ROOT / "scripts" / "run_cicd_dbt_adapter_acceptance.sh").read_text(encoding="utf-8")
+    assert "cicd_policy_gate/dbt_acceptance.py" in runner, "dbt acceptance runner missing script"
+
+
 def validate_governed_agent_arc_files() -> None:
     arc = (ROOT / "governed_agent_arc" / "arc.py").read_text(encoding="utf-8")
     for marker in (
@@ -281,6 +327,7 @@ def validate_ci_workflows() -> None:
     for marker in (
         "scripts/validate_examples.py",
         "scripts/run_cicd_policy_gate_acceptance.sh",
+        "scripts/run_cicd_dbt_adapter_acceptance.sh",
         "scripts/run_human_exception_workflow_acceptance.sh",
         "scripts/run_governed_agent_arc_acceptance.sh",
         "scripts/run_framework_runtime_acceptance.sh",
@@ -294,6 +341,7 @@ def validate_ci_workflows() -> None:
         "METATATE_MCP_BACKEND: saas",
         "METATATE_SAAS_MCP_TOKEN",
         "scripts/run_cicd_policy_gate_acceptance.sh",
+        "scripts/run_cicd_dbt_adapter_acceptance.sh",
         "scripts/run_human_exception_workflow_acceptance.sh",
         "scripts/run_governed_agent_arc_acceptance.sh",
         "scripts/run_framework_runtime_acceptance.sh",

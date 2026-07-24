@@ -1,0 +1,158 @@
+name: Metatate policy gate
+description: >-
+  Advisory Metatate governance gate for data/AI changes — a dbt manifest or a
+  prebuilt change set in, typed verdicts out, with a job-summary table and an
+  optional PR comment. Verdicts are served from your workspace's CURRENT
+  publication; every row carries a Metatate evidence id.
+branding:
+  icon: shield
+  color: green
+
+inputs:
+  mode:
+    description: >-
+      "live" (default) gates against your workspace's MCP endpoint;
+      "offline" replays the recorded AcmeCloud fixtures (demo/smoke only).
+    default: live
+  changes:
+    description: Path to a prebuilt gate change-set JSON (skips the dbt adapter).
+    default: ""
+  dbt-manifest:
+    description: Path to dbt target/manifest.json (relative to the workspace).
+    default: ""
+  dbt-previous-manifest:
+    description: Optional previous manifest.json for checksum diffing.
+    default: ""
+  dbt-changed-files:
+    description: Optional path to a newline-separated changed-file list.
+    default: ""
+  strict:
+    description: Fail the job when the release is not allowed.
+    default: "true"
+  fail-on-controls:
+    description: Treat needs_controls (conditional/masking) as blocking too.
+    default: "false"
+  mcp-url:
+    description: Workspace MCP endpoint (https://…/mcp) — required in live mode.
+    default: ""
+  mcp-token:
+    description: Workspace MCP access token (mtt_…) — required in live mode.
+    default: ""
+  github-token:
+    description: Token for the PR comment (usually secrets.GITHUB_TOKEN with pull-requests write).
+    default: ""
+
+outputs:
+  verdict:
+    description: Worst gate across the change set (pass | needs_controls | needs_review | fail).
+    value: ${{ steps.summarize.outputs.verdict }}
+  release-allowed:
+    description: Whether the gate allows the release ("true"/"false").
+    value: ${{ steps.summarize.outputs.release-allowed }}
+  report-path:
+    description: Path to the machine-readable JSON gate report.
+    value: ${{ steps.gate.outputs.report-path }}
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Python for the gate
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    - name: Install gate dependencies
+      shell: bash
+      run: python -m pip install --quiet --disable-pip-version-check requests python-dotenv
+
+    - name: Build the change set from the dbt manifest
+      if: inputs.dbt-manifest != ''
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      env:
+        IN_MANIFEST: ${{ inputs.dbt-manifest }}
+        IN_PREVIOUS: ${{ inputs.dbt-previous-manifest }}
+        IN_CHANGED: ${{ inputs.dbt-changed-files }}
+      run: |
+        abspath() { case "$1" in /*) printf '%s' "$1";; *) printf '%s/%s' "${GITHUB_WORKSPACE}" "$1";; esac; }
+        args=(--manifest "$(abspath "${IN_MANIFEST}")" --output "${RUNNER_TEMP}/metatate-changes.json")
+        [ -n "${IN_PREVIOUS}" ] && args+=(--previous-manifest "$(abspath "${IN_PREVIOUS}")")
+        [ -n "${IN_CHANGED}" ] && args+=(--changed-files "$(abspath "${IN_CHANGED}")")
+        python3 -m cicd_policy_gate.dbt_adapter "${args[@]}"
+
+    - name: Run the Metatate policy gate
+      id: gate
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      env:
+        METATATE_EXAMPLES_MODE: ${{ inputs.mode }}
+        METATATE_MCP_BACKEND: saas
+        METATATE_MCP_URL: ${{ inputs.mcp-url }}
+        METATATE_SAAS_MCP_TOKEN: ${{ inputs.mcp-token }}
+        IN_CHANGES: ${{ inputs.changes }}
+        IN_FAIL_ON_CONTROLS: ${{ inputs.fail-on-controls }}
+      run: |
+        abspath() { case "$1" in /*) printf '%s' "$1";; *) printf '%s/%s' "${GITHUB_WORKSPACE}" "$1";; esac; }
+        if [ -n "${IN_CHANGES}" ]; then
+          changes="$(abspath "${IN_CHANGES}")"
+        else
+          changes="${RUNNER_TEMP}/metatate-changes.json"
+        fi
+        flags=()
+        [ "${IN_FAIL_ON_CONTROLS}" = "true" ] && flags+=(--fail-on-controls)
+        # Never --strict here: the comment/summary steps must run first; the
+        # dedicated enforce step fails the job LAST when strict is on.
+        python3 -m cicd_policy_gate.cli --changes "${changes}" \
+          --output "${RUNNER_TEMP}/metatate-gate-report.json" "${flags[@]}"
+        echo "report-path=${RUNNER_TEMP}/metatate-gate-report.json" >> "${GITHUB_OUTPUT}"
+
+    - name: Summarize the verdicts
+      id: summarize
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      run: |
+        python3 -m cicd_policy_gate.report_to_markdown \
+          --report "${RUNNER_TEMP}/metatate-gate-report.json" \
+          --output "${RUNNER_TEMP}/metatate-gate-summary.md"
+        cat "${RUNNER_TEMP}/metatate-gate-summary.md" >> "${GITHUB_STEP_SUMMARY}"
+        python3 - "${RUNNER_TEMP}/metatate-gate-report.json" >> "${GITHUB_OUTPUT}" <<'PY'
+        import json, sys
+        sys.path.insert(0, ".")
+        from cicd_policy_gate.report_to_markdown import worst_gate
+        report = json.load(open(sys.argv[1]))
+        print(f"verdict={worst_gate(report)}")
+        print(f"release-allowed={str(report.get('release_allowed')).lower()}")
+        PY
+
+    - name: Comment on the pull request
+      if: inputs.github-token != '' && github.event_name == 'pull_request'
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+      run: |
+        marker='<!-- metatate-policy-gate -->'
+        printf '%s\n\n' "${marker}" > "${RUNNER_TEMP}/metatate-gate-comment.md"
+        cat "${RUNNER_TEMP}/metatate-gate-summary.md" >> "${RUNNER_TEMP}/metatate-gate-comment.md"
+        existing="$(gh api "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments" \
+          --paginate --jq ".[] | select(.body | startswith(\"${marker}\")) | .id" | head -1 || true)"
+        if [ -n "${existing}" ]; then
+          gh api --method PATCH "repos/${GITHUB_REPOSITORY}/issues/comments/${existing}" \
+            -F body=@"${RUNNER_TEMP}/metatate-gate-comment.md" > /dev/null
+        else
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments" \
+            -F body=@"${RUNNER_TEMP}/metatate-gate-comment.md" > /dev/null
+        fi
+
+    - name: Enforce the strict gate
+      if: inputs.strict == 'true'
+      shell: bash
+      run: |
+        python3 - "${RUNNER_TEMP}/metatate-gate-report.json" <<'PY'
+        import json, sys
+        report = json.load(open(sys.argv[1]))
+        if not report.get("release_allowed"):
+            print("Metatate policy gate: release not allowed (strict mode).", file=sys.stderr)
+            raise SystemExit(1)
+        print("Metatate policy gate: release allowed.")
+        PY

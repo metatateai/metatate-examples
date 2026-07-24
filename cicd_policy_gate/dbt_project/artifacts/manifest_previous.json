@@ -1,0 +1,55 @@
+{
+  "_comment": "Previous-run manifest fixture for diff mode: only the aggregate model exists (same checksum), and the fine-tune + KPI exposures are byte-identical to the current manifest — so a checksum diff selects exactly the two new models and the Salesforce exposure that depends on one of them.",
+  "metadata": {
+    "project_name": "acmecloud_analytics",
+    "dbt_schema_version": "https://schemas.getdbt.com/dbt/manifest/v12.json"
+  },
+  "nodes": {
+    "model.acmecloud_analytics.customer_arr_by_region": {
+      "unique_id": "model.acmecloud_analytics.customer_arr_by_region",
+      "resource_type": "model",
+      "name": "customer_arr_by_region",
+      "original_file_path": "models/marts/customer_arr_by_region.sql",
+      "patch_path": "acmecloud_analytics://models/schema.yml",
+      "database": "acmecloud_demo",
+      "schema": "public",
+      "description": "Revenue dashboard aggregates ARR by region.",
+      "checksum": { "name": "sha256", "checksum": "arr-by-region-v1" },
+      "config": { "enabled": true, "materialized": "view", "meta": {} },
+      "meta": {},
+      "raw_code": "SELECT region, SUM(arr) FROM customers GROUP BY region",
+      "compiled_code": "SELECT region, SUM(arr) FROM customers GROUP BY region"
+    }
+  },
+  "exposures": {
+    "exposure.acmecloud_analytics.support_assistant_finetune": {
+      "unique_id": "exposure.acmecloud_analytics.support_assistant_finetune",
+      "resource_type": "exposure",
+      "name": "support_assistant_finetune",
+      "label": "Support assistant fine-tune",
+      "original_file_path": "models/exposures.yml",
+      "description": "Fine-tune a support assistant on raw support ticket text.",
+      "depends_on": { "nodes": ["model.acmecloud_analytics.customer_arr_by_region"] },
+      "config": { "enabled": true },
+      "meta": {
+        "metatate": {
+          "kind": "ai_training_job",
+          "asset": { "database": "acmecloud_demo", "schema": "public", "table": "support_tickets" },
+          "use": "fine-tune a support assistant on ticket text",
+          "scenario_key": "ai.training"
+        }
+      }
+    },
+    "exposure.acmecloud_analytics.weekly_kpi_email": {
+      "unique_id": "exposure.acmecloud_analytics.weekly_kpi_email",
+      "resource_type": "exposure",
+      "name": "weekly_kpi_email",
+      "label": "Weekly KPI email",
+      "original_file_path": "models/exposures.yml",
+      "description": "Un-annotated exposure — the adapter reports it as skipped.",
+      "depends_on": { "nodes": ["model.acmecloud_analytics.customer_arr_by_region"] },
+      "config": { "enabled": true },
+      "meta": {}
+    }
+  }
+}
