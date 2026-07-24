@@ -1,0 +1,39 @@
+# STARTER POLICY — outbound transfers default to conditional.
+#
+# Wherever YOUR catalog classifies personal data: any export is conditional
+# on recorded approval until destination-specific rules replace this default
+# (the AcmeCloud transfer policy shows the destination-aware matrix:
+# named systems, jurisdictions, per-destination effects).
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: starter-transfer-default-conditional
+  version: 1.0.0
+  description: >-
+    Exports of personal data require recorded approval until
+    destination-specific transfer rules are authored.
+  tags: [transfer, pii, starter_pack]
+  businessContext:
+    domain: Privacy
+    owner: Privacy Office
+    steward: privacy@your-company.example
+    purpose: Approval-first default for outbound personal-data transfers.
+spec:
+  enforcementMode: enforce
+  priority: 600
+  selector:
+    taxonomyTypes:
+      - pii.identity.full_name
+      - pii.contact.email
+      - pii.government_id.national_id
+  classification:
+    sensitivity: confidential
+    category: pii
+  transferGovernance:
+    defaultEffect: conditional
+    rules:
+      - effect: conditional
+        operations: [export]
+        requiresApproval: true
+extensions:
+  displayName: Starter — transfers default-conditional (taxonomy)

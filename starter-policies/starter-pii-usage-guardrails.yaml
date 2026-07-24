@@ -1,0 +1,41 @@
+# STARTER POLICY — PII usage guardrails, taxonomy-targeted.
+#
+# Applies to every table where YOUR catalog classifies a column as personal
+# data (names, emails, government ids): analytics/reporting/support are
+# permitted, direct marketing and advertising are prohibited until a
+# consent-specific policy replaces this default. The scenarioMap entry keeps
+# the prohibition on its honest scenario (`purpose.prohibited_use`).
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: starter-pii-usage-guardrails
+  version: 1.0.0
+  description: >-
+    Personal data supports analytics, reporting, and support workflows;
+    direct marketing and advertising are blocked pending a consent basis.
+  tags: [pii, starter_pack]
+  businessContext:
+    domain: Privacy
+    owner: Privacy Office
+    steward: privacy@your-company.example
+    purpose: Default usage guardrails wherever personal data is classified.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    taxonomyTypes:
+      - pii.identity.full_name
+      - pii.contact.email
+      - pii.government_id.national_id
+  classification:
+    sensitivity: confidential
+    category: pii
+  usage:
+    permittedUses: [analytics, reporting, support]
+    prohibitedUses: [marketing, advertising]
+extensions:
+  displayName: Starter — PII usage guardrails (taxonomy)
+  scenarioMap:
+    "usage_guidance:spec.usage.prohibitedUses:prohibited":
+      scenarioKey: purpose.prohibited_use
+      source: user_confirmed

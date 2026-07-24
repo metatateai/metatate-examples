@@ -1,0 +1,37 @@
+# STARTER POLICY — AI training default-deny on personal data.
+#
+# Wherever YOUR catalog classifies personal data: model training is denied by
+# default, inference is allowed with anonymization required. Replace with
+# asset-specific AI policies as your AI lifecycle matures (the AcmeCloud demo
+# shows the full pattern: raw data denied, derived features allowed).
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: starter-ai-training-default-deny
+  version: 1.0.0
+  description: >-
+    Personal data is not used to train models by default; inference is
+    permitted with anonymization.
+  tags: [ai, pii, starter_pack]
+  businessContext:
+    domain: AI Governance
+    owner: AI Governance
+    steward: ai-governance@your-company.example
+    purpose: Default AI-lifecycle posture wherever personal data is classified.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    taxonomyTypes:
+      - pii.identity.full_name
+      - pii.contact.email
+      - pii.government_id.national_id
+  classification:
+    sensitivity: confidential
+    category: pii
+  aiGovernance:
+    allowTraining: false
+    allowInference: true
+    requiresAnonymization: true
+extensions:
+  displayName: Starter — AI training default-deny (taxonomy)

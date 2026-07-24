@@ -55,6 +55,12 @@ def main() -> None:
         "human_exception_workflow/cli.py",
         "human_exception_workflow/workflow.py",
         "human_exception_workflow/acceptance.py",
+        "starter-policies/starter-email-masking.yaml",
+        "starter-policies/starter-pii-usage-guardrails.yaml",
+        "starter-policies/starter-ai-training-default-deny.yaml",
+        "starter-policies/starter-transfer-default-conditional.yaml",
+        "scripts/bootstrap_check.py",
+        "docs/walkthrough-byo-estate.md",
         "audit_evidence/__init__.py",
         "audit_evidence/evidence.py",
         "audit_evidence/cli.py",
@@ -133,6 +139,21 @@ def validate_policy_files() -> None:
         text = path.read_text(encoding="utf-8")
         for marker in ("apiVersion: metatate.io/v1", "kind: DataPolicy", "spec:", "selector:"):
             assert marker in text, f"{path} missing {marker}"
+    # The starter pack must stay valid DataPolicy documents AND estate-agnostic
+    # (taxonomy-targeted — no databases/schemas/tables baked in).
+    starter_paths = sorted((ROOT / "starter-policies").glob("*.yaml"))
+    assert len(starter_paths) == 4, "expected four starter policies"
+    for path in starter_paths:
+        text = path.read_text(encoding="utf-8")
+        for marker in (
+            "apiVersion: metatate.io/v1",
+            "kind: DataPolicy",
+            "selector:",
+            "taxonomyTypes:",
+        ):
+            assert marker in text, f"{path} missing {marker}"
+        for forbidden in ("databases:", "schemas:", "tables:"):
+            assert forbidden not in text, f"{path} must stay estate-agnostic ({forbidden})"
 
 
 def validate_notebooks() -> None:

@@ -129,6 +129,11 @@ Demo policy behavior:
   once, govern the group: one collection-targeted policy, answers citing the
   `collection` resolution path, and membership changes that deploy instead of
   re-authoring.
+- [docs/walkthrough-byo-estate.md](docs/walkthrough-byo-estate.md) — YOUR
+  estate, governed by Friday: connect any of the six connector kinds, review
+  classification, publish the estate-agnostic
+  [starter policy pack](starter-policies), and measure the coverage delta
+  with `scripts/bootstrap_check.py`.
 
 The notebooks run in two modes:
 
@@ -282,6 +287,7 @@ governed_agent_arc/             The flagship one-brief-end-to-end agent arc
 human_exception_workflow/       Human review and exception workflow example
 notebooks/                      Notebook-first walkthroughs (generated)
 sample-data/acmecloud/tables/   Small synthetic CSV tables
+starter-policies/               Estate-agnostic starter pack for YOUR workspace
 sample-data/acmecloud/policies/ Example policy YAML
 sample-data/acmecloud/metatate-responses/
                                 Offline Metatate response fixtures

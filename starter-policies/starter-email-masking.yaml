@@ -1,0 +1,35 @@
+# STARTER POLICY — email masking, taxonomy-targeted.
+#
+# Estate-agnostic by construction: the selector targets the taxonomy type
+# `pii.contact.email`, so deployment resolves it to EVERY column YOUR catalog
+# classifies as an email — no table or column lists to maintain. Paste into
+# Policies → New policy → Raw YAML, review, approve, publish.
+# Optional narrowing: add database/schema selector dimensions to scope it down.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: starter-email-masking
+  version: 1.0.0
+  description: >-
+    Email addresses are partially masked outside exempt data-steward roles,
+    wherever the catalog classifies a column as an email address.
+  tags: [pii, starter_pack]
+  businessContext:
+    domain: Privacy
+    owner: Privacy Office
+    steward: privacy@your-company.example
+    purpose: Display protection for contact email addresses, estate-wide.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    taxonomyTypes: [pii.contact.email]
+  classification:
+    sensitivity: confidential
+    category: pii.contact
+  accessControl:
+    masking:
+      type: partial
+      exemptRoles: [DATA_STEWARD, PRIVACY_ADMIN]
+extensions:
+  displayName: Starter — email masking (taxonomy)

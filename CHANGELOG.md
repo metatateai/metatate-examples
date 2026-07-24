@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- BYO-estate bootstrap: `docs/walkthrough-byo-estate.md` bridges from the
+  AcmeCloud demo to YOUR data — connect any of the six connector kinds,
+  review classification, publish the new `starter-policies/` pack (four
+  estate-agnostic, TAXONOMY-targeted DataPolicy templates: email masking,
+  PII usage guardrails, AI-training default-deny, transfers
+  default-conditional — no placeholders to edit), and measure the coverage
+  delta with `scripts/bootstrap_check.py` (live-only, estate-agnostic:
+  discover → baseline authorize per governed table → typed-state summary).
+
 - The audit evidence packet (`audit_evidence/`, notebook
   `15_audit_evidence_packet.ipynb`): a day of governed questions rendered as
   an audit-ready report — decisions with policy-version citations and
