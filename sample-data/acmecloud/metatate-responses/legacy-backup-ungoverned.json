@@ -7,6 +7,7 @@
       "schema": "public",
       "table": "legacy_customer_backup"
     },
+    "authorization_id": "accef000-0000-4000-8000-000000000077",
     "message": "Not enough published governance state \u2014 review required.",
     "next_actions": [
       "No published instruction covers this asset and scenario \u2014 extend a policy to cover it and publish.",

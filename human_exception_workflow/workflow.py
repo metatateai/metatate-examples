@@ -153,7 +153,15 @@ def run_workflow(
 
 
 def evaluate_request(client: Any, request: dict[str, Any]) -> ExceptionWorkflowItem:
-    response = _call_metatate(client, request)
+    return item_from_answer(request, _call_metatate(client, request))
+
+
+def item_from_answer(request: dict[str, Any], response: dict[str, Any]) -> ExceptionWorkflowItem:
+    """Build a workflow item from an ALREADY-OBTAINED Metatate answer.
+
+    Callers that hold a typed answer (e.g. the governed agent arc) reuse the
+    packet/review machinery without paying a duplicate authorize call.
+    """
     decision = _decision_label(response)
     packet = build_exception_packet(request, response, decision)
     status = _initial_status(decision)

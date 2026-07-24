@@ -1,6 +1,6 @@
 # Metatate Examples
 
-![Animated terminal: the AcmeCloud examples asking Metatate for decisions — marketing use of customer PII is denied, an EU Salesforce export is conditional on approval and anonymization, and an aggregate analytics query passes.](docs/assets/readme-hero.svg)
+![Animated terminal: one agent brief runs end to end against Metatate — the rulebook is read first, a warned SQL draft is revised to a passing aggregate, a conditional Salesforce export resumes only with attested controls, a denied fine-tune is rerouted to the governed feature store, and explain_why confirms every decision is current.](docs/assets/readme-hero.svg)
 
 Metatate is a programmable decision layer for governed data. It gives agents and workflows structured context about meaning, policy, allowed use, transfer rules, and decision rationale before they touch data.
 
@@ -108,6 +108,7 @@ Demo policy behavior:
 | `11_langgraph_governed_sql_agent_runtime.ipynb` | LangGraph runtime SQL agent with approve, revise, and block routes. |
 | `12_governance_states_and_the_wider_estate.ipynb` | Honest states (ungoverned, review-required, conflicted), the wider decision vocabulary, free-text scenario mapping, role gating, the AI lifecycle, collections, taxonomy masking, and the finance schema. |
 | `13_sql_gauntlet_validate_query_context.ipynb` | JOINs, `SELECT *`, CTEs, joins into ungoverned tables, and byte-identical SQL passing or failing on intent. |
+| `14_governed_agent_end_to_end.ipynb` | The flagship arc: one brief, eleven governed calls — rulebook first, self-revised SQL, a conditional export resumed with controls, a denied fine-tune rerouted, every decision explained. |
 
 ## Walkthroughs (live, beyond the notebooks)
 
@@ -136,8 +137,12 @@ The notebooks run in two modes:
   with a workspace bearer token (see
   [docs/live-mode-saas.md](docs/live-mode-saas.md)).
 
-Notebook `11_langgraph_governed_sql_agent_runtime.ipynb` requires the framework
-dependencies from `requirements-framework.txt`.
+Notebooks `11_langgraph_governed_sql_agent_runtime.ipynb` and
+`14_governed_agent_end_to_end.ipynb` require the framework dependencies from
+`requirements-framework.txt`. The arc in notebook 14 can optionally draft its
+SQL with a provider-neutral LLM in live mode (`METATATE_EXAMPLES_LLM`, see
+`requirements-llm.txt`) — governance calls and routing stay identical either
+way, and CI never calls an LLM.
 
 Notebooks are generated from `scripts/build_notebooks.py`; edit that script and
 regenerate — CI fails on drift (`scripts/build_notebooks.py --check`).
@@ -159,6 +164,7 @@ Runtime coverage is separate from core notebook execution:
 - `08_openai_agents_tool_guard_pattern.ipynb` is paired with a deterministic OpenAI Agents SDK `FunctionTool` runtime acceptance script.
 - `09_human_approval_packet_for_conditional_export.ipynb` is backed by the reusable `human_exception_workflow` package and an acceptance script.
 - `10_llamaindex_governed_retrieval_pattern.ipynb` is paired with a deterministic LlamaIndex `FunctionTool` runtime acceptance script.
+- `14_governed_agent_end_to_end.ipynb` is backed by the reusable `governed_agent_arc` package and an acceptance script that pins the arc's exact eleven-call decision sequence.
 
 The LangGraph, OpenAI, and LlamaIndex runtime checks invoke real framework objects, but they intentionally do not call an LLM. Review [docs/validation-matrix.md](docs/validation-matrix.md) and [docs/framework-runtime-acceptance.md](docs/framework-runtime-acceptance.md) for the exact coverage.
 
@@ -194,6 +200,15 @@ scripts/run_human_exception_workflow_acceptance.sh
 ```
 
 See [docs/human-exception-workflow.md](docs/human-exception-workflow.md).
+
+To run the governed agent arc locally (needs `requirements-framework.txt`):
+
+```bash
+scripts/run_governed_agent_arc.sh
+scripts/run_governed_agent_arc_acceptance.sh
+```
+
+See [docs/governed-agent-arc.md](docs/governed-agent-arc.md).
 
 Review [docs/release-process.md](docs/release-process.md) before tagging a public release.
 
@@ -240,6 +255,7 @@ Configure `.env` with your endpoint, keep the token in your shell, and see
 common/                         Shared Python client helpers
 cicd_policy_gate/               Reusable CI/CD policy gate example
 docs/                           Setup, demo model, and troubleshooting
+governed_agent_arc/             The flagship one-brief-end-to-end agent arc
 human_exception_workflow/       Human review and exception workflow example
 notebooks/                      Notebook-first walkthroughs (generated)
 sample-data/acmecloud/tables/   Small synthetic CSV tables

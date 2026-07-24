@@ -17,6 +17,10 @@ The examples are use-case first. Frameworks are included when they make the Meta
 - Human-in-the-loop exception workflow with acceptance coverage
 - LlamaIndex governed retrieval pattern
 - LlamaIndex FunctionTool runtime acceptance
+- Governed agent arc — one brief end to end on a LangGraph runtime (rulebook-first
+  planning, bounded SQL self-revision, exception-packet reuse, deny-reroute,
+  explain chaining) with acceptance coverage pinning the exact decision sequence
+  and an optional provider-neutral LLM planner for live mode
 
 Snowflake Native App integrations (Cortex Agent preflight and hosted runtime
 acceptance) are maintained in

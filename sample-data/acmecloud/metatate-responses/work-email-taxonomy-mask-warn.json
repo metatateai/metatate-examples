@@ -6,6 +6,7 @@
         "conflict": null,
         "decision": "mask_partial",
         "decision_reason": "acme-email-masking v1 masking:spec.accessControl.masking \u2192 mask_partial on acmecloud_demo.public.employees.work_email",
+        "finding_id": "accef000-0000-4000-8000-000000000123",
         "instructions": [
           {
             "category": "enforceable",
@@ -13,7 +14,7 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "mask_partial",
-            "decision_id": "accef000-0000-4000-8000-000000000064",
+            "decision_id": "accef000-0000-4000-8000-000000000082",
             "decision_reason": "acme-email-masking v1 masking:spec.accessControl.masking \u2192 mask_partial on acmecloud_demo.public.employees.work_email",
             "enforcement_mode": "enforce",
             "instruction_family": "masking",
@@ -55,7 +56,7 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "allow",
-            "decision_id": "accef000-0000-4000-8000-000000000079",
+            "decision_id": "accef000-0000-4000-8000-000000000097",
             "decision_reason": "acme-employee-access v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.employees",
             "enforcement_mode": "enforce",
             "instruction_family": "usage_guidance",
@@ -69,9 +70,9 @@
             "primary_resolution_source": "selector",
             "priority": 2,
             "provenance": {
-              "policy_id": "accef000-0000-4000-8000-000000000041",
+              "policy_id": "accef000-0000-4000-8000-000000000051",
               "policy_name": "AcmeCloud employee data access",
-              "policy_version_id": "accef000-0000-4000-8000-000000000042",
+              "policy_version_id": "accef000-0000-4000-8000-000000000052",
               "version_number": 1
             },
             "resolution_paths": [
@@ -106,6 +107,7 @@
       "published_at": "2026-07-16T00:00:00.000Z"
     },
     "state": "answered",
+    "validation_id": "accef000-0000-4000-8000-000000000122",
     "verdict": "warn"
   },
   "arguments": {

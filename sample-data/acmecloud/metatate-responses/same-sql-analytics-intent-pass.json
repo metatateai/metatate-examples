@@ -6,6 +6,7 @@
         "conflict": null,
         "decision": "allow",
         "decision_reason": "acme-customer-use v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.customers",
+        "finding_id": "accef000-0000-4000-8000-000000000162",
         "instructions": [
           {
             "category": "advisory",
@@ -66,6 +67,7 @@
       "published_at": "2026-07-16T00:00:00.000Z"
     },
     "state": "answered",
+    "validation_id": "accef000-0000-4000-8000-000000000161",
     "verdict": "pass"
   },
   "arguments": {

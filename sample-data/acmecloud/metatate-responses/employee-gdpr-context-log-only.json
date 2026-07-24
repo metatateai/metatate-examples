@@ -7,6 +7,7 @@
       "schema": "public",
       "table": "employees"
     },
+    "authorization_id": "accef000-0000-4000-8000-000000000137",
     "can_proceed_now": false,
     "conditions": [],
     "context_facts": {
@@ -23,7 +24,7 @@
       "subcategory": null
     },
     "decision": "log_only",
-    "decision_id": "accef000-0000-4000-8000-000000000073",
+    "decision_id": "accef000-0000-4000-8000-000000000091",
     "instructions": [
       {
         "category": "advisory",
@@ -31,7 +32,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000073",
+        "decision_id": "accef000-0000-4000-8000-000000000091",
         "decision_reason": "acme-employee-gdpr v1 compliance:spec.compliance.regulations:gdpr \u2192 log_only on acmecloud_demo.public.employees",
         "enforcement_mode": "advisory",
         "instruction_family": "compliance",
@@ -42,9 +43,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000049",
+          "policy_id": "accef000-0000-4000-8000-000000000061",
           "policy_name": "AcmeCloud employee GDPR context",
-          "policy_version_id": "accef000-0000-4000-8000-000000000050",
+          "policy_version_id": "accef000-0000-4000-8000-000000000062",
           "version_number": 1
         },
         "resolution_paths": [

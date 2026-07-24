@@ -23,6 +23,9 @@ This repository separates examples from runtime acceptance tests.
 | Human-in-the-loop exception workflow | `09_human_approval_packet_for_conditional_export.ipynb` | Yes | Yes | `human_exception_workflow/acceptance.py` |
 | LlamaIndex governed retrieval | `10_llamaindex_governed_retrieval_pattern.ipynb` | Yes | Yes | `framework_runtime/llamaindex_acceptance.py` |
 | LangGraph governed SQL agent runtime | `11_langgraph_governed_sql_agent_runtime.ipynb` | Yes; requires framework deps | Yes; requires framework deps and MCP env | `framework_runtime/langgraph_agent_acceptance.py` |
+| Governance states and the wider estate | `12_governance_states_and_the_wider_estate.ipynb` | Yes | Yes | Covered by notebook execution |
+| The SQL gauntlet | `13_sql_gauntlet_validate_query_context.ipynb` | Yes | Yes | Covered by notebook execution |
+| Governed agent arc, end to end | `14_governed_agent_end_to_end.ipynb` | Yes; requires framework deps | Yes; requires framework deps and MCP env | `governed_agent_arc/acceptance.py` |
 
 ## Test Commands
 

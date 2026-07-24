@@ -1,0 +1,11 @@
+# OPTIONAL: provider-neutral LLM planning for the governed agent arc.
+# CI NEVER installs this file (the house rule: CI never calls an LLM).
+#
+# Pick a provider extra to match METATATE_EXAMPLES_LLM, e.g.
+#   pip install -r requirements-llm.txt "langchain[anthropic]"
+#   METATATE_EXAMPLES_LLM=anthropic:claude-sonnet-5
+# or
+#   pip install -r requirements-llm.txt "langchain[openai]"
+#   METATATE_EXAMPLES_LLM=openai:gpt-4.1
+-r requirements-framework.txt
+langchain>=0.3

@@ -83,6 +83,9 @@ jobs:
       - name: Live framework runtime acceptance
         run: scripts/run_framework_runtime_acceptance.sh
 
+      - name: Live governed agent arc acceptance
+        run: scripts/run_governed_agent_arc_acceptance.sh
+
       - name: Execute live core notebook pack
         if: inputs.run_notebook_pack == 'true'
         env:

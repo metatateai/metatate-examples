@@ -21,12 +21,15 @@ endpoint instead (see `docs/live-mode-saas.md`).
 12. `11_langgraph_governed_sql_agent_runtime.ipynb`
 13. `12_governance_states_and_the_wider_estate.ipynb`
 14. `13_sql_gauntlet_validate_query_context.ipynb`
+15. `14_governed_agent_end_to_end.ipynb`
 
 Notebook `06_ci_gate_for_data_ai_changes.ipynb` uses the reusable `cicd_policy_gate` package. The same gate can be run from CI with `scripts/run_cicd_policy_gate.sh`.
 
 Notebook `09_human_approval_packet_for_conditional_export.ipynb` uses the reusable `human_exception_workflow` package. The same workflow can be run from a terminal with `scripts/run_human_exception_workflow.sh`.
 
-Notebook `11_langgraph_governed_sql_agent_runtime.ipynb` requires `requirements-framework.txt` and is executed separately with `scripts/run_langgraph_runtime_notebook.sh`.
+Notebooks `11_langgraph_governed_sql_agent_runtime.ipynb` and `14_governed_agent_end_to_end.ipynb` require `requirements-framework.txt` and are executed separately with `scripts/run_langgraph_runtime_notebook.sh`.
+
+Notebook `14_governed_agent_end_to_end.ipynb` uses the reusable `governed_agent_arc` package. The same arc can be run from a terminal with `scripts/run_governed_agent_arc.sh`.
 
 The notebooks are generated from `scripts/build_notebooks.py` so the JSON
 remains reproducible. Do not hand-edit the `.ipynb` files: edit the generator

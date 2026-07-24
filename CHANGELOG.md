@@ -2,6 +2,26 @@
 
 ## Unreleased
 
+- FLAGSHIP: the governed agent arc (`governed_agent_arc/`, notebook
+  `14_governed_agent_end_to_end.ipynb`) — one realistic brief on a LangGraph
+  runtime, visibly changing course because of governance: rulebook-first
+  planning, a warned SQL draft self-revised to pass, a conditional Salesforce
+  export resumed only with attested controls (reusing the human-exception
+  packet machinery via the new `item_from_answer` export), a denied fine-tune
+  REROUTED to the governed feature-store alternative, and `explain_why`
+  chained over every collected decision id. Acceptance pins the exact
+  eleven-call decision sequence; an optional provider-neutral LLM planner
+  (`METATATE_EXAMPLES_LLM`, `requirements-llm.txt`) drafts SQL in live mode
+  while governance calls stay identical. CI never calls an LLM.
+- The README hero is now GENERATED (`scripts/build_readme_hero.py`,
+  drift-gated like the notebooks) and tells the arc's story on the current
+  typed-answer contract — the previous hand-authored SVG still demoed the
+  pre-split positional-argument calls and stale estate counts.
+- Offline recordings refreshed against current metatate-saas main: answers now
+  carry the additive `authorization_id` / `validation_id` / `finding_id`
+  fields (server request-log ids), plus the two explain recordings the arc
+  chains (`explain_train_deny_decision`, `explain_ml_training_decision`).
+
 - The pack is NATIVE to the Metatate Cloud typed-answer contract: notebooks,
   the CI/CD gate, the human-exception workflow, and the framework harness all
   send structured asset refs + canonical scenario keys and read typed answers

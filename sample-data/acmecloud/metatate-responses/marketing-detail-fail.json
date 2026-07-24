@@ -6,6 +6,7 @@
         "conflict": null,
         "decision": "mask_partial",
         "decision_reason": "acme-email-masking v1 masking:spec.accessControl.masking \u2192 mask_partial on acmecloud_demo.public.customers.email",
+        "finding_id": "accef000-0000-4000-8000-000000000109",
         "instructions": [
           {
             "category": "enforceable",
@@ -109,6 +110,7 @@
       "published_at": "2026-07-16T00:00:00.000Z"
     },
     "state": "answered",
+    "validation_id": "accef000-0000-4000-8000-000000000108",
     "verdict": "fail"
   },
   "arguments": {

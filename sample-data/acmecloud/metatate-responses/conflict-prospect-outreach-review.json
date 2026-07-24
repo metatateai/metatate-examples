@@ -7,23 +7,24 @@
       "schema": "public",
       "table": "marketing_prospects"
     },
+    "authorization_id": "accef000-0000-4000-8000-000000000124",
     "can_proceed_now": false,
     "conflict": {
-      "group_id": "accef000-0000-4000-8000-000000000094",
+      "group_id": "accef000-0000-4000-8000-000000000128",
       "sources": [
         {
           "category": "advisory",
-          "conflict_group_id": "accef000-0000-4000-8000-000000000094",
+          "conflict_group_id": "accef000-0000-4000-8000-000000000128",
           "conflict_status": "conflicted",
           "conflicts_with": [
             {
               "decision": "allow",
               "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
-              "policy_version_id": "accef000-0000-4000-8000-000000000095"
+              "policy_version_id": "accef000-0000-4000-8000-000000000129"
             }
           ],
           "decision": "deny",
-          "decision_id": "accef000-0000-4000-8000-000000000091",
+          "decision_id": "accef000-0000-4000-8000-000000000125",
           "decision_reason": "acme-prospect-privacy v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on acmecloud_demo.public.marketing_prospects",
           "enforcement_mode": "enforce",
           "instruction_family": "usage_guidance",
@@ -37,9 +38,9 @@
           "primary_resolution_source": "selector",
           "priority": 2,
           "provenance": {
-            "policy_id": "accef000-0000-4000-8000-000000000092",
+            "policy_id": "accef000-0000-4000-8000-000000000126",
             "policy_name": "AcmeCloud prospect outreach privacy block",
-            "policy_version_id": "accef000-0000-4000-8000-000000000093",
+            "policy_version_id": "accef000-0000-4000-8000-000000000127",
             "version_number": 1
           },
           "resolution_paths": [
@@ -60,17 +61,17 @@
         },
         {
           "category": "advisory",
-          "conflict_group_id": "accef000-0000-4000-8000-000000000094",
+          "conflict_group_id": "accef000-0000-4000-8000-000000000128",
           "conflict_status": "conflicted",
           "conflicts_with": [
             {
               "decision": "deny",
               "instruction_key": "usage_guidance:spec.usage.prohibitedUses:prohibited",
-              "policy_version_id": "accef000-0000-4000-8000-000000000093"
+              "policy_version_id": "accef000-0000-4000-8000-000000000127"
             }
           ],
           "decision": "allow",
-          "decision_id": "accef000-0000-4000-8000-000000000096",
+          "decision_id": "accef000-0000-4000-8000-000000000130",
           "decision_reason": "acme-prospect-outreach v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.marketing_prospects",
           "enforcement_mode": "enforce",
           "instruction_family": "usage_guidance",
@@ -84,9 +85,9 @@
           "primary_resolution_source": "selector",
           "priority": 2,
           "provenance": {
-            "policy_id": "accef000-0000-4000-8000-000000000097",
+            "policy_id": "accef000-0000-4000-8000-000000000131",
             "policy_name": "AcmeCloud prospect outreach enablement",
-            "policy_version_id": "accef000-0000-4000-8000-000000000095",
+            "policy_version_id": "accef000-0000-4000-8000-000000000129",
             "version_number": 1
           },
           "resolution_paths": [
@@ -124,17 +125,17 @@
     "instructions": [
       {
         "category": "advisory",
-        "conflict_group_id": "accef000-0000-4000-8000-000000000094",
+        "conflict_group_id": "accef000-0000-4000-8000-000000000128",
         "conflict_status": "conflicted",
         "conflicts_with": [
           {
             "decision": "allow",
             "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
-            "policy_version_id": "accef000-0000-4000-8000-000000000095"
+            "policy_version_id": "accef000-0000-4000-8000-000000000129"
           }
         ],
         "decision": "deny",
-        "decision_id": "accef000-0000-4000-8000-000000000091",
+        "decision_id": "accef000-0000-4000-8000-000000000125",
         "decision_reason": "acme-prospect-privacy v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on acmecloud_demo.public.marketing_prospects",
         "enforcement_mode": "enforce",
         "instruction_family": "usage_guidance",
@@ -148,9 +149,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000092",
+          "policy_id": "accef000-0000-4000-8000-000000000126",
           "policy_name": "AcmeCloud prospect outreach privacy block",
-          "policy_version_id": "accef000-0000-4000-8000-000000000093",
+          "policy_version_id": "accef000-0000-4000-8000-000000000127",
           "version_number": 1
         },
         "resolution_paths": [
@@ -171,17 +172,17 @@
       },
       {
         "category": "advisory",
-        "conflict_group_id": "accef000-0000-4000-8000-000000000094",
+        "conflict_group_id": "accef000-0000-4000-8000-000000000128",
         "conflict_status": "conflicted",
         "conflicts_with": [
           {
             "decision": "deny",
             "instruction_key": "usage_guidance:spec.usage.prohibitedUses:prohibited",
-            "policy_version_id": "accef000-0000-4000-8000-000000000093"
+            "policy_version_id": "accef000-0000-4000-8000-000000000127"
           }
         ],
         "decision": "allow",
-        "decision_id": "accef000-0000-4000-8000-000000000096",
+        "decision_id": "accef000-0000-4000-8000-000000000130",
         "decision_reason": "acme-prospect-outreach v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.marketing_prospects",
         "enforcement_mode": "enforce",
         "instruction_family": "usage_guidance",
@@ -195,9 +196,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000097",
+          "policy_id": "accef000-0000-4000-8000-000000000131",
           "policy_name": "AcmeCloud prospect outreach enablement",
-          "policy_version_id": "accef000-0000-4000-8000-000000000095",
+          "policy_version_id": "accef000-0000-4000-8000-000000000129",
           "version_number": 1
         },
         "resolution_paths": [

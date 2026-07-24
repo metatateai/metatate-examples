@@ -6,7 +6,10 @@ from .workflow import (
     ExceptionWorkflowItem,
     ExceptionWorkflowRun,
     ReviewDecision,
+    apply_review,
+    build_exception_packet,
     evaluate_request,
+    item_from_answer,
     print_summary,
     run_workflow,
 )
@@ -17,7 +20,10 @@ __all__ = [
     "ExceptionWorkflowItem",
     "ExceptionWorkflowRun",
     "ReviewDecision",
+    "apply_review",
+    "build_exception_packet",
     "evaluate_request",
+    "item_from_answer",
     "print_summary",
     "run_workflow",
 ]
