@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- Governance in the pull request: `cicd_policy_gate/dbt_adapter.py` turns a
+  dbt `target/manifest.json` into the gate's change set (full /
+  checksum-diff / changed-files selection; models validated with their own
+  database/schema defaults and an optional `meta.metatate.scenario_key`
+  intent; exposures gated only when annotated with `meta.metatate` — never
+  guessed; every skipped resource reported). The repo root now ships a
+  reusable composite GitHub Action (`action.yml`): adapter → gate →
+  job-summary verdict table → upserted PR comment → strict enforcement LAST,
+  so the comment always posts before the job fails. A runnable sample dbt
+  project + checked-in manifest fixtures replay the canonical pr-042 matrix
+  offline with zero new recordings, and CI smoke-tests the action end to end.
+
 - FLAGSHIP: the governed agent arc (`governed_agent_arc/`, notebook
   `14_governed_agent_end_to_end.ipynb`) — one realistic brief on a LangGraph
   runtime, visibly changing course because of governance: rulebook-first

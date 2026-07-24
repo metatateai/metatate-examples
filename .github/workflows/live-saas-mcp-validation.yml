@@ -77,6 +77,9 @@ jobs:
       - name: Live CI/CD policy gate acceptance
         run: scripts/run_cicd_policy_gate_acceptance.sh
 
+      - name: Live dbt adapter acceptance
+        run: scripts/run_cicd_dbt_adapter_acceptance.sh
+
       - name: Live human exception workflow acceptance
         run: scripts/run_human_exception_workflow_acceptance.sh
 

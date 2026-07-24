@@ -1,0 +1,54 @@
+version: 2
+
+# Exposures become authorize-kind gate changes ONLY when annotated with
+# meta.metatate — dbt has no destination/jurisdiction concepts, so the
+# adapter never guesses a transfer context. The un-annotated exposure below
+# is deliberately skipped (and reported) by the adapter.
+exposures:
+  - name: salesforce_customer_sync
+    label: Salesforce customer sync
+    type: application
+    maturity: high
+    owner:
+      name: Revenue Operations
+      email: revops@example.com
+    description: CRM sync sends approved customer fields to Salesforce.
+    depends_on:
+      - ref('eu_customer_arr_detail')
+    meta:
+      metatate:
+        kind: export_job
+        asset: { database: acmecloud_demo, schema: public, table: customers }
+        use: sync approved customer fields to the CRM
+        scenario_key: residency.cross_border_transfer
+        operation: export
+        destination: { system: SALESFORCE, jurisdiction: US }
+        consumer_jurisdiction: EU
+
+  - name: support_assistant_finetune
+    label: Support assistant fine-tune
+    type: ml
+    maturity: medium
+    owner:
+      name: Support Operations
+      email: support-ops@example.com
+    description: Fine-tune a support assistant on raw support ticket text.
+    depends_on:
+      - ref('customer_arr_by_region')
+    meta:
+      metatate:
+        kind: ai_training_job
+        asset: { database: acmecloud_demo, schema: public, table: support_tickets }
+        use: fine-tune a support assistant on ticket text
+        scenario_key: ai.training
+
+  - name: weekly_kpi_email
+    label: Weekly KPI email
+    type: analysis
+    maturity: low
+    owner:
+      name: Revenue Operations
+      email: revops@example.com
+    description: Un-annotated exposure — the adapter reports it as skipped.
+    depends_on:
+      - ref('customer_arr_by_region')

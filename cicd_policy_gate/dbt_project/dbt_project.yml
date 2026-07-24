@@ -1,0 +1,9 @@
+# Minimal dbt project over the AcmeCloud demo schema — the worked example for
+# cicd_policy_gate/dbt_adapter.py. Models use bare table names (no ref()/
+# source()) so raw SQL == compiled SQL == the recorded fixture strings, and
+# running real dbt locally reproduces the committed artifacts/ manifests.
+name: acmecloud_analytics
+version: "1.0.0"
+config-version: 2
+profile: acmecloud
+model-paths: ["models"]
