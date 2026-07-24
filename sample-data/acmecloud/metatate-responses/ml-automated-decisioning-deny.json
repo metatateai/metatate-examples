@@ -7,6 +7,7 @@
       "schema": "public",
       "table": "ml_feature_store"
     },
+    "authorization_id": "accef000-0000-4000-8000-000000000075",
     "can_proceed_now": false,
     "conditions": [],
     "context_facts": {
@@ -17,7 +18,7 @@
       "subcategory": null
     },
     "decision": "deny",
-    "decision_id": "accef000-0000-4000-8000-000000000059",
+    "decision_id": "accef000-0000-4000-8000-000000000076",
     "instructions": [
       {
         "category": "advisory",
@@ -25,7 +26,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "deny",
-        "decision_id": "accef000-0000-4000-8000-000000000059",
+        "decision_id": "accef000-0000-4000-8000-000000000076",
         "decision_reason": "acme-ml-embedding v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on acmecloud_demo.public.ml_feature_store",
         "enforcement_mode": "enforce",
         "instruction_family": "usage_guidance",
@@ -39,9 +40,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000056",
+          "policy_id": "accef000-0000-4000-8000-000000000071",
           "policy_name": "AcmeCloud ML embedding guardrails",
-          "policy_version_id": "accef000-0000-4000-8000-000000000057",
+          "policy_version_id": "accef000-0000-4000-8000-000000000072",
           "version_number": 1
         },
         "resolution_paths": [

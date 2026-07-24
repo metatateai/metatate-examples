@@ -7,6 +7,7 @@
       "schema": "finance",
       "table": "invoices"
     },
+    "authorization_id": "accef000-0000-4000-8000-000000000142",
     "can_proceed_now": true,
     "conditions": [],
     "context_facts": {
@@ -17,7 +18,7 @@
       "subcategory": null
     },
     "decision": "allow",
-    "decision_id": "accef000-0000-4000-8000-000000000102",
+    "decision_id": "accef000-0000-4000-8000-000000000143",
     "instructions": [
       {
         "category": "advisory",
@@ -25,7 +26,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "allow",
-        "decision_id": "accef000-0000-4000-8000-000000000102",
+        "decision_id": "accef000-0000-4000-8000-000000000143",
         "decision_reason": "acme-finance-guardrails v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.finance.invoices",
         "enforcement_mode": "enforce",
         "instruction_family": "usage_guidance",
@@ -40,9 +41,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000103",
+          "policy_id": "accef000-0000-4000-8000-000000000144",
           "policy_name": "AcmeCloud finance data guardrails",
-          "policy_version_id": "accef000-0000-4000-8000-000000000104",
+          "policy_version_id": "accef000-0000-4000-8000-000000000145",
           "version_number": 1
         },
         "resolution_paths": [

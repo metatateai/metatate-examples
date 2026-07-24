@@ -7,6 +7,7 @@
       "schema": "public",
       "table": "ml_feature_store"
     },
+    "authorization_id": "accef000-0000-4000-8000-000000000067",
     "can_proceed_now": true,
     "conditions": [],
     "context_facts": {
@@ -17,7 +18,7 @@
       "subcategory": null
     },
     "decision": "allow",
-    "decision_id": "accef000-0000-4000-8000-000000000054",
+    "decision_id": "accef000-0000-4000-8000-000000000068",
     "instructions": [
       {
         "category": "advisory",
@@ -25,7 +26,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "allow",
-        "decision_id": "accef000-0000-4000-8000-000000000054",
+        "decision_id": "accef000-0000-4000-8000-000000000068",
         "decision_reason": "acme-ml-features v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.ml_feature_store",
         "enforcement_mode": "enforce",
         "instruction_family": "usage_guidance",
@@ -39,9 +40,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000052",
+          "policy_id": "accef000-0000-4000-8000-000000000065",
           "policy_name": "AcmeCloud ML feature AI lifecycle",
-          "policy_version_id": "accef000-0000-4000-8000-000000000053",
+          "policy_version_id": "accef000-0000-4000-8000-000000000066",
           "version_number": 1
         },
         "resolution_paths": [

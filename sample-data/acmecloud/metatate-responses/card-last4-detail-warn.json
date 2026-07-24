@@ -6,6 +6,7 @@
         "conflict": null,
         "decision": "mask_full",
         "decision_reason": "acme-payment-protection v1 masking:spec.accessControl.masking \u2192 mask_full on acmecloud_demo.public.payment_methods.card_last4",
+        "finding_id": "accef000-0000-4000-8000-000000000116",
         "instructions": [
           {
             "category": "enforceable",
@@ -13,7 +14,7 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "mask_full",
-            "decision_id": "accef000-0000-4000-8000-000000000088",
+            "decision_id": "accef000-0000-4000-8000-000000000117",
             "decision_reason": "acme-payment-protection v1 masking:spec.accessControl.masking \u2192 mask_full on acmecloud_demo.public.payment_methods.card_last4",
             "enforcement_mode": "enforce",
             "instruction_family": "masking",
@@ -24,9 +25,9 @@
             "primary_resolution_source": "selector",
             "priority": 3,
             "provenance": {
-              "policy_id": "accef000-0000-4000-8000-000000000089",
+              "policy_id": "accef000-0000-4000-8000-000000000118",
               "policy_name": "AcmeCloud payment data protection",
-              "policy_version_id": "accef000-0000-4000-8000-000000000090",
+              "policy_version_id": "accef000-0000-4000-8000-000000000119",
               "version_number": 1
             },
             "resolution_paths": [
@@ -61,6 +62,7 @@
       "published_at": "2026-07-16T00:00:00.000Z"
     },
     "state": "answered",
+    "validation_id": "accef000-0000-4000-8000-000000000115",
     "verdict": "warn"
   },
   "arguments": {

@@ -7,6 +7,7 @@
       "schema": "public",
       "table": "subscriptions"
     },
+    "authorization_id": "accef000-0000-4000-8000-000000000132",
     "can_proceed_now": false,
     "conditions": [],
     "context_facts": {
@@ -17,7 +18,7 @@
       "subcategory": null
     },
     "decision": "retain",
-    "decision_id": "accef000-0000-4000-8000-000000000098",
+    "decision_id": "accef000-0000-4000-8000-000000000133",
     "instructions": [
       {
         "category": "enforceable",
@@ -25,7 +26,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "retain",
-        "decision_id": "accef000-0000-4000-8000-000000000098",
+        "decision_id": "accef000-0000-4000-8000-000000000133",
         "decision_reason": "acme-retention v1 retention:spec.retention \u2192 retain on acmecloud_demo.public.subscriptions",
         "enforcement_mode": "enforce",
         "instruction_family": "retention",
@@ -38,9 +39,9 @@
         "primary_resolution_source": "selector",
         "priority": 1,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000099",
+          "policy_id": "accef000-0000-4000-8000-000000000134",
           "policy_name": "AcmeCloud revenue retention guardrails",
-          "policy_version_id": "accef000-0000-4000-8000-000000000100",
+          "policy_version_id": "accef000-0000-4000-8000-000000000135",
           "version_number": 1
         },
         "resolution_paths": [

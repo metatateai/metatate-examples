@@ -7,6 +7,7 @@
       "schema": "public",
       "table": "subscriptions"
     },
+    "authorization_id": "accef000-0000-4000-8000-000000000102",
     "can_proceed_now": true,
     "conditions": [],
     "context_facts": {
@@ -17,7 +18,7 @@
       "subcategory": null
     },
     "decision": "allow",
-    "decision_id": "accef000-0000-4000-8000-000000000084",
+    "decision_id": "accef000-0000-4000-8000-000000000103",
     "instructions": [
       {
         "category": "advisory",
@@ -25,7 +26,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "allow",
-        "decision_id": "accef000-0000-4000-8000-000000000084",
+        "decision_id": "accef000-0000-4000-8000-000000000103",
         "decision_reason": "acme-customer-360 v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.subscriptions",
         "enforcement_mode": "enforce",
         "instruction_family": "usage_guidance",

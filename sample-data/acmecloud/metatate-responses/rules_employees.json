@@ -17,7 +17,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "mask_full",
-        "decision_id": "accef000-0000-4000-8000-000000000060",
+        "decision_id": "accef000-0000-4000-8000-000000000078",
         "decision_reason": "acme-salary-masking v1 masking:spec.accessControl.masking \u2192 mask_full on acmecloud_demo.public.employees.national_id",
         "enforcement_mode": "enforce",
         "instruction_family": "masking",
@@ -28,9 +28,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000061",
+          "policy_id": "accef000-0000-4000-8000-000000000079",
           "policy_name": "AcmeCloud salary and identifier masking",
-          "policy_version_id": "accef000-0000-4000-8000-000000000062",
+          "policy_version_id": "accef000-0000-4000-8000-000000000080",
           "version_number": 1
         },
         "resolution_paths": [
@@ -55,7 +55,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "mask_full",
-        "decision_id": "accef000-0000-4000-8000-000000000063",
+        "decision_id": "accef000-0000-4000-8000-000000000081",
         "decision_reason": "acme-salary-masking v1 masking:spec.accessControl.masking \u2192 mask_full on acmecloud_demo.public.employees.salary",
         "enforcement_mode": "enforce",
         "instruction_family": "masking",
@@ -66,9 +66,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000061",
+          "policy_id": "accef000-0000-4000-8000-000000000079",
           "policy_name": "AcmeCloud salary and identifier masking",
-          "policy_version_id": "accef000-0000-4000-8000-000000000062",
+          "policy_version_id": "accef000-0000-4000-8000-000000000080",
           "version_number": 1
         },
         "resolution_paths": [
@@ -93,7 +93,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "require_review",
-        "decision_id": "accef000-0000-4000-8000-000000000045",
+        "decision_id": "accef000-0000-4000-8000-000000000056",
         "decision_reason": "acme-hr-name-review v1 masking:spec.accessControl.masking \u2192 require_review on acmecloud_demo.public.employees.full_name",
         "enforcement_mode": "monitor",
         "instruction_family": "masking",
@@ -104,9 +104,9 @@
         "primary_resolution_source": "selector",
         "priority": 1,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000046",
+          "policy_id": "accef000-0000-4000-8000-000000000057",
           "policy_name": "AcmeCloud HR name review masking",
-          "policy_version_id": "accef000-0000-4000-8000-000000000047",
+          "policy_version_id": "accef000-0000-4000-8000-000000000058",
           "version_number": 1
         },
         "resolution_paths": [
@@ -131,7 +131,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "mask_partial",
-        "decision_id": "accef000-0000-4000-8000-000000000064",
+        "decision_id": "accef000-0000-4000-8000-000000000082",
         "decision_reason": "acme-email-masking v1 masking:spec.accessControl.masking \u2192 mask_partial on acmecloud_demo.public.employees.work_email",
         "enforcement_mode": "enforce",
         "instruction_family": "masking",
@@ -173,7 +173,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "deny",
-        "decision_id": "accef000-0000-4000-8000-000000000040",
+        "decision_id": "accef000-0000-4000-8000-000000000050",
         "decision_reason": "acme-employee-access v1 role_grant:spec.accessControl.deniedRoles:public:deny \u2192 deny on acmecloud_demo.public.employees",
         "enforcement_mode": "enforce",
         "instruction_family": "role_grant",
@@ -185,9 +185,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000041",
+          "policy_id": "accef000-0000-4000-8000-000000000051",
           "policy_name": "AcmeCloud employee data access",
-          "policy_version_id": "accef000-0000-4000-8000-000000000042",
+          "policy_version_id": "accef000-0000-4000-8000-000000000052",
           "version_number": 1
         },
         "resolution_paths": [
@@ -212,7 +212,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "deny",
-        "decision_id": "accef000-0000-4000-8000-000000000048",
+        "decision_id": "accef000-0000-4000-8000-000000000060",
         "decision_reason": "acme-employee-gdpr v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on acmecloud_demo.public.employees",
         "enforcement_mode": "advisory",
         "instruction_family": "usage_guidance",
@@ -226,9 +226,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000049",
+          "policy_id": "accef000-0000-4000-8000-000000000061",
           "policy_name": "AcmeCloud employee GDPR context",
-          "policy_version_id": "accef000-0000-4000-8000-000000000050",
+          "policy_version_id": "accef000-0000-4000-8000-000000000062",
           "version_number": 1
         },
         "resolution_paths": [
@@ -253,7 +253,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "require_review",
-        "decision_id": "accef000-0000-4000-8000-000000000065",
+        "decision_id": "accef000-0000-4000-8000-000000000083",
         "decision_reason": "acme-employee-gdpr v1 retention:spec.retention \u2192 require_review on acmecloud_demo.public.employees",
         "enforcement_mode": "advisory",
         "instruction_family": "retention",
@@ -266,9 +266,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000049",
+          "policy_id": "accef000-0000-4000-8000-000000000061",
           "policy_name": "AcmeCloud employee GDPR context",
-          "policy_version_id": "accef000-0000-4000-8000-000000000050",
+          "policy_version_id": "accef000-0000-4000-8000-000000000062",
           "version_number": 1
         },
         "resolution_paths": [
@@ -293,7 +293,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "conditional",
-        "decision_id": "accef000-0000-4000-8000-000000000066",
+        "decision_id": "accef000-0000-4000-8000-000000000084",
         "decision_reason": "acme-employee-rows v1 row_access:spec.rowFilter.rules \u2192 conditional on acmecloud_demo.public.employees",
         "enforcement_mode": "enforce",
         "instruction_family": "row_access",
@@ -311,9 +311,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000067",
+          "policy_id": "accef000-0000-4000-8000-000000000085",
           "policy_name": "AcmeCloud employee region rows",
-          "policy_version_id": "accef000-0000-4000-8000-000000000068",
+          "policy_version_id": "accef000-0000-4000-8000-000000000086",
           "version_number": 1
         },
         "resolution_paths": [
@@ -338,7 +338,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000069",
+        "decision_id": "accef000-0000-4000-8000-000000000087",
         "decision_reason": "acme-employee-access v1 business_context:metadata.businessContext \u2192 log_only on acmecloud_demo.public.employees",
         "enforcement_mode": "enforce",
         "instruction_family": "business_context",
@@ -352,9 +352,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000041",
+          "policy_id": "accef000-0000-4000-8000-000000000051",
           "policy_name": "AcmeCloud employee data access",
-          "policy_version_id": "accef000-0000-4000-8000-000000000042",
+          "policy_version_id": "accef000-0000-4000-8000-000000000052",
           "version_number": 1
         },
         "resolution_paths": [
@@ -379,7 +379,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000070",
+        "decision_id": "accef000-0000-4000-8000-000000000088",
         "decision_reason": "acme-employee-access v1 classification:spec.classification \u2192 log_only on acmecloud_demo.public.employees",
         "enforcement_mode": "enforce",
         "instruction_family": "classification",
@@ -392,9 +392,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000041",
+          "policy_id": "accef000-0000-4000-8000-000000000051",
           "policy_name": "AcmeCloud employee data access",
-          "policy_version_id": "accef000-0000-4000-8000-000000000042",
+          "policy_version_id": "accef000-0000-4000-8000-000000000052",
           "version_number": 1
         },
         "resolution_paths": [
@@ -419,7 +419,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000071",
+        "decision_id": "accef000-0000-4000-8000-000000000089",
         "decision_reason": "acme-employee-gdpr v1 business_context:metadata.businessContext \u2192 log_only on acmecloud_demo.public.employees",
         "enforcement_mode": "advisory",
         "instruction_family": "business_context",
@@ -433,9 +433,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000049",
+          "policy_id": "accef000-0000-4000-8000-000000000061",
           "policy_name": "AcmeCloud employee GDPR context",
-          "policy_version_id": "accef000-0000-4000-8000-000000000050",
+          "policy_version_id": "accef000-0000-4000-8000-000000000062",
           "version_number": 1
         },
         "resolution_paths": [
@@ -460,7 +460,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000072",
+        "decision_id": "accef000-0000-4000-8000-000000000090",
         "decision_reason": "acme-employee-gdpr v1 classification:spec.classification \u2192 log_only on acmecloud_demo.public.employees",
         "enforcement_mode": "advisory",
         "instruction_family": "classification",
@@ -473,9 +473,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000049",
+          "policy_id": "accef000-0000-4000-8000-000000000061",
           "policy_name": "AcmeCloud employee GDPR context",
-          "policy_version_id": "accef000-0000-4000-8000-000000000050",
+          "policy_version_id": "accef000-0000-4000-8000-000000000062",
           "version_number": 1
         },
         "resolution_paths": [
@@ -500,7 +500,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000073",
+        "decision_id": "accef000-0000-4000-8000-000000000091",
         "decision_reason": "acme-employee-gdpr v1 compliance:spec.compliance.regulations:gdpr \u2192 log_only on acmecloud_demo.public.employees",
         "enforcement_mode": "advisory",
         "instruction_family": "compliance",
@@ -511,9 +511,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000049",
+          "policy_id": "accef000-0000-4000-8000-000000000061",
           "policy_name": "AcmeCloud employee GDPR context",
-          "policy_version_id": "accef000-0000-4000-8000-000000000050",
+          "policy_version_id": "accef000-0000-4000-8000-000000000062",
           "version_number": 1
         },
         "resolution_paths": [
@@ -538,7 +538,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000074",
+        "decision_id": "accef000-0000-4000-8000-000000000092",
         "decision_reason": "acme-employee-gdpr v1 lineage:metadata.sourceType \u2192 log_only on acmecloud_demo.public.employees",
         "enforcement_mode": "advisory",
         "instruction_family": "lineage",
@@ -549,9 +549,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000049",
+          "policy_id": "accef000-0000-4000-8000-000000000061",
           "policy_name": "AcmeCloud employee GDPR context",
-          "policy_version_id": "accef000-0000-4000-8000-000000000050",
+          "policy_version_id": "accef000-0000-4000-8000-000000000062",
           "version_number": 1
         },
         "resolution_paths": [
@@ -576,7 +576,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000075",
+        "decision_id": "accef000-0000-4000-8000-000000000093",
         "decision_reason": "acme-employee-rows v1 business_context:metadata.businessContext \u2192 log_only on acmecloud_demo.public.employees",
         "enforcement_mode": "enforce",
         "instruction_family": "business_context",
@@ -590,9 +590,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000067",
+          "policy_id": "accef000-0000-4000-8000-000000000085",
           "policy_name": "AcmeCloud employee region rows",
-          "policy_version_id": "accef000-0000-4000-8000-000000000068",
+          "policy_version_id": "accef000-0000-4000-8000-000000000086",
           "version_number": 1
         },
         "resolution_paths": [
@@ -617,7 +617,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000076",
+        "decision_id": "accef000-0000-4000-8000-000000000094",
         "decision_reason": "acme-employee-rows v1 classification:spec.classification \u2192 log_only on acmecloud_demo.public.employees",
         "enforcement_mode": "enforce",
         "instruction_family": "classification",
@@ -630,9 +630,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000067",
+          "policy_id": "accef000-0000-4000-8000-000000000085",
           "policy_name": "AcmeCloud employee region rows",
-          "policy_version_id": "accef000-0000-4000-8000-000000000068",
+          "policy_version_id": "accef000-0000-4000-8000-000000000086",
           "version_number": 1
         },
         "resolution_paths": [
@@ -657,7 +657,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000077",
+        "decision_id": "accef000-0000-4000-8000-000000000095",
         "decision_reason": "acme-salary-masking v1 business_context:metadata.businessContext \u2192 log_only on acmecloud_demo.public.employees",
         "enforcement_mode": "enforce",
         "instruction_family": "business_context",
@@ -671,9 +671,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000061",
+          "policy_id": "accef000-0000-4000-8000-000000000079",
           "policy_name": "AcmeCloud salary and identifier masking",
-          "policy_version_id": "accef000-0000-4000-8000-000000000062",
+          "policy_version_id": "accef000-0000-4000-8000-000000000080",
           "version_number": 1
         },
         "resolution_paths": [
@@ -698,7 +698,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000078",
+        "decision_id": "accef000-0000-4000-8000-000000000096",
         "decision_reason": "acme-salary-masking v1 classification:spec.classification \u2192 log_only on acmecloud_demo.public.employees",
         "enforcement_mode": "enforce",
         "instruction_family": "classification",
@@ -711,9 +711,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000061",
+          "policy_id": "accef000-0000-4000-8000-000000000079",
           "policy_name": "AcmeCloud salary and identifier masking",
-          "policy_version_id": "accef000-0000-4000-8000-000000000062",
+          "policy_version_id": "accef000-0000-4000-8000-000000000080",
           "version_number": 1
         },
         "resolution_paths": [
@@ -738,7 +738,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "allow",
-        "decision_id": "accef000-0000-4000-8000-000000000043",
+        "decision_id": "accef000-0000-4000-8000-000000000053",
         "decision_reason": "acme-employee-access v1 role_grant:spec.accessControl.allowedRoles:hr_admin:allow \u2192 allow on acmecloud_demo.public.employees",
         "enforcement_mode": "enforce",
         "instruction_family": "role_grant",
@@ -750,9 +750,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000041",
+          "policy_id": "accef000-0000-4000-8000-000000000051",
           "policy_name": "AcmeCloud employee data access",
-          "policy_version_id": "accef000-0000-4000-8000-000000000042",
+          "policy_version_id": "accef000-0000-4000-8000-000000000052",
           "version_number": 1
         },
         "resolution_paths": [
@@ -777,7 +777,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "allow",
-        "decision_id": "accef000-0000-4000-8000-000000000044",
+        "decision_id": "accef000-0000-4000-8000-000000000054",
         "decision_reason": "acme-employee-access v1 role_grant:spec.accessControl.allowedRoles:people_ops:allow \u2192 allow on acmecloud_demo.public.employees",
         "enforcement_mode": "enforce",
         "instruction_family": "role_grant",
@@ -789,9 +789,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000041",
+          "policy_id": "accef000-0000-4000-8000-000000000051",
           "policy_name": "AcmeCloud employee data access",
-          "policy_version_id": "accef000-0000-4000-8000-000000000042",
+          "policy_version_id": "accef000-0000-4000-8000-000000000052",
           "version_number": 1
         },
         "resolution_paths": [
@@ -816,7 +816,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "allow",
-        "decision_id": "accef000-0000-4000-8000-000000000079",
+        "decision_id": "accef000-0000-4000-8000-000000000097",
         "decision_reason": "acme-employee-access v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.employees",
         "enforcement_mode": "enforce",
         "instruction_family": "usage_guidance",
@@ -830,9 +830,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000041",
+          "policy_id": "accef000-0000-4000-8000-000000000051",
           "policy_name": "AcmeCloud employee data access",
-          "policy_version_id": "accef000-0000-4000-8000-000000000042",
+          "policy_version_id": "accef000-0000-4000-8000-000000000052",
           "version_number": 1
         },
         "resolution_paths": [
@@ -857,7 +857,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000080",
+        "decision_id": "accef000-0000-4000-8000-000000000098",
         "decision_reason": "acme-hr-name-review v1 business_context:metadata.businessContext \u2192 log_only on acmecloud_demo.public.employees",
         "enforcement_mode": "monitor",
         "instruction_family": "business_context",
@@ -871,9 +871,9 @@
         "primary_resolution_source": "selector",
         "priority": 1,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000046",
+          "policy_id": "accef000-0000-4000-8000-000000000057",
           "policy_name": "AcmeCloud HR name review masking",
-          "policy_version_id": "accef000-0000-4000-8000-000000000047",
+          "policy_version_id": "accef000-0000-4000-8000-000000000058",
           "version_number": 1
         },
         "resolution_paths": [
@@ -898,7 +898,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000081",
+        "decision_id": "accef000-0000-4000-8000-000000000099",
         "decision_reason": "acme-hr-name-review v1 classification:spec.classification \u2192 log_only on acmecloud_demo.public.employees",
         "enforcement_mode": "monitor",
         "instruction_family": "classification",
@@ -911,9 +911,9 @@
         "primary_resolution_source": "selector",
         "priority": 1,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000046",
+          "policy_id": "accef000-0000-4000-8000-000000000057",
           "policy_name": "AcmeCloud HR name review masking",
-          "policy_version_id": "accef000-0000-4000-8000-000000000047",
+          "policy_version_id": "accef000-0000-4000-8000-000000000058",
           "version_number": 1
         },
         "resolution_paths": [
@@ -938,7 +938,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000082",
+        "decision_id": "accef000-0000-4000-8000-000000000100",
         "decision_reason": "acme-email-masking v1 business_context:metadata.businessContext \u2192 log_only on acmecloud_demo.public.employees",
         "enforcement_mode": "enforce",
         "instruction_family": "business_context",
@@ -979,7 +979,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000083",
+        "decision_id": "accef000-0000-4000-8000-000000000101",
         "decision_reason": "acme-email-masking v1 classification:spec.classification \u2192 log_only on acmecloud_demo.public.employees",
         "enforcement_mode": "enforce",
         "instruction_family": "classification",

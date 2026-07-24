@@ -7,6 +7,7 @@
       "schema": "public",
       "table": "employees"
     },
+    "authorization_id": "accef000-0000-4000-8000-000000000136",
     "can_proceed_now": false,
     "conditions": [
       {
@@ -31,7 +32,7 @@
       "subcategory": null
     },
     "decision": "conditional",
-    "decision_id": "accef000-0000-4000-8000-000000000066",
+    "decision_id": "accef000-0000-4000-8000-000000000084",
     "instructions": [
       {
         "category": "enforceable",
@@ -39,7 +40,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "conditional",
-        "decision_id": "accef000-0000-4000-8000-000000000066",
+        "decision_id": "accef000-0000-4000-8000-000000000084",
         "decision_reason": "acme-employee-rows v1 row_access:spec.rowFilter.rules \u2192 conditional on acmecloud_demo.public.employees",
         "enforcement_mode": "enforce",
         "instruction_family": "row_access",
@@ -57,9 +58,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000067",
+          "policy_id": "accef000-0000-4000-8000-000000000085",
           "policy_name": "AcmeCloud employee region rows",
-          "policy_version_id": "accef000-0000-4000-8000-000000000068",
+          "policy_version_id": "accef000-0000-4000-8000-000000000086",
           "version_number": 1
         },
         "resolution_paths": [

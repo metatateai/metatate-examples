@@ -1,71 +1,101 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 348" width="880" height="348" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" role="img" aria-label="Animated terminal: the AcmeCloud examples asking Metatate for decisions — marketing use of customer PII is denied, an EU Salesforce export is conditional on approval and anonymization, and an aggregate analytics query passes.">
-  <title>Metatate examples — governed decisions for AI agents</title>
-  <desc>A Python session against the AcmeCloud demo domain. authorize_use of customers for an email marketing campaign returns DENY with reason purpose.prohibited_use. authorize_use of customer_exports to a Salesforce destination in the EU returns CONDITIONAL requiring approval and anonymization. validate_query_context on an aggregate subscriptions query returns PASS.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 516" width="880" height="516" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" role="img" aria-label="Animated terminal: one agent brief runs end to end against Metatate — the rulebook is read first, a warned SQL draft is revised to a passing aggregate, a Salesforce export is conditional and resumes only with attested controls, a fine-tune on raw tickets is denied and rerouted to the governed feature store, and explain_why confirms every decision is current.">
+  <title>Metatate examples — the governed agent, end to end</title>
+  <desc>A Python session against the AcmeCloud demo domain running the governed agent arc (notebook 14). inspect_governance_rules returns 18 active rules. validate_query_context returns WARN for a masked-column draft, then PASS for the revised aggregate (fixtures email-detail-warn and safe-aggregate-pass). authorize_use for a Salesforce export returns CONDITIONAL with approval_required and anonymize_first (export-salesforce-conditional); the exception packet resumes with attested controls. authorize_use for fine-tuning on support tickets returns DENY (train-support-tickets-deny) and the reroute to ml_feature_store returns ALLOW (ml-training-features-allow). explain_why reports every decision current.</desc>
 
   <defs>
     <clipPath id="screen">
-      <rect x="0" y="34" width="880" height="314"/>
+      <rect x="0" y="34" width="880" height="482"/>
     </clipPath>
   </defs>
 
   <!-- terminal chrome -->
-  <rect width="880" height="348" rx="10" fill="#0A1628"/>
+  <rect width="880" height="516" rx="10" fill="#0A1628"/>
   <rect width="880" height="34" rx="10" fill="#0F1E32"/>
   <rect y="26" width="880" height="8" fill="#0F1E32"/>
   <circle cx="22" cy="17" r="6" fill="#ff5f56"/>
   <circle cx="42" cy="17" r="6" fill="#ffbd2e"/>
   <circle cx="62" cy="17" r="6" fill="#27c93f"/>
-  <text x="440" y="21" text-anchor="middle" fill="#8b949e" font-size="12">metatate-examples · AcmeCloud governed decisions for AI agents</text>
+  <text x="440" y="21" text-anchor="middle" fill="#8b949e" font-size="12">metatate-examples · one agent brief, governed end to end</text>
   <line x1="0" y1="34" x2="880" y2="34" stroke="#22314a" stroke-width="1"/>
 
   <g clip-path="url(#screen)">
 
-    <!-- Q1: marketing use of customer PII -->
     <text x="24" y="70">
-      <tspan fill="#C3FFB2">&gt;&gt;&gt; </tspan><tspan fill="#c9d1d9">client.authorize_use(</tspan><tspan fill="#4ECDC4">"customers"</tspan><tspan fill="#c9d1d9">, </tspan><tspan fill="#4ECDC4">"read"</tspan><tspan fill="#c9d1d9">, </tspan><tspan fill="#4ECDC4">"email marketing campaign"</tspan><tspan fill="#c9d1d9">)</tspan>
-      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0; 0.0219; 0.0313; 0.8438; 0.8750; 1" dur="16s" repeatCount="indefinite"/>
+      <tspan fill="#C3FFB2">&gt;&gt;&gt; </tspan><tspan fill="#c9d1d9">client.inspect_governance_rules(asset(</tspan><tspan fill="#4ECDC4">"customers"</tspan><tspan fill="#c9d1d9">))</tspan>
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0; 0.0238; 0.0300; 0.8438; 0.8750; 1" dur="24s" repeatCount="indefinite"/>
     </text>
+
     <text x="24" y="96">
-      <tspan fill="#FF6B5B" font-weight="bold">✗ DENY</tspan><tspan fill="#8b949e">  purpose.prohibited_use — customer PII is off-limits for marketing</tspan>
-      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0; 0.0844; 0.0938; 0.8438; 0.8750; 1" dur="16s" repeatCount="indefinite"/>
+      <tspan fill="#4ECDC4" font-weight="bold">☰ 18 RULES</tspan><tspan fill="#8b949e">  masking · ai.training deny · destination-aware transfers — read BEFORE acting</tspan>
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0; 0.0687; 0.0750; 0.8438; 0.8750; 1" dur="24s" repeatCount="indefinite"/>
     </text>
 
-    <!-- Q2: cross-border export to Salesforce -->
     <text x="24" y="132">
-      <tspan fill="#C3FFB2">&gt;&gt;&gt; </tspan><tspan fill="#c9d1d9">client.authorize_use(</tspan><tspan fill="#4ECDC4">"customer_exports"</tspan><tspan fill="#c9d1d9">, </tspan><tspan fill="#4ECDC4">"export"</tspan><tspan fill="#c9d1d9">, </tspan><tspan fill="#4ECDC4">"sync to crm"</tspan><tspan fill="#c9d1d9">,</tspan>
-      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0; 0.1531; 0.1625; 0.8438; 0.8750; 1" dur="16s" repeatCount="indefinite"/>
+      <tspan fill="#C3FFB2">&gt;&gt;&gt; </tspan><tspan fill="#c9d1d9">client.validate_query_context(</tspan><tspan fill="#4ECDC4">"SELECT customer_name, email FROM customers …"</tspan><tspan fill="#c9d1d9">)</tspan>
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0; 0.1137; 0.1200; 0.8438; 0.8750; 1" dur="24s" repeatCount="indefinite"/>
     </text>
-    <text x="24" y="154">
-      <tspan fill="#0A1628">&gt;&gt;&gt; </tspan><tspan fill="#c9d1d9">                     destination={</tspan><tspan fill="#4ECDC4">"system"</tspan><tspan fill="#c9d1d9">: </tspan><tspan fill="#4ECDC4">"SALESFORCE"</tspan><tspan fill="#c9d1d9">, </tspan><tspan fill="#4ECDC4">"jurisdiction"</tspan><tspan fill="#c9d1d9">: </tspan><tspan fill="#4ECDC4">"EU"</tspan><tspan fill="#c9d1d9">})</tspan>
-      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0; 0.1719; 0.1813; 0.8438; 0.8750; 1" dur="16s" repeatCount="indefinite"/>
+
+    <text x="24" y="158">
+      <tspan fill="#FBBF24" font-weight="bold">◐ WARN</tspan><tspan fill="#8b949e">  masked column referenced — the agent revises, it does not argue</tspan>
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0; 0.1588; 0.1650; 0.8438; 0.8750; 1" dur="24s" repeatCount="indefinite"/>
     </text>
+
     <text x="24" y="180">
-      <tspan fill="#FBBF24" font-weight="bold">◐ CONDITIONAL</tspan><tspan fill="#8b949e">  approval_required · anonymize_first — cross-border transfer rules</tspan>
-      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0; 0.2406; 0.2500; 0.8438; 0.8750; 1" dur="16s" repeatCount="indefinite"/>
+      <tspan fill="#C3FFB2" font-weight="bold">✓ PASS</tspan><tspan fill="#8b949e">  SELECT region, SUM(arr) FROM customers GROUP BY region</tspan>
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0; 0.2037; 0.2100; 0.8438; 0.8750; 1" dur="24s" repeatCount="indefinite"/>
     </text>
 
-    <!-- Q3: aggregate analytics query -->
     <text x="24" y="216">
-      <tspan fill="#C3FFB2">&gt;&gt;&gt; </tspan><tspan fill="#c9d1d9">client.validate_query_context(</tspan><tspan fill="#4ECDC4">"SELECT plan_tier, COUNT(*) FROM subscriptions GROUP BY plan_tier"</tspan><tspan fill="#c9d1d9">)</tspan>
-      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0; 0.3156; 0.3250; 0.8438; 0.8750; 1" dur="16s" repeatCount="indefinite"/>
-    </text>
-    <text x="24" y="242">
-      <tspan fill="#C3FFB2" font-weight="bold">✓ PASS</tspan><tspan fill="#8b949e">  aggregate analytics on governed tables — allowed use</tspan>
-      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0; 0.3906; 0.4000; 0.8438; 0.8750; 1" dur="16s" repeatCount="indefinite"/>
+      <tspan fill="#C3FFB2">&gt;&gt;&gt; </tspan><tspan fill="#c9d1d9">client.authorize_use(asset(</tspan><tspan fill="#4ECDC4">"customers"</tspan><tspan fill="#c9d1d9">), use=</tspan><tspan fill="#4ECDC4">"sync approved customer fields to the CRM"</tspan><tspan fill="#c9d1d9">,</tspan>
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0; 0.2487; 0.2550; 0.8438; 0.8750; 1" dur="24s" repeatCount="indefinite"/>
     </text>
 
-    <!-- footer -->
-    <text x="24" y="284" fill="#6e7681">One synthetic company · five tables · three policies · typed decisions — offline or live
-      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0; 0.4656; 0.4750; 0.8438; 0.8750; 1" dur="16s" repeatCount="indefinite"/>
+    <text x="24" y="238">
+      <tspan fill="#0A1628">&gt;&gt;&gt; </tspan><tspan fill="#c9d1d9">    operation=</tspan><tspan fill="#4ECDC4">"export"</tspan><tspan fill="#c9d1d9">, destination={</tspan><tspan fill="#4ECDC4">"system"</tspan><tspan fill="#c9d1d9">: </tspan><tspan fill="#4ECDC4">"SALESFORCE"</tspan><tspan fill="#c9d1d9">}, consumer_jurisdiction=</tspan><tspan fill="#4ECDC4">"EU"</tspan><tspan fill="#c9d1d9">)</tspan>
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0; 0.2938; 0.3000; 0.8438; 0.8750; 1" dur="24s" repeatCount="indefinite"/>
     </text>
 
-    <!-- idle prompt + blinking cursor -->
+    <text x="24" y="264">
+      <tspan fill="#FBBF24" font-weight="bold">◐ CONDITIONAL</tspan><tspan fill="#8b949e">  approval_required · anonymize_first → exception packet → RESUMED with attested controls</tspan>
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0; 0.3387; 0.3450; 0.8438; 0.8750; 1" dur="24s" repeatCount="indefinite"/>
+    </text>
+
+    <text x="24" y="300">
+      <tspan fill="#C3FFB2">&gt;&gt;&gt; </tspan><tspan fill="#c9d1d9">client.authorize_use(asset(</tspan><tspan fill="#4ECDC4">"support_tickets"</tspan><tspan fill="#c9d1d9">), use=</tspan><tspan fill="#4ECDC4">"fine-tune a support assistant on ticket text"</tspan><tspan fill="#c9d1d9">)</tspan>
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0; 0.3838; 0.3900; 0.8438; 0.8750; 1" dur="24s" repeatCount="indefinite"/>
+    </text>
+
+    <text x="24" y="326">
+      <tspan fill="#FF6B5B" font-weight="bold">✗ DENY</tspan><tspan fill="#8b949e">  ai.training prohibited on raw tickets — the agent reroutes, it does not work around</tspan>
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0; 0.4287; 0.4350; 0.8438; 0.8750; 1" dur="24s" repeatCount="indefinite"/>
+    </text>
+
+    <text x="24" y="348">
+      <tspan fill="#C3FFB2" font-weight="bold">✓ ALLOW</tspan><tspan fill="#8b949e">  ai.training on ml_feature_store features — the estate's sanctioned path</tspan>
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0; 0.4738; 0.4800; 0.8438; 0.8750; 1" dur="24s" repeatCount="indefinite"/>
+    </text>
+
+    <text x="24" y="384">
+      <tspan fill="#C3FFB2">&gt;&gt;&gt; </tspan><tspan fill="#c9d1d9">client.explain_why(decision_id)</tspan><tspan fill="#8b949e">   # ×4 — every step above is evidence-bearing</tspan>
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0; 0.5188; 0.5250; 0.8438; 0.8750; 1" dur="24s" repeatCount="indefinite"/>
+    </text>
+
+    <text x="24" y="410">
+      <tspan fill="#C3FFB2" font-weight="bold">✓ CURRENT</tspan><tspan fill="#8b949e">  policy, version, and publication cited for every decision served</tspan>
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0; 0.5638; 0.5700; 0.8438; 0.8750; 1" dur="24s" repeatCount="indefinite"/>
+    </text>
+
+    <text x="24" y="452">
+      <tspan fill="#6e7681">One brief · eleven governed calls · twelve tables · eighteen policies · typed decisions — offline or live</tspan>
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0; 0.6088; 0.6150; 0.8438; 0.8750; 1" dur="24s" repeatCount="indefinite"/>
+    </text>
+
     <g>
-      <text x="24" y="316" fill="#C3FFB2">&gt;&gt;&gt;</text>
-      <rect x="56" y="305" width="8" height="14" fill="#C3FFB2">
+      <text x="24" y="484" fill="#C3FFB2">&gt;&gt;&gt;</text>
+      <rect x="56" y="473" width="8" height="14" fill="#C3FFB2">
         <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.45;0.5;0.95;1" dur="1.2s" repeatCount="indefinite"/>
       </rect>
-      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0; 0.5031; 0.5125; 0.8438; 0.8750; 1" dur="16s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0; 0.6538; 0.6600; 0.8438; 0.8750; 1" dur="24s" repeatCount="indefinite"/>
     </g>
 
   </g>

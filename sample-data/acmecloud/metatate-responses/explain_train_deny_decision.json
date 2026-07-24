@@ -1,0 +1,58 @@
+{
+  "answer": {
+    "current": true,
+    "explanation": "Decision 'deny' on acmecloud_demo.public.support_tickets was produced by policy 'AcmeCloud customer use guardrails' v1 (instruction 'ai_governance:spec.aiGovernance:training', scenario 'ai.training', current publication): acme-customer-use v1 ai_governance:spec.aiGovernance:training \u2192 deny on acmecloud_demo.public.support_tickets",
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "record": {
+      "category": "advisory",
+      "conflict_group_id": null,
+      "conflict_status": "none",
+      "conflicts_with": [],
+      "decision": "deny",
+      "decision_id": "accef000-0000-4000-8000-000000000043",
+      "decision_reason": "acme-customer-use v1 ai_governance:spec.aiGovernance:training \u2192 deny on acmecloud_demo.public.support_tickets",
+      "enforcement_mode": "enforce",
+      "instruction_family": "ai_governance",
+      "instruction_key": "ai_governance:spec.aiGovernance:training",
+      "parameters": {
+        "allowInference": true,
+        "allowTraining": false,
+        "requiresAnonymization": true,
+        "restrictions": []
+      },
+      "primary_resolution_source": "selector",
+      "priority": 2,
+      "provenance": {
+        "policy_id": "accef000-0000-4000-8000-000000000006",
+        "policy_name": "AcmeCloud customer use guardrails",
+        "policy_version_id": "accef000-0000-4000-8000-000000000007",
+        "version_number": 1
+      },
+      "resolution_paths": [
+        {
+          "ref": null,
+          "source": "selector"
+        }
+      ],
+      "scenario_key": "ai.training",
+      "scenario_lane": "agent",
+      "scope": {
+        "column": null,
+        "database": "acmecloud_demo",
+        "schema": "public",
+        "table": "support_tickets"
+      },
+      "weight": 1
+    },
+    "state": "answered"
+  },
+  "arguments": {
+    "decision_id": "accef000-0000-4000-8000-000000000043",
+    "kind": "decision"
+  },
+  "case_id": "explain_train_deny_decision",
+  "tool": "explain_why"
+}

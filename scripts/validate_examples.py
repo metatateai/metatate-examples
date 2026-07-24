@@ -47,10 +47,21 @@ def main() -> None:
         "human_exception_workflow/cli.py",
         "human_exception_workflow/workflow.py",
         "human_exception_workflow/acceptance.py",
+        "governed_agent_arc/__init__.py",
+        "governed_agent_arc/arc.py",
+        "governed_agent_arc/planner.py",
+        "governed_agent_arc/llm_planner.py",
+        "governed_agent_arc/cli.py",
+        "governed_agent_arc/acceptance.py",
+        "docs/governed-agent-arc.md",
+        "requirements-llm.txt",
+        "scripts/build_readme_hero.py",
         "scripts/run_cicd_policy_gate.sh",
         "scripts/run_cicd_policy_gate_acceptance.sh",
         "scripts/run_human_exception_workflow.sh",
         "scripts/run_human_exception_workflow_acceptance.sh",
+        "scripts/run_governed_agent_arc.sh",
+        "scripts/run_governed_agent_arc_acceptance.sh",
         "scripts/run_framework_runtime_acceptance.sh",
         "scripts/run_langgraph_runtime_notebook.sh",
         "scripts/run_notebook_pack.sh",
@@ -65,6 +76,8 @@ def main() -> None:
     validate_notebooks()
     validate_cicd_policy_gate_files()
     validate_human_exception_workflow_files()
+    validate_governed_agent_arc_files()
+    validate_readme_hero()
     validate_ci_workflows()
     validate_framework_runtime_files()
     validate_python_imports()
@@ -106,7 +119,7 @@ def validate_policy_files() -> None:
 
 def validate_notebooks() -> None:
     notebooks = sorted((ROOT / "notebooks").glob("*.ipynb"))
-    assert len(notebooks) == 14, "expected fourteen starter notebooks"
+    assert len(notebooks) == 15, "expected fifteen starter notebooks"
     for path in notebooks:
         with path.open("r", encoding="utf-8") as handle:
             payload = json.load(handle)
@@ -214,12 +227,62 @@ def validate_human_exception_workflow_files() -> None:
     assert "human_exception_workflow/acceptance.py" in acceptance_runner, "human exception acceptance runner missing script"
 
 
+def validate_governed_agent_arc_files() -> None:
+    arc = (ROOT / "governed_agent_arc" / "arc.py").read_text(encoding="utf-8")
+    for marker in (
+        "inspect_governance_rules",
+        "authorize_use",
+        "validate_query_context",
+        "explain_why",
+        "item_from_answer",
+        "reroute_to_governed_training",
+        "resume_with_controls",
+        "MAX_REVISIONS",
+    ):
+        assert marker in arc, f"governed agent arc missing {marker}"
+
+    planner = (ROOT / "governed_agent_arc" / "planner.py").read_text(encoding="utf-8")
+    for marker in ("ScriptedPlanner", "METATATE_EXAMPLES_LLM", "requirements-llm.txt"):
+        assert marker in planner, f"arc planner missing {marker}"
+
+    acceptance = (ROOT / "governed_agent_arc" / "acceptance.py").read_text(encoding="utf-8")
+    for marker in (
+        "EXPECTED_SEQUENCE",
+        "resumed_with_controls",
+        "rerouted_to_governed_alternative",
+        "ScriptedPlanner",
+    ):
+        assert marker in acceptance, f"arc acceptance missing {marker}"
+
+    runner = (ROOT / "scripts" / "run_governed_agent_arc.sh").read_text(encoding="utf-8")
+    assert "python3 -m governed_agent_arc.cli" in runner, "arc runner does not call the CLI"
+    acceptance_runner = (ROOT / "scripts" / "run_governed_agent_arc_acceptance.sh").read_text(
+        encoding="utf-8"
+    )
+    assert "governed_agent_arc/acceptance.py" in acceptance_runner, "arc acceptance runner missing script"
+
+
+def validate_readme_hero() -> None:
+    # The hero SVG is a generated artifact quoting recorded arc answers; like
+    # the notebooks, drift from its generator is a validation failure.
+    check = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "build_readme_hero.py"), "--check"],
+        capture_output=True,
+        text=True,
+    )
+    assert check.returncode == 0, (
+        "docs/assets/readme-hero.svg drifted from scripts/build_readme_hero.py:\n"
+        f"{check.stdout}{check.stderr}"
+    )
+
+
 def validate_ci_workflows() -> None:
     offline = (ROOT / ".github" / "workflows" / "offline-ci.yml").read_text(encoding="utf-8")
     for marker in (
         "scripts/validate_examples.py",
         "scripts/run_cicd_policy_gate_acceptance.sh",
         "scripts/run_human_exception_workflow_acceptance.sh",
+        "scripts/run_governed_agent_arc_acceptance.sh",
         "scripts/run_framework_runtime_acceptance.sh",
         "scripts/run_notebook_pack.sh",
     ):
@@ -232,6 +295,7 @@ def validate_ci_workflows() -> None:
         "METATATE_SAAS_MCP_TOKEN",
         "scripts/run_cicd_policy_gate_acceptance.sh",
         "scripts/run_human_exception_workflow_acceptance.sh",
+        "scripts/run_governed_agent_arc_acceptance.sh",
         "scripts/run_framework_runtime_acceptance.sh",
         "scripts/run_notebook_pack.sh",
         "scripts/run_langgraph_runtime_notebook.sh",
@@ -256,8 +320,11 @@ def validate_python_imports() -> None:
     for name in ("evaluate_changes", "load_changes", "DEFAULT_CHANGESET_PATH"):
         assert hasattr(cicd_policy_gate, name), f"cicd_policy_gate missing {name}"
     human_exception_workflow = importlib.import_module("human_exception_workflow")
-    for name in ("run_workflow", "DEFAULT_REQUESTS", "DEFAULT_REVIEWS"):
+    for name in ("run_workflow", "DEFAULT_REQUESTS", "DEFAULT_REVIEWS", "item_from_answer"):
         assert hasattr(human_exception_workflow, name), f"human_exception_workflow missing {name}"
+    governed_agent_arc = importlib.import_module("governed_agent_arc")
+    for name in ("run_arc", "build_governed_agent_arc", "ScriptedPlanner", "ARC_BRIEF"):
+        assert hasattr(governed_agent_arc, name), f"governed_agent_arc missing {name}"
 
 
 if __name__ == "__main__":

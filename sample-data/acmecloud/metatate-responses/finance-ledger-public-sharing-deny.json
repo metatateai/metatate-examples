@@ -7,6 +7,7 @@
       "schema": "finance",
       "table": "revenue_ledger"
     },
+    "authorization_id": "accef000-0000-4000-8000-000000000146",
     "can_proceed_now": false,
     "conditions": [],
     "context_facts": {
@@ -17,7 +18,7 @@
       "subcategory": null
     },
     "decision": "deny",
-    "decision_id": "accef000-0000-4000-8000-000000000105",
+    "decision_id": "accef000-0000-4000-8000-000000000147",
     "instructions": [
       {
         "category": "advisory",
@@ -25,7 +26,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "deny",
-        "decision_id": "accef000-0000-4000-8000-000000000105",
+        "decision_id": "accef000-0000-4000-8000-000000000147",
         "decision_reason": "acme-finance-guardrails v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on acmecloud_demo.finance.revenue_ledger",
         "enforcement_mode": "enforce",
         "instruction_family": "usage_guidance",
@@ -39,9 +40,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000103",
+          "policy_id": "accef000-0000-4000-8000-000000000144",
           "policy_name": "AcmeCloud finance data guardrails",
-          "policy_version_id": "accef000-0000-4000-8000-000000000104",
+          "policy_version_id": "accef000-0000-4000-8000-000000000145",
           "version_number": 1
         },
         "resolution_paths": [

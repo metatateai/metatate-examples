@@ -7,6 +7,7 @@ set -euo pipefail
 "${JUPYTER_BIN}" nbconvert \
   --to notebook \
   --execute notebooks/11_langgraph_governed_sql_agent_runtime.ipynb \
+    notebooks/14_governed_agent_end_to_end.ipynb \
   --output-dir "${METATATE_NOTEBOOK_OUTPUT_DIR}"
 
-printf 'Executed LangGraph runtime notebook into %s\n' "${METATATE_NOTEBOOK_OUTPUT_DIR}"
+printf 'Executed LangGraph runtime notebooks into %s\n' "${METATATE_NOTEBOOK_OUTPUT_DIR}"

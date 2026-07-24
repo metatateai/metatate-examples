@@ -1419,6 +1419,124 @@ def sql_gauntlet_notebook() -> dict:
     )
 
 
+def governed_agent_arc_notebook() -> dict:
+    return notebook(
+        [
+            markdown(
+                """
+                # 14 - The Governed Agent, End To End
+
+                Every other notebook proves one decision at a time. This one gives a
+                LangGraph agent a realistic multi-part brief and lets governance
+                visibly change its course:
+
+                > *"Build the EU churn dashboard, push the at-risk segment to
+                > Salesforce, and fine-tune the support assistant on ticket text."*
+
+                The agent reads the rulebook first, self-revises warned SQL, turns a
+                conditional export into a human exception packet and resumes with
+                attested controls, REROUTES a denied fine-tune to the governed
+                alternative, and closes by chaining `explain_why` over every decision
+                id it collected. Offline it replays recorded answers with a
+                deterministic planner; in live mode an optional LLM drafts the SQL
+                (`METATATE_EXAMPLES_LLM`) while governance calls stay identical.
+
+                Requires `requirements-framework.txt` (LangGraph), like notebook 11.
+                """
+            ),
+            code(SETUP_CELL),
+            markdown("## Run the whole arc"),
+            code(
+                """
+                from governed_agent_arc import ArcRecordingClient, ScriptedPlanner, run_arc
+
+                recording = ArcRecordingClient(client)
+                report = run_arc(recording, ScriptedPlanner())
+                for line in report.transcript:
+                    print(line)
+                """
+            ),
+            markdown(
+                """
+                ## The decision spine
+
+                Eleven Metatate calls, in order — the agent's entire interaction with
+                governance, every one a typed answer:
+                """
+            ),
+            code(
+                """
+                for step, call in enumerate(report.decision_sequence, start=1):
+                    print(f"{step:>2}. {call['tool']:<24} -> {call['label']}")
+                """
+            ),
+            markdown(
+                """
+                ## Beat 1: the draft that had to change
+
+                The first draft referenced a masked column — `warn`, not a guess. The
+                agent revised once and re-validated to `pass`. It never returns SQL
+                Metatate has not passed.
+                """
+            ),
+            code(
+                """
+                print(f"draft:   {report.draft_sql}")
+                print(f"final:   {report.final_sql}")
+                print(f"revisions: {report.revision_count} (dashboard {report.dashboard_status})")
+                """
+            ),
+            markdown(
+                """
+                ## Beat 2: the conditional export became a review, then a resume
+
+                `conditional` is not a soft yes — the agent built an exception packet
+                (the same `human_exception_workflow` machinery from notebook 09) and
+                resumed only after the reviewer attested BOTH required controls.
+                """
+            ),
+            code(
+                """
+                packet = report.exception_packet
+                print(f"packet:  {packet['packet_id']} -> queue {packet['reviewer_queue']}")
+                print(f"attestations required: {packet['required_attestations']}")
+                print(f"status:  {report.export_status}")
+                print(f"resume:  {report.resume_payload['action']}")
+                """
+            ),
+            markdown(
+                """
+                ## Beat 3: deny became redirection, not a dead end
+
+                Fine-tuning on raw ticket text is denied. The rulebook already showed
+                where training IS allowed — the agent re-asked on the feature store
+                and got a real `allow`, with its own decision id.
+                """
+            ),
+            code(
+                """
+                print(f"training: {report.training_status} (rerouted: {report.rerouted})")
+                """
+            ),
+            markdown(
+                """
+                ## Beat 4: the receipts
+
+                Every decision the agent collected resolves through `explain_why`,
+                and every one is still current in the live publication.
+                """
+            ),
+            code(
+                """
+                for explanation in report.explanations:
+                    print(f"{explanation['decision_id']} -> current: {explanation['current']}")
+                print(f"total Metatate calls: {report.metatate_calls}")
+                """
+            ),
+        ]
+    )
+
+
 NOTEBOOKS = {
     "00_setup_live_or_offline.ipynb": setup_notebook,
     "01_decision_layer_cookbook.ipynb": cookbook_notebook,
@@ -1434,6 +1552,7 @@ NOTEBOOKS = {
     "11_langgraph_governed_sql_agent_runtime.ipynb": langgraph_governed_sql_agent_runtime_notebook,
     "12_governance_states_and_the_wider_estate.ipynb": governance_states_notebook,
     "13_sql_gauntlet_validate_query_context.ipynb": sql_gauntlet_notebook,
+    "14_governed_agent_end_to_end.ipynb": governed_agent_arc_notebook,
 }
 
 

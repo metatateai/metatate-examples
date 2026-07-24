@@ -506,6 +506,19 @@ CASES: list[dict[str, Any]] = [
             "default_schema": SCHEMA,
         },
     },
+    # ---- governed agent arc (APPENDED — same uuid-stability rule as above):
+    # the arc chains explain_why over the fine-tune deny and the governed
+    # training reroute in addition to the two explains recorded earlier.
+    {
+        "id": "explain_train_deny_decision",
+        "tool": "explain_why",
+        "arguments": {"kind": "decision", "decision_id": "@train-support-tickets-deny.decision_id"},
+    },
+    {
+        "id": "explain_ml_training_decision",
+        "tool": "explain_why",
+        "arguments": {"kind": "decision", "decision_id": "@ml-training-features-allow.decision_id"},
+    },
 ]
 
 

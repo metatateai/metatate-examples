@@ -48,7 +48,9 @@ jobs:
             cicd_policy_gate \
             framework_runtime \
             human_exception_workflow \
+            governed_agent_arc \
             scripts/build_notebooks.py \
+            scripts/build_readme_hero.py \
             scripts/validate_examples.py
 
       - name: CI/CD policy gate acceptance
@@ -77,6 +79,21 @@ jobs:
 
       - name: Framework runtime acceptance
         run: scripts/run_framework_runtime_acceptance.sh
+
+      - name: Governed agent arc acceptance
+        run: scripts/run_governed_agent_arc_acceptance.sh
+
+      - name: Governed agent arc CLI
+        run: scripts/run_governed_agent_arc.sh
+
+      - name: Execute governed agent arc notebook
+        env:
+          JUPYTER_BIN: jupyter
+          METATATE_NOTEBOOK_OUTPUT_DIR: ${{ runner.temp }}/metatate-examples-arc-notebook
+        run: |
+          jupyter nbconvert --to notebook \
+            --execute notebooks/14_governed_agent_end_to_end.ipynb \
+            --output-dir "${METATATE_NOTEBOOK_OUTPUT_DIR}"
 
       - name: Execute offline notebook pack
         env:
