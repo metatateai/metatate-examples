@@ -83,6 +83,9 @@ jobs:
       - name: Live human exception workflow acceptance
         run: scripts/run_human_exception_workflow_acceptance.sh
 
+      - name: Live audit evidence packet acceptance
+        run: scripts/run_audit_evidence_acceptance.sh
+
       - name: Live framework runtime acceptance
         run: scripts/run_framework_runtime_acceptance.sh
 

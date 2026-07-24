@@ -109,6 +109,7 @@ Demo policy behavior:
 | `12_governance_states_and_the_wider_estate.ipynb` | Honest states (ungoverned, review-required, conflicted), the wider decision vocabulary, free-text scenario mapping, role gating, the AI lifecycle, collections, taxonomy masking, and the finance schema. |
 | `13_sql_gauntlet_validate_query_context.ipynb` | JOINs, `SELECT *`, CTEs, joins into ungoverned tables, and byte-identical SQL passing or failing on intent. |
 | `14_governed_agent_end_to_end.ipynb` | The flagship arc: one brief, eleven governed calls — rulebook first, self-revised SQL, a conditional export resumed with controls, a denied fine-tune rerouted, every decision explained. |
+| `15_audit_evidence_packet.ipynb` | A day of decisions as an audit-ready report: citations by policy version, the explain chain proving currency, and the honest corners on the record. |
 
 ## Walkthroughs (live, beyond the notebooks)
 
@@ -165,6 +166,7 @@ Runtime coverage is separate from core notebook execution:
 - `09_human_approval_packet_for_conditional_export.ipynb` is backed by the reusable `human_exception_workflow` package and an acceptance script.
 - `10_llamaindex_governed_retrieval_pattern.ipynb` is paired with a deterministic LlamaIndex `FunctionTool` runtime acceptance script.
 - `14_governed_agent_end_to_end.ipynb` is backed by the reusable `governed_agent_arc` package and an acceptance script that pins the arc's exact eleven-call decision sequence.
+- `15_audit_evidence_packet.ipynb` is backed by the reusable `audit_evidence` package and an acceptance script that pins the packet structure (4/4 explained and current, both honest corners on the record).
 
 The LangGraph, OpenAI, and LlamaIndex runtime checks invoke real framework objects, but they intentionally do not call an LLM. Review [docs/validation-matrix.md](docs/validation-matrix.md) and [docs/framework-runtime-acceptance.md](docs/framework-runtime-acceptance.md) for the exact coverage.
 
@@ -220,6 +222,15 @@ scripts/run_governed_agent_arc_acceptance.sh
 
 See [docs/governed-agent-arc.md](docs/governed-agent-arc.md).
 
+To assemble the audit evidence packet locally:
+
+```bash
+scripts/run_audit_evidence.sh
+scripts/run_audit_evidence_acceptance.sh
+```
+
+See [docs/audit-evidence-packet.md](docs/audit-evidence-packet.md).
+
 Review [docs/release-process.md](docs/release-process.md) before tagging a public release.
 
 To run the framework runtime acceptance checks:
@@ -263,6 +274,7 @@ Configure `.env` with your endpoint, keep the token in your shell, and see
 ```text
 .github/workflows/               Offline PR CI and manual live SaaS validation
 action.yml                      Reusable GitHub Action: dbt manifest -> gate -> PR comment
+audit_evidence/                 Audit evidence packet: decisions -> audit-ready report
 common/                         Shared Python client helpers
 cicd_policy_gate/               Reusable CI/CD policy gate + dbt adapter + sample dbt project
 docs/                           Setup, demo model, and troubleshooting

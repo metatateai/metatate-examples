@@ -94,6 +94,12 @@ jobs:
           fi
           echo "Human exception workflow failed as expected for the denied training request."
 
+      - name: Audit evidence packet acceptance
+        run: scripts/run_audit_evidence_acceptance.sh
+
+      - name: Audit evidence packet CLI
+        run: scripts/run_audit_evidence.sh
+
       - name: Framework runtime acceptance
         run: scripts/run_framework_runtime_acceptance.sh
 

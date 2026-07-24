@@ -26,6 +26,7 @@ This repository separates examples from runtime acceptance tests.
 | Governance states and the wider estate | `12_governance_states_and_the_wider_estate.ipynb` | Yes | Yes | Covered by notebook execution |
 | The SQL gauntlet | `13_sql_gauntlet_validate_query_context.ipynb` | Yes | Yes | Covered by notebook execution |
 | Governed agent arc, end to end | `14_governed_agent_end_to_end.ipynb` | Yes; requires framework deps | Yes; requires framework deps and MCP env | `governed_agent_arc/acceptance.py` |
+| Audit evidence packet | `15_audit_evidence_packet.ipynb` | Yes | Yes | `audit_evidence/acceptance.py` |
 
 ## Test Commands
 
