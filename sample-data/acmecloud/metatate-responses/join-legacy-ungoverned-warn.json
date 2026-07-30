@@ -1,12 +1,19 @@
 {
   "answer": {
     "advisory": true,
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T02:06:30.182Z",
+    "evaluated_purpose": {
+      "purpose_category": "analytics",
+      "purpose_key": "analytics.reporting",
+      "registry_version": 1
+    },
     "findings": [
       {
         "conflict": null,
         "decision": "allow",
-        "decision_reason": "acme-customer-use v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.customers",
-        "finding_id": "accef000-0000-4000-8000-000000000159",
+        "decision_reason": "Purpose `analytics.reporting` is named by this policy's permitted-uses list (policy AcmeCloud customer use guardrails).",
+        "finding_id": "accef000-0000-4000-8000-000000000160",
         "instructions": [
           {
             "category": "advisory",
@@ -15,7 +22,9 @@
             "conflicts_with": [],
             "decision": "allow",
             "decision_id": "accef000-0000-4000-8000-000000000020",
-            "decision_reason": "acme-customer-use v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.customers",
+            "decision_reason": "Purpose `analytics.reporting` is named by this policy's permitted-uses list (policy AcmeCloud customer use guardrails).",
+            "effective_from": null,
+            "effective_until": null,
             "enforcement_mode": "enforce",
             "instruction_family": "usage_guidance",
             "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
@@ -65,7 +74,7 @@
         "conflict": null,
         "decision": null,
         "decision_reason": null,
-        "finding_id": "accef000-0000-4000-8000-000000000160",
+        "finding_id": "accef000-0000-4000-8000-000000000161",
         "instructions": [],
         "reason_code": "no_published_instruction_state",
         "ref": {
@@ -82,12 +91,13 @@
       "published_at": "2026-07-16T00:00:00.000Z"
     },
     "state": "answered",
-    "validation_id": "accef000-0000-4000-8000-000000000158",
+    "validation_id": "accef000-0000-4000-8000-000000000159",
     "verdict": "warn"
   },
   "arguments": {
     "default_database": "acmecloud_demo",
     "default_schema": "public",
+    "purpose_key": "analytics.reporting",
     "scenario_key": "purpose.allowed_use",
     "sql": "SELECT c.customer_name, l.exported_at FROM customers c JOIN legacy_customer_backup l ON l.customer_id = c.customer_id"
   },

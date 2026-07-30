@@ -7,13 +7,17 @@
       "schema": "public",
       "table": "legacy_customer_backup"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000077",
+    "authorization_id": "accef000-0000-4000-8000-000000000078",
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T02:06:12.836Z",
+    "evaluated_purpose": null,
     "message": "Not enough published governance state \u2014 review required.",
     "next_actions": [
       "No published instruction covers this asset and scenario \u2014 extend a policy to cover it and publish.",
       "Treat this use as review-required until published coverage exists."
     ],
     "reason_code": "no_published_instruction_state",
+    "satisfied_conditions": [],
     "scenario_key": "purpose.allowed_use",
     "state": "not_enough_published_state",
     "unresolved_targets": []

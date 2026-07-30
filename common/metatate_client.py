@@ -87,7 +87,12 @@ class OfflineMetatateClient:
         operation: str | None = None,
         destination: dict[str, str] | None = None,
         consumer_jurisdiction: str | None = None,
+        purpose_key: str | None = None,
     ) -> dict[str, Any]:
+        # B3: `purpose_key` is a DECISION-BEARING input, not a label. Omitting it
+        # is a different question with a different (fail-closed) answer, so it is
+        # part of the exact match key — `_drop_none` keeps "absent" and "declared"
+        # distinguishable rather than collapsing them.
         return self._dispatch(
             "authorize_use",
             _drop_none(
@@ -98,6 +103,7 @@ class OfflineMetatateClient:
                     "operation": operation,
                     "destination": destination,
                     "consumer_jurisdiction": consumer_jurisdiction,
+                    "purpose_key": purpose_key,
                 }
             ),
         )
@@ -112,6 +118,7 @@ class OfflineMetatateClient:
         operation: str | None = None,
         destination: dict[str, str] | None = None,
         consumer_jurisdiction: str | None = None,
+        purpose_key: str | None = None,
     ) -> dict[str, Any]:
         return self._dispatch(
             "validate_query_context",
@@ -125,6 +132,7 @@ class OfflineMetatateClient:
                     "operation": operation,
                     "destination": destination,
                     "consumer_jurisdiction": consumer_jurisdiction,
+                    "purpose_key": purpose_key,
                 }
             ),
         )

@@ -18,6 +18,10 @@ authorize:
   - id: analytics-customers-allow
     asset: { table: customers }
     scenario_key: purpose.allowed_use
+    # B3: the permitted-uses list names the `analytics` CATEGORY, so a call
+    # stating any analytics.* purpose matches. A purpose-BLIND call on the
+    # same rows fails closed to review (contract E2).
+    purpose_key: analytics.reporting
     expect: { state: answered, decision: allow }
   - id: train-support-tickets-deny
     asset: { table: support_tickets }
@@ -73,11 +77,16 @@ authorize:
   - id: ml-retrieval-context-allow
     asset: { table: ml_feature_store }
     scenario_key: ai.retrieval_context
+    purpose_key: ai.inference
     expect: { state: answered, decision: allow }
-  - id: ml-embedding-storage-allow
+  # B3 fail-closed legacy vocabulary: the embedding policy's permitted-uses
+  # list is an UNMAPPED free string (`embedding_storage`), so no purpose can
+  # prove coverage and the answer is review — never an inferred allow.
+  - id: ml-embedding-storage-review
     asset: { table: ml_feature_store }
     scenario_key: ai.embedding_storage
-    expect: { state: answered, decision: allow }
+    purpose_key: ai.inference
+    expect: { state: review_required, reason_code: decision_requires_review }
   - id: ml-vendor-transfer-deny
     asset: { table: ml_feature_store }
     scenario_key: ai.vendor_transfer
@@ -97,6 +106,7 @@ authorize:
   - id: customer-360-internal-sharing-allow
     asset: { table: subscriptions }
     scenario_key: sharing.internal
+    purpose_key: analytics.reporting
     expect: { state: answered, decision: allow }
   # ---- estate v3: conflict corner, decision vocabulary, free text, finance ----
   - id: conflict-prospect-outreach-review
@@ -136,6 +146,7 @@ authorize:
   - id: finance-invoices-allowed-use
     asset: { schema: finance, table: invoices }
     scenario_key: purpose.allowed_use
+    purpose_key: compliance.reporting
     expect: { state: answered, decision: allow }
   - id: finance-ledger-public-sharing-deny
     asset: { schema: finance, table: revenue_ledger }
@@ -147,6 +158,7 @@ validate:
     sql: SELECT region, SUM(arr) FROM customers GROUP BY region
     scenario_key: purpose.allowed_use
     columns: [region, arr]
+    purpose_key: analytics.reporting
     expect: { verdict: pass }
   - id: email-detail-warn
     sql: SELECT customer_name, email FROM customers WHERE region = 'EU'
@@ -186,6 +198,7 @@ validate:
     scenario_key: purpose.allowed_use
     tables: [customers, subscriptions]
     columns: [region, arr, customer_id]
+    purpose_key: analytics.reporting
     expect: { verdict: pass }
   - id: select-star-payment-methods-warn
     sql: SELECT * FROM payment_methods LIMIT 5
@@ -204,12 +217,14 @@ validate:
     scenario_key: purpose.allowed_use
     tables: [subscriptions]
     columns: [customer_id, arr, end_date]
+    purpose_key: analytics.reporting
     expect: { verdict: pass }
   - id: join-legacy-ungoverned-warn
     sql: SELECT c.customer_name, l.exported_at FROM customers c JOIN legacy_customer_backup l ON l.customer_id = c.customer_id
     scenario_key: purpose.allowed_use
     tables: [customers, legacy_customer_backup]
     columns: [customer_name, exported_at, customer_id]
+    purpose_key: analytics.reporting
     expect: { verdict: warn, not_enough_tables: [legacy_customer_backup] }
   # The intent flip: byte-identical SQL, opposite verdicts — participation is
   # intent-aware, so the analytics ask passes and the marketing ask fails.
@@ -217,6 +232,7 @@ validate:
     sql: SELECT region, COUNT(*) FROM customers GROUP BY region
     scenario_key: purpose.allowed_use
     columns: [region]
+    purpose_key: analytics.reporting
     expect: { verdict: pass }
   - id: same-sql-marketing-intent-fail
     sql: SELECT region, COUNT(*) FROM customers GROUP BY region
@@ -228,4 +244,36 @@ validate:
     scenario_key: purpose.allowed_use
     tables: [finance.invoices, finance.revenue_ledger]
     columns: [invoice_id, amount]
+    purpose_key: compliance.reporting
     expect: { verdict: pass }
+
+# ---------------------------------------------------------------------------
+# EXAMPLES-ONLY additions (not in the metatate-saas matrix).
+#
+# THE THREE-WAY PURPOSE BOUNDARY, on purpose, in one place. A reader should
+# learn the boundary here rather than infer it from outcome names:
+#
+#   1. COVERED purpose            -> allow
+#      analytics-customers-allow declares `analytics.reporting`; the policy
+#      grants the `analytics` CATEGORY, so the leaf matches.
+#   2. VALID purpose the policy's legacy authoring cannot cover -> review
+#      support-tickets-… declares `operations.support` — a real registered
+#      purpose. The policy's authored entries are legacy free strings that
+#      cannot prove coverage, so it fails closed.
+#   3. NO purpose at all          -> review
+#      analytics-customers-purpose-missing-review asks the identical question
+#      as (1) minus the purpose. One absent key, a different answer.
+#
+# ml-embedding-storage-review above is the sharpest case of (2): it DECLARES a
+# valid `ai.inference` and STILL reviews, because the policy's authored
+# `embedding_storage` entry says vectors may be STORED — which never
+# established inference use. Declaring a good purpose does not rescue an
+# authored entry that cannot prove coverage.
+# ---------------------------------------------------------------------------
+examples_only:
+  - id: support-tickets-unmapped-policy-use-review
+    note: a VALID declared purpose the policy's legacy authoring cannot cover
+    expect: { state: review_required, decision: require_review }
+  - id: analytics-customers-purpose-missing-review
+    note: the SAME question with no purpose at all
+    expect: { state: review_required, decision: require_review }

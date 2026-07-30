@@ -1,12 +1,15 @@
 {
   "answer": {
     "advisory": true,
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T02:06:18.020Z",
+    "evaluated_purpose": null,
     "findings": [
       {
         "conflict": null,
         "decision": "mask_full",
         "decision_reason": "acme-ticket-redaction v1 masking:spec.accessControl.masking \u2192 mask_full on acmecloud_demo.public.support_tickets.ticket_text",
-        "finding_id": "accef000-0000-4000-8000-000000000111",
+        "finding_id": "accef000-0000-4000-8000-000000000112",
         "instructions": [
           {
             "category": "enforceable",
@@ -14,8 +17,10 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "mask_full",
-            "decision_id": "accef000-0000-4000-8000-000000000112",
+            "decision_id": "accef000-0000-4000-8000-000000000113",
             "decision_reason": "acme-ticket-redaction v1 masking:spec.accessControl.masking \u2192 mask_full on acmecloud_demo.public.support_tickets.ticket_text",
+            "effective_from": null,
+            "effective_until": null,
             "enforcement_mode": "enforce",
             "instruction_family": "masking",
             "instruction_key": "masking:spec.accessControl.masking",
@@ -25,9 +30,9 @@
             "primary_resolution_source": "selector",
             "priority": 2,
             "provenance": {
-              "policy_id": "accef000-0000-4000-8000-000000000113",
+              "policy_id": "accef000-0000-4000-8000-000000000114",
               "policy_name": "AcmeCloud ticket free-text redaction",
-              "policy_version_id": "accef000-0000-4000-8000-000000000114",
+              "policy_version_id": "accef000-0000-4000-8000-000000000115",
               "version_number": 1
             },
             "resolution_paths": [
@@ -52,8 +57,10 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "deny",
-            "decision_id": "accef000-0000-4000-8000-000000000043",
+            "decision_id": "accef000-0000-4000-8000-000000000044",
             "decision_reason": "acme-customer-use v1 ai_governance:spec.aiGovernance:training \u2192 deny on acmecloud_demo.public.support_tickets",
+            "effective_from": null,
+            "effective_until": null,
             "enforcement_mode": "enforce",
             "instruction_family": "ai_governance",
             "instruction_key": "ai_governance:spec.aiGovernance:training",
@@ -103,7 +110,7 @@
       "published_at": "2026-07-16T00:00:00.000Z"
     },
     "state": "answered",
-    "validation_id": "accef000-0000-4000-8000-000000000110",
+    "validation_id": "accef000-0000-4000-8000-000000000111",
     "verdict": "fail"
   },
   "arguments": {

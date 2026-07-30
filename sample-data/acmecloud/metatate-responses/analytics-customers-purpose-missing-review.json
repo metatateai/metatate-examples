@@ -5,32 +5,40 @@
       "column": null,
       "database": "acmecloud_demo",
       "schema": "public",
-      "table": "support_tickets"
+      "table": "customers"
     },
     "authorization_id": "accef000-0000-4000-8000-000000000040",
-    "can_proceed_now": true,
+    "can_proceed_now": false,
     "conditions": [],
+    "conflict": null,
     "context_facts": {
       "category": "pii",
       "masking": {
-        "exempt_roles": [],
-        "type": "redact"
+        "exempt_roles": [
+          "DATA_STEWARD",
+          "PRIVACY_ADMIN"
+        ],
+        "type": "partial"
       },
       "pii": true,
-      "sensitivity": "confidential",
+      "sensitivity": "restricted",
       "subcategory": null
     },
-    "decision": "allow",
-    "decision_id": "accef000-0000-4000-8000-000000000041",
+    "decision": "require_review",
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T02:06:01.980Z",
+    "evaluated_purpose": null,
     "instructions": [
       {
         "category": "advisory",
         "conflict_group_id": null,
         "conflict_status": "none",
         "conflicts_with": [],
-        "decision": "allow",
-        "decision_id": "accef000-0000-4000-8000-000000000041",
-        "decision_reason": "acme-customer-use v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.support_tickets",
+        "decision": "require_review",
+        "decision_id": "accef000-0000-4000-8000-000000000020",
+        "decision_reason": "Permitted uses require a declared purpose; this call stated none (policy AcmeCloud customer use guardrails).",
+        "effective_from": null,
+        "effective_until": null,
         "enforcement_mode": "enforce",
         "instruction_family": "usage_guidance",
         "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
@@ -62,34 +70,35 @@
           "column": null,
           "database": "acmecloud_demo",
           "schema": "public",
-          "table": "support_tickets"
+          "table": "customers"
         },
         "weight": 1
       }
     ],
     "next_actions": [
-      "Proceed \u2014 the current published instructions allow this use."
+      "Obtain data-steward review before proceeding with this use."
     ],
-    "obligations": [],
-    "prohibitions": [],
     "publication": {
       "publication_id": "accef000-0000-4000-8000-000000000001",
       "published_at": "2026-07-16T00:00:00.000Z"
     },
-    "reason": "acme-customer-use v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.support_tickets",
+    "reason": "Permitted uses require a declared purpose; this call stated none (policy AcmeCloud customer use guardrails).",
+    "reason_code": "decision_requires_review",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
     "scenario_key": "purpose.allowed_use",
     "scenario_lane": "human",
-    "state": "answered"
+    "state": "review_required"
   },
   "arguments": {
     "asset": {
       "database": "acmecloud_demo",
       "schema": "public",
-      "table": "support_tickets"
+      "table": "customers"
     },
     "scenario_key": "purpose.allowed_use",
-    "use": "triage open support tickets"
+    "use": "build a churn analytics dashboard"
   },
-  "case_id": "support-tickets-allow",
+  "case_id": "analytics-customers-purpose-missing-review",
   "tool": "authorize_use"
 }

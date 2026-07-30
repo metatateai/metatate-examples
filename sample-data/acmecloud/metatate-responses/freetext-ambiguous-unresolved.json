@@ -7,13 +7,17 @@
       "schema": "public",
       "table": "customers"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000141",
+    "authorization_id": "accef000-0000-4000-8000-000000000142",
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T02:06:25.541Z",
+    "evaluated_purpose": null,
     "message": "Not enough published governance state \u2014 review required.",
     "next_actions": [
       "Provide a canonical scenario_key \u2014 the proposed use could not be mapped to exactly one scenario.",
       "Treat this use as review-required until the scenario is explicit."
     ],
     "reason_code": "scenario_unresolved",
+    "satisfied_conditions": [],
     "scenario_key": null,
     "state": "not_enough_published_state",
     "unresolved_targets": []

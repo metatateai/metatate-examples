@@ -2,6 +2,65 @@
 
 ## Unreleased
 
+- **B3 purposeful calls end to end.** Every governed call declares the
+  `purpose_key` its canonical case declares, and the offline router matches on it
+  **exactly** — no aliases, no approximate matching, no fallback between
+  purposeful and purpose-blind recordings. `purpose_key` is now a parameter on
+  `authorize_use` and `validate_query_context` on both clients; previously it
+  existed in the canonical cases but **no client could emit it**, so nine cases
+  were unreachable and one silently re-routed to its purpose-blind twin.
+
+  All case ids, purposes and outcomes are **re-synced from `metatate-saas`
+  `origin/main` (`00fed9f`)** and all 58 recordings **re-recorded live** against
+  publication `7b10b30f`. Zero mismatches: **63 canonical scalar expectations
+  matched by live output.** Nothing hand-edited.
+
+  **Categories and keys.** A policy may grant a whole family (`analytics`) while a
+  caller states one leaf (`analytics.reporting`); the leaf matches because it
+  belongs to the family. This is intentional vocabulary design. Category-vs-key is
+  decided mechanically — an entry is a category iff it byte-equals a registry
+  family token, and the namespaces are disjoint because every key contains a dot
+  and no family token does. Categories are asserted **never to be narrowed** to a
+  single key, since collapsing `analytics` to `analytics.reporting` would silently
+  shrink a family-wide grant.
+
+  **The three-way boundary is now taught, not inferred:** a covered purpose →
+  `allow`; a *valid* purpose the policy's legacy authoring cannot cover →
+  `review_required`; no purpose at all → `review_required`. The sharpest case is
+  `ml-embedding-storage-review`, which **declares** a valid `ai.inference` and
+  *still* reviews, because the policy's authored `embedding_storage` entry says
+  vectors may be STORED — which never established inference use. It carries a
+  standing *do not map* ruling for exactly that reason.
+
+  New gates in offline CI: `scripts/run_purpose_contract_acceptance.sh` (router
+  exactness, consumer↔case exactness, both directions of the purpose boundary,
+  cross-surface consistency, the stale-claim guard, the do-not-map tripwire, and
+  the served-use inventory assertions) and a **release gate**
+  `scripts/live_expected_decision_parity.py` in the live workflow.
+
+- **Served-use inventory** (`sample-data/acmecloud/served-use-inventory.json`,
+  generated). The pack serves **18 distinct authored entries across 19
+  (entry, list-kind) pairs**; the #374 change-set manifest covers 9, and had been
+  read as a complete inventory. The inventory is generated from the canonical
+  policy pack and cross-checked against live serving state in both directions,
+  reading **only** structured `usage_guidance.parameters.uses` — never prose or
+  serialized parameters, which is enforced by an assertion after a coarse
+  substring sweep elsewhere matched an English sentence in a `log_only` row.
+
+  Vocabulary disposition is modelled **separately** from occurrence inventory:
+  occurrences retain policy, list kind, and entry, so `prospect_outreach` being
+  permitted in one policy and prohibited in another cannot collapse. That pair is
+  the deliberate governance-debt conflict fixture and is asserted to survive.
+
+- **The finance divergence: diagnosed and resolved, not papered over.** Staging had
+  been serving a publication from `2026-07-23T22:02Z` while the purpose vocabulary
+  migrated on 07-29, so current B3 semantics were evaluating pre-B3P serving rows —
+  under which an unmapped legacy entry correctly cannot prove coverage, turning
+  `allow` into `require_review`. Neither implementation was at fault. After the
+  staging reinstall and the canonical policy re-sync, live and offline agree;
+  both finance cases are back in the matrix with `compliance.reporting`, and the
+  notebook sections that demonstrated them are restored.
+
 - BYO-estate bootstrap: `docs/walkthrough-byo-estate.md` bridges from the
   AcmeCloud demo to YOUR data — connect any of the six connector kinds,
   review classification, publish the new `starter-policies/` pack (four

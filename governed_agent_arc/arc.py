@@ -26,6 +26,7 @@ from dataclasses import asdict, dataclass
 from typing import Any, TypedDict
 
 from common import get_client
+from framework_runtime.scenarios import PURPOSE_BY_SQL
 from governed_agent_arc.planner import Planner, ScriptedPlanner
 from human_exception_workflow import ReviewDecision, apply_review, item_from_answer
 
@@ -181,6 +182,10 @@ def build_governed_agent_arc(client: Any, planner: Planner | None = None) -> Any
             _CUSTOMERS,
             use="build a churn analytics dashboard",
             scenario_key="purpose.allowed_use",
+            # B3: a churn dashboard IS analytics reporting. Declaring it is what
+            # earns the `allow`; omitting it is a different, fail-closed question
+            # (see the analytics-customers-purpose-missing-review control).
+            purpose_key="analytics.reporting",
         )
         return {
             **state,
@@ -200,11 +205,18 @@ def build_governed_agent_arc(client: Any, planner: Planner | None = None) -> Any
         }
 
     def validate_dashboard_sql(state: GovernedArcState) -> GovernedArcState:
+        # This node runs TWICE — once on the draft (the masked-email detail
+        # query) and again on the revision (the safe aggregate). Each leg must
+        # send exactly the purpose its canonical recording declares, so the
+        # purpose comes from the declared map rather than being pinned to one
+        # value: the detail query's recording is purpose-blind, the aggregate's
+        # is purposeful.
         validation = client.validate_query_context(
             state["draft_sql"],
             scenario_key="purpose.allowed_use",
             default_database=_DATABASE,
             default_schema=_SCHEMA,
+            purpose_key=PURPOSE_BY_SQL.get(state["draft_sql"]),
         )
         return {
             **state,

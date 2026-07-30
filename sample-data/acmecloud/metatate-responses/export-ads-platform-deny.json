@@ -7,7 +7,7 @@
       "schema": "public",
       "table": "customers"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000046",
+    "authorization_id": "accef000-0000-4000-8000-000000000047",
     "can_proceed_now": false,
     "conditions": [],
     "context_facts": {
@@ -25,6 +25,9 @@
     },
     "decision": "deny",
     "decision_id": "accef000-0000-4000-8000-000000000010",
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T02:06:05.441Z",
+    "evaluated_purpose": null,
     "instructions": [
       {
         "category": "advisory",
@@ -34,6 +37,8 @@
         "decision": "deny",
         "decision_id": "accef000-0000-4000-8000-000000000010",
         "decision_reason": "Transfer to ADS_PLATFORM (US) for consumer jurisdiction US is denied by policy AcmeCloud transfer guardrails.",
+        "effective_from": null,
+        "effective_until": null,
         "enforcement_mode": "enforce",
         "instruction_family": "transfer_governance",
         "instruction_key": "transfer_governance:spec.transferGovernance",
@@ -114,6 +119,8 @@
       "published_at": "2026-07-16T00:00:00.000Z"
     },
     "reason": "Transfer to ADS_PLATFORM (US) for consumer jurisdiction US is denied by policy AcmeCloud transfer guardrails.",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
     "scenario_key": "residency.cross_border_transfer",
     "scenario_lane": "platform",
     "state": "answered"

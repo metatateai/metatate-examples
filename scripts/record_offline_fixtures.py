@@ -75,8 +75,88 @@ def normalize(recordings: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return [swap(recording) for recording in recordings]
 
 
+# Tables the canonical case set requires. Derived from CASES, not hand-listed,
+# so a new case that references a new table cannot slip past the gate.
+def _required_tables() -> set[str]:
+    found: set[str] = set()
+
+    def walk(node: Any) -> None:
+        if isinstance(node, dict):
+            if "table" in node and "database" in node:
+                found.add(str(node["table"]))
+            for v in node.values():
+                walk(v)
+        elif isinstance(node, list):
+            for v in node:
+                walk(v)
+
+    walk([c["arguments"] for c in CASES])
+    return found
+
+
+def _ungoverned_tables() -> set[str]:
+    """Tables the pack references in order to demonstrate the ABSENCE of
+    published state. Derived from the case set so the list cannot drift."""
+    found: set[str] = set()
+    for case in CASES:
+        if "ungoverned" not in str(case["id"]):
+            continue
+        asset_ref = case["arguments"].get("asset")
+        if isinstance(asset_ref, dict) and "table" in asset_ref:
+            found.add(str(asset_ref["table"]))
+    return found
+
+
+def preflight(client: "MetatateCloudClient") -> None:
+    """FAIL CLOSED before recording anything.
+
+    Recording against a workspace that does not serve the full estate produces
+    a partial fixture set that still *looks* like a recording — the first run
+    of this pack died on `asset_not_found` two-thirds of the way through, after
+    having already written files. Worse, a workspace could be selected by a
+    misleading slug: the tenant named `acmecloud-demo` serves only 5 of the 11
+    tables the cases need. So the gate checks the ESTATE, never the name.
+    """
+    answer = client.call_tool("discover_context", {})
+    state = answer.get("state")
+    if state != "answered":
+        raise SystemExit(f"preflight FAILED: discover_context state={state!r}, expected 'answered' (is a publication current?)")
+    assets = answer.get("assets") or []
+    # The asset shape nests the ref: {"ref": {database, schema, table, column}}.
+    # Reading a flat "table" key yields None for every asset and makes the gate
+    # report the ENTIRE estate as missing — a false alarm that looks exactly
+    # like a wrong workspace.
+    served = {
+        str((a.get("ref") or {}).get("table"))
+        for a in assets
+        if isinstance(a, dict) and isinstance(a.get("ref"), dict)
+    }
+    required = _required_tables()
+    # Some tables are referenced precisely BECAUSE they are ungoverned (the
+    # pack demonstrates not_enough_published_state). Those must NOT be required
+    # to appear in discover_context — and their absence is itself the point.
+    intentionally_ungoverned = _ungoverned_tables()
+    missing = sorted(required - served - intentionally_ungoverned)
+    unexpectedly_governed = sorted(intentionally_ungoverned & served)
+    if unexpectedly_governed:
+        raise SystemExit(
+            "preflight FAILED: tables the pack demonstrates as UNGOVERNED are "
+            f"being served: {unexpectedly_governed}. The ungoverned-state cases "
+            "would silently stop demonstrating anything."
+        )
+    if missing:
+        raise SystemExit(
+            "preflight FAILED: the configured workspace does not serve the full estate.\n"
+            f"  required by CASES ({len(required)}): {sorted(required)}\n"
+            f"  missing ({len(missing)}): {missing}\n"
+            "  Refusing to record a partial fixture set."
+        )
+    print(f"preflight OK: workspace serves all {len(required)} required tables under a current publication")
+
+
 def main() -> int:
     client = MetatateCloudClient()
+    preflight(client)
     recorded: dict[str, dict[str, Any]] = {}
     ordered: list[dict[str, Any]] = []
 

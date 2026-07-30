@@ -7,7 +7,7 @@
       "schema": "public",
       "table": "subscriptions"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000102",
+    "authorization_id": "accef000-0000-4000-8000-000000000103",
     "can_proceed_now": true,
     "conditions": [],
     "context_facts": {
@@ -18,7 +18,14 @@
       "subcategory": null
     },
     "decision": "allow",
-    "decision_id": "accef000-0000-4000-8000-000000000103",
+    "decision_id": "accef000-0000-4000-8000-000000000104",
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T02:06:15.384Z",
+    "evaluated_purpose": {
+      "purpose_category": "analytics",
+      "purpose_key": "analytics.reporting",
+      "registry_version": 1
+    },
     "instructions": [
       {
         "category": "advisory",
@@ -26,15 +33,17 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "allow",
-        "decision_id": "accef000-0000-4000-8000-000000000103",
-        "decision_reason": "acme-customer-360 v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.subscriptions",
+        "decision_id": "accef000-0000-4000-8000-000000000104",
+        "decision_reason": "Purpose `analytics.reporting` is named by this policy's permitted-uses list (policy AcmeCloud Customer 360 context).",
+        "effective_from": null,
+        "effective_until": null,
         "enforcement_mode": "enforce",
         "instruction_family": "usage_guidance",
         "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
         "parameters": {
           "kind": "permitted",
           "uses": [
-            "customer_360_reporting"
+            "analytics.reporting"
           ]
         },
         "primary_resolution_source": "collection",
@@ -71,7 +80,9 @@
       "publication_id": "accef000-0000-4000-8000-000000000001",
       "published_at": "2026-07-16T00:00:00.000Z"
     },
-    "reason": "acme-customer-360 v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.subscriptions",
+    "reason": "Purpose `analytics.reporting` is named by this policy's permitted-uses list (policy AcmeCloud Customer 360 context).",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
     "scenario_key": "sharing.internal",
     "scenario_lane": "human",
     "state": "answered"
@@ -82,6 +93,7 @@
       "schema": "public",
       "table": "subscriptions"
     },
+    "purpose_key": "analytics.reporting",
     "scenario_key": "sharing.internal",
     "use": "share account health summaries with the success team"
   },

@@ -27,7 +27,8 @@ spec:
     sensitivity: confidential
     category: pii
   usage:
-    permittedUses: [customer_360_reporting]
+    # B3: registry vocabulary (B3P authoring contract).
+    permittedUses: [analytics.reporting]
 extensions:
   displayName: AcmeCloud Customer 360 context
   scenarioMap:

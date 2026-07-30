@@ -32,6 +32,7 @@ answer = client.authorize_use(
     {"database": "acmecloud_demo", "schema": "public", "table": "subscriptions"},
     use="share account health summaries with the success team",
     scenario_key="sharing.internal",
+    purpose_key="analytics.reporting",
 )
 winner = answer["instructions"][0]
 print(answer["state"], answer["decision"])          # -> answered allow
@@ -41,6 +42,13 @@ print(winner["resolution_paths"])                   # -> [{"ref": "<collection-i
 
 The serving row exists on `subscriptions` **because** it is a Customer 360
 member, and the answer says so — provenance down to the resolution path.
+
+Note the `purpose_key`. The Customer 360 policy's permitted use was
+canonicalized to `analytics.reporting`, so the call states the purpose it is
+actually pursuing. Drop it and the same question answers `review_required`: the
+collection still resolves and is still cited, but a purpose-blind call cannot
+match a permitted use. Provenance does not depend on the answer being
+favourable — a review cites its sources exactly as an allow does.
 
 ## 3. Ask about a non-member — the boundary is real
 

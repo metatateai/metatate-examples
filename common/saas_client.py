@@ -65,7 +65,10 @@ class MetatateCloudClient(ManagedMCPMetatateClient):
         operation: str | None = None,
         destination: dict[str, str] | None = None,
         consumer_jurisdiction: str | None = None,
+        purpose_key: str | None = None,
     ) -> dict[str, Any]:
+        # B3: decision-bearing. Omitting it is a different question, not a
+        # cosmetic difference — see OfflineMetatateClient.authorize_use.
         return self.call_tool(
             "authorize_use",
             _drop_none(
@@ -76,6 +79,7 @@ class MetatateCloudClient(ManagedMCPMetatateClient):
                     "operation": operation,
                     "destination": destination,
                     "consumer_jurisdiction": consumer_jurisdiction,
+                    "purpose_key": purpose_key,
                 }
             ),
         )
@@ -90,6 +94,7 @@ class MetatateCloudClient(ManagedMCPMetatateClient):
         operation: str | None = None,
         destination: dict[str, str] | None = None,
         consumer_jurisdiction: str | None = None,
+        purpose_key: str | None = None,
     ) -> dict[str, Any]:
         return self.call_tool(
             "validate_query_context",
@@ -103,6 +108,7 @@ class MetatateCloudClient(ManagedMCPMetatateClient):
                     "operation": operation,
                     "destination": destination,
                     "consumer_jurisdiction": consumer_jurisdiction,
+                    "purpose_key": purpose_key,
                 }
             ),
         )

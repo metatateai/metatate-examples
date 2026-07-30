@@ -217,6 +217,9 @@ def _validate_sql_change(client: Any, change: GateChange) -> dict[str, Any]:
         operation=change.get("operation"),
         destination=change.get("destination"),
         consumer_jurisdiction=change.get("consumer_jurisdiction"),
+        # B3: the change declares its purpose like any other governance input.
+        # Absent -> no purpose_key on the wire -> the fail-closed answer.
+        purpose_key=change.get("purpose_key"),
     )
 
 
@@ -231,6 +234,7 @@ def _authorize_use_change(client: Any, change: GateChange) -> dict[str, Any]:
         operation=change.get("operation"),
         destination=change.get("destination"),
         consumer_jurisdiction=change.get("consumer_jurisdiction"),
+        purpose_key=change.get("purpose_key"),
     )
 
 

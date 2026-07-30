@@ -7,9 +7,10 @@
       "schema": "public",
       "table": "ml_feature_store"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000069",
-    "can_proceed_now": true,
+    "authorization_id": "accef000-0000-4000-8000-000000000070",
+    "can_proceed_now": false,
     "conditions": [],
+    "conflict": null,
     "context_facts": {
       "category": "pii",
       "masking": null,
@@ -17,17 +18,25 @@
       "sensitivity": "confidential",
       "subcategory": null
     },
-    "decision": "allow",
-    "decision_id": "accef000-0000-4000-8000-000000000070",
+    "decision": "require_review",
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T02:06:10.884Z",
+    "evaluated_purpose": {
+      "purpose_category": "ai",
+      "purpose_key": "ai.inference",
+      "registry_version": 1
+    },
     "instructions": [
       {
         "category": "advisory",
         "conflict_group_id": null,
         "conflict_status": "none",
         "conflicts_with": [],
-        "decision": "allow",
-        "decision_id": "accef000-0000-4000-8000-000000000070",
-        "decision_reason": "acme-ml-embedding v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.ml_feature_store",
+        "decision": "require_review",
+        "decision_id": "accef000-0000-4000-8000-000000000071",
+        "decision_reason": "This policy's permitted-uses list carries an entry outside the purpose registry and none names purpose `ai.inference` (policy AcmeCloud ML embedding guardrails).",
+        "effective_from": null,
+        "effective_until": null,
         "enforcement_mode": "enforce",
         "instruction_family": "usage_guidance",
         "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
@@ -40,9 +49,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000071",
+          "policy_id": "accef000-0000-4000-8000-000000000072",
           "policy_name": "AcmeCloud ML embedding guardrails",
-          "policy_version_id": "accef000-0000-4000-8000-000000000072",
+          "policy_version_id": "accef000-0000-4000-8000-000000000073",
           "version_number": 1
         },
         "resolution_paths": [
@@ -63,18 +72,19 @@
       }
     ],
     "next_actions": [
-      "Proceed \u2014 the current published instructions allow this use."
+      "Obtain data-steward review before proceeding with this use."
     ],
-    "obligations": [],
-    "prohibitions": [],
     "publication": {
       "publication_id": "accef000-0000-4000-8000-000000000001",
       "published_at": "2026-07-16T00:00:00.000Z"
     },
-    "reason": "acme-ml-embedding v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.ml_feature_store",
+    "reason": "This policy's permitted-uses list carries an entry outside the purpose registry and none names purpose `ai.inference` (policy AcmeCloud ML embedding guardrails).",
+    "reason_code": "decision_requires_review",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
     "scenario_key": "ai.embedding_storage",
     "scenario_lane": "agent",
-    "state": "answered"
+    "state": "review_required"
   },
   "arguments": {
     "asset": {
@@ -82,9 +92,10 @@
       "schema": "public",
       "table": "ml_feature_store"
     },
+    "purpose_key": "ai.inference",
     "scenario_key": "ai.embedding_storage",
     "use": "index feature vectors in the embedding store"
   },
-  "case_id": "ml-embedding-storage-allow",
+  "case_id": "ml-embedding-storage-review",
   "tool": "authorize_use"
 }

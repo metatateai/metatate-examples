@@ -7,7 +7,7 @@
       "schema": "public",
       "table": "customers"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000044",
+    "authorization_id": "accef000-0000-4000-8000-000000000045",
     "can_proceed_now": true,
     "conditions": [],
     "context_facts": {
@@ -25,6 +25,9 @@
     },
     "decision": "allow",
     "decision_id": "accef000-0000-4000-8000-000000000019",
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T02:06:04.120Z",
+    "evaluated_purpose": null,
     "instructions": [
       {
         "category": "advisory",
@@ -34,6 +37,8 @@
         "decision": "allow",
         "decision_id": "accef000-0000-4000-8000-000000000019",
         "decision_reason": "acme-customer-use v1 ai_governance:spec.aiGovernance:inference \u2192 allow on acmecloud_demo.public.customers",
+        "effective_from": null,
+        "effective_until": null,
         "enforcement_mode": "enforce",
         "instruction_family": "ai_governance",
         "instruction_key": "ai_governance:spec.aiGovernance:inference",
@@ -78,6 +83,8 @@
       "published_at": "2026-07-16T00:00:00.000Z"
     },
     "reason": "acme-customer-use v1 ai_governance:spec.aiGovernance:inference \u2192 allow on acmecloud_demo.public.customers",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
     "scenario_key": "ai.inference",
     "scenario_lane": "agent",
     "state": "answered"

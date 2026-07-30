@@ -314,6 +314,7 @@ def cookbook_notebook() -> dict:
                     asset("customers"),
                     use="build a churn analytics dashboard",
                     scenario_key="purpose.allowed_use",
+                    purpose_key="analytics.reporting",
                 )
                 print_answer(analytics)
                 """
@@ -336,6 +337,7 @@ def cookbook_notebook() -> dict:
                     scenario_key="purpose.allowed_use",
                     default_database="acmecloud_demo",
                     default_schema="public",
+                    purpose_key="analytics.reporting",
                 )
                 print(f"aggregate query -> {safe['verdict']}")
 
@@ -390,12 +392,19 @@ def langgraph_notebook() -> dict:
                 """
                 SAFE_SQL = "SELECT region, SUM(arr) FROM customers GROUP BY region"
 
+                # B3: the purpose is part of the QUESTION, not a label on it.
+                # The aggregate declares `analytics.reporting` and is allowed.
+                # The detail and marketing queries are deliberately purpose-blind,
+                # so they demonstrate the fail-closed answer instead of an allow.
+                PURPOSE_BY_SQL = {SAFE_SQL: "analytics.reporting"}
+
                 def governed_sql(sql, scenario_key):
                     answer = client.validate_query_context(
                         sql,
                         scenario_key=scenario_key,
                         default_database="acmecloud_demo",
                         default_schema="public",
+                        purpose_key=PURPOSE_BY_SQL.get(sql),
                     )
                     verdict = answer["verdict"]
                     if verdict == "fail":
@@ -533,6 +542,12 @@ def governed_text_to_sql_notebook() -> dict:
                 """
                 SAFE_SQL = "SELECT region, SUM(arr) FROM customers GROUP BY region"
 
+                # B3: the purpose is part of the QUESTION, not a label on it.
+                # The aggregate declares `analytics.reporting` and is allowed.
+                # The detail and marketing queries are deliberately purpose-blind,
+                # so they demonstrate the fail-closed answer instead of an allow.
+                PURPOSE_BY_SQL = {SAFE_SQL: "analytics.reporting"}
+
                 def plan(question):
                     q = question.lower()
                     if "marketing" in q or "campaign" in q:
@@ -554,6 +569,7 @@ def governed_text_to_sql_notebook() -> dict:
                         scenario_key=scenario_key,
                         default_database="acmecloud_demo",
                         default_schema="public",
+                        purpose_key=PURPOSE_BY_SQL.get(sql),
                     )
                     verdict = answer["verdict"]
                     if verdict == "fail":
@@ -632,6 +648,7 @@ def red_team_notebook() -> dict:
                             asset("customers"),
                             use="build a churn analytics dashboard",
                             scenario_key="purpose.allowed_use",
+                            purpose_key="analytics.reporting",
                         ),
                         "expect": "allow",
                     },
@@ -751,6 +768,7 @@ def governed_rag_ingestion_gate_notebook() -> dict:
                     scenario_key="purpose.allowed_use",
                     default_database="acmecloud_demo",
                     default_schema="public",
+                    purpose_key="analytics.reporting",
                 )
                 print(f"retrieval query verdict: {retrieval_sql['verdict']}")
                 """
@@ -856,6 +874,12 @@ def llamaindex_retrieval_notebook() -> dict:
                 """
                 SAFE_SQL = "SELECT region, SUM(arr) FROM customers GROUP BY region"
 
+                # B3: the purpose is part of the QUESTION, not a label on it.
+                # The aggregate declares `analytics.reporting` and is allowed.
+                # The detail and marketing queries are deliberately purpose-blind,
+                # so they demonstrate the fail-closed answer instead of an allow.
+                PURPOSE_BY_SQL = {SAFE_SQL: "analytics.reporting"}
+
                 def plan_retrieval(question):
                     q = question.lower()
                     if "marketing" in q:
@@ -877,6 +901,7 @@ def llamaindex_retrieval_notebook() -> dict:
                         scenario_key=scenario_key,
                         default_database="acmecloud_demo",
                         default_schema="public",
+                        purpose_key=PURPOSE_BY_SQL.get(sql),
                     )
                     if answer["verdict"] == "fail":
                         return {"question": question, "retrieved": None, "verdict": "fail"}
@@ -1047,11 +1072,13 @@ def governance_states_notebook() -> dict:
                         asset("ml_feature_store"),
                         use="feed churn features into agent retrieval context",
                         scenario_key="ai.retrieval_context",
+                        purpose_key="ai.inference",
                     )),
                     ("features, ai.embedding_storage", client.authorize_use(
                         asset("ml_feature_store"),
                         use="index feature vectors in the embedding store",
                         scenario_key="ai.embedding_storage",
+                        purpose_key="ai.inference",
                     )),
                     ("features, ai.vendor_transfer", client.authorize_use(
                         asset("ml_feature_store"),
@@ -1066,6 +1093,25 @@ def governance_states_notebook() -> dict:
                 ]
                 for name, answer in lifecycle:
                     print(f"{name:40s} -> {answer_label(answer)}")
+                """
+            ),
+            markdown(
+                """
+                Look at the two `ai.inference` rows. **Same asset, same declared
+                purpose, opposite answers.**
+
+                `ai.retrieval_context` is allowed because its policy's permitted
+                use was canonicalized to the registry key `ai.inference` — the
+                declared purpose matches a permitted use.
+
+                `ai.embedding_storage` reviews, *even though the call declares the
+                same valid purpose*, because that policy's authored entry says
+                feature vectors may be **STORED** — which never established
+                inference use. An unmapped legacy entry cannot prove coverage, and
+                declaring a good purpose does not rescue it.
+
+                That is the whole boundary in two lines: the purpose you state has
+                to meet a permitted use the policy actually expressed.
                 """
             ),
             markdown(
@@ -1107,6 +1153,7 @@ def governance_states_notebook() -> dict:
                     asset("subscriptions"),
                     use="share account health summaries with the success team",
                     scenario_key="sharing.internal",
+                    purpose_key="analytics.reporting",
                 )
                 print(f"sharing.internal on subscriptions -> {sharing['decision']}")
                 for instruction in sharing["instructions"]:
@@ -1239,19 +1286,23 @@ def governance_states_notebook() -> dict:
             ),
             code(
                 """
-                invoices = client.authorize_use(
-                    asset("invoices", schema="finance"),
-                    use="prepare the quarterly revenue recognition report",
-                    scenario_key="purpose.allowed_use",
-                )
-                print(f"finance.invoices reporting            -> {invoices['decision']}")
-
                 ledger = client.authorize_use(
                     asset("revenue_ledger", schema="finance"),
                     use="publish ledger extracts on the public status page",
                     scenario_key="sharing.public",
                 )
                 print(f"finance.revenue_ledger public sharing -> {ledger['decision']}")
+                """
+            ),
+            code(
+                """
+                invoices = client.authorize_use(
+                    asset("invoices", schema="finance"),
+                    use="prepare the quarterly revenue recognition report",
+                    scenario_key="purpose.allowed_use",
+                    purpose_key="compliance.reporting",
+                )
+                print(f"finance.invoices reporting            -> {invoices['decision']}")
                 """
             ),
         ]
@@ -1291,6 +1342,7 @@ def sql_gauntlet_notebook() -> dict:
                     scenario_key="purpose.allowed_use",
                     default_database="acmecloud_demo",
                     default_schema="public",
+                    purpose_key="analytics.reporting",
                 )
                 print(f"customers JOIN subscriptions -> {joined['verdict']}")
                 for finding in joined["findings"]:
@@ -1339,6 +1391,7 @@ def sql_gauntlet_notebook() -> dict:
                     scenario_key="purpose.allowed_use",
                     default_database="acmecloud_demo",
                     default_schema="public",
+                    purpose_key="analytics.reporting",
                 )
                 print(f"CTE aggregate -> {cte['verdict']}")
                 print(f"findings: {[finding['ref']['table'] for finding in cte['findings']]}")
@@ -1360,6 +1413,7 @@ def sql_gauntlet_notebook() -> dict:
                     scenario_key="purpose.allowed_use",
                     default_database="acmecloud_demo",
                     default_schema="public",
+                    purpose_key="analytics.reporting",
                 )
                 print(f"governed JOIN ungoverned -> {legacy['verdict']}")
                 for finding in legacy["findings"]:
@@ -1383,6 +1437,7 @@ def sql_gauntlet_notebook() -> dict:
                     scenario_key="purpose.allowed_use",
                     default_database="acmecloud_demo",
                     default_schema="public",
+                    purpose_key="analytics.reporting",
                 )
                 marketing = client.validate_query_context(
                     "SELECT region, COUNT(*) FROM customers GROUP BY region",
@@ -1399,7 +1454,9 @@ def sql_gauntlet_notebook() -> dict:
                 ## 6. Cross-schema joins resolve like anything else
 
                 Two-part names qualify against the default database — the `finance`
-                schema's guardrails answer for their own tables.
+                schema's guardrails answer for their own tables. The finance policy
+                grants `compliance.reporting` and `compliance.audit`, so the call
+                declares the purpose it is actually pursuing.
                 """
             ),
             code(
@@ -1409,6 +1466,7 @@ def sql_gauntlet_notebook() -> dict:
                     scenario_key="purpose.allowed_use",
                     default_database="acmecloud_demo",
                     default_schema="public",
+                    purpose_key="compliance.reporting",
                 )
                 print(f"finance.invoices JOIN finance.revenue_ledger -> {finance['verdict']}")
                 for finding in finance["findings"]:

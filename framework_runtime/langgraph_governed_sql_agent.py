@@ -8,12 +8,20 @@ from __future__ import annotations
 
 from typing import Any, TypedDict
 
-from framework_runtime.scenarios import MARKETING_SQL, SAFE_ANALYTICS_SQL, UNSAFE_ANALYTICS_SQL
+from framework_runtime.scenarios import (
+    MARKETING_SQL,
+    PURPOSE_BY_SQL,
+    SAFE_ANALYTICS_SQL,
+    UNSAFE_ANALYTICS_SQL,
+)
 
 
 class GovernedSqlAgentState(TypedDict, total=False):
     question: str
     scenario_key: str
+    # B3: the planner declares the PURPOSE alongside the scenario, because the
+    # purpose is part of the question being asked — not a tag added afterwards.
+    purpose_key: str | None
     draft_sql: str
     validation: dict[str, Any]
     decision: str
@@ -34,7 +42,13 @@ def build_governed_sql_agent(client: Any) -> Any:
 
     def plan_sql(state: GovernedSqlAgentState) -> GovernedSqlAgentState:
         sql_text, scenario_key = plan_question(state["question"])
-        return {**state, "draft_sql": sql_text, "scenario_key": scenario_key, "notes": []}
+        return {
+            **state,
+            "draft_sql": sql_text,
+            "scenario_key": scenario_key,
+            "purpose_key": PURPOSE_BY_SQL.get(sql_text),
+            "notes": [],
+        }
 
     def validate_with_metatate(state: GovernedSqlAgentState) -> GovernedSqlAgentState:
         validation = client.validate_query_context(
@@ -42,6 +56,7 @@ def build_governed_sql_agent(client: Any) -> Any:
             scenario_key=state["scenario_key"],
             default_database="acmecloud_demo",
             default_schema="public",
+            purpose_key=state.get("purpose_key"),
         )
         decision = decision_label(validation)
         route = route_for_decision(decision)
