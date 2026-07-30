@@ -23,7 +23,9 @@ Run: python3 scripts/purpose_contract_acceptance.py
 from __future__ import annotations
 
 import json
+import re
 import sys
+import pathlib
 from pathlib import Path
 from typing import Any
 
@@ -711,35 +713,101 @@ def section_zero_quarantine() -> None:
           "negative control restored the data cleanly (still zero quarantined)")
 
 
-def section_no_false_readonly_claim() -> None:
-    """Forbid describing the exercised tool subset as read-only / side-effect-free.
+def _surface_blobs(path: pathlib.Path) -> list[str]:
+    """Text of a file, joined so a claim split across nodes cannot hide.
 
-    WHY THIS KEYS ON THE PREDICATE, NOT THE NUMBER. An earlier sweep looked for
-    the string "seven governance tools", found the COUNT error, fixed it — and
-    left "seven READ-ONLY tools" and "the read-only decision surface" standing.
-    The number was never the dangerous part. The behavioural claim was.
+    Flattening lines is NOT enough here. This pack has markdown, notebook cells
+    and Python comments, so one sentence can be split across cell boundaries or
+    adjacent string literals and survive a line-oriented — or even a
+    single-node — sweep. So we build two views:
 
-    It is false: `authorize_use` and `validate_query_context` record durable,
-    citable decision evidence. The pack's own audit-evidence example depends on
-    exactly that — `explain_why(decision_id)` can only cite a decision because
-    the decision was written. Denying the write in prose while demonstrating it
-    in code tells a reader the mechanism they are following does not happen.
+      1. per-node flattened text (precise, good line context)
+      2. a whole-file blob with quote characters, comment markers and newlines
+         removed, so adjacent literals and consecutive comment lines JOIN
 
-    All seven need only the `read` token scope, and that is the trap: scope is
-    not durable-effect behaviour. #384 spent three rounds removing that same
-    conflation from the wire.
-
-    Prose is FLATTENED before matching so a line-wrapped instance cannot survive.
+    A guard that cannot see a wrapped instance reports success while the claim
+    is still shipping.
     """
-    print("\nM. No false read-only claim about the exercised tool subset")
-    import re as _re
-    PREDICATES = [r"read[- ]only", r"side[- ]effect[- ]free", r"non[- ]writing",
-                  r"does ?n[o']t write", r"no writes", r"never writes", r"write[- ]free"]
-    # Talking ABOUT the subset — not an unrelated use of the words.
-    SUBJECT = _re.compile(r"seven|subset|this pack|decision surface|governance tools", _re.I)
-    # The one legitimate phrasing: the FIVE genuinely pure reads.
-    ALLOWED = _re.compile(r"five pure reads|5 pure reads", _re.I)
+    try:
+        raw = path.read_text()
+    except Exception:
+        return []
+    blobs: list[str] = []
+    if path.suffix == ".ipynb":
+        try:
+            doc = json.loads(raw)
+            for cell in doc.get("cells", []):
+                blobs.append("".join(cell.get("source", [])))
+            blobs.append(" ".join(blobs))          # cross-CELL join
+        except Exception:
+            blobs.append(raw)
+    else:
+        blobs.append(raw)
+    joined = re.sub(r'["\'#]', " ", raw)           # drop quote/comment markers
+    joined = re.sub(r"\s+", " ", joined)           # cross-LITERAL / cross-LINE join
+    blobs.append(joined)
+    return [re.sub(r"\s+", " ", b) for b in blobs]
 
+
+def section_tool_surface_claims() -> None:
+    """Pin the exercised partition; reject only the FALSE read-only claim.
+
+    Four different things share the word "read-only", and three of them are
+    TRUE. A blanket ban would be the hand-listed-set defect one level up — a
+    gate that fires on correct statements:
+
+      1. `read` TOKEN SCOPE       — true; all seven need only {read}
+      2. `readOnlyHint` ANNOTATION — true; eight of nine advertise it
+      3. OPERATIONALLY PURE READS  — true of five of the seven
+      4. EVIDENCE-WRITING          — `authorize_use` / `validate_query_context`
+                                     write durable, citable records
+
+    The falsehood is never the phrase. It is asserting (4) away by borrowing the
+    language of (1) or (2) — the scope-vs-behaviour conflation #384 removed from
+    the wire. So this targets the PREDICATE ATTACHED TO A SURFACE NOUN
+    ("read-only tools", "the tools are read-only"), never the token.
+
+    Calibration, and the guard is wrong if either flips:
+      "all seven tools require only the read scope"  -> MUST PASS
+      "the seven read-only tools this pack replays"  -> MUST FAIL
+    """
+    print("\nM. Tool-surface claims (positive pin + targeted negative)")
+
+    # ---- POSITIVE PIN. A negative is only safe next to something true it
+    # requires; otherwise the guard just forbids and never confirms.
+    from common.metatate_client import OfflineMetatateClient
+    EVIDENCE_WRITING = {"authorize_use", "validate_query_context"}
+    PURE_READS = {"discover_context", "get_decision_context", "inspect_data_meaning",
+                  "inspect_governance_rules", "explain_why"}
+    B1_LANE = {"request_access", "check_request"}
+    exercised = {c["tool"] for c in CASES}
+    check(exercised == PURE_READS | EVIDENCE_WRITING,
+          f"pack exercises exactly {len(PURE_READS)} pure reads + "
+          f"{len(EVIDENCE_WRITING)} evidence-writing tools",
+          f"exercised={sorted(exercised)}")
+    check(not (exercised & B1_LANE),
+          "the B1 request lane is NOT exercised by this pack",
+          f"unexpected: {sorted(exercised & B1_LANE)}")
+    for tool in sorted(EVIDENCE_WRITING):
+        check(hasattr(OfflineMetatateClient, tool),
+              f"{tool} is exercised and records durable, citable decision evidence")
+    # The audit-evidence example is the proof it writes: explain_why can only
+    # cite a decision_id because the decision was recorded.
+    chained = [c for c in CASES if c["tool"] == "explain_why"
+               and str(c["arguments"].get("decision_id", "")).startswith("@")]
+    check(bool(chained),
+          f"{len(chained)} explain_why case(s) chain a recorded decision_id "
+          f"— the pack demonstrates the write it must not deny")
+
+    # ---- TARGETED NEGATIVE. Predicate bound to a surface noun, not the token.
+    SURFACE = r"(?:governance\s+)?(?:mcp\s+)?(?:tool|tools|surface|subset|decision surface)"
+    PRED = r"(?:read[- ]only|side[- ]effect[- ]free|non[- ]writing|write[- ]free)"
+    FALSE_CLAIMS = [
+        rf"{PRED}\s+{SURFACE}",                      # "read-only tools"
+        rf"{SURFACE}\s+(?:are|is|were|remain)\s+{PRED}",   # "the tools are read-only"
+        rf"seven\s+{PRED}",                          # "seven read-only ..."
+        rf"{SURFACE}[^.]{{0,40}}\b(?:do(?:es)? ?n[o']t write|never writes?|no writes)\b",
+    ]
     offenders = []
     for path in sorted(REPO.rglob("*")):
         if path.is_dir() or ".git" in path.parts or ".venv-312" in path.parts:
@@ -747,49 +815,43 @@ def section_no_false_readonly_claim() -> None:
         if path.suffix not in (".md", ".py", ".ipynb", ".yaml", ".yml", ".sh"):
             continue
         if path.name == "purpose_contract_acceptance.py":
-            continue  # must name the patterns in order to forbid them
-        try:
-            flat = _re.sub(r"\s+", " ", path.read_text())
-        except Exception:
-            continue
-        for pat in PREDICATES:
-            for m in _re.finditer(pat, flat, _re.I):
-                ctx = flat[max(0, m.start() - 110): m.end() + 110]
-                if SUBJECT.search(ctx) and not ALLOWED.search(ctx):
-                    offenders.append(f"{path.relative_to(REPO)}: …{ctx.strip()[:120]}…")
+            continue  # must name the patterns to forbid them
+        for blob in _surface_blobs(path):
+            for pat in FALSE_CLAIMS:
+                m = re.search(pat, blob, re.I)
+                if m:
+                    ctx = blob[max(0, m.start() - 70): m.end() + 70]
+                    offenders.append(f"{path.relative_to(REPO)}: …{ctx.strip()[:110]}…")
+                    break
+            else:
+                continue
+            break
     check(not offenders,
-          "no file describes the exercised subset as read-only / side-effect-free",
-          " | ".join(offenders[:4]) + "  ||  authorize_use and validate_query_context "
-          "RECORD durable citable decision evidence; `read` scope is not "
-          "durable-effect behaviour. Use: 'seven context and decision tools: five "
-          "pure reads and two advisory tools that record durable, citable decision "
-          "evidence.'")
+          "no file claims the tool surface is read-only / side-effect-free",
+          " | ".join(offenders[:3]) + "  ||  `read` SCOPE and `readOnlyHint` are "
+          "true and stay sayable; what is false is calling the exercised SUBSET "
+          "read-only when authorize_use and validate_query_context record "
+          "durable, citable decision evidence.")
 
-    # The COUNT claim is a different error from the behavioural one, and also
-    # wrong: the server exposes nine. Cheap to guard, so guard it.
-    count_offenders = []
-    for path in sorted(REPO.rglob("*")):
-        if path.is_dir() or ".git" in path.parts or ".venv-312" in path.parts:
-            continue
-        if path.suffix not in (".md", ".py", ".ipynb", ".yaml", ".yml", ".sh"):
-            continue
-        if path.name == "purpose_contract_acceptance.py":
-            continue
-        try:
-            flat = _re.sub(r"\s+", " ", path.read_text())
-        except Exception:
-            continue
-        if _re.search(r"seven governance tools", flat, _re.I):
-            count_offenders.append(str(path.relative_to(REPO)))
-    check(not count_offenders,
-          "no file claims the server exposes 'seven governance tools' (it exposes nine)",
-          f"offenders: {count_offenders}")
+    # ---- CALIBRATION. If both sides agree, the guard keys on the wrong thing.
+    def _fires(text: str) -> bool:
+        flat = re.sub(r"\s+", " ", text)
+        return any(re.search(p, flat, re.I) for p in FALSE_CLAIMS)
+    check(not _fires("all seven tools require only the read scope"),
+          "CALIBRATION: a true `read scope` statement does NOT trip the guard")
+    check(not _fires("eight of the nine tools advertise readOnlyHint true"),
+          "CALIBRATION: a true `readOnlyHint` statement does NOT trip the guard")
+    check(_fires("the seven read-only tools this pack replays"),
+          "CALIBRATION: the false `read-only tools` claim DOES trip the guard")
+    check(_fires("the MCP tools are read-only by design"),
+          "CALIBRATION: `tools are read-only` DOES trip the guard")
+    # wrapped across a source line — the case Lane A's mutations evaded
+    check(_fires("the seven read-only\n                tools this pack replays"),
+          "CALIBRATION: a LINE-WRAPPED false claim still trips the guard")
 
-    # Positive control: the corrected wording must actually be present.
-    live_doc = (REPO / "docs" / "live-mode-saas.md").read_text()
-    flat_doc = _re.sub(r"\s+", " ", live_doc)
-    check("five pure reads" in flat_doc and "durable, citable decision evidence" in flat_doc,
-          "the corrected characterisation is present in docs/live-mode-saas.md")
+    live_doc = re.sub(r"\s+", " ", (REPO / "docs" / "live-mode-saas.md").read_text())
+    check("five pure reads" in live_doc and "durable, citable decision evidence" in live_doc,
+          "the corrected characterisation is present, not merely the false one absent")
 
 
 def main() -> int:
@@ -804,7 +866,7 @@ def main() -> int:
     section_do_not_map_tripwire()
     section_classification_drift()
     section_zero_quarantine()
-    section_no_false_readonly_claim()
+    section_tool_surface_claims()
     section_authored_uses_accounted_for()
     section_no_substring_scanning()
     section_served_use_inventory()
