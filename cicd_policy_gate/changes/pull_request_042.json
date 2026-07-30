@@ -9,6 +9,7 @@
       "description": "Revenue dashboard aggregates ARR by region.",
       "sql": "SELECT region, SUM(arr) FROM customers GROUP BY region",
       "scenario_key": "purpose.allowed_use",
+      "purpose_key": "analytics.reporting",
       "default_database": "acmecloud_demo",
       "default_schema": "public"
     },

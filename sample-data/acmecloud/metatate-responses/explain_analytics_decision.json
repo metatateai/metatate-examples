@@ -14,6 +14,8 @@
       "decision": "allow",
       "decision_id": "accef000-0000-4000-8000-000000000020",
       "decision_reason": "acme-customer-use v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.customers",
+      "effective_from": null,
+      "effective_until": null,
       "enforcement_mode": "enforce",
       "instruction_family": "usage_guidance",
       "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",

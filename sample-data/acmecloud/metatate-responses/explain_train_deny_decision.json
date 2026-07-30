@@ -12,8 +12,10 @@
       "conflict_status": "none",
       "conflicts_with": [],
       "decision": "deny",
-      "decision_id": "accef000-0000-4000-8000-000000000043",
+      "decision_id": "accef000-0000-4000-8000-000000000044",
       "decision_reason": "acme-customer-use v1 ai_governance:spec.aiGovernance:training \u2192 deny on acmecloud_demo.public.support_tickets",
+      "effective_from": null,
+      "effective_until": null,
       "enforcement_mode": "enforce",
       "instruction_family": "ai_governance",
       "instruction_key": "ai_governance:spec.aiGovernance:training",
@@ -50,7 +52,7 @@
     "state": "answered"
   },
   "arguments": {
-    "decision_id": "accef000-0000-4000-8000-000000000043",
+    "decision_id": "accef000-0000-4000-8000-000000000044",
     "kind": "decision"
   },
   "case_id": "explain_train_deny_decision",

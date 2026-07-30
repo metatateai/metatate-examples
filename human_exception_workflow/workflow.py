@@ -30,6 +30,10 @@ DEFAULT_REQUESTS: list[dict[str, Any]] = [
         "description": "Release an aggregate analytics query for customer ARR by region.",
         "sql": SAFE_ANALYTICS_SQL,
         "scenario_key": "purpose.allowed_use",
+        # B3: the request declares its purpose. An ARR dashboard is analytics
+        # reporting; saying so is what makes this a `pass` rather than a
+        # fail-closed review.
+        "purpose_key": "analytics.reporting",
         "default_database": "acmecloud_demo",
         "default_schema": "public",
         "owner": "Revenue Operations",
@@ -275,6 +279,7 @@ def _call_metatate(client: Any, request: dict[str, Any]) -> dict[str, Any]:
             operation=request.get("operation"),
             destination=request.get("destination"),
             consumer_jurisdiction=request.get("consumer_jurisdiction"),
+            purpose_key=request.get("purpose_key"),
         )
     if kind == "authorization":
         return client.authorize_use(
@@ -284,6 +289,7 @@ def _call_metatate(client: Any, request: dict[str, Any]) -> dict[str, Any]:
             operation=request.get("operation"),
             destination=request.get("destination"),
             consumer_jurisdiction=request.get("consumer_jurisdiction"),
+            purpose_key=request.get("purpose_key"),
         )
     raise ValueError(f"Unsupported request kind {kind!r}")
 

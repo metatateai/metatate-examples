@@ -14,6 +14,8 @@
       "decision": "conditional",
       "decision_id": "accef000-0000-4000-8000-000000000010",
       "decision_reason": "acme-transfer v1 transfer_governance:spec.transferGovernance \u2192 conditional on acmecloud_demo.public.customers",
+      "effective_from": null,
+      "effective_until": null,
       "enforcement_mode": "enforce",
       "instruction_family": "transfer_governance",
       "instruction_key": "transfer_governance:spec.transferGovernance",

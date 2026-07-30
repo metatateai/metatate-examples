@@ -1,12 +1,15 @@
 {
   "answer": {
     "advisory": true,
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T02:06:28.859Z",
+    "evaluated_purpose": null,
     "findings": [
       {
         "conflict": null,
         "decision": null,
         "decision_reason": null,
-        "finding_id": "accef000-0000-4000-8000-000000000155",
+        "finding_id": "accef000-0000-4000-8000-000000000156",
         "instructions": [],
         "reason_code": null,
         "ref": {
@@ -23,7 +26,7 @@
       "published_at": "2026-07-16T00:00:00.000Z"
     },
     "state": "answered",
-    "validation_id": "accef000-0000-4000-8000-000000000154",
+    "validation_id": "accef000-0000-4000-8000-000000000155",
     "verdict": "pass"
   },
   "arguments": {

@@ -55,7 +55,10 @@ class OfflineMetatateClient:
         self.fixture_dir = Path(fixture_dir)
         self._decision_explains: dict[str, str] | None = None
 
-    # ---- the seven tools ---------------------------------------------------
+    # ---- the seven context + decision tools this pack replays ----------------
+    # Five pure reads; authorize_use and validate_query_context RECORD durable,
+    # citable decision evidence live (the audit-evidence example depends on it).
+    # `read` scope != side-effect-free. B1 request lane is out of scope here.
 
     def discover_context(self, **arguments: Any) -> dict[str, Any]:
         return self._dispatch("discover_context", _drop_none(arguments))
@@ -87,7 +90,12 @@ class OfflineMetatateClient:
         operation: str | None = None,
         destination: dict[str, str] | None = None,
         consumer_jurisdiction: str | None = None,
+        purpose_key: str | None = None,
     ) -> dict[str, Any]:
+        # B3: `purpose_key` is a DECISION-BEARING input, not a label. Omitting it
+        # is a different question with a different (fail-closed) answer, so it is
+        # part of the exact match key — `_drop_none` keeps "absent" and "declared"
+        # distinguishable rather than collapsing them.
         return self._dispatch(
             "authorize_use",
             _drop_none(
@@ -98,6 +106,7 @@ class OfflineMetatateClient:
                     "operation": operation,
                     "destination": destination,
                     "consumer_jurisdiction": consumer_jurisdiction,
+                    "purpose_key": purpose_key,
                 }
             ),
         )
@@ -112,6 +121,7 @@ class OfflineMetatateClient:
         operation: str | None = None,
         destination: dict[str, str] | None = None,
         consumer_jurisdiction: str | None = None,
+        purpose_key: str | None = None,
     ) -> dict[str, Any]:
         return self._dispatch(
             "validate_query_context",
@@ -125,6 +135,7 @@ class OfflineMetatateClient:
                     "operation": operation,
                     "destination": destination,
                     "consumer_jurisdiction": consumer_jurisdiction,
+                    "purpose_key": purpose_key,
                 }
             ),
         )

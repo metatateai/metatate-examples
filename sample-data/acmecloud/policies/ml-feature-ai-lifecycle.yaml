@@ -26,8 +26,11 @@ spec:
     sensitivity: internal
     category: operational
   usage:
-    permittedUses: [retrieval_context]
-    prohibitedUses: [vendor_transfer]
+    # B3: registry vocabulary (B3P authoring contract) — a free string
+    # can never prove purpose coverage, so an unmapped entry answers
+    # review. `ai.inference` covers retrieval/model-context use.
+    permittedUses: [ai.inference]
+    prohibitedUses: [ai.third_party_export]
   aiGovernance:
     allowTraining: true
     allowInference: true

@@ -5,9 +5,11 @@ only when a publication changes.** Drafts don't leak. Approvals don't leak.
 The answer flips at publish — and `explain_why` tells you whether a cited
 decision is still current.
 
-This is a product-UI walkthrough (the MCP tools are read-only by design — no
-tool can author or publish), so run it against your own workspace with the
-AcmeCloud demo loaded and a terminal beside the app.
+This is a product-UI walkthrough: **no MCP tool authors or publishes
+governance** (ADR-0012), so the authoring steps happen in the app. The decision
+tools *do* record durable, citable evidence — that is what makes `explain_why`
+work below — but none of them edit a policy or cut a publication. Run it against
+your own workspace with the AcmeCloud demo loaded and a terminal beside the app.
 
 ## 0. Baseline: a typed "I don't know"
 
@@ -49,14 +51,35 @@ the approval.
 ## 3. Publish (the answer flips)
 
 **Deployments → generate a plan** including the new policy → review the
-serving bundle preview → **publish**. Re-run the call:
+serving bundle preview → **publish**. Now re-run the call — and note the one
+addition, because under B3 it is load-bearing:
 
-```text
-answered allow
+```python
+answer = client.authorize_use(
+    {"database": "acmecloud_demo", "schema": "public", "table": "legacy_customer_backup"},
+    use="report on the legacy customer backup",
+    scenario_key="purpose.allowed_use",
+    purpose_key="analytics.reporting",   # B3: declare WHY, not just what
+)
+print(answer["state"], answer["decision"])
+# -> answered allow
 ```
 
 The flip happened at exactly one moment: publication. The answer now carries
 the citing instruction with full provenance and a `decision_id`.
+
+**Drop `purpose_key` and re-run.** The publication has not changed, but the
+answer does:
+
+```text
+review_required require_review
+```
+
+That is not a bug and not a stricter mood — it is a *different question*. The
+policy permits `analytics` and `reporting`; a call that declines to say which
+purpose it is pursuing has not matched a permitted use, so B3 refuses to guess
+and hands it to a human. Publication decides whether an answer *exists*;
+the declared purpose decides *which* answer you get.
 
 ## 4. Explain it — and watch `current`
 

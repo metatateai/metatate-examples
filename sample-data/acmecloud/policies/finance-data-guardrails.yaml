@@ -30,8 +30,9 @@ spec:
     sensitivity: internal
     category: financial
   usage:
-    permittedUses: [financial_reporting, audit_support]
-    prohibitedUses: [external_disclosure]
+    # B3: registry vocabulary (B3P authoring contract).
+    permittedUses: [compliance.reporting, compliance.audit]
+    prohibitedUses: [sharing.external]
 extensions:
   displayName: AcmeCloud finance data guardrails
   scenarioMap:

@@ -7,8 +7,9 @@
       "schema": "public",
       "table": "employees"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000055",
+    "authorization_id": "accef000-0000-4000-8000-000000000056",
     "can_proceed_now": false,
+    "conditions": [],
     "conflict": null,
     "context_facts": {
       "category": "pii",
@@ -21,6 +22,9 @@
       "subcategory": null
     },
     "decision": "require_review",
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T02:06:08.032Z",
+    "evaluated_purpose": null,
     "instructions": [
       {
         "category": "enforceable",
@@ -28,8 +32,10 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "require_review",
-        "decision_id": "accef000-0000-4000-8000-000000000056",
+        "decision_id": "accef000-0000-4000-8000-000000000057",
         "decision_reason": "acme-hr-name-review v1 masking:spec.accessControl.masking \u2192 require_review on acmecloud_demo.public.employees.full_name",
+        "effective_from": null,
+        "effective_until": null,
         "enforcement_mode": "monitor",
         "instruction_family": "masking",
         "instruction_key": "masking:spec.accessControl.masking",
@@ -39,9 +45,9 @@
         "primary_resolution_source": "selector",
         "priority": 1,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000057",
+          "policy_id": "accef000-0000-4000-8000-000000000058",
           "policy_name": "AcmeCloud HR name review masking",
-          "policy_version_id": "accef000-0000-4000-8000-000000000058",
+          "policy_version_id": "accef000-0000-4000-8000-000000000059",
           "version_number": 1
         },
         "resolution_paths": [
@@ -70,6 +76,8 @@
     },
     "reason": "acme-hr-name-review v1 masking:spec.accessControl.masking \u2192 require_review on acmecloud_demo.public.employees.full_name",
     "reason_code": "decision_requires_review",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
     "scenario_key": "masking.display",
     "scenario_lane": "platform",
     "state": "review_required"

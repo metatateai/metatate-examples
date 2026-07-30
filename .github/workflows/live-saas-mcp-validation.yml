@@ -92,6 +92,19 @@ jobs:
       - name: Live governed agent arc acceptance
         run: scripts/run_governed_agent_arc_acceptance.sh
 
+      # RELEASE GATE, not monitoring. Compares every non-quarantined expected
+      # decision against what the live MCP actually returns, and asserts the
+      # intentionally-unmapped authored entries are STILL unmapped (it does NOT
+      # assert that everything resolves — that would fail the standing ruling).
+      #
+      # This workflow is workflow_dispatch-only, so the gate reports the state at
+      # the moment it ran. It is NOT continuous drift detection. There is
+      # deliberately no schedule: each live evaluation writes durable ledger
+      # evidence into the tenant, so a cron would accrue real governance records
+      # indefinitely — an operational and retention cost, not just CI minutes.
+      - name: Live expected-decision parity (release gate)
+        run: python3 scripts/live_expected_decision_parity.py
+
       - name: Execute live core notebook pack
         if: inputs.run_notebook_pack == 'true'
         env:

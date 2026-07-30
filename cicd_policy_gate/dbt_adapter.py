@@ -39,6 +39,11 @@ AUTHORIZE_PASSTHROUGH_KEYS = (
     "operation",
     "destination",
     "consumer_jurisdiction",
+    # B3: purpose is declared per model/exposure in `meta.metatate.purpose_key`.
+    # There is deliberately NO default — an unannotated model asks the
+    # purpose-blind question and gets the fail-closed answer, which is the
+    # honest result rather than a guessed purpose.
+    "purpose_key",
 )
 
 
@@ -157,6 +162,26 @@ def change_for_model(node: dict[str, Any]) -> tuple[dict[str, Any] | None, str |
         "sql": sql,
         "scenario_key": scenario_key,
     }
+    # B3 purpose, three DISTINCT states — never two.
+    #
+    #   annotated with a value  -> purposeful call
+    #   annotated as null       -> DECLARED purpose-blind (a deliberate choice)
+    #   not annotated at all    -> purpose-blind call, but marked undeclared
+    #
+    # The third state is the dangerous one: without the marker it is byte-identical
+    # on the wire to a deliberate purpose-blind call, so an un-annotated model would
+    # silently match a purpose-blind recording and read as an intentional
+    # demonstration. This adapter ships as a composite Action over a real user's
+    # manifest, so REFUSING un-annotated models would break every adopter whose
+    # models predate B3. Instead the absence is carried forward and reported, so
+    # "nobody declared a purpose" can never be mistaken for "blind on purpose".
+    meta = _metatate_meta(node)
+    if "purpose_key" in meta:
+        change["purpose_declared"] = True
+        if meta["purpose_key"] is not None:
+            change["purpose_key"] = meta["purpose_key"]
+    else:
+        change["purpose_declared"] = False
     if node.get("database"):
         change["default_database"] = node["database"]
     if node.get("schema"):
@@ -188,6 +213,11 @@ def change_for_exposure(exposure: dict[str, Any]) -> tuple[dict[str, Any] | None
     for key in AUTHORIZE_PASSTHROUGH_KEYS:
         if annotation.get(key) is not None:
             change[key] = annotation[key]
+    # Same three-state rule as models (see change_for_model): `purpose_key` absent
+    # from the annotation is recorded as UNDECLARED rather than silently becoming
+    # an apparently-deliberate purpose-blind call. The loop above cannot express
+    # this, because it collapses "absent" and "explicitly null" into one branch.
+    change["purpose_declared"] = "purpose_key" in annotation
     return change, None
 
 

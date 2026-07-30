@@ -6,9 +6,11 @@ deploy time, Metatate expands it to serving rows for every member, each
 answer citing the collection as its resolution path. Membership changes are
 a deployment, not a re-authoring exercise.
 
-This is a product-UI walkthrough (the MCP tools are read-only by design), so
-run it against your own workspace with the AcmeCloud demo loaded and a
-terminal beside the app.
+This is a product-UI walkthrough: **no MCP tool authors or publishes
+governance** (ADR-0012), so the membership change happens in the app. The
+decision tools *do* record durable, citable evidence, but none of them edit a
+policy or cut a publication. Run it against your own workspace with the
+AcmeCloud demo loaded and a terminal beside the app.
 
 ## 0. See the group
 
@@ -32,6 +34,7 @@ answer = client.authorize_use(
     {"database": "acmecloud_demo", "schema": "public", "table": "subscriptions"},
     use="share account health summaries with the success team",
     scenario_key="sharing.internal",
+    purpose_key="analytics.reporting",
 )
 winner = answer["instructions"][0]
 print(answer["state"], answer["decision"])          # -> answered allow
@@ -41,6 +44,13 @@ print(winner["resolution_paths"])                   # -> [{"ref": "<collection-i
 
 The serving row exists on `subscriptions` **because** it is a Customer 360
 member, and the answer says so — provenance down to the resolution path.
+
+Note the `purpose_key`. The Customer 360 policy's permitted use was
+canonicalized to `analytics.reporting`, so the call states the purpose it is
+actually pursuing. Drop it and the same question answers `review_required`: the
+collection still resolves and is still cited, but a purpose-blind call cannot
+match a permitted use. Provenance does not depend on the answer being
+favourable — a review cites its sources exactly as an allow does.
 
 ## 3. Ask about a non-member — the boundary is real
 

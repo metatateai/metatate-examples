@@ -1,9 +1,27 @@
 # Live Mode (Metatate Cloud)
 
-Metatate Cloud exposes the seven governance tools at a single `POST /mcp`
-endpoint with plain bearer-token auth. This repo's live mode runs every
-notebook, gate, and acceptance script against it — same `get_client()` seam,
-no notebook changes.
+Metatate Cloud exposes **nine** tools at a single `POST /mcp` endpoint with
+plain bearer-token auth. **This pack exercises seven context and decision
+tools: five pure reads and two advisory tools that record durable, citable
+decision evidence** (`authorize_use`, `validate_query_context`). The B1 request
+lane (`request_access`, `check_request`) is not exercised here.
+
+All seven need only the `read` token scope — but **scope is not durable-effect
+behaviour**, and the two are easy to conflate. `authorize_use` and
+`validate_query_context` write decision records; that is not incidental, it is
+the mechanism the audit-evidence example depends on. `explain_why(decision_id)`
+can only cite a decision because the decision was recorded.
+
+> **If you build on the request lane:** asking the human to confirm before
+> calling `request_access` is a **client-side obligation today**. The server
+> enforces scope, eligibility, citation and idempotency — it does **not**
+> perform elicitation or a two-phase commit, and it will not check that a human
+> agreed. Nor is that satisfied by the caller passing something like
+> `confirmed: true`: a client asserting its own compliance is not enforcement.
+> Build the confirmation into your client.
+
+This repo's live mode runs every notebook, gate, and acceptance script against
+the endpoint — same `get_client()` seam, no notebook changes.
 
 Metatate Cloud speaks the typed-answer contract (snake_case keys, structured
 `asset {database, schema, table, column?}` references, typed

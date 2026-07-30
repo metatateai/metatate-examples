@@ -36,8 +36,10 @@ a question gets typed governance answers back in chat.
    }
    ```
 
-After the restart, the connector's tool listing shows the seven governance
-tools. The config file now contains a workspace secret — treat it like a
+After the restart, the connector's tool listing shows all **nine** tools the
+workspace endpoint exposes — the seven context and decision tools this pack
+uses (five pure reads, plus `authorize_use` and `validate_query_context`, which
+record durable, citable decision evidence) and the two B1 request-lane tools. The config file now contains a workspace secret — treat it like a
 password, and revoke the token from the Tokens tab if the file is ever shared.
 
 > **Why the bridge?** The workspace endpoint deliberately has no OAuth flow —

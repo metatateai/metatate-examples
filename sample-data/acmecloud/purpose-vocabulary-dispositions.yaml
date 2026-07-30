@@ -1,0 +1,262 @@
+# AcmeCloud purpose-vocabulary DISPOSITIONS (VENDORED) — the #374 CHANGE SET.
+#
+# SCOPE, stated up front because it has been misread: the vendored table below
+# is the complete set of entries #374 CHANGED. It is NOT an inventory of the
+# vocabulary the estate SERVES. For that, see the generated
+# `served-use-inventory.json` (scripts/build_served_use_inventory.py), which
+# covers all 18 distinct entries and all 19 (entry, list-kind) occurrence pairs.
+#
+# TWO LAYERS, deliberately separate:
+#   * VOCABULARY DISPOSITION (this file) — keyed by ENTRY. What an entry means.
+#   * OCCURRENCE INVENTORY (generated)   — keyed by (policy, list_kind, entry).
+#     A single-keyed table cannot represent `prospect_outreach` being permitted
+#     in one policy and prohibited in another: one row would overwrite the other
+#     and the conflict fixture would vanish from the record while the demo still
+#     served it.
+#
+# CATEGORY vs KEY is mechanical, not a lookup: an entry is a category reference
+# iff it byte-equals a registry family token. The namespaces are disjoint by
+# construction — every KEY contains a `.`, no family token does
+# (metatate-saas docs/purpose-registry-product-contract.md:208).
+#
+# PROVENANCE — this file is a vendored copy, not an original.
+#   source: metatate-saas docs/b3-acmecloud-purpose-vocabulary-manifest.md
+#   at:     origin/main 19a3fdd  (#374 mapping table, approved 2026-07-28)
+# Re-sync it from that manifest; do not edit dispositions here by hand.
+#
+# WHY THIS FILE EXISTS
+# --------------------
+# "Which authored entries may never resolve" must be DATA the tooling reads, not
+# a list any script knows independently. A hand-listed set is how the live parity
+# gate came to assert that mapping `retrieval_context` and `customer_360_reporting`
+# would be a FAILURE — when #374 had already mapped both, deliberately and with
+# reasoning. A gate built on that list would have fired on correct canonical
+# state, which is the worst failure mode a gate has.
+#
+# THREE STATES, and the distinction between the last two is the whole point:
+#   mapped              -> resolved_key set. Coverage can be proven.
+#   unmapped            -> resolved_key null, do_not_map false. Untouched, NOT a
+#                          declared exception. It may legitimately become mapped
+#                          later; that is a fix, not a regression.
+#   unmapped + do_not_map -> resolved_key null, do_not_map TRUE. A standing
+#                          ruling. Mapping it IS a regression.
+#
+# Only ONE entry carries do_not_map. If a second ever appears here, that is a
+# deliberate decision that belongs in the source manifest first.
+
+entries:
+  # ---- mapped by #374 (coverage provable) ---------------------------------
+  - authored_entry: customer_360_reporting
+    policy: customer-360-context
+    list: permitted
+    resolved_key: analytics.reporting
+    do_not_map: false
+    rationale: >-
+      Reporting on a customer-360 view is analytics reporting; the registry key
+      states exactly that.
+
+  - authored_entry: retrieval_context
+    policy: ml-feature-ai-lifecycle
+    list: permitted
+    resolved_key: ai.inference
+    do_not_map: false
+    rationale: >-
+      The policy's own scenario is ai.retrieval_context; retrieval context is
+      model context consumed at inference.
+
+  - authored_entry: financial_reporting
+    policy: finance-data-guardrails
+    list: permitted
+    resolved_key: compliance.reporting
+    do_not_map: false
+    rationale: The policy governs regulated financial reporting.
+
+  - authored_entry: audit_support
+    policy: finance-data-guardrails
+    list: permitted
+    resolved_key: compliance.audit
+    do_not_map: false
+    rationale: Audit support is the registry's audit/accountability purpose.
+
+  - authored_entry: external_disclosure
+    policy: finance-data-guardrails
+    list: prohibited
+    resolved_key: sharing.external
+    do_not_map: false
+    rationale: External disclosure IS external sharing.
+
+  - authored_entry: vendor_transfer
+    policy: ml-feature-ai-lifecycle
+    list: prohibited
+    resolved_key: ai.third_party_export
+    do_not_map: false
+    rationale: >-
+      The policy's scenario is ai.vendor_transfer; the registry key is the
+      third-party AI export purpose.
+
+  - authored_entry: automated_decisioning
+    policy: ml-embedding-guardrails
+    list: prohibited
+    resolved_key: ai
+    resolved_kind: category_token
+    do_not_map: false
+    rationale: >-
+      Mapping to ai.third_party_export was REJECTED as semantically invalid.
+      The CATEGORY token prohibits automated decisioning across every ai.*
+      purpose, which is what the policy means. Remapped to a category token
+      precisely so the prohibition cannot silently stop applying.
+
+  # ---- the single standing exception --------------------------------------
+  - authored_entry: embedding_storage
+    policy: ml-embedding-guardrails
+    list: permitted
+    resolved_key: null
+    do_not_map: true
+    rationale: >-
+      Do not "fix" this. The policy text says feature vectors may be STORED in
+      embedding indexes. It does NOT establish retrieval or model-context use at
+      inference, so mapping it to ai.inference would infer coverage the author
+      never wrote. Under B3 this row answers review_required for EVERY purpose —
+      including a call that correctly declares ai.inference — which is the honest
+      legacy-vocabulary case. The policy TEXT was deliberately not rewritten to
+      preserve a green fixture.
+
+  # ---- unmapped and simply untouched (NOT declared exceptions) -----------
+  # Found by resolving every entry in the pack against the registry. These are
+  # absent from the source manifest's table: nobody ruled on them. They may
+  # legitimately become mapped, so the parity gate must NOT assert they stay
+  # unmapped. The three PROHIBITED ones are the ones to watch — see
+  # `prohibition_bite_checks` below.
+  - authored_entry: ml_training
+    kind: unmapped_untouched
+    list: prohibited
+    resolved_key: null
+    do_not_map: false
+    rationale: >-
+      RULED 2026-07-30 (Carlos): stays uncanonicalized but is now documented.
+      Prohibited. Disposition is UNTOUCHED; whether the prohibition still bites is a SEPARATE assertion (prohibition_bite_checks) — see the note below.
+
+  - authored_entry: prospect_outreach
+    kind: deliberate_conflict
+    list: both            # permitted in one policy, prohibited in another
+    resolved_key: null
+    do_not_map: false
+    retain_both_occurrences: true
+    rationale: >-
+      INTENTIONAL governance-debt conflict fixture. It is not an accidental
+      duplicate and must not be canonicalized away: both the permitted and the
+      prohibited occurrence are retained, and together they produce the
+      conflicted-state demonstration. Collapsing them would delete the fixture
+      while the demo still served both rows.
+
+  - authored_entry: public_sharing
+    kind: unmapped_untouched
+    list: prohibited
+    resolved_key: null
+    do_not_map: false
+    rationale: >-
+      RULED 2026-07-30 (Carlos): stays uncanonicalized but is now documented.
+      Prohibited. Disposition is UNTOUCHED; its behavioural effect is asserted separately.
+
+  - authored_entry: reporting
+    kind: unmapped_untouched
+    list: permitted
+    resolved_key: null
+    do_not_map: false
+    rationale: >-
+      RULED 2026-07-30 (Carlos): stays uncanonicalized but is now documented.
+      Permitted. May legitimately become mapped later.
+
+  - authored_entry: support
+    kind: unmapped_untouched
+    list: permitted
+    resolved_key: null
+    do_not_map: false
+    rationale: >-
+      RULED 2026-07-30 (Carlos): stays uncanonicalized but is now documented.
+      Permitted. May legitimately become mapped later.
+
+  - authored_entry: renewal_planning
+    kind: unmapped_do_not_map
+    list: permitted
+    resolved_key: null
+    do_not_map: true
+    rationale: >-
+      RULED 2026-07-30 (Carlos): standing fence. Renewal planning is a real
+      business activity with no published purpose that expresses it, and the
+      nearest candidates mean something else. Mapping it would infer coverage
+      nobody authored — the same error `embedding_storage` guards against.
+      This is the ONLY one of the five unruled entries that gets the fence.
+
+  # ---- ruled by Carlos 2026-07-29 (were previously recorded as unruled) ----
+  # These are NOT unresolved entries and NOT normalization gaps. Two are
+  # deliberate registry CATEGORY tokens granting/prohibiting a whole family.
+  #
+  # A category must never be narrowed to a single key. `analytics` grants every
+  # `analytics.*` purpose; the flagship case CALLS with `analytics.reporting`.
+  # Both are correct and they are not the same statement — the call states a
+  # leaf, the policy grants the family. Collapsing the policy entry to the leaf
+  # would silently shrink the grant.
+  - authored_entry: analytics
+    kind: registry_category
+    resolved_category: analytics
+    matches: analytics.*
+    list: permitted
+    resolved_key: null
+    do_not_map: false
+    rationale: >-
+      Deliberate category-wide permitted grant in the AcmeCloud demo. Preserve as
+      `analytics`; do NOT narrow to analytics.reporting.
+
+  - authored_entry: marketing
+    kind: registry_category
+    resolved_category: marketing
+    matches: marketing.*
+    list: prohibited
+    resolved_key: null
+    do_not_map: false
+    rationale: Deliberate category-wide prohibition across every marketing.* purpose.
+
+  - authored_entry: advertising
+    kind: normalized_key
+    resolved_key: marketing.advertising
+    list: prohibited
+    do_not_map: false
+    rationale: Normalizes to the registry key marketing.advertising.
+
+  - authored_entry: personalization
+    kind: normalized_key
+    resolved_key: marketing.personalization
+    list: prohibited
+    do_not_map: false
+    rationale: Normalizes to the registry key marketing.personalization.
+
+# DISPOSITION vs BEHAVIOURAL EFFECT — two ideas, two assertions, on purpose.
+#
+#   disposition        = how the vocabulary treats an entry (mapped / untouched /
+#                        fenced). Asserted from this file.
+#   behavioural effect = whether a prohibition still changes an outcome.
+#                        Asserted from live/recorded answers, below.
+#
+# They are kept apart because collapsing them would let a future MAPPING change
+# silently alter what a PROHIBITION does, with a single green test covering both.
+# `ml_training` and `public_sharing` are exactly that case: disposition
+# `unmapped_untouched`, behaviour "still bites".
+#
+# An unmapped entry can neither prove coverage nor neutralize a prohibition, and
+# a prohibition silently ceasing to apply would not announce itself.
+prohibition_bite_checks:
+  - case_id: train-support-tickets-deny
+    covers: ml_training
+  - case_id: employee-public-sharing-deny
+    covers: public_sharing
+  - case_id: finance-ledger-public-sharing-deny
+    covers: public_sharing
+  - case_id: conflict-prospect-outreach-review
+    covers: prospect_outreach
+  - case_id: ml-vendor-transfer-deny
+    covers: vendor_transfer
+  - case_id: ml-automated-decisioning-deny
+    covers: automated_decisioning
+  - case_id: marketing-customers-deny
+    covers: advertising/marketing/personalization (discovered, unmapped, prohibited)

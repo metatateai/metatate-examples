@@ -25,6 +25,13 @@
     },
     "decision": "allow",
     "decision_id": "accef000-0000-4000-8000-000000000020",
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T02:06:01.333Z",
+    "evaluated_purpose": {
+      "purpose_category": "analytics",
+      "purpose_key": "analytics.reporting",
+      "registry_version": 1
+    },
     "instructions": [
       {
         "category": "advisory",
@@ -33,7 +40,9 @@
         "conflicts_with": [],
         "decision": "allow",
         "decision_id": "accef000-0000-4000-8000-000000000020",
-        "decision_reason": "acme-customer-use v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.customers",
+        "decision_reason": "Purpose `analytics.reporting` is named by this policy's permitted-uses list (policy AcmeCloud customer use guardrails).",
+        "effective_from": null,
+        "effective_until": null,
         "enforcement_mode": "enforce",
         "instruction_family": "usage_guidance",
         "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
@@ -79,7 +88,9 @@
       "publication_id": "accef000-0000-4000-8000-000000000001",
       "published_at": "2026-07-16T00:00:00.000Z"
     },
-    "reason": "acme-customer-use v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.customers",
+    "reason": "Purpose `analytics.reporting` is named by this policy's permitted-uses list (policy AcmeCloud customer use guardrails).",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
     "scenario_key": "purpose.allowed_use",
     "scenario_lane": "human",
     "state": "answered"
@@ -90,6 +101,7 @@
       "schema": "public",
       "table": "customers"
     },
+    "purpose_key": "analytics.reporting",
     "scenario_key": "purpose.allowed_use",
     "use": "build a churn analytics dashboard"
   },

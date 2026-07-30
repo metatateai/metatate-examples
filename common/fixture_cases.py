@@ -79,15 +79,31 @@ CASES: list[dict[str, Any]] = [
             "asset": asset("customers"),
             "scenario_key": "purpose.allowed_use",
             "use": "build a churn analytics dashboard",
+            "purpose_key": "analytics.reporting",
         },
     },
     {
-        "id": "support-tickets-allow",
+        # PURPOSE-BLIND CONTROL. Identical asset, scenario and authored policy
+        # to `analytics-customers-allow`, with the purpose deliberately OMITTED.
+        # B3's redline: a purpose-blind call can never ride a permitted-uses
+        # allow, so this must answer review_required and mint NO decision_id.
+        # Nothing may chain an explain_why off it.
+        "id": "analytics-customers-purpose-missing-review",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("customers"),
+            "scenario_key": "purpose.allowed_use",
+            "use": "build a churn analytics dashboard",
+        },
+    },
+    {
+        "id": "support-tickets-unmapped-policy-use-review",
         "tool": "authorize_use",
         "arguments": {
             "asset": asset("support_tickets"),
             "scenario_key": "purpose.allowed_use",
             "use": "triage open support tickets",
+            "purpose_key": "operations.support",
         },
     },
     {
@@ -199,15 +215,17 @@ CASES: list[dict[str, Any]] = [
         "arguments": {
             "asset": asset("ml_feature_store"),
             "scenario_key": "ai.retrieval_context",
+            "purpose_key": "ai.inference",
             "use": "feed churn features into agent retrieval context",
         },
     },
     {
-        "id": "ml-embedding-storage-allow",
+        "id": "ml-embedding-storage-review",
         "tool": "authorize_use",
         "arguments": {
             "asset": asset("ml_feature_store"),
             "scenario_key": "ai.embedding_storage",
+            "purpose_key": "ai.inference",
             "use": "index feature vectors in the embedding store",
         },
     },
@@ -259,6 +277,7 @@ CASES: list[dict[str, Any]] = [
         "arguments": {
             "asset": asset("subscriptions"),
             "scenario_key": "sharing.internal",
+            "purpose_key": "analytics.reporting",
             "use": "share account health summaries with the success team",
         },
     },
@@ -271,6 +290,7 @@ CASES: list[dict[str, Any]] = [
             "scenario_key": "purpose.allowed_use",
             "default_database": DATABASE,
             "default_schema": SCHEMA,
+            "purpose_key": "analytics.reporting",
         },
     },
     {
@@ -414,6 +434,7 @@ CASES: list[dict[str, Any]] = [
         "arguments": {
             "asset": asset("invoices", schema="finance"),
             "scenario_key": "purpose.allowed_use",
+            "purpose_key": "compliance.reporting",
             "use": "prepare the quarterly revenue recognition report",
         },
     },
@@ -434,6 +455,7 @@ CASES: list[dict[str, Any]] = [
             "scenario_key": "purpose.allowed_use",
             "default_database": DATABASE,
             "default_schema": SCHEMA,
+            "purpose_key": "analytics.reporting",
         },
     },
     {
@@ -464,6 +486,7 @@ CASES: list[dict[str, Any]] = [
             "scenario_key": "purpose.allowed_use",
             "default_database": DATABASE,
             "default_schema": SCHEMA,
+            "purpose_key": "analytics.reporting",
         },
     },
     {
@@ -472,6 +495,7 @@ CASES: list[dict[str, Any]] = [
         "arguments": {
             "sql": "SELECT c.customer_name, l.exported_at FROM customers c JOIN legacy_customer_backup l ON l.customer_id = c.customer_id",
             "scenario_key": "purpose.allowed_use",
+            "purpose_key": "analytics.reporting",
             "default_database": DATABASE,
             "default_schema": SCHEMA,
         },
@@ -484,6 +508,7 @@ CASES: list[dict[str, Any]] = [
             "scenario_key": "purpose.allowed_use",
             "default_database": DATABASE,
             "default_schema": SCHEMA,
+            "purpose_key": "analytics.reporting",
         },
     },
     {
@@ -502,6 +527,7 @@ CASES: list[dict[str, Any]] = [
         "arguments": {
             "sql": "SELECT i.invoice_id, r.amount FROM finance.invoices i JOIN finance.revenue_ledger r ON r.invoice_id = i.invoice_id",
             "scenario_key": "purpose.allowed_use",
+            "purpose_key": "compliance.reporting",
             "default_database": DATABASE,
             "default_schema": SCHEMA,
         },

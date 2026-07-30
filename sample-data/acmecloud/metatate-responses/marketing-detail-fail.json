@@ -1,12 +1,15 @@
 {
   "answer": {
     "advisory": true,
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T02:06:17.419Z",
+    "evaluated_purpose": null,
     "findings": [
       {
         "conflict": null,
         "decision": "mask_partial",
         "decision_reason": "acme-email-masking v1 masking:spec.accessControl.masking \u2192 mask_partial on acmecloud_demo.public.customers.email",
-        "finding_id": "accef000-0000-4000-8000-000000000109",
+        "finding_id": "accef000-0000-4000-8000-000000000110",
         "instructions": [
           {
             "category": "enforceable",
@@ -16,6 +19,8 @@
             "decision": "mask_partial",
             "decision_id": "accef000-0000-4000-8000-000000000002",
             "decision_reason": "acme-email-masking v1 masking:spec.accessControl.masking \u2192 mask_partial on acmecloud_demo.public.customers.email",
+            "effective_from": null,
+            "effective_until": null,
             "enforcement_mode": "enforce",
             "instruction_family": "masking",
             "instruction_key": "masking:spec.accessControl.masking",
@@ -58,6 +63,8 @@
             "decision": "deny",
             "decision_id": "accef000-0000-4000-8000-000000000008",
             "decision_reason": "acme-customer-use v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on acmecloud_demo.public.customers",
+            "effective_from": null,
+            "effective_until": null,
             "enforcement_mode": "enforce",
             "instruction_family": "usage_guidance",
             "instruction_key": "usage_guidance:spec.usage.prohibitedUses:prohibited",
@@ -110,7 +117,7 @@
       "published_at": "2026-07-16T00:00:00.000Z"
     },
     "state": "answered",
-    "validation_id": "accef000-0000-4000-8000-000000000108",
+    "validation_id": "accef000-0000-4000-8000-000000000109",
     "verdict": "fail"
   },
   "arguments": {

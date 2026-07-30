@@ -7,15 +7,18 @@
       "schema": "public",
       "table": "customer_exports"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000048",
+    "authorization_id": "accef000-0000-4000-8000-000000000049",
     "can_proceed_now": false,
     "conditions": [
       {
         "kind": "approval_required",
+        "projection": null,
         "required_by_policy": "AcmeCloud transfer guardrails",
         "required_role": null,
         "requirement": "No transfer rule matched to INTERNAL_WAREHOUSE (US) for consumer jurisdiction US; default effect conditional applies (policy AcmeCloud transfer guardrails).",
-        "satisfied_by": null
+        "satisfied": false,
+        "satisfied_by": null,
+        "satisfied_by_exception_id": null
       }
     ],
     "context_facts": {
@@ -33,6 +36,9 @@
     },
     "decision": "conditional",
     "decision_id": "accef000-0000-4000-8000-000000000030",
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T02:06:06.778Z",
+    "evaluated_purpose": null,
     "instructions": [
       {
         "category": "advisory",
@@ -42,6 +48,8 @@
         "decision": "conditional",
         "decision_id": "accef000-0000-4000-8000-000000000030",
         "decision_reason": "No transfer rule matched to INTERNAL_WAREHOUSE (US) for consumer jurisdiction US; default effect conditional applies (policy AcmeCloud transfer guardrails).",
+        "effective_from": null,
+        "effective_until": null,
         "enforcement_mode": "enforce",
         "instruction_family": "transfer_governance",
         "instruction_key": "transfer_governance:spec.transferGovernance",
@@ -116,6 +124,8 @@
       "published_at": "2026-07-16T00:00:00.000Z"
     },
     "reason": "No transfer rule matched to INTERNAL_WAREHOUSE (US) for consumer jurisdiction US; default effect conditional applies (policy AcmeCloud transfer guardrails).",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
     "scenario_key": "residency.cross_border_transfer",
     "scenario_lane": "platform",
     "state": "answered"

@@ -1,12 +1,15 @@
 {
   "answer": {
     "advisory": true,
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T02:06:31.926Z",
+    "evaluated_purpose": null,
     "findings": [
       {
         "conflict": null,
         "decision": "deny",
         "decision_reason": "acme-customer-use v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on acmecloud_demo.public.customers",
-        "finding_id": "accef000-0000-4000-8000-000000000164",
+        "finding_id": "accef000-0000-4000-8000-000000000165",
         "instructions": [
           {
             "category": "advisory",
@@ -16,6 +19,8 @@
             "decision": "deny",
             "decision_id": "accef000-0000-4000-8000-000000000008",
             "decision_reason": "acme-customer-use v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on acmecloud_demo.public.customers",
+            "effective_from": null,
+            "effective_until": null,
             "enforcement_mode": "enforce",
             "instruction_family": "usage_guidance",
             "instruction_key": "usage_guidance:spec.usage.prohibitedUses:prohibited",
@@ -68,7 +73,7 @@
       "published_at": "2026-07-16T00:00:00.000Z"
     },
     "state": "answered",
-    "validation_id": "accef000-0000-4000-8000-000000000163",
+    "validation_id": "accef000-0000-4000-8000-000000000164",
     "verdict": "fail"
   },
   "arguments": {

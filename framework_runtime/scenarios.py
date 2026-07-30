@@ -25,6 +25,23 @@ SAFE_ANALYTICS_SQL = "SELECT region, SUM(arr) FROM customers GROUP BY region"
 UNSAFE_ANALYTICS_SQL = "SELECT customer_name, email FROM customers WHERE region = 'EU'"
 MARKETING_SQL = "SELECT customer_name, email FROM customers WHERE marketing_consent = 'opted_in'"
 
+# B3: the declared purpose per demonstration query.
+#
+# These are DECLARED here rather than looked up from the recordings on purpose.
+# If the consumer derived its own input from the fixture it was about to match,
+# the "every consumer call matches its canonical case" assertion would be a
+# tautology — it would pass no matter how wrong the recordings were.
+#
+# `None` means the call is deliberately purpose-blind and matches a purpose-blind
+# recording. It is NOT a fallback: an unlisted query resolves to None, sends no
+# purpose_key, and fails closed with `offline_fixture_missing` if no purpose-blind
+# recording exists for it.
+PURPOSE_BY_SQL: dict[str, str | None] = {
+    SAFE_ANALYTICS_SQL: "analytics.reporting",
+    UNSAFE_ANALYTICS_SQL: None,
+    MARKETING_SQL: None,
+}
+
 
 class RecordingMetatateClient:
     """Wrap the examples client and record validation calls."""
@@ -38,18 +55,31 @@ class RecordingMetatateClient:
         return self.client.validate_query_context(sql, **params)
 
 
+_UNSET = object()
+
+
 def validate_sql_for_agent(
     client: RecordingMetatateClient,
     sql_text: str,
     scenario_key: str = "purpose.allowed_use",
+    purpose_key: Any = _UNSET,
 ) -> dict[str, Any]:
-    """Validate SQL through Metatate and return the agent-facing decision."""
+    """Validate SQL through Metatate and return the agent-facing decision.
+
+    `purpose_key` defaults to the declared purpose for this query
+    (:data:`PURPOSE_BY_SQL`). Pass it explicitly — including ``None`` — to make a
+    deliberately purpose-blind call.
+    """
+
+    if purpose_key is _UNSET:
+        purpose_key = PURPOSE_BY_SQL.get(sql_text)
 
     answer = client.validate_query_context(
         sql_text,
         scenario_key=scenario_key,
         default_database=DATABASE,
         default_schema=SCHEMA,
+        purpose_key=purpose_key,
     )
     state = str(answer.get("state") or "")
     verdict = str(answer.get("verdict") or "") if state == "answered" else state

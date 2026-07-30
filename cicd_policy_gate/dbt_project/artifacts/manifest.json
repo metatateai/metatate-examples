@@ -16,7 +16,7 @@
       "description": "Revenue dashboard aggregates ARR by region.",
       "checksum": { "name": "sha256", "checksum": "arr-by-region-v1" },
       "config": { "enabled": true, "materialized": "view", "meta": {} },
-      "meta": {},
+      "meta": { "metatate": { "purpose_key": "analytics.reporting" } },
       "raw_code": "SELECT region, SUM(arr) FROM customers GROUP BY region",
       "compiled_code": "SELECT region, SUM(arr) FROM customers GROUP BY region"
     },
@@ -31,7 +31,7 @@
       "description": "Analyst-facing customer detail model includes name and email.",
       "checksum": { "name": "sha256", "checksum": "eu-detail-v2" },
       "config": { "enabled": true, "materialized": "view", "meta": {} },
-      "meta": {},
+      "meta": { "metatate": { "purpose_key": null } },
       "raw_code": "SELECT customer_name, email FROM customers WHERE region = 'EU'",
       "compiled_code": "SELECT customer_name, email FROM customers WHERE region = 'EU'"
     },
@@ -50,7 +50,7 @@
         "materialized": "view",
         "meta": { "metatate": { "scenario_key": "purpose.prohibited_use" } }
       },
-      "meta": {},
+      "meta": { "metatate": { "purpose_key": null } },
       "raw_code": "SELECT customer_name, email FROM customers WHERE marketing_consent = 'opted_in'",
       "compiled_code": "SELECT customer_name, email FROM customers WHERE marketing_consent = 'opted_in'"
     },

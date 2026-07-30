@@ -100,6 +100,9 @@ jobs:
       - name: Audit evidence packet CLI
         run: scripts/run_audit_evidence.sh
 
+      - name: B3 purpose-contract acceptance (strict routing + cross-surface consistency)
+        run: scripts/run_purpose_contract_acceptance.sh
+
       - name: Framework runtime acceptance
         run: scripts/run_framework_runtime_acceptance.sh
 

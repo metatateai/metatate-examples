@@ -24,8 +24,20 @@ spec:
     sensitivity: internal
     category: operational
   usage:
+    # B3 (deliberate): `embedding_storage` stays an UNMAPPED legacy free
+    # string. The policy text says feature vectors may be STORED in
+    # embedding indexes; it does not establish retrieval/model-context use
+    # at inference, so mapping it to `ai.inference` would be inferring
+    # coverage the author never wrote. Under B3 this permitted row answers
+    # `review_required` for every purpose — the correct, fail-closed
+    # outcome, and the demo's honest legacy-vocabulary case. The
+    # retrieval-context policy supplies the legitimate `ai.inference`
+    # allow example.
     permittedUses: [embedding_storage]
-    prohibitedUses: [automated_decisioning]
+    # `ai` is the CATEGORY TOKEN: automated decisioning is prohibited across
+    # EVERY ai.* purpose, which is what the policy means. It is not a key,
+    # and it deliberately does not narrow to one purpose.
+    prohibitedUses: [ai]
 extensions:
   displayName: AcmeCloud ML embedding guardrails
   scenarioMap:

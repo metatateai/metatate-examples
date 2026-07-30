@@ -40,6 +40,9 @@ DEFAULT_QUESTIONS: list[dict[str, Any]] = [
         "asset": _asset("customers"),
         "use": "build a churn analytics dashboard",
         "scenario_key": "purpose.allowed_use",
+        # B3: declared purpose is what earns the allow. The purpose-blind form of
+        # this same question is a fail-closed review — see the honest-corner note.
+        "purpose_key": "analytics.reporting",
     },
     {
         "question": "Can we sync approved customer fields to Salesforce for EU consumers?",
@@ -168,6 +171,7 @@ def collect_evidence(
             operation=question.get("operation"),
             destination=question.get("destination"),
             consumer_jurisdiction=question.get("consumer_jurisdiction"),
+            purpose_key=question.get("purpose_key"),
         )
         publication = answer.get("publication")
         if publication_id is None and isinstance(publication, dict):

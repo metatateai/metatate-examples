@@ -1,12 +1,19 @@
 {
   "answer": {
     "advisory": true,
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T02:06:32.527Z",
+    "evaluated_purpose": {
+      "purpose_category": "compliance",
+      "purpose_key": "compliance.reporting",
+      "registry_version": 1
+    },
     "findings": [
       {
         "conflict": null,
         "decision": "allow",
-        "decision_reason": "acme-finance-guardrails v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.finance.invoices",
-        "finding_id": "accef000-0000-4000-8000-000000000166",
+        "decision_reason": "Purpose `compliance.reporting` is named by this policy's permitted-uses list (policy AcmeCloud finance data guardrails).",
+        "finding_id": "accef000-0000-4000-8000-000000000167",
         "instructions": [
           {
             "category": "advisory",
@@ -14,24 +21,26 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "allow",
-            "decision_id": "accef000-0000-4000-8000-000000000143",
-            "decision_reason": "acme-finance-guardrails v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.finance.invoices",
+            "decision_id": "accef000-0000-4000-8000-000000000144",
+            "decision_reason": "Purpose `compliance.reporting` is named by this policy's permitted-uses list (policy AcmeCloud finance data guardrails).",
+            "effective_from": null,
+            "effective_until": null,
             "enforcement_mode": "enforce",
             "instruction_family": "usage_guidance",
             "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
             "parameters": {
               "kind": "permitted",
               "uses": [
-                "financial_reporting",
-                "audit_support"
+                "compliance.reporting",
+                "compliance.audit"
               ]
             },
             "primary_resolution_source": "selector",
             "priority": 2,
             "provenance": {
-              "policy_id": "accef000-0000-4000-8000-000000000144",
+              "policy_id": "accef000-0000-4000-8000-000000000145",
               "policy_name": "AcmeCloud finance data guardrails",
-              "policy_version_id": "accef000-0000-4000-8000-000000000145",
+              "policy_version_id": "accef000-0000-4000-8000-000000000146",
               "version_number": 1
             },
             "resolution_paths": [
@@ -63,8 +72,8 @@
       {
         "conflict": null,
         "decision": "allow",
-        "decision_reason": "acme-finance-guardrails v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.finance.revenue_ledger",
-        "finding_id": "accef000-0000-4000-8000-000000000167",
+        "decision_reason": "Purpose `compliance.reporting` is named by this policy's permitted-uses list (policy AcmeCloud finance data guardrails).",
+        "finding_id": "accef000-0000-4000-8000-000000000168",
         "instructions": [
           {
             "category": "advisory",
@@ -72,24 +81,26 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "allow",
-            "decision_id": "accef000-0000-4000-8000-000000000168",
-            "decision_reason": "acme-finance-guardrails v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.finance.revenue_ledger",
+            "decision_id": "accef000-0000-4000-8000-000000000169",
+            "decision_reason": "Purpose `compliance.reporting` is named by this policy's permitted-uses list (policy AcmeCloud finance data guardrails).",
+            "effective_from": null,
+            "effective_until": null,
             "enforcement_mode": "enforce",
             "instruction_family": "usage_guidance",
             "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
             "parameters": {
               "kind": "permitted",
               "uses": [
-                "financial_reporting",
-                "audit_support"
+                "compliance.reporting",
+                "compliance.audit"
               ]
             },
             "primary_resolution_source": "selector",
             "priority": 2,
             "provenance": {
-              "policy_id": "accef000-0000-4000-8000-000000000144",
+              "policy_id": "accef000-0000-4000-8000-000000000145",
               "policy_name": "AcmeCloud finance data guardrails",
-              "policy_version_id": "accef000-0000-4000-8000-000000000145",
+              "policy_version_id": "accef000-0000-4000-8000-000000000146",
               "version_number": 1
             },
             "resolution_paths": [
@@ -124,12 +135,13 @@
       "published_at": "2026-07-16T00:00:00.000Z"
     },
     "state": "answered",
-    "validation_id": "accef000-0000-4000-8000-000000000165",
+    "validation_id": "accef000-0000-4000-8000-000000000166",
     "verdict": "pass"
   },
   "arguments": {
     "default_database": "acmecloud_demo",
     "default_schema": "public",
+    "purpose_key": "compliance.reporting",
     "scenario_key": "purpose.allowed_use",
     "sql": "SELECT i.invoice_id, r.amount FROM finance.invoices i JOIN finance.revenue_ledger r ON r.invoice_id = i.invoice_id"
   },

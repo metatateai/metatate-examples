@@ -1,12 +1,15 @@
 {
   "answer": {
     "advisory": true,
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T02:06:19.963Z",
+    "evaluated_purpose": null,
     "findings": [
       {
         "conflict": null,
         "decision": "mask_partial",
         "decision_reason": "acme-email-masking v1 masking:spec.accessControl.masking \u2192 mask_partial on acmecloud_demo.public.employees.work_email",
-        "finding_id": "accef000-0000-4000-8000-000000000123",
+        "finding_id": "accef000-0000-4000-8000-000000000124",
         "instructions": [
           {
             "category": "enforceable",
@@ -14,8 +17,10 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "mask_partial",
-            "decision_id": "accef000-0000-4000-8000-000000000082",
+            "decision_id": "accef000-0000-4000-8000-000000000083",
             "decision_reason": "acme-email-masking v1 masking:spec.accessControl.masking \u2192 mask_partial on acmecloud_demo.public.employees.work_email",
+            "effective_from": null,
+            "effective_until": null,
             "enforcement_mode": "enforce",
             "instruction_family": "masking",
             "instruction_key": "masking:spec.accessControl.masking",
@@ -55,9 +60,11 @@
             "conflict_group_id": null,
             "conflict_status": "none",
             "conflicts_with": [],
-            "decision": "allow",
-            "decision_id": "accef000-0000-4000-8000-000000000097",
-            "decision_reason": "acme-employee-access v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.employees",
+            "decision": "require_review",
+            "decision_id": "accef000-0000-4000-8000-000000000098",
+            "decision_reason": "Permitted uses require a declared purpose; this call stated none (policy AcmeCloud employee data access).",
+            "effective_from": null,
+            "effective_until": null,
             "enforcement_mode": "enforce",
             "instruction_family": "usage_guidance",
             "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
@@ -70,9 +77,9 @@
             "primary_resolution_source": "selector",
             "priority": 2,
             "provenance": {
-              "policy_id": "accef000-0000-4000-8000-000000000051",
+              "policy_id": "accef000-0000-4000-8000-000000000052",
               "policy_name": "AcmeCloud employee data access",
-              "policy_version_id": "accef000-0000-4000-8000-000000000052",
+              "policy_version_id": "accef000-0000-4000-8000-000000000053",
               "version_number": 1
             },
             "resolution_paths": [
@@ -107,7 +114,7 @@
       "published_at": "2026-07-16T00:00:00.000Z"
     },
     "state": "answered",
-    "validation_id": "accef000-0000-4000-8000-000000000122",
+    "validation_id": "accef000-0000-4000-8000-000000000123",
     "verdict": "warn"
   },
   "arguments": {

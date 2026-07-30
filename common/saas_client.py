@@ -28,7 +28,12 @@ def _drop_none(payload: dict[str, Any]) -> dict[str, Any]:
 
 
 class MetatateCloudClient(ManagedMCPMetatateClient):
-    """The seven governance tools over the workspace MCP endpoint
+    """The seven context and decision tools this pack uses, over the workspace
+    MCP endpoint: five pure reads, plus `authorize_use` and
+    `validate_query_context`, which RECORD durable, citable decision evidence.
+    They need only the `read` scope — scope is not durable-effect behaviour.
+    The server also exposes the B1 request lane (`request_access`,
+    `check_request`), which this pack does not cover
     (bearer ``mtt_…`` token from the MCP module's Tokens tab)."""
 
     def discover_context(
@@ -65,7 +70,10 @@ class MetatateCloudClient(ManagedMCPMetatateClient):
         operation: str | None = None,
         destination: dict[str, str] | None = None,
         consumer_jurisdiction: str | None = None,
+        purpose_key: str | None = None,
     ) -> dict[str, Any]:
+        # B3: decision-bearing. Omitting it is a different question, not a
+        # cosmetic difference — see OfflineMetatateClient.authorize_use.
         return self.call_tool(
             "authorize_use",
             _drop_none(
@@ -76,6 +84,7 @@ class MetatateCloudClient(ManagedMCPMetatateClient):
                     "operation": operation,
                     "destination": destination,
                     "consumer_jurisdiction": consumer_jurisdiction,
+                    "purpose_key": purpose_key,
                 }
             ),
         )
@@ -90,6 +99,7 @@ class MetatateCloudClient(ManagedMCPMetatateClient):
         operation: str | None = None,
         destination: dict[str, str] | None = None,
         consumer_jurisdiction: str | None = None,
+        purpose_key: str | None = None,
     ) -> dict[str, Any]:
         return self.call_tool(
             "validate_query_context",
@@ -103,6 +113,7 @@ class MetatateCloudClient(ManagedMCPMetatateClient):
                     "operation": operation,
                     "destination": destination,
                     "consumer_jurisdiction": consumer_jurisdiction,
+                    "purpose_key": purpose_key,
                 }
             ),
         )

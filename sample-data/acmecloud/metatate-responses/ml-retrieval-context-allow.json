@@ -7,7 +7,7 @@
       "schema": "public",
       "table": "ml_feature_store"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000067",
+    "authorization_id": "accef000-0000-4000-8000-000000000068",
     "can_proceed_now": true,
     "conditions": [],
     "context_facts": {
@@ -18,7 +18,14 @@
       "subcategory": null
     },
     "decision": "allow",
-    "decision_id": "accef000-0000-4000-8000-000000000068",
+    "decision_id": "accef000-0000-4000-8000-000000000069",
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T02:06:09.989Z",
+    "evaluated_purpose": {
+      "purpose_category": "ai",
+      "purpose_key": "ai.inference",
+      "registry_version": 1
+    },
     "instructions": [
       {
         "category": "advisory",
@@ -26,23 +33,25 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "allow",
-        "decision_id": "accef000-0000-4000-8000-000000000068",
-        "decision_reason": "acme-ml-features v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.ml_feature_store",
+        "decision_id": "accef000-0000-4000-8000-000000000069",
+        "decision_reason": "Purpose `ai.inference` is named by this policy's permitted-uses list (policy AcmeCloud ML feature AI lifecycle).",
+        "effective_from": null,
+        "effective_until": null,
         "enforcement_mode": "enforce",
         "instruction_family": "usage_guidance",
         "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
         "parameters": {
           "kind": "permitted",
           "uses": [
-            "retrieval_context"
+            "ai.inference"
           ]
         },
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000065",
+          "policy_id": "accef000-0000-4000-8000-000000000066",
           "policy_name": "AcmeCloud ML feature AI lifecycle",
-          "policy_version_id": "accef000-0000-4000-8000-000000000066",
+          "policy_version_id": "accef000-0000-4000-8000-000000000067",
           "version_number": 1
         },
         "resolution_paths": [
@@ -71,7 +80,9 @@
       "publication_id": "accef000-0000-4000-8000-000000000001",
       "published_at": "2026-07-16T00:00:00.000Z"
     },
-    "reason": "acme-ml-features v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on acmecloud_demo.public.ml_feature_store",
+    "reason": "Purpose `ai.inference` is named by this policy's permitted-uses list (policy AcmeCloud ML feature AI lifecycle).",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
     "scenario_key": "ai.retrieval_context",
     "scenario_lane": "agent",
     "state": "answered"
@@ -82,6 +93,7 @@
       "schema": "public",
       "table": "ml_feature_store"
     },
+    "purpose_key": "ai.inference",
     "scenario_key": "ai.retrieval_context",
     "use": "feed churn features into agent retrieval context"
   },
