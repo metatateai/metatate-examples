@@ -5,9 +5,11 @@ only when a publication changes.** Drafts don't leak. Approvals don't leak.
 The answer flips at publish — and `explain_why` tells you whether a cited
 decision is still current.
 
-This is a product-UI walkthrough (the MCP tools are read-only by design — no
-tool can author or publish), so run it against your own workspace with the
-AcmeCloud demo loaded and a terminal beside the app.
+This is a product-UI walkthrough: **no MCP tool authors or publishes
+governance** (ADR-0012), so the authoring steps happen in the app. The decision
+tools *do* record durable, citable evidence — that is what makes `explain_why`
+work below — but none of them edit a policy or cut a publication. Run it against
+your own workspace with the AcmeCloud demo loaded and a terminal beside the app.
 
 ## 0. Baseline: a typed "I don't know"
 

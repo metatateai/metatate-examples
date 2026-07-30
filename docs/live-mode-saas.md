@@ -1,10 +1,16 @@
 # Live Mode (Metatate Cloud)
 
 Metatate Cloud exposes **nine** tools at a single `POST /mcp` endpoint with
-plain bearer-token auth. **This pack exercises seven of them** — the read-only
-decision surface. The remaining two are the B1 request lane (`request_access`,
-`check_request`) and are deliberately out of scope here; `request_access` is the
-only tool that writes.
+plain bearer-token auth. **This pack exercises seven context and decision
+tools: five pure reads and two advisory tools that record durable, citable
+decision evidence** (`authorize_use`, `validate_query_context`). The B1 request
+lane (`request_access`, `check_request`) is not exercised here.
+
+All seven need only the `read` token scope — but **scope is not durable-effect
+behaviour**, and the two are easy to conflate. `authorize_use` and
+`validate_query_context` write decision records; that is not incidental, it is
+the mechanism the audit-evidence example depends on. `explain_why(decision_id)`
+can only cite a decision because the decision was recorded.
 
 > **If you build on the request lane:** asking the human to confirm before
 > calling `request_access` is a **client-side obligation today**. The server

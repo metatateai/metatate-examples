@@ -711,6 +711,87 @@ def section_zero_quarantine() -> None:
           "negative control restored the data cleanly (still zero quarantined)")
 
 
+def section_no_false_readonly_claim() -> None:
+    """Forbid describing the exercised tool subset as read-only / side-effect-free.
+
+    WHY THIS KEYS ON THE PREDICATE, NOT THE NUMBER. An earlier sweep looked for
+    the string "seven governance tools", found the COUNT error, fixed it — and
+    left "seven READ-ONLY tools" and "the read-only decision surface" standing.
+    The number was never the dangerous part. The behavioural claim was.
+
+    It is false: `authorize_use` and `validate_query_context` record durable,
+    citable decision evidence. The pack's own audit-evidence example depends on
+    exactly that — `explain_why(decision_id)` can only cite a decision because
+    the decision was written. Denying the write in prose while demonstrating it
+    in code tells a reader the mechanism they are following does not happen.
+
+    All seven need only the `read` token scope, and that is the trap: scope is
+    not durable-effect behaviour. #384 spent three rounds removing that same
+    conflation from the wire.
+
+    Prose is FLATTENED before matching so a line-wrapped instance cannot survive.
+    """
+    print("\nM. No false read-only claim about the exercised tool subset")
+    import re as _re
+    PREDICATES = [r"read[- ]only", r"side[- ]effect[- ]free", r"non[- ]writing",
+                  r"does ?n[o']t write", r"no writes", r"never writes", r"write[- ]free"]
+    # Talking ABOUT the subset — not an unrelated use of the words.
+    SUBJECT = _re.compile(r"seven|subset|this pack|decision surface|governance tools", _re.I)
+    # The one legitimate phrasing: the FIVE genuinely pure reads.
+    ALLOWED = _re.compile(r"five pure reads|5 pure reads", _re.I)
+
+    offenders = []
+    for path in sorted(REPO.rglob("*")):
+        if path.is_dir() or ".git" in path.parts or ".venv-312" in path.parts:
+            continue
+        if path.suffix not in (".md", ".py", ".ipynb", ".yaml", ".yml", ".sh"):
+            continue
+        if path.name == "purpose_contract_acceptance.py":
+            continue  # must name the patterns in order to forbid them
+        try:
+            flat = _re.sub(r"\s+", " ", path.read_text())
+        except Exception:
+            continue
+        for pat in PREDICATES:
+            for m in _re.finditer(pat, flat, _re.I):
+                ctx = flat[max(0, m.start() - 110): m.end() + 110]
+                if SUBJECT.search(ctx) and not ALLOWED.search(ctx):
+                    offenders.append(f"{path.relative_to(REPO)}: …{ctx.strip()[:120]}…")
+    check(not offenders,
+          "no file describes the exercised subset as read-only / side-effect-free",
+          " | ".join(offenders[:4]) + "  ||  authorize_use and validate_query_context "
+          "RECORD durable citable decision evidence; `read` scope is not "
+          "durable-effect behaviour. Use: 'seven context and decision tools: five "
+          "pure reads and two advisory tools that record durable, citable decision "
+          "evidence.'")
+
+    # The COUNT claim is a different error from the behavioural one, and also
+    # wrong: the server exposes nine. Cheap to guard, so guard it.
+    count_offenders = []
+    for path in sorted(REPO.rglob("*")):
+        if path.is_dir() or ".git" in path.parts or ".venv-312" in path.parts:
+            continue
+        if path.suffix not in (".md", ".py", ".ipynb", ".yaml", ".yml", ".sh"):
+            continue
+        if path.name == "purpose_contract_acceptance.py":
+            continue
+        try:
+            flat = _re.sub(r"\s+", " ", path.read_text())
+        except Exception:
+            continue
+        if _re.search(r"seven governance tools", flat, _re.I):
+            count_offenders.append(str(path.relative_to(REPO)))
+    check(not count_offenders,
+          "no file claims the server exposes 'seven governance tools' (it exposes nine)",
+          f"offenders: {count_offenders}")
+
+    # Positive control: the corrected wording must actually be present.
+    live_doc = (REPO / "docs" / "live-mode-saas.md").read_text()
+    flat_doc = _re.sub(r"\s+", " ", live_doc)
+    check("five pure reads" in flat_doc and "durable, citable decision evidence" in flat_doc,
+          "the corrected characterisation is present in docs/live-mode-saas.md")
+
+
 def main() -> int:
     print("B3 purpose-contract acceptance")
     client = OfflineMetatateClient()
@@ -723,6 +804,7 @@ def main() -> int:
     section_do_not_map_tripwire()
     section_classification_drift()
     section_zero_quarantine()
+    section_no_false_readonly_claim()
     section_authored_uses_accounted_for()
     section_no_substring_scanning()
     section_served_use_inventory()

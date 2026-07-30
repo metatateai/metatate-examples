@@ -6,9 +6,11 @@ deploy time, Metatate expands it to serving rows for every member, each
 answer citing the collection as its resolution path. Membership changes are
 a deployment, not a re-authoring exercise.
 
-This is a product-UI walkthrough (the MCP tools are read-only by design), so
-run it against your own workspace with the AcmeCloud demo loaded and a
-terminal beside the app.
+This is a product-UI walkthrough: **no MCP tool authors or publishes
+governance** (ADR-0012), so the membership change happens in the app. The
+decision tools *do* record durable, citable evidence, but none of them edit a
+policy or cut a publication. Run it against your own workspace with the
+AcmeCloud demo loaded and a terminal beside the app.
 
 ## 0. See the group
 

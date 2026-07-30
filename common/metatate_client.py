@@ -55,8 +55,10 @@ class OfflineMetatateClient:
         self.fixture_dir = Path(fixture_dir)
         self._decision_explains: dict[str, str] | None = None
 
-    # ---- the seven read-only tools this pack replays -------------------------
-    # (the server also exposes the B1 request lane; out of scope here)
+    # ---- the seven context + decision tools this pack replays ----------------
+    # Five pure reads; authorize_use and validate_query_context RECORD durable,
+    # citable decision evidence live (the audit-evidence example depends on it).
+    # `read` scope != side-effect-free. B1 request lane is out of scope here.
 
     def discover_context(self, **arguments: Any) -> dict[str, Any]:
         return self._dispatch("discover_context", _drop_none(arguments))
