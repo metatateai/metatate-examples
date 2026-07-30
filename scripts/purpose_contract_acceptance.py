@@ -431,9 +431,10 @@ def section_do_not_map_tripwire() -> None:
                            / "purpose-mapping-manifest.json").read_text())
     got = sorted(e["authored_entry"]
                  for e in manifest["authored_entries_that_must_remain_unmapped"])
-    ACCEPTED = ["embedding_storage"]
+    # The FENCE. Mapping any of these is a REGRESSION, not a fix.
+    ACCEPTED = ["embedding_storage", "renewal_planning"]
     check(got == ACCEPTED,
-          f"do_not_map set is exactly {ACCEPTED}",
+          f"FENCE: do_not_map set is exactly {ACCEPTED}",
           f"got {got} — if this change is intended, rule on it in metatate-saas "
           f"docs/b3-acmecloud-purpose-vocabulary-manifest.md FIRST, then update "
           f"the vendored dispositions and this tripwire together")
@@ -448,6 +449,68 @@ def section_do_not_map_tripwire() -> None:
     check(bool(manifest.get("authored_entries_mapped")),
           f"{len(manifest.get('authored_entries_mapped', []))} authored entries are MAPPED",
           "if this is empty the dispositions file failed to parse")
+
+
+def section_classification_drift() -> None:
+    """Pin every entry's CURRENT classification so a change requires review.
+
+    This is NOT the fence, and conflating the two would be a real error:
+
+      * FENCE (`do_not_map`) says an entry must NEVER be mapped. Mapping it is a
+        regression and the fix is to revert.
+      * THIS tripwire says an entry's classification changed. That may be
+        perfectly legitimate — an `unmapped_untouched` entry is explicitly
+        allowed to become mapped later. The assertion exists so the change is
+        SEEN and confirmed by a human, not so it is forbidden.
+
+    Asserting current state is not the same as forbidding change. The failure
+    message has to say which of the two a reader is looking at, or the next
+    person will "fix" a legitimate mapping by reverting it.
+    """
+    print("\nK. Classification drift tripwire (change requires review, not reversal)")
+    inv = json.loads((REPO / "sample-data" / "acmecloud"
+                      / "served-use-inventory.json").read_text())
+    actual = {e["entry"]: e["disposition"]["classification"] for e in inv["entries"]}
+
+    # Ruled 2026-07-30. Pinned so drift is visible; NOT a prohibition except
+    # where the fence separately says so.
+    PINNED = {
+        "renewal_planning": "unmapped_do_not_map",   # ALSO fenced (see section G)
+        "ml_training":      "unmapped_untouched",
+        "public_sharing":   "unmapped_untouched",
+        "reporting":        "unmapped_untouched",
+        "support":          "unmapped_untouched",
+        "embedding_storage": "do_not_map",           # ALSO fenced
+        "analytics":        "registry_category",
+        "marketing":        "registry_category",
+        "ai":               "registry_category",
+        "advertising":      "normalized_key",
+        "personalization":  "normalized_key",
+        "prospect_outreach": "deliberate_conflict",
+    }
+    drifted = []
+    for entry, want in sorted(PINNED.items()):
+        got = actual.get(entry)
+        if got != want:
+            drifted.append(f"{entry}: pinned={want!r} now={got!r}")
+    check(not drifted,
+          f"all {len(PINNED)} pinned classifications unchanged",
+          "; ".join(drifted) + "  |  A CHANGE HERE MAY BE CORRECT: an "
+          "`unmapped_untouched` entry is allowed to become mapped. Confirm the "
+          "change was intended, then update this pin. Do NOT revert on the "
+          "strength of this test alone — only the FENCE (section G) forbids "
+          "mapping, and only for the entries it names.")
+
+    # The two ideas must not silently merge: a fenced entry is pinned AND
+    # forbidden; an untouched entry is pinned only.
+    fenced = {e["authored_entry"]
+              for e in json.loads((REPO / "sample-data" / "acmecloud"
+                                   / "purpose-mapping-manifest.json").read_text())
+              ["authored_entries_that_must_remain_unmapped"]}
+    untouched_pinned = {k for k, v in PINNED.items() if v == "unmapped_untouched"}
+    check(not (fenced & untouched_pinned),
+          "no entry is both FENCED and classified unmapped_untouched",
+          f"contradiction: {sorted(fenced & untouched_pinned)}")
 
 
 def section_authored_uses_accounted_for() -> None:
@@ -610,6 +673,7 @@ def main() -> int:
     section_recorder_preflight()
     section_manifest_drift()
     section_do_not_map_tripwire()
+    section_classification_drift()
     section_authored_uses_accounted_for()
     section_no_substring_scanning()
     section_served_use_inventory()

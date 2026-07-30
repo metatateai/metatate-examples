@@ -374,7 +374,7 @@
       ]
     },
     {
-      "classification": "legacy_unmapped",
+      "classification": "unmapped_untouched",
       "derived_measurement": {
         "_note": "measurement of the current pack, not a contract",
         "resolves_in_case_count": 3,
@@ -385,7 +385,7 @@
         ]
       },
       "disposition": {
-        "classification": "legacy_unmapped",
+        "classification": "unmapped_untouched",
         "contains_dot": false,
         "derived_family_token": false,
         "has_explicit_disposition": true,
@@ -486,7 +486,7 @@
       ]
     },
     {
-      "classification": "legacy_unmapped",
+      "classification": "unmapped_untouched",
       "derived_measurement": {
         "_note": "measurement of the current pack, not a contract",
         "resolves_in_case_count": 1,
@@ -495,7 +495,7 @@
         ]
       },
       "disposition": {
-        "classification": "legacy_unmapped",
+        "classification": "unmapped_untouched",
         "contains_dot": false,
         "derived_family_token": false,
         "has_explicit_disposition": true,
@@ -520,7 +520,7 @@
       ]
     },
     {
-      "classification": "legacy_unmapped",
+      "classification": "unmapped_do_not_map",
       "derived_measurement": {
         "_note": "measurement of the current pack, not a contract",
         "resolves_in_case_count": 2,
@@ -530,7 +530,7 @@
         ]
       },
       "disposition": {
-        "classification": "legacy_unmapped",
+        "classification": "unmapped_do_not_map",
         "contains_dot": false,
         "derived_family_token": false,
         "has_explicit_disposition": true,
@@ -556,7 +556,7 @@
       ]
     },
     {
-      "classification": "legacy_unmapped",
+      "classification": "unmapped_untouched",
       "derived_measurement": {
         "_note": "measurement of the current pack, not a contract",
         "resolves_in_case_count": 10,
@@ -574,7 +574,7 @@
         ]
       },
       "disposition": {
-        "classification": "legacy_unmapped",
+        "classification": "unmapped_untouched",
         "contains_dot": false,
         "derived_family_token": false,
         "has_explicit_disposition": true,
@@ -642,7 +642,7 @@
       ]
     },
     {
-      "classification": "legacy_unmapped",
+      "classification": "unmapped_untouched",
       "derived_measurement": {
         "_note": "measurement of the current pack, not a contract",
         "resolves_in_case_count": 8,
@@ -658,7 +658,7 @@
         ]
       },
       "disposition": {
-        "classification": "legacy_unmapped",
+        "classification": "unmapped_untouched",
         "contains_dot": false,
         "derived_family_token": false,
         "has_explicit_disposition": true,

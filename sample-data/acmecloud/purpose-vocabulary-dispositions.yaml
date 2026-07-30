@@ -128,10 +128,13 @@ entries:
   # unmapped. The three PROHIBITED ones are the ones to watch — see
   # `prohibition_bite_checks` below.
   - authored_entry: ml_training
+    kind: unmapped_untouched
     list: prohibited
     resolved_key: null
     do_not_map: false
-    rationale: Not in the source manifest's table — untouched, not a ruling.
+    rationale: >-
+      RULED 2026-07-30 (Carlos): stays uncanonicalized but is now documented.
+      Prohibited. Disposition is UNTOUCHED; whether the prohibition still bites is a SEPARATE assertion (prohibition_bite_checks) — see the note below.
 
   - authored_entry: prospect_outreach
     kind: deliberate_conflict
@@ -147,30 +150,43 @@ entries:
       while the demo still served both rows.
 
   - authored_entry: public_sharing
+    kind: unmapped_untouched
     list: prohibited
     resolved_key: null
     do_not_map: false
-    rationale: Not in the source manifest's table — untouched, not a ruling.
+    rationale: >-
+      RULED 2026-07-30 (Carlos): stays uncanonicalized but is now documented.
+      Prohibited. Disposition is UNTOUCHED; its behavioural effect is asserted separately.
 
   - authored_entry: reporting
-    list: permitted
-    resolved_key: null
-    do_not_map: false
-    rationale: Not in the source manifest's table — untouched, not a ruling.
-
-  - authored_entry: support
-    list: permitted
-    resolved_key: null
-    do_not_map: false
-    rationale: Not in the source manifest's table — untouched, not a ruling.
-
-  - authored_entry: renewal_planning
+    kind: unmapped_untouched
     list: permitted
     resolved_key: null
     do_not_map: false
     rationale: >-
-      Not in the source manifest's table. Previously mis-recorded as a declared
-      exception; it is not one.
+      RULED 2026-07-30 (Carlos): stays uncanonicalized but is now documented.
+      Permitted. May legitimately become mapped later.
+
+  - authored_entry: support
+    kind: unmapped_untouched
+    list: permitted
+    resolved_key: null
+    do_not_map: false
+    rationale: >-
+      RULED 2026-07-30 (Carlos): stays uncanonicalized but is now documented.
+      Permitted. May legitimately become mapped later.
+
+  - authored_entry: renewal_planning
+    kind: unmapped_do_not_map
+    list: permitted
+    resolved_key: null
+    do_not_map: true
+    rationale: >-
+      RULED 2026-07-30 (Carlos): standing fence. Renewal planning is a real
+      business activity with no published purpose that expresses it, and the
+      nearest candidates mean something else. Mapping it would infer coverage
+      nobody authored — the same error `embedding_storage` guards against.
+      This is the ONLY one of the five unruled entries that gets the fence.
 
   # ---- ruled by Carlos 2026-07-29 (were previously recorded as unruled) ----
   # These are NOT unresolved entries and NOT normalization gaps. Two are
@@ -215,9 +231,20 @@ entries:
     do_not_map: false
     rationale: Normalizes to the registry key marketing.personalization.
 
-# Unmapped PROHIBITED entries can neither prove coverage nor neutralize a
-# prohibition. A prohibition silently ceasing to apply is the dangerous
-# direction and would not announce itself, so it is asserted explicitly by case.
+# DISPOSITION vs BEHAVIOURAL EFFECT — two ideas, two assertions, on purpose.
+#
+#   disposition        = how the vocabulary treats an entry (mapped / untouched /
+#                        fenced). Asserted from this file.
+#   behavioural effect = whether a prohibition still changes an outcome.
+#                        Asserted from live/recorded answers, below.
+#
+# They are kept apart because collapsing them would let a future MAPPING change
+# silently alter what a PROHIBITION does, with a single green test covering both.
+# `ml_training` and `public_sharing` are exactly that case: disposition
+# `unmapped_untouched`, behaviour "still bites".
+#
+# An unmapped entry can neither prove coverage nor neutralize a prohibition, and
+# a prohibition silently ceasing to apply would not announce itself.
 prohibition_bite_checks:
   - case_id: train-support-tickets-deny
     covers: ml_training

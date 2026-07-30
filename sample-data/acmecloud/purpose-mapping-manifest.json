@@ -130,6 +130,12 @@
       "list": "permitted",
       "must_remain_unmapped": true,
       "policy": "ml-embedding-guardrails"
+    },
+    {
+      "authored_entry": "renewal_planning",
+      "list": "permitted",
+      "must_remain_unmapped": true,
+      "policy": null
     }
   ],
   "authored_entries_unmapped_untouched": [
@@ -150,11 +156,6 @@
     },
     {
       "authored_entry": "support",
-      "list": "permitted",
-      "may_become_mapped": true
-    },
-    {
-      "authored_entry": "renewal_planning",
       "list": "permitted",
       "may_become_mapped": true
     }

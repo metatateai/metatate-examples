@@ -28,7 +28,9 @@ def _drop_none(payload: dict[str, Any]) -> dict[str, Any]:
 
 
 class MetatateCloudClient(ManagedMCPMetatateClient):
-    """The seven governance tools over the workspace MCP endpoint
+    """The seven READ-ONLY governance tools this pack uses, over the workspace
+    MCP endpoint. The server also exposes the B1 request lane
+    (`request_access`, `check_request`), which this pack does not cover
     (bearer ``mtt_…`` token from the MCP module's Tokens tab)."""
 
     def discover_context(
