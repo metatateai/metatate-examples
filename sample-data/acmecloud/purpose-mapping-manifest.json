@@ -818,7 +818,7 @@
         "usage_guidance_rows_cited": 1
       },
       "kind": "purposeful",
-      "quarantined": true,
+      "quarantined": false,
       "tool": "authorize_use"
     },
     {
@@ -969,7 +969,7 @@
         "verdict": "pass"
       },
       "kind": "purposeful",
-      "quarantined": true,
+      "quarantined": false,
       "tool": "validate_query_context"
     }
   ]

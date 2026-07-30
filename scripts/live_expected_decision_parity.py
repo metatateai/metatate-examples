@@ -110,7 +110,12 @@ def main() -> int:
     from common.saas_client import MetatateCloudClient
     client = MetatateCloudClient()
 
-    passed = failed = skipped = 0
+    # THREE DISTINCT COUNTERS. They were one "skipped" bucket, which made a
+    # delegated-but-green fence look identical to a real skipped case — the gate
+    # read weaker than it was AND a genuine skip could hide in the noise.
+    case_pass = case_fail = case_skip = 0        # live case parity
+    proh_pass = proh_fail = 0                    # live prohibition checks
+    delegated = 0                                # fences asserted in SaaS CI, not here
     failures: list[str] = []
 
     print("=" * 78)
@@ -118,18 +123,34 @@ def main() -> int:
     print("Scope: closes the ASSERTION gap. NOT monitoring, NOT drift detection.")
     print("=" * 78)
 
+    # A release must not quietly withhold current-behaviour cases from its own
+    # gate. Quarantining understates what the release proves, and a summary line
+    # saying "skipped as quarantined" while the PR says "restored" is exactly the
+    # contradiction that gets believed later.
+    quarantined_now = [e["case_id"] for e in manifest["purposeful_and_blind_cases"]
+                       if e.get("quarantined")]
+    print(f"\n0. Release contains ZERO quarantined current-behaviour cases")
+    if quarantined_now:
+        print(f"  FAIL  {len(quarantined_now)} case(s) quarantined: {quarantined_now}")
+        print( "        A quarantined case is NOT exercised by this gate. Either resolve")
+        print( "        the divergence and un-quarantine it, or do not claim the release")
+        print( "        covers it.")
+        failures.append(f"quarantined current-behaviour cases: {quarantined_now}")
+    else:
+        print("  PASS  no case is withheld from this gate")
+
     # ---- direction 1: declared purposes must resolve exactly ----------------
     print("\n1. Cases: live projection must equal the offline projection")
     for entry in manifest["purposeful_and_blind_cases"]:
         cid = entry["case_id"]
         if entry.get("quarantined"):
-            print(f"  SKIP  {cid} (quarantined — withdrawn from current-behaviour claims)")
-            skipped += 1
+            print(f"  SKIP  {cid} (quarantined — NOT exercised; see section 0)")
+            case_skip += 1
             continue
         case = by_id.get(cid)
         if case is None:
             failures.append(f"{cid}: in manifest but not in CASES")
-            failed += 1
+            case_fail += 1
             continue
         expected = entry["expected_offline_projection"]
         try:
@@ -137,7 +158,7 @@ def main() -> int:
         except Exception as exc:  # noqa: BLE001
             print(f"  FAIL  {cid}: live call raised {type(exc).__name__}: {exc}")
             failures.append(f"{cid}: live call raised {exc}")
-            failed += 1
+            case_fail += 1
             continue
 
         deltas = []
@@ -162,10 +183,10 @@ def main() -> int:
             for d in deltas:
                 print(f"          {d}")
             failures.append(f"{cid}: " + "; ".join(deltas))
-            failed += 1
+            case_fail += 1
         else:
             print(f"  PASS  {cid}")
-            passed += 1
+            case_pass += 1
 
     # ---- direction 2: the inexpressible set must STAY unmapped -------------
     must_remain = manifest["authored_entries_that_must_remain_unmapped"]
@@ -176,10 +197,10 @@ def main() -> int:
         print("  NOTE  the dispositions mark none — nothing to assert")
     for entry in must_remain:
         authored = entry["authored_entry"]
-        print(f"  NOTE  {authored}: standing ruling — mapping it would be a regression.")
-        print(f"        Its case-level fail-closed outcome is asserted in section 1;")
-        print(f"        the mapping itself is asserted SaaS-side against the registry.")
-        skipped += 1
+        print(f"  DELEGATED  {authored}: fence asserted SaaS-side against the registry.")
+        print(f"             Its case-level fail-closed outcome IS asserted here, in")
+        print(f"             section 1 — this is not an unrun check.")
+        delegated += 1
 
     untouched = manifest.get("authored_entries_unmapped_untouched", [])
     print(f"\n   Unmapped but NOT ruled on ({len(untouched)}): "
@@ -198,7 +219,7 @@ def main() -> int:
         if case is None:
             print(f"  FAIL  {cid}: bite-check case not found in CASES")
             failures.append(f"{cid}: bite-check case missing")
-            failed += 1
+            proh_fail += 1
             continue
         expected = check.get("expected_projection") or {}
         try:
@@ -206,7 +227,7 @@ def main() -> int:
         except Exception as exc:  # noqa: BLE001
             print(f"  FAIL  {cid}: live call raised {exc}")
             failures.append(f"{cid}: live call raised {exc}")
-            failed += 1
+            proh_fail += 1
             continue
         # The prohibition must still produce a non-permissive outcome, AND match
         # the recorded projection exactly.
@@ -221,13 +242,19 @@ def main() -> int:
             for d in deltas:
                 print(f"          {d}")
             failures.append(f"{cid}: " + "; ".join(deltas))
-            failed += 1
+            proh_fail += 1
         else:
             print(f"  PASS  {cid} still bites (covers {covers})")
-            passed += 1
+            proh_pass += 1
 
     print("\n" + "-" * 78)
-    print(f"parity gate: {passed} passed, {failed} failed, {skipped} skipped")
+    print("parity gate — counters kept SEPARATE, because a delegated check that is")
+    print("green elsewhere is not a skip, and a real skip must not hide among them:")
+    print(f"  live case parity      : {case_pass} passed, {case_fail} failed, {case_skip} skipped")
+    print(f"  live prohibition bite : {proh_pass} passed, {proh_fail} failed")
+    print(f"  registry fences       : {delegated} delegated to SaaS CI (asserted there, not unrun)")
+    print(f"  TOTAL live assertions : {case_pass + proh_pass} passed, "
+          f"{case_fail + proh_fail} failed, {case_skip} skipped")
     print("Scope reminder: this reflects the moment it ran. It is not a continuous")
     print("guarantee, and there is deliberately no schedule — each live evaluation")
     print("writes durable ledger evidence into the tenant.")

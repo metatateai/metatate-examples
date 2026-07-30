@@ -84,8 +84,33 @@ def _load_dispositions() -> dict[str, Any]:
     return {"entries": entries, "prohibition_bite_checks": bite}
 
 
-# Withdrawn from current-behaviour claims (see expected-decisions.yaml).
-QUARANTINED = {"finance-invoices-allowed-use", "finance-cross-schema-join-pass"}
+EXPECTED_DECISIONS = REPO / "sample-data" / "acmecloud" / "expected-decisions.yaml"
+
+
+def _quarantined_ids() -> set[str]:
+    """Read the quarantine set from the DATA, never from a literal here.
+
+    This function exists because the literal it replaces caused a real defect:
+    the quarantine was lifted in expected-decisions.yaml when the finance
+    divergence resolved, but a frozen `QUARANTINED = {...}` set in this file kept
+    marking both cases quarantined. The live parity gate then SKIPPED them while
+    the PR body said they were restored — a release gate contradicting its own
+    PR. Exactly the hand-listed-set failure this pack keeps finding elsewhere.
+    """
+    if not EXPECTED_DECISIONS.exists():
+        return set()
+    text = EXPECTED_DECISIONS.read_text()
+    _, marker, tail = text.partition("\nquarantined:")
+    if not marker:
+        return set()
+    ids: set[str] = set()
+    for line in tail.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("- id:"):
+            ids.add(stripped.split(":", 1)[1].strip().strip("\"'"))
+        elif stripped and not stripped.startswith(("-", "#")) and not line.startswith(" "):
+            break  # left the quarantined block
+    return ids
 
 SCALARS = ("state", "decision", "verdict", "reason_code")
 
@@ -117,6 +142,7 @@ def _projection(case_id: str) -> dict[str, Any] | None:
 
 def build() -> dict[str, Any]:
     by_case = {c["id"]: c for c in CASES}
+    quarantined = _quarantined_ids()
     entries: list[dict[str, Any]] = []
 
     for case in CASES:
@@ -142,7 +168,7 @@ def build() -> dict[str, Any]:
             "tool": case["tool"],
             "kind": kind,
             "declared_purpose_key": declared,
-            "quarantined": cid in QUARANTINED,
+            "quarantined": cid in quarantined,
             "expected_offline_projection": projection,
         })
 

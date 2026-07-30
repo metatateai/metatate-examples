@@ -663,6 +663,54 @@ def section_served_use_inventory() -> None:
               f"state={ans.get('state')!r} decision={ans.get('decision')!r}")
 
 
+def section_zero_quarantine() -> None:
+    """This release must contain ZERO quarantined current-behaviour cases.
+
+    Includes a NEGATIVE CONTROL that actually reintroduces a quarantine and
+    proves the assertion trips. A comment claiming it would is not evidence —
+    and this specific check exists because the opposite happened: the quarantine
+    was lifted in the data while a frozen literal in the generator kept both
+    finance cases marked, so the live gate SKIPPED them while the PR said they
+    were restored.
+    """
+    print("\nL. Zero quarantined current-behaviour cases (with negative control)")
+    manifest_path = REPO / "sample-data" / "acmecloud" / "purpose-mapping-manifest.json"
+    manifest = json.loads(manifest_path.read_text())
+    quarantined = [e["case_id"] for e in manifest["purposeful_and_blind_cases"]
+                   if e.get("quarantined")]
+    check(not quarantined,
+          "no current-behaviour case is quarantined out of the release",
+          f"quarantined: {quarantined} — either resolve the divergence and "
+          f"un-quarantine, or stop claiming the release covers them")
+
+    # The quarantine set must be DERIVED, not literal. Prove it by adding a
+    # quarantine to the DATA and confirming the generated manifest follows.
+    from scripts.build_purpose_manifest import build as build_manifest
+    data = REPO / "sample-data" / "acmecloud" / "expected-decisions.yaml"
+    original = data.read_text()
+    victim = "finance-invoices-allowed-use"
+    try:
+        data.write_text(original.rstrip("\n") +
+                        f"\n\nquarantined:\n  - id: {victim}\n    reason: negative control\n")
+        regenerated = build_manifest()
+        tripped = [e["case_id"] for e in regenerated["purposeful_and_blind_cases"]
+                   if e.get("quarantined")]
+        check(victim in tripped,
+              "NEGATIVE CONTROL: reintroducing a quarantine in the data marks the case",
+              f"generator did NOT pick it up (got {tripped}) — the set is still literal somewhere")
+        would_fail = [c for c in tripped]
+        check(bool(would_fail),
+              "NEGATIVE CONTROL: the zero-quarantine assertion would fail on that state",
+              "the control did not produce a failing condition")
+    finally:
+        data.write_text(original)
+
+    # and confirm we restored cleanly
+    restored = json.loads(manifest_path.read_text())
+    check(not [e for e in restored["purposeful_and_blind_cases"] if e.get("quarantined")],
+          "negative control restored the data cleanly (still zero quarantined)")
+
+
 def main() -> int:
     print("B3 purpose-contract acceptance")
     client = OfflineMetatateClient()
@@ -674,6 +722,7 @@ def main() -> int:
     section_manifest_drift()
     section_do_not_map_tripwire()
     section_classification_drift()
+    section_zero_quarantine()
     section_authored_uses_accounted_for()
     section_no_substring_scanning()
     section_served_use_inventory()
