@@ -2,7 +2,7 @@
   "answer": {
     "advisory": true,
     "evaluated_actor_role": null,
-    "evaluated_at": "2026-07-30T02:06:16.722Z",
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
     "evaluated_purpose": null,
     "findings": [
       {

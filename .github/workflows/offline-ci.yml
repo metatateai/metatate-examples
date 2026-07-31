@@ -48,6 +48,7 @@ jobs:
             cicd_policy_gate \
             framework_runtime \
             human_exception_workflow \
+            request_lifecycle \
             governed_agent_arc \
             scripts/build_notebooks.py \
             scripts/build_readme_hero.py \
@@ -99,6 +100,9 @@ jobs:
 
       - name: Audit evidence packet CLI
         run: scripts/run_audit_evidence.sh
+
+      - name: Request lifecycle acceptance (non-writing)
+        run: scripts/run_request_lifecycle_acceptance.sh
 
       - name: B3 purpose-contract acceptance (strict routing + cross-surface consistency)
         run: scripts/run_purpose_contract_acceptance.sh

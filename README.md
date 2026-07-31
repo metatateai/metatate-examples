@@ -134,6 +134,10 @@ Demo policy behavior:
   classification, publish the estate-agnostic
   [starter policy pack](starter-policies), and measure the coverage delta
   with `scripts/bootstrap_check.py`.
+- [docs/request-access-lifecycle.md](docs/request-access-lifecycle.md) — the
+  two server-backed workflow tools: preview by default, explicit confirmation
+  before filing a real steward request, status polling, and a server-verified
+  exception retry. It is intentionally absent from automated live CI.
 
 The notebooks run in two modes:
 
@@ -285,6 +289,7 @@ cicd_policy_gate/               Reusable CI/CD policy gate + dbt adapter + sampl
 docs/                           Setup, demo model, and troubleshooting
 governed_agent_arc/             The flagship one-brief-end-to-end agent arc
 human_exception_workflow/       Human review and exception workflow example
+request_lifecycle/              Live-only request_access/check_request walkthrough
 notebooks/                      Notebook-first walkthroughs (generated)
 sample-data/acmecloud/tables/   Small synthetic CSV tables
 starter-policies/               Estate-agnostic starter pack for YOUR workspace

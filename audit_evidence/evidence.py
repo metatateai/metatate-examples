@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
 """The audit evidence packet — from decision ids to an audit-ready report.
 
-"Advisory" does not mean unaccountable: every Metatate answer carries a
-`decision_id`, publication provenance, and cited policy versions, and
-`explain_why` re-resolves any decision after the fact (including whether it
-is still CURRENT in the live publication). This module turns a day of
+"Advisory" does not mean unaccountable: decision answers cite serving
+`decision_id` values, while authorization and validation calls mint durable
+receipts. `explain_why` resolves all three reference kinds. This module turns a day of
 governed questions into a single evidence packet a governance lead can hand
 to an auditor — decisions, citations, conditions, obligations, the explain
 chain, and the honest corners where the estate refused to guess.
 
 Offline it replays recorded answers; live it collects real evidence from
-your workspace. The server keeps its own ledger too: MCP Tools → Tokens →
-"View requests" in the product.
+your workspace. Activity → Audit trail shows governance receipts; MCP Tools →
+Tokens → View requests is the separate transport request log.
 """
 
 from __future__ import annotations
@@ -243,11 +242,11 @@ def render_markdown(packet: EvidencePacket) -> str:
         "",
         "## Ledger",
         "",
-        "Every call above is also in the workspace's server-side request log "
-        "(MCP Tools → Tokens → View requests). Advisory answers, accountable "
-        "trail: decision ids resolve via `explain_why` for as long as the "
-        "history is retained, and `current` flags decisions superseded by a "
-        "later publication.",
+        "Activity → Audit trail shows the durable governance receipts. MCP "
+        "Tools → Tokens → View requests is the separate transport request log; "
+        "the two corroborate different layers. Decision ids resolve via "
+        "`explain_why` for as long as history is retained, and `current` flags "
+        "serving decisions superseded by a later publication.",
     ]
     return "\n".join(lines) + "\n"
 

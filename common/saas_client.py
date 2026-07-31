@@ -20,7 +20,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from .metatate_client import ManagedMCPMetatateClient
+from .metatate_client import ManagedMCPMetatateClient, _explain_arguments
 
 
 def _drop_none(payload: dict[str, Any]) -> dict[str, Any]:
@@ -33,8 +33,8 @@ class MetatateCloudClient(ManagedMCPMetatateClient):
     `validate_query_context`, which RECORD durable, citable decision evidence.
     They need only the `read` scope — scope is not durable-effect behaviour.
     The server also exposes the B1 request lane (`request_access`,
-    `check_request`), which this pack does not cover
-    (bearer ``mtt_…`` token from the MCP module's Tokens tab)."""
+    `check_request`). This client exposes it for the explicitly confirmed,
+    live-only walkthrough; the recorded/default pack remains seven tools."""
 
     def discover_context(
         self, database: str | None = None, schema: str | None = None
@@ -71,6 +71,8 @@ class MetatateCloudClient(ManagedMCPMetatateClient):
         destination: dict[str, str] | None = None,
         consumer_jurisdiction: str | None = None,
         purpose_key: str | None = None,
+        on_behalf_of: str | None = None,
+        satisfied_conditions: list[dict[str, str]] | None = None,
     ) -> dict[str, Any]:
         # B3: decision-bearing. Omitting it is a different question, not a
         # cosmetic difference — see OfflineMetatateClient.authorize_use.
@@ -85,6 +87,8 @@ class MetatateCloudClient(ManagedMCPMetatateClient):
                     "destination": destination,
                     "consumer_jurisdiction": consumer_jurisdiction,
                     "purpose_key": purpose_key,
+                    "on_behalf_of": on_behalf_of,
+                    "satisfied_conditions": satisfied_conditions,
                 }
             ),
         )
@@ -100,6 +104,7 @@ class MetatateCloudClient(ManagedMCPMetatateClient):
         destination: dict[str, str] | None = None,
         consumer_jurisdiction: str | None = None,
         purpose_key: str | None = None,
+        on_behalf_of: str | None = None,
     ) -> dict[str, Any]:
         return self.call_tool(
             "validate_query_context",
@@ -114,11 +119,39 @@ class MetatateCloudClient(ManagedMCPMetatateClient):
                     "destination": destination,
                     "consumer_jurisdiction": consumer_jurisdiction,
                     "purpose_key": purpose_key,
+                    "on_behalf_of": on_behalf_of,
                 }
             ),
         )
 
-    def explain_why(self, decision_id: str) -> dict[str, Any]:
-        # `kind='decision'` is the only server explain surface; validation
-        # records have none (docs/live-mode-saas.md).
-        return self.call_tool("explain_why", {"kind": "decision", "decision_id": decision_id})
+    def explain_why(
+        self,
+        decision_id: str | None = None,
+        *,
+        authorization_id: str | None = None,
+        validation_id: str | None = None,
+    ) -> dict[str, Any]:
+        return self.call_tool(
+            "explain_why",
+            _explain_arguments(
+                decision_id,
+                authorization_id=authorization_id,
+                validation_id=validation_id,
+            ),
+        )
+
+    def request_access(
+        self, authorization_id: str, note: str | None = None
+    ) -> dict[str, Any]:
+        return self.call_tool(
+            "request_access",
+            _drop_none(
+                {
+                    "source": {"kind": "authorization", "id": authorization_id},
+                    "note": note,
+                }
+            ),
+        )
+
+    def check_request(self, request_id: str) -> dict[str, Any]:
+        return self.call_tool("check_request", {"request_id": request_id})

@@ -1602,14 +1602,14 @@ def audit_evidence_notebook() -> dict:
                 """
                 # 15 - The Audit Evidence Packet
 
-                "Advisory" does not mean unaccountable. Every Metatate answer carries a
-                `decision_id`, publication provenance, and cited policy versions — this
+                "Advisory" does not mean unaccountable. Decision answers cite serving
+                `decision_id` values, while authorization and validation evaluations
+                mint durable `authorization_id` and `validation_id` receipts. This
                 notebook turns a day of governed questions into a single audit-ready
-                report: decisions with receipts, the `explain_why` chain proving each
-                one is still CURRENT, and the honest corners where the estate refused
-                to guess. The reusable `audit_evidence` package does the assembly; the
-                server keeps its own corroborating ledger (MCP Tools → Tokens →
-                **View requests**).
+                report with publication provenance, policy versions, explain chains,
+                and the honest corners where the estate refused to guess. In the app,
+                **Activity → Audit trail** shows the governance receipts; **MCP Tools →
+                Tokens → View requests** is the separate transport request log.
                 """
             ),
             code(SETUP_CELL),
@@ -1638,6 +1638,44 @@ def audit_evidence_notebook() -> dict:
             code(
                 """
                 print(render_markdown(packet))
+                """
+            ),
+            markdown(
+                """
+                ## Three explanation references, three distinct records
+
+                `decision_id` cites a serving-row decision. `authorization_id`
+                and `validation_id` cite the two durable evaluation ledgers.
+                They are all explainable, but they are not interchangeable.
+                """
+            ),
+            code(
+                """
+                analytics = client.authorize_use(
+                    {"database": "acmecloud_demo", "schema": "public", "table": "customers"},
+                    use="build a churn analytics dashboard",
+                    scenario_key="purpose.allowed_use",
+                    purpose_key="analytics.reporting",
+                )
+                safe_query = client.validate_query_context(
+                    "SELECT region, SUM(arr) FROM customers GROUP BY region",
+                    scenario_key="purpose.allowed_use",
+                    default_database="acmecloud_demo",
+                    default_schema="public",
+                    purpose_key="analytics.reporting",
+                )
+
+                explanation_union = {
+                    "decision": client.explain_why(analytics["decision_id"]),
+                    "authorization": client.explain_why(
+                        authorization_id=analytics["authorization_id"]
+                    ),
+                    "validation": client.explain_why(
+                        validation_id=safe_query["validation_id"]
+                    ),
+                }
+                for kind, explanation in explanation_union.items():
+                    print(kind, "->", explanation.get("kind", "decision"))
                 """
             ),
             markdown(

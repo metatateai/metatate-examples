@@ -6,7 +6,7 @@
       "schema": "public",
       "table": "customer_exports"
     },
-    "evaluated_at": "2026-07-30T02:05:58.706Z",
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
     "publication": {
       "publication_id": "accef000-0000-4000-8000-000000000001",
       "published_at": "2026-07-16T00:00:00.000Z"

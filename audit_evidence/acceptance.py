@@ -14,7 +14,8 @@ from audit_evidence import collect_evidence, render_markdown  # noqa: E402
 
 
 def main() -> int:
-    packet = collect_evidence(get_client())
+    client = get_client()
+    packet = collect_evidence(client)
 
     assert packet.total == 6, f"expected 6 entries, got {packet.total}"
     assert packet.publication_id, "packet must carry publication provenance"
@@ -60,11 +61,42 @@ def main() -> int:
     ):
         assert marker in markdown, f"packet markdown missing {marker!r}"
 
+    # The public client exposes every current server explanation surface.
+    # Keep these as two independent source calls: a validation_id is not a
+    # decision_id, and an authorization_id is the durable call receipt rather
+    # than the serving-row decision cited by that call.
+    authorization = client.authorize_use(
+        {"database": "acmecloud_demo", "schema": "public", "table": "customers"},
+        use="build a churn analytics dashboard",
+        scenario_key="purpose.allowed_use",
+        purpose_key="analytics.reporting",
+    )
+    authorization_explain = client.explain_why(
+        authorization_id=authorization["authorization_id"]
+    )
+    assert authorization_explain["kind"] == "authorization"
+    assert (
+        authorization_explain["authorization_id"]
+        == authorization["authorization_id"]
+    )
+
+    validation = client.validate_query_context(
+        "SELECT region, SUM(arr) FROM customers GROUP BY region",
+        scenario_key="purpose.allowed_use",
+        default_database="acmecloud_demo",
+        default_schema="public",
+        purpose_key="analytics.reporting",
+    )
+    validation_explain = client.explain_why(validation_id=validation["validation_id"])
+    assert validation_explain["kind"] == "validation"
+    assert validation_explain["validation_id"] == validation["validation_id"]
+
     print("audit evidence packet acceptance passed")
     print(
         f"  {packet.total} decisions, {packet.current}/{packet.explained} explained+current, "
         f"{packet.honest_corners} honest corners, publication {packet.publication_id}"
     )
+    print("  explanation union: decision + authorization + validation")
     return 0
 
 

@@ -93,6 +93,12 @@ def main() -> None:
         "scripts/run_framework_runtime_acceptance.sh",
         "scripts/run_langgraph_runtime_notebook.sh",
         "scripts/run_notebook_pack.sh",
+        "request_lifecycle/__init__.py",
+        "request_lifecycle/workflow.py",
+        "request_lifecycle/cli.py",
+        "request_lifecycle/acceptance.py",
+        "docs/request-access-lifecycle.md",
+        "scripts/run_request_lifecycle_acceptance.sh",
         "requirements-framework.txt",
     ]
     for relative in required:
@@ -105,6 +111,7 @@ def main() -> None:
     validate_cicd_policy_gate_files()
     validate_dbt_adapter_files()
     validate_audit_evidence_files()
+    validate_request_lifecycle_files()
     validate_human_exception_workflow_files()
     validate_governed_agent_arc_files()
     validate_readme_hero()
@@ -121,16 +128,82 @@ def validate_json_files() -> None:
     from common.fixture_cases import CASES
 
     fixture_dir = ROOT / "sample-data" / "acmecloud" / "metatate-responses"
+    by_id = {str(case["id"]): case for case in CASES}
     recorded = set()
     for path in fixture_dir.glob("*.json"):
         with path.open("r", encoding="utf-8") as handle:
             payload = json.load(handle)
-        for key in ("case_id", "tool", "arguments", "answer"):
-            assert key in payload, f"{path} missing {key}"
+        assert set(payload) == {"case_id", "tool", "arguments", "answer"}, (
+            f"{path} must use the native Cloud recording wrapper; "
+            f"got keys {sorted(payload)}"
+        )
         assert payload["case_id"] == path.stem, f"{path} case_id mismatch"
+        assert path.stem in by_id, f"orphan recording without canonical case: {path.stem}"
+        assert payload["tool"] == by_id[path.stem]["tool"], f"{path} tool mismatch"
+        serialized = json.dumps(payload, sort_keys=True)
+        assert '"snapshot_id"' not in serialized, f"{path} uses the retired snapshot envelope"
+        assert '"agent_action"' not in serialized, f"{path} uses the retired agent_action envelope"
+
+        answer = payload["answer"]
+        assert isinstance(answer, dict), f"{path} answer must be an object"
+
+        def assert_pinned_evaluated_at(value: object) -> None:
+            if isinstance(value, dict):
+                for key, child in value.items():
+                    if key == "evaluated_at" and isinstance(child, str):
+                        assert child == "2026-07-30T00:00:00.000Z", (
+                            f"{path} has an unnormalized evaluated_at"
+                        )
+                    assert_pinned_evaluated_at(child)
+            elif isinstance(value, list):
+                for child in value:
+                    assert_pinned_evaluated_at(child)
+
+        assert_pinned_evaluated_at(answer)
+        tool = str(payload["tool"])
+        required_by_tool = {
+            "discover_context": {"state", "assets", "publication", "next_cursor"},
+            "get_decision_context": {
+                "state", "asset", "decisions", "effective_decision", "publication"
+            },
+            "inspect_data_meaning": {"ref", "meaning", "classification", "pii"},
+            "inspect_governance_rules": {"state", "asset", "rules", "publication"},
+            "authorize_use": {
+                "state", "advisory", "asset", "authorization_id", "evaluated_at",
+                "evaluated_purpose", "satisfied_conditions"
+            },
+            "validate_query_context": {
+                "state", "advisory", "verdict", "validation_id", "findings",
+                "publication", "evaluated_purpose"
+            },
+        }
+        if tool in required_by_tool:
+            missing_keys = required_by_tool[tool] - set(answer)
+            assert not missing_keys, f"{path} missing current Cloud fields {sorted(missing_keys)}"
+        elif tool == "explain_why":
+            kind = payload["arguments"].get("kind")
+            explain_required = {
+                "decision": {"state", "current", "record", "publication", "explanation"},
+                "authorization": {
+                    "kind", "authorization_id", "answer_state", "evaluated",
+                    "cited_decision_ids", "provenance"
+                },
+                "validation": {
+                    "kind", "validation_id", "answer_state", "verdict", "findings",
+                    "purpose_context", "provenance"
+                },
+            }
+            assert kind in explain_required, f"{path} has unknown explain kind {kind!r}"
+            missing_keys = explain_required[kind] - set(answer)
+            assert not missing_keys, f"{path} missing {kind} explain fields {sorted(missing_keys)}"
+            if kind != "decision":
+                assert answer.get("kind") == kind, f"{path} explain discriminator mismatch"
+        else:
+            raise AssertionError(f"{path} records unknown tool {tool!r}")
         recorded.add(path.stem)
     missing = {str(case["id"]) for case in CASES} - recorded
     assert not missing, f"cases without recordings: {sorted(missing)}"
+    assert len(recorded) == len(CASES), "recording count must equal canonical case count"
 
 
 def validate_csv_files() -> None:
@@ -316,7 +389,8 @@ def validate_audit_evidence_files() -> None:
         "publication_id",
         "honest_corners",
         "render_markdown",
-        "View requests",
+        "Activity → Audit trail",
+        "Tokens → View requests",
     ):
         assert marker in evidence, f"audit evidence missing {marker}"
 
@@ -335,6 +409,26 @@ def validate_audit_evidence_files() -> None:
         encoding="utf-8"
     )
     assert "audit_evidence/acceptance.py" in acceptance_runner, "evidence acceptance runner missing script"
+
+
+def validate_request_lifecycle_files() -> None:
+    workflow = (ROOT / "request_lifecycle" / "workflow.py").read_text(encoding="utf-8")
+    for marker in (
+        "Type START",
+        "REQUEST {authorization_id}",
+        "request_access",
+        "check_request",
+        "satisfied_conditions",
+        "Activity > Review requests",
+    ):
+        assert marker in workflow, f"request lifecycle missing {marker!r}"
+    acceptance = (ROOT / "request_lifecycle" / "acceptance.py").read_text(encoding="utf-8")
+    for marker in (
+        "client.calls == []",
+        "not the bound confirmation",
+        "explain_why must require exactly one reference",
+    ):
+        assert marker in acceptance, f"request lifecycle acceptance missing {marker!r}"
 
 
 def validate_governed_agent_arc_files() -> None:
@@ -394,6 +488,7 @@ def validate_ci_workflows() -> None:
         "scripts/run_cicd_dbt_adapter_acceptance.sh",
         "scripts/run_human_exception_workflow_acceptance.sh",
         "scripts/run_audit_evidence_acceptance.sh",
+        "scripts/run_request_lifecycle_acceptance.sh",
         "scripts/run_governed_agent_arc_acceptance.sh",
         "scripts/run_framework_runtime_acceptance.sh",
         "scripts/run_notebook_pack.sh",
@@ -409,6 +504,7 @@ def validate_ci_workflows() -> None:
         "scripts/run_cicd_dbt_adapter_acceptance.sh",
         "scripts/run_human_exception_workflow_acceptance.sh",
         "scripts/run_audit_evidence_acceptance.sh",
+        "scripts/run_request_lifecycle_acceptance.sh",
         "scripts/run_governed_agent_arc_acceptance.sh",
         "scripts/run_framework_runtime_acceptance.sh",
         "scripts/run_notebook_pack.sh",

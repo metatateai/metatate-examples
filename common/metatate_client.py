@@ -6,9 +6,9 @@ Offline mode replays RECORDED Metatate Cloud answers (committed under
 reader studies offline are byte-shaped like the live endpoint's. Live mode
 calls your Metatate Cloud workspace's MCP endpoint (see docs/live-mode-saas.md).
 
-Both clients expose the same seven methods with the same native arguments
-(structured `asset`/`ref` dicts, canonical `scenario_key`, destination-aware
-transfer context) and return the tool's typed answer verbatim:
+Both clients expose the same seven recorded methods with the same native
+arguments (structured `asset`/`ref` dicts, canonical `scenario_key`,
+destination-aware transfer context) and return the tool's typed answer verbatim:
 `state: answered | review_required | not_enough_published_state`, lowercase
 decision vocabulary (`allow / deny / conditional / mask_partial / …`),
 `verdict: pass | warn | fail`, structured `conditions` / `obligations` /
@@ -53,7 +53,7 @@ class OfflineMetatateClient:
 
     def __init__(self, fixture_dir: Path | str = FIXTURE_DIR) -> None:
         self.fixture_dir = Path(fixture_dir)
-        self._decision_explains: dict[str, str] | None = None
+        self._explains: dict[tuple[str, str], str] | None = None
 
     # ---- the seven context + decision tools this pack replays ----------------
     # Five pure reads; authorize_use and validate_query_context RECORD durable,
@@ -91,6 +91,8 @@ class OfflineMetatateClient:
         destination: dict[str, str] | None = None,
         consumer_jurisdiction: str | None = None,
         purpose_key: str | None = None,
+        on_behalf_of: str | None = None,
+        satisfied_conditions: list[dict[str, str]] | None = None,
     ) -> dict[str, Any]:
         # B3: `purpose_key` is a DECISION-BEARING input, not a label. Omitting it
         # is a different question with a different (fail-closed) answer, so it is
@@ -107,6 +109,8 @@ class OfflineMetatateClient:
                     "destination": destination,
                     "consumer_jurisdiction": consumer_jurisdiction,
                     "purpose_key": purpose_key,
+                    "on_behalf_of": on_behalf_of,
+                    "satisfied_conditions": satisfied_conditions,
                 }
             ),
         )
@@ -122,6 +126,7 @@ class OfflineMetatateClient:
         destination: dict[str, str] | None = None,
         consumer_jurisdiction: str | None = None,
         purpose_key: str | None = None,
+        on_behalf_of: str | None = None,
     ) -> dict[str, Any]:
         return self._dispatch(
             "validate_query_context",
@@ -136,18 +141,31 @@ class OfflineMetatateClient:
                     "destination": destination,
                     "consumer_jurisdiction": consumer_jurisdiction,
                     "purpose_key": purpose_key,
+                    "on_behalf_of": on_behalf_of,
                 }
             ),
         )
 
-    def explain_why(self, decision_id: str) -> dict[str, Any]:
-        explains = self._decision_explain_index()
-        case_id = explains.get(str(decision_id))
+    def explain_why(
+        self,
+        decision_id: str | None = None,
+        *,
+        authorization_id: str | None = None,
+        validation_id: str | None = None,
+    ) -> dict[str, Any]:
+        arguments = _explain_arguments(
+            decision_id,
+            authorization_id=authorization_id,
+            validation_id=validation_id,
+        )
+        kind = str(arguments["kind"])
+        reference_id = str(arguments[f"{kind}_id"])
+        case_id = self._explain_index().get((kind, reference_id))
         if case_id is None:
             raise MetatateToolError(
                 "offline_fixture_missing",
-                "The offline recordings only explain decision_ids returned by the "
-                "recorded authorize answers (chain from one of those).",
+                f"The offline recordings do not contain an explain_why({kind}) "
+                "answer for that id. Chain from a recorded source case or use live mode.",
             )
         return self._load(case_id)
 
@@ -170,22 +188,24 @@ class OfflineMetatateClient:
             recording = json.load(handle)
         return recording["answer"]
 
-    def _decision_explain_index(self) -> dict[str, str]:
-        if self._decision_explains is None:
-            index: dict[str, str] = {}
+    def _explain_index(self) -> dict[tuple[str, str], str]:
+        if self._explains is None:
+            index: dict[tuple[str, str], str] = {}
             for case in CASES:
                 if case["tool"] != "explain_why":
                     continue
-                reference = str(case["arguments"].get("decision_id") or "")
+                kind = str(case["arguments"].get("kind") or "")
+                field = f"{kind}_id"
+                reference = str(case["arguments"].get(field) or "")
                 if not reference.startswith("@"):
                     continue
-                source_id = reference[1:].split(".", 1)[0]
+                source_id, _, source_field = reference[1:].partition(".")
                 answer = self._load(source_id)
-                decision_id = answer.get("decision_id")
-                if isinstance(decision_id, str):
-                    index[decision_id] = str(case["id"])
-            self._decision_explains = index
-        return self._decision_explains
+                reference_id = answer.get(source_field)
+                if isinstance(reference_id, str):
+                    index[(kind, reference_id)] = str(case["id"])
+            self._explains = index
+        return self._explains
 
 
 class ManagedMCPMetatateClient:
@@ -364,3 +384,28 @@ def _tool_error(text: str) -> tuple[str, str]:
 
 def _drop_none(payload: dict[str, Any]) -> dict[str, Any]:
     return {key: value for key, value in payload.items() if value is not None}
+
+
+def _explain_arguments(
+    decision_id: str | None = None,
+    *,
+    authorization_id: str | None = None,
+    validation_id: str | None = None,
+) -> dict[str, str]:
+    """Build the closed explain_why union while preserving positional calls."""
+    supplied = [
+        ("decision", "decision_id", decision_id),
+        ("authorization", "authorization_id", authorization_id),
+        ("validation", "validation_id", validation_id),
+    ]
+    selected = [(kind, field, value) for kind, field, value in supplied if value is not None]
+    if len(selected) != 1:
+        raise ValueError(
+            "explain_why requires exactly one of decision_id, authorization_id, "
+            "or validation_id"
+        )
+    kind, field, raw = selected[0]
+    value = str(raw).strip()
+    if not value:
+        raise ValueError(f"{field} must be non-empty")
+    return {"kind": kind, field: value}

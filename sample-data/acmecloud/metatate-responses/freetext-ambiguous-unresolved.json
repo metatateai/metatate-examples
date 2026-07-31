@@ -9,7 +9,7 @@
     },
     "authorization_id": "accef000-0000-4000-8000-000000000142",
     "evaluated_actor_role": null,
-    "evaluated_at": "2026-07-30T02:06:25.541Z",
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
     "evaluated_purpose": null,
     "message": "Not enough published governance state \u2014 review required.",
     "next_actions": [

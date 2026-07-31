@@ -4,13 +4,17 @@ Metatate Cloud exposes **nine** tools at a single `POST /mcp` endpoint with
 plain bearer-token auth. **This pack exercises seven context and decision
 tools: five pure reads and two advisory tools that record durable, citable
 decision evidence** (`authorize_use`, `validate_query_context`). The B1 request
-lane (`request_access`, `check_request`) is not exercised here.
+lane (`request_access`, `check_request`) is demonstrated separately by the
+explicitly confirmed, live-only request lifecycle; it is never run by the
+default notebook or CI pack.
 
 All seven need only the `read` token scope — but **scope is not durable-effect
 behaviour**, and the two are easy to conflate. `authorize_use` and
 `validate_query_context` write decision records; that is not incidental, it is
-the mechanism the audit-evidence example depends on. `explain_why(decision_id)`
-can only cite a decision because the decision was recorded.
+the mechanism the audit-evidence example depends on. `explain_why` accepts
+exactly one of `decision_id`, `authorization_id`, or `validation_id`, so the
+serving-row decision and both durable call receipts can be explained without
+conflating their identifiers.
 
 > **If you build on the request lane:** asking the human to confirm before
 > calling `request_access` is a **client-side obligation today**. The server
@@ -79,6 +83,7 @@ deterministic local one.
 ```bash
 scripts/run_cicd_policy_gate_acceptance.sh
 scripts/run_human_exception_workflow_acceptance.sh
+scripts/run_request_lifecycle_acceptance.sh    # fake client; never files a request
 scripts/run_framework_runtime_acceptance.sh    # needs Python 3.10+
 scripts/run_notebook_pack.sh                   # notebooks 00–12, except 11
 scripts/run_langgraph_runtime_notebook.sh      # notebook 11 (framework deps)
@@ -99,13 +104,15 @@ CI: `.github/workflows/live-saas-mcp-validation.yml`
   the authored transfer rules per destination (SALESFORCE → CONDITIONAL with
   approval + anonymization, ADS_PLATFORM / EXTERNAL_LLM_VENDOR → deny on the
   AcmeCloud policy).
-- **`explain_why` chains natively.** `data.decision_id` on authorize answers
-  is the real serving-row uuid; `explain_why(decision_id=...)` resolves it
-  server-side. Validation records have no server-side explain surface.
+- **`explain_why` chains natively.** `decision_id` explains a cited serving
+  decision, `authorization_id` explains the durable `authorize_use` evaluation,
+  and `validation_id` explains the durable `validate_query_context` evaluation.
+  The client requires exactly one identifier and sends the matching wire kind.
 - **Query validation is server-verdict.** Validation is intent- and
   column-aware; the typed answer carries `verdict: pass | warn | fail` plus
-  per-ref findings citing the participating instructions. The server keeps no
-  validation records (only authorize `decision_id`s are explainable).
+  per-ref findings citing the participating instructions. Every call carries a
+  durable `validation_id`, which is explainable server-side without returning
+  raw SQL.
 - **Offline parity.** `scripts/record_offline_fixtures.py` replays the
   canonical case set (`common/fixture_cases.py`) against a live workspace and
   commits the typed answers — uuid-normalized but internally consistent, so
