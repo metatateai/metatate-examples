@@ -27,6 +27,7 @@ This repository separates examples from runtime acceptance tests.
 | The SQL gauntlet | `13_sql_gauntlet_validate_query_context.ipynb` | Yes | Yes | Covered by notebook execution |
 | Governed agent arc, end to end | `14_governed_agent_end_to_end.ipynb` | Yes; requires framework deps | Yes; requires framework deps and MCP env | `governed_agent_arc/acceptance.py` |
 | Audit evidence packet | `15_audit_evidence_packet.ipynb` | Yes | Yes | `audit_evidence/acceptance.py` |
+| Server-backed request lifecycle | `docs/request-access-lifecycle.md` | Preview only | Interactive only; never CI | `request_lifecycle/acceptance.py` (fake client, non-writing) |
 
 ## Test Commands
 
@@ -75,6 +76,12 @@ Run human exception workflow acceptance:
 
 ```bash
 scripts/run_human_exception_workflow_acceptance.sh
+```
+
+Run the non-writing request-lifecycle acceptance:
+
+```bash
+scripts/run_request_lifecycle_acceptance.sh
 ```
 
 Run the human exception workflow as a command:

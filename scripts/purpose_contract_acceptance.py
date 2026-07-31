@@ -794,10 +794,17 @@ def section_tool_surface_claims() -> None:
     # The audit-evidence example is the proof it writes: explain_why can only
     # cite a decision_id because the decision was recorded.
     chained = [c for c in CASES if c["tool"] == "explain_why"
-               and str(c["arguments"].get("decision_id", "")).startswith("@")]
+               and any(str(value).startswith("@") for value in c["arguments"].values())]
     check(bool(chained),
-          f"{len(chained)} explain_why case(s) chain a recorded decision_id "
-          f"— the pack demonstrates the write it must not deny")
+          f"{len(chained)} explain_why case(s) chain a recorded evidence id "
+          f"— the pack demonstrates the writes it must not deny")
+
+    explain_kinds = {
+        str(c["arguments"].get("kind")) for c in CASES if c["tool"] == "explain_why"
+    }
+    check(explain_kinds == {"decision", "authorization", "validation"},
+          "the pack pins all three explain_why reference kinds",
+          f"got {sorted(explain_kinds)}")
 
     # ---- TARGETED NEGATIVE. Predicate bound to a surface noun, not the token.
     SURFACE = r"(?:governance\s+)?(?:mcp\s+)?(?:tool|tools|surface|subset|decision surface)"
@@ -848,6 +855,31 @@ def section_tool_surface_claims() -> None:
     # wrapped across a source line — the case Lane A's mutations evaded
     check(_fires("the seven read-only\n                tools this pack replays"),
           "CALIBRATION: a LINE-WRAPPED false claim still trips the guard")
+
+    # The retired pre-B3T envelope claimed only decision_id was explainable.
+    # Keep the negative next to the positive three-kind pin above so this is a
+    # contract guard, not a word ban.
+    retired_explain_claims = (
+        r"validation records have no (?:server-side )?explain",
+        r"server keeps no validation records",
+        r"only (?:server )?explain surface",
+        r"only authorize decision_ids? (?:are|is) explainable",
+    )
+    explain_offenders = []
+    for path in sorted(REPO.rglob("*")):
+        if path.is_dir() or ".git" in path.parts or ".venv-312" in path.parts:
+            continue
+        if path.suffix not in (".md", ".py", ".ipynb", ".yaml", ".yml", ".sh"):
+            continue
+        if path.name == "purpose_contract_acceptance.py":
+            continue
+        for blob in _surface_blobs(path):
+            if any(re.search(pattern, blob, re.I) for pattern in retired_explain_claims):
+                explain_offenders.append(str(path.relative_to(REPO)))
+                break
+    check(not explain_offenders,
+          "no surface claims validation/authorization receipts cannot be explained",
+          f"offenders={explain_offenders[:5]}")
 
     live_doc = re.sub(r"\s+", " ", (REPO / "docs" / "live-mode-saas.md").read_text())
     check("five pure reads" in live_doc and "durable, citable decision evidence" in live_doc,

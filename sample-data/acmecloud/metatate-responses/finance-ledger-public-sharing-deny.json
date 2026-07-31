@@ -20,7 +20,7 @@
     "decision": "deny",
     "decision_id": "accef000-0000-4000-8000-000000000148",
     "evaluated_actor_role": null,
-    "evaluated_at": "2026-07-30T02:06:26.697Z",
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
     "evaluated_purpose": null,
     "instructions": [
       {

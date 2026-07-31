@@ -1,7 +1,8 @@
 # The Audit Evidence Packet
 
-"Advisory" does not mean unaccountable. Every Metatate answer carries a
-`decision_id`, publication provenance, and cited policy versions —
+"Advisory" does not mean unaccountable. Decision answers cite serving
+`decision_id` values; authorization and validation evaluations mint durable
+`authorization_id` and `validation_id` receipts —
 `audit_evidence/` (and notebook `15_audit_evidence_packet.ipynb`) turns a day
 of governed questions into a single audit-ready report:
 
@@ -16,9 +17,10 @@ of governed questions into a single audit-ready report:
   question the estate refused to guess at — the ungoverned legacy table
   (`not_enough_published_state`) and the monitored custom mask
   (`review_required`). An evidence trail that hides its gaps isn't evidence.
-- **The server keeps its own ledger.** Every call also lands in the
-  workspace's request log — MCP Tools → Tokens → **View requests** — so the
-  packet and the server-side trail corroborate each other.
+- **The server keeps its own evidence.** **Activity → Audit trail** shows the
+  governance receipts. MCP Tools → Tokens → **View requests** is the separate
+  transport request log; the packet and those two server-side layers
+  corroborate different parts of the call.
 
 ## Run it
 

@@ -24,9 +24,11 @@ governance-core), and the expected-decisions matrix is asserted against the
 derived state in the product's test suite. Nothing downstream is
 hand-authored.
 
-The CSV data is intentionally small. The Metatate response fixtures represent
-the decision-layer output produced after equivalent policies are deployed and
-published in a Metatate Cloud workspace.
+The CSV data is intentionally small. The Metatate response fixtures are native,
+typed MCP answers recorded from a Metatate Cloud workspace. They are not
+database seed rows: the product's Activity/Audit/Review demo records come from
+its authoritative request-lane fixture and must never be reconstructed by
+copying these response files.
 
 To run against this domain live, load it into your own workspace with the
 one-click **Load the AcmeCloud demo** action (dashboard → "New here?" banner);

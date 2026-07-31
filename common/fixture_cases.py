@@ -545,6 +545,23 @@ CASES: list[dict[str, Any]] = [
         "tool": "explain_why",
         "arguments": {"kind": "decision", "decision_id": "@ml-training-features-allow.decision_id"},
     },
+    # ---- B3/B3T explanation union (APPENDED — preserve every prior uuid) -----
+    {
+        "id": "explain_analytics_authorization",
+        "tool": "explain_why",
+        "arguments": {
+            "kind": "authorization",
+            "authorization_id": "@analytics-customers-allow.authorization_id",
+        },
+    },
+    {
+        "id": "explain_safe_validation",
+        "tool": "explain_why",
+        "arguments": {
+            "kind": "validation",
+            "validation_id": "@safe-aggregate-pass.validation_id",
+        },
+    },
 ]
 
 

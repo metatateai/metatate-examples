@@ -1,0 +1,51 @@
+{
+  "answer": {
+    "answer_state": "answered",
+    "authorization_id": "accef000-0000-4000-8000-000000000039",
+    "cited_decision_ids": [
+      "accef000-0000-4000-8000-000000000020"
+    ],
+    "decision": "allow",
+    "evaluated": {
+      "asset": {
+        "column": null,
+        "database": "acmecloud_demo",
+        "schema": "public",
+        "table": "customers"
+      },
+      "consumer_jurisdiction": null,
+      "destination": null,
+      "operation": null,
+      "purpose_context": {
+        "purpose_category": "analytics",
+        "purpose_key": "analytics.reporting",
+        "registry_version": 1
+      },
+      "scenario_key": "purpose.allowed_use"
+    },
+    "kind": "authorization",
+    "provenance": {
+      "actor": {
+        "bound_role": null,
+        "kind": "claude_code",
+        "name": "examples contract recorder"
+      },
+      "envelope_version": 2,
+      "evaluated_at": "2026-07-30T00:00:00.000Z",
+      "evaluator_version": "metatate-mcp-server@0.2.0",
+      "publication": {
+        "is_current": true,
+        "publication_id": "accef000-0000-4000-8000-000000000001",
+        "published_at": "2026-07-16T00:00:00.000Z"
+      }
+    },
+    "reason_code": null,
+    "satisfied_exception_ids": null
+  },
+  "arguments": {
+    "authorization_id": "accef000-0000-4000-8000-000000000039",
+    "kind": "authorization"
+  },
+  "case_id": "explain_analytics_authorization",
+  "tool": "explain_why"
+}

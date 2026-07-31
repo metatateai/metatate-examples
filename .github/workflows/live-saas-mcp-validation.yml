@@ -86,6 +86,12 @@ jobs:
       - name: Live audit evidence packet acceptance
         run: scripts/run_audit_evidence_acceptance.sh
 
+      # Deliberately NON-WRITING: this uses a fake client. A real
+      # request_access call requires a confirming human and a {read,request}
+      # token; the shared read-only release credential never enters that lane.
+      - name: Request lifecycle acceptance (non-writing)
+        run: scripts/run_request_lifecycle_acceptance.sh
+
       - name: Live framework runtime acceptance
         run: scripts/run_framework_runtime_acceptance.sh
 

@@ -35,6 +35,7 @@ from common.saas_client import MetatateCloudClient  # noqa: E402
 FIXTURE_DIR = ROOT / "sample-data" / "acmecloud" / "metatate-responses"
 UUID_RE = re.compile(r"\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b")
 PINNED_PUBLISHED_AT = "2026-07-16T00:00:00.000Z"
+PINNED_EVALUATED_AT = "2026-07-30T00:00:00.000Z"
 
 
 def resolve_reference(value: Any, recorded: dict[str, dict[str, Any]]) -> Any:
@@ -67,7 +68,13 @@ def normalize(recordings: list[dict[str, Any]]) -> list[dict[str, Any]]:
             return [swap(item) for item in value]
         if isinstance(value, dict):
             return {
-                k: (PINNED_PUBLISHED_AT if k == "published_at" and isinstance(v, str) else swap(v))
+                k: (
+                    PINNED_PUBLISHED_AT
+                    if k == "published_at" and isinstance(v, str)
+                    else PINNED_EVALUATED_AT
+                    if k == "evaluated_at" and isinstance(v, str)
+                    else swap(v)
+                )
                 for k, v in value.items()
             }
         return value

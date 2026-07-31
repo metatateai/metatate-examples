@@ -1,0 +1,51 @@
+{
+  "answer": {
+    "answer_state": "answered",
+    "findings": [
+      {
+        "decision": "allow",
+        "finding_id": "accef000-0000-4000-8000-000000000106",
+        "reason_code": null,
+        "ref": {
+          "column": null,
+          "database": "acmecloud_demo",
+          "schema": "public",
+          "table": "customers"
+        },
+        "status": "evaluated"
+      }
+    ],
+    "kind": "validation",
+    "provenance": {
+      "actor": {
+        "bound_role": null,
+        "kind": "claude_code",
+        "name": "examples contract recorder"
+      },
+      "envelope_version": 2,
+      "evaluated_at": "2026-07-30T00:00:00.000Z",
+      "evaluator_version": "metatate-mcp-server@0.2.0",
+      "publication": {
+        "is_current": true,
+        "publication_id": "accef000-0000-4000-8000-000000000001",
+        "published_at": "2026-07-16T00:00:00.000Z"
+      }
+    },
+    "purpose_context": {
+      "purpose_category": "analytics",
+      "purpose_key": "analytics.reporting",
+      "registry_version": 1
+    },
+    "query_fingerprint": "sha256:f2eb9b0c5c0527c7aae7da87412c9baf1ed89ae3e63abebd4544b68a5826e191",
+    "reason_code": null,
+    "statement_kind": "select",
+    "validation_id": "accef000-0000-4000-8000-000000000105",
+    "verdict": "pass"
+  },
+  "arguments": {
+    "kind": "validation",
+    "validation_id": "accef000-0000-4000-8000-000000000105"
+  },
+  "case_id": "explain_safe_validation",
+  "tool": "explain_why"
+}
