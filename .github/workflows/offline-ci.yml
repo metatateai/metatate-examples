@@ -69,20 +69,6 @@ jobs:
       - name: dbt adapter acceptance
         run: scripts/run_cicd_dbt_adapter_acceptance.sh
 
-      - name: Policy gate action self-smoke (offline dbt manifest)
-        id: gate-smoke
-        uses: ./
-        with:
-          mode: offline
-          dbt-manifest: cicd_policy_gate/dbt_project/artifacts/manifest.json
-          strict: "false"
-
-      - name: Assert action self-smoke outputs
-        run: |
-          test "${{ steps.gate-smoke.outputs.verdict }}" = "fail"
-          test "${{ steps.gate-smoke.outputs.release-allowed }}" = "false"
-          echo "Action refused the sample release as expected."
-
       - name: Human exception workflow acceptance
         run: scripts/run_human_exception_workflow_acceptance.sh
 
@@ -130,3 +116,20 @@ jobs:
           JUPYTER_BIN: jupyter
           METATATE_NOTEBOOK_OUTPUT_DIR: ${{ runner.temp }}/metatate-examples-offline-notebooks
         run: scripts/run_notebook_pack.sh
+
+      # Keep the composite action last: it deliberately provisions its own
+      # Python 3.11 runtime, which must not replace the pack's Python 3.12 PATH
+      # before the framework and notebook acceptance suites execute.
+      - name: Policy gate action self-smoke (offline dbt manifest)
+        id: gate-smoke
+        uses: ./
+        with:
+          mode: offline
+          dbt-manifest: cicd_policy_gate/dbt_project/artifacts/manifest.json
+          strict: "false"
+
+      - name: Assert action self-smoke outputs
+        run: |
+          test "${{ steps.gate-smoke.outputs.verdict }}" = "fail"
+          test "${{ steps.gate-smoke.outputs.release-allowed }}" = "false"
+          echo "Action refused the sample release as expected."

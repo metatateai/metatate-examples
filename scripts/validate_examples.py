@@ -494,6 +494,13 @@ def validate_ci_workflows() -> None:
         "scripts/run_notebook_pack.sh",
     ):
         assert marker in offline, f"offline CI workflow missing {marker}"
+    framework_step = offline.index("scripts/run_framework_runtime_acceptance.sh")
+    notebook_step = offline.index("scripts/run_notebook_pack.sh")
+    action_runtime_step = offline.index("uses: ./")
+    assert framework_step < action_runtime_step and notebook_step < action_runtime_step, (
+        "the composite policy-gate action provisions Python 3.11 and must run after "
+        "the Python 3.12 framework and notebook acceptance suites"
+    )
 
     saas = (ROOT / ".github" / "workflows" / "live-saas-mcp-validation.yml").read_text(encoding="utf-8")
     for marker in (
