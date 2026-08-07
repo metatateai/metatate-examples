@@ -2,7 +2,7 @@
 
 Captured from the executed OFFLINE notebook (`notebooks/04_governed_text_to_sql_agent.ipynb`), which replays
 recorded Metatate Cloud answers — live mode against a workspace serving the
-AcmeCloud demo publication produces the same decisions.
+Customer 360 demo publication produces the same decisions.
 
 
 ```text

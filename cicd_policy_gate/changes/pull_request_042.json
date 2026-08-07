@@ -10,7 +10,7 @@
       "sql": "SELECT region, SUM(arr) FROM customers GROUP BY region",
       "scenario_key": "purpose.allowed_use",
       "purpose_key": "analytics.reporting",
-      "default_database": "acmecloud_demo",
+      "default_database": "master",
       "default_schema": "public"
     },
     {
@@ -20,7 +20,7 @@
       "description": "Analyst-facing customer detail model includes name and email.",
       "sql": "SELECT customer_name, email FROM customers WHERE region = 'EU'",
       "scenario_key": "purpose.allowed_use",
-      "default_database": "acmecloud_demo",
+      "default_database": "master",
       "default_schema": "public"
     },
     {
@@ -30,7 +30,7 @@
       "description": "Marketing activation model selects names and email addresses.",
       "sql": "SELECT customer_name, email FROM customers WHERE marketing_consent = 'opted_in'",
       "scenario_key": "purpose.prohibited_use",
-      "default_database": "acmecloud_demo",
+      "default_database": "master",
       "default_schema": "public"
     },
     {
@@ -38,7 +38,7 @@
       "kind": "export_job",
       "source_path": "jobs/salesforce/customer_sync.yaml",
       "description": "CRM sync sends approved customer fields to Salesforce.",
-      "asset": { "database": "acmecloud_demo", "schema": "public", "table": "customers" },
+      "asset": { "database": "master", "schema": "public", "table": "customers" },
       "use": "sync approved customer fields to the CRM",
       "scenario_key": "residency.cross_border_transfer",
       "operation": "export",
@@ -50,7 +50,7 @@
       "kind": "ai_training_job",
       "source_path": "pipelines/support-ticket-finetune.yaml",
       "description": "Fine-tune a support assistant on raw support ticket text.",
-      "asset": { "database": "acmecloud_demo", "schema": "public", "table": "support_tickets" },
+      "asset": { "database": "product", "schema": "public", "table": "support_tickets" },
       "use": "fine-tune a support assistant on ticket text",
       "scenario_key": "ai.training"
     }

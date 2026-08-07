@@ -2,7 +2,7 @@
 #
 # Wherever YOUR catalog classifies personal data: model training is denied by
 # default, inference is allowed with anonymization required. Replace with
-# asset-specific AI policies as your AI lifecycle matures (the AcmeCloud demo
+# asset-specific AI policies as your AI lifecycle matures (the Customer 360 demo
 # shows the full pattern: raw data denied, derived features allowed).
 apiVersion: metatate.io/v1
 kind: DataPolicy

@@ -1,0 +1,34 @@
+{
+  "answer": {
+    "classification": {
+      "category": "pii",
+      "sensitivity": "confidential",
+      "subcategory": null
+    },
+    "data_type": null,
+    "masking": {
+      "exempt_roles": [
+        "DATA_STEWARD",
+        "PRIVACY_ADMIN"
+      ],
+      "type": "partial"
+    },
+    "meaning": "Customer master data for the Customer 360 sample domain.",
+    "pii": true,
+    "ref": {
+      "column": null,
+      "database": "master",
+      "schema": "public",
+      "table": "customers"
+    }
+  },
+  "arguments": {
+    "ref": {
+      "database": "master",
+      "schema": "public",
+      "table": "customers"
+    }
+  },
+  "case_id": "meaning_customers",
+  "tool": "inspect_data_meaning"
+}

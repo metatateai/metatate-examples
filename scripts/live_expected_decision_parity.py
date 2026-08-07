@@ -28,7 +28,7 @@ detection is wanted it is a separate, costed decision.
 
 HOW IT ASSERTS
 --------------
-Driven by `sample-data/acmecloud/purpose-mapping-manifest.json`, in BOTH
+Driven by `sample-data/customer-360/purpose-mapping-manifest.json`, in BOTH
 directions:
 
   1. Canonicalizable cases must resolve to their EXACT declared purpose and
@@ -71,7 +71,7 @@ sys.path.insert(0, str(REPO))
 
 from common.fixture_cases import CASES  # noqa: E402
 
-MANIFEST = REPO / "sample-data" / "acmecloud" / "purpose-mapping-manifest.json"
+MANIFEST = REPO / "sample-data" / "customer-360" / "purpose-mapping-manifest.json"
 
 COMPARED = ("state", "decision", "verdict", "reason_code")
 
@@ -84,6 +84,9 @@ def _call(client: Any, case: dict[str, Any]) -> dict[str, Any]:
             operation=a.get("operation"), destination=a.get("destination"),
             consumer_jurisdiction=a.get("consumer_jurisdiction"),
             purpose_key=a.get("purpose_key"),
+            data_access_context=a.get("data_access_context"),
+            on_behalf_of=a.get("on_behalf_of"),
+            satisfied_conditions=a.get("satisfied_conditions"),
         )
     if case["tool"] == "validate_query_context":
         return client.validate_query_context(
@@ -93,8 +96,20 @@ def _call(client: Any, case: dict[str, Any]) -> dict[str, Any]:
             operation=a.get("operation"), destination=a.get("destination"),
             consumer_jurisdiction=a.get("consumer_jurisdiction"),
             purpose_key=a.get("purpose_key"),
+            data_access_context=a.get("data_access_context"),
+            on_behalf_of=a.get("on_behalf_of"),
         )
     raise ValueError(f"unsupported tool {case['tool']!r}")
+
+
+def _client_for_case(
+    case: dict[str, Any], default_client: Any, agent_client: Any | None
+) -> Any:
+    if case.get("bound_role") != "agent":
+        return default_client
+    if agent_client is None:
+        raise RuntimeError("agent-bound case has no agent client")
+    return agent_client
 
 
 def main() -> int:
@@ -109,6 +124,20 @@ def main() -> int:
 
     from common.saas_client import MetatateCloudClient
     client = MetatateCloudClient()
+    agent_case_ids = {
+        str(case["id"]) for case in CASES if case.get("bound_role") == "agent"
+    }
+    agent_client: MetatateCloudClient | None = None
+    if agent_case_ids:
+        if not os.getenv("METATATE_SAAS_MCP_AGENT_TOKEN"):
+            print(
+                "REFUSING: agent-bound parity cases require "
+                "METATATE_SAAS_MCP_AGENT_TOKEN (a {read} token with bound_role=agent)."
+            )
+            return 2
+        agent_client = MetatateCloudClient(
+            token_env="METATATE_SAAS_MCP_AGENT_TOKEN"
+        )
 
     # THREE DISTINCT COUNTERS. They were one "skipped" bucket, which made a
     # delegated-but-green fence look identical to a real skipped case — the gate
@@ -154,7 +183,8 @@ def main() -> int:
             continue
         expected = entry["expected_offline_projection"]
         try:
-            answer = _call(client, case)
+            case_client = _client_for_case(case, client, agent_client)
+            answer = _call(case_client, case)
         except Exception as exc:  # noqa: BLE001
             print(f"  FAIL  {cid}: live call raised {type(exc).__name__}: {exc}")
             failures.append(f"{cid}: live call raised {exc}")
@@ -223,7 +253,8 @@ def main() -> int:
             continue
         expected = check.get("expected_projection") or {}
         try:
-            answer = _call(client, case)
+            case_client = _client_for_case(case, client, agent_client)
+            answer = _call(case_client, case)
         except Exception as exc:  # noqa: BLE001
             print(f"  FAIL  {cid}: live call raised {exc}")
             failures.append(f"{cid}: live call raised {exc}")

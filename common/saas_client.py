@@ -71,6 +71,7 @@ class MetatateCloudClient(ManagedMCPMetatateClient):
         destination: dict[str, str] | None = None,
         consumer_jurisdiction: str | None = None,
         purpose_key: str | None = None,
+        data_access_context: dict[str, str] | None = None,
         on_behalf_of: str | None = None,
         satisfied_conditions: list[dict[str, str]] | None = None,
     ) -> dict[str, Any]:
@@ -87,6 +88,7 @@ class MetatateCloudClient(ManagedMCPMetatateClient):
                     "destination": destination,
                     "consumer_jurisdiction": consumer_jurisdiction,
                     "purpose_key": purpose_key,
+                    "data_access_context": data_access_context,
                     "on_behalf_of": on_behalf_of,
                     "satisfied_conditions": satisfied_conditions,
                 }
@@ -104,6 +106,7 @@ class MetatateCloudClient(ManagedMCPMetatateClient):
         destination: dict[str, str] | None = None,
         consumer_jurisdiction: str | None = None,
         purpose_key: str | None = None,
+        data_access_context: dict[str, str] | None = None,
         on_behalf_of: str | None = None,
     ) -> dict[str, Any]:
         return self.call_tool(
@@ -119,6 +122,7 @@ class MetatateCloudClient(ManagedMCPMetatateClient):
                     "destination": destination,
                     "consumer_jurisdiction": consumer_jurisdiction,
                     "purpose_key": purpose_key,
+                    "data_access_context": data_access_context,
                     "on_behalf_of": on_behalf_of,
                 }
             ),

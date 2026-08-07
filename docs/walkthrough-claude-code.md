@@ -7,7 +7,7 @@ to a hosted-runtime proof.
 
 ## Setup (once, ~3 minutes)
 
-1. A workspace serving the AcmeCloud demo publication
+1. A workspace serving the Customer 360 demo publication
    ([README → Run It Live In 5 Minutes](../README.md#run-it-live-in-5-minutes)).
 2. In Claude Code:
 
@@ -45,7 +45,7 @@ HR, the ML feature store — each with instruction counts and scenario keys.
 
 ```text
 /metatate:authorize-use
-Can we use acmecloud_demo.public.customers for a marketing email campaign?
+Can we use master.public.customers for a marketing email campaign?
 ```
 
 Expect a typed **deny** (`purpose.prohibited_use`) with the citing policy —
@@ -74,7 +74,7 @@ decision is still current.
 ```text
 /metatate:validate-query
 Is this safe to run for analytics?
-SELECT customer_name, email FROM acmecloud_demo.public.customers WHERE region = 'EU'
+SELECT customer_name, email FROM master.public.customers WHERE region = 'EU'
 ```
 
 Expect **warn** — a masked column is referenced — and Claude proposing the
@@ -85,7 +85,7 @@ running inside a production agent.
 
 ```text
 /metatate:authorize-use
-Can we report on acmecloud_demo.public.legacy_customer_backup?
+Can we report on master.public.legacy_customer_backup?
 ```
 
 Expect `not_enough_published_state`: the table is cataloged but ungoverned,

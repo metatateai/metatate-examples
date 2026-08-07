@@ -1,0 +1,104 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "master",
+      "schema": "public",
+      "table": "customers"
+    },
+    "authorization_id": "accef000-0000-4000-8000-000000000050",
+    "can_proceed_now": true,
+    "conditions": [],
+    "context_facts": {
+      "category": "pii",
+      "masking": {
+        "exempt_roles": [
+          "DATA_STEWARD",
+          "PRIVACY_ADMIN"
+        ],
+        "type": "partial"
+      },
+      "pii": true,
+      "sensitivity": "confidential",
+      "subcategory": null
+    },
+    "decision": "allow",
+    "decision_id": "accef000-0000-4000-8000-000000000024",
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": null,
+    "instructions": [
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "allow",
+        "decision_id": "accef000-0000-4000-8000-000000000024",
+        "decision_reason": "customer-use-guardrails v1 ai_governance:spec.aiGovernance:inference \u2192 allow on master.public.customers",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "ai_governance",
+        "instruction_key": "ai_governance:spec.aiGovernance:inference",
+        "parameters": {
+          "allowInference": true,
+          "allowTraining": false,
+          "requiresAnonymization": true,
+          "restrictions": []
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000006",
+          "policy_name": "Customer use guardrails",
+          "policy_version_id": "accef000-0000-4000-8000-000000000007",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "ai.inference",
+        "scenario_lane": "agent",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "customers"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "Proceed \u2014 the current published instructions allow this use."
+    ],
+    "obligations": [],
+    "prohibitions": [],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "customer-use-guardrails v1 ai_governance:spec.aiGovernance:inference \u2192 allow on master.public.customers",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
+    "scenario_key": "ai.inference",
+    "scenario_lane": "agent",
+    "state": "answered"
+  },
+  "arguments": {
+    "asset": {
+      "database": "master",
+      "schema": "public",
+      "table": "customers"
+    },
+    "scenario_key": "ai.inference",
+    "use": "summarize customer accounts with an LLM"
+  },
+  "case_id": "inference-customers-allow",
+  "tool": "authorize_use"
+}

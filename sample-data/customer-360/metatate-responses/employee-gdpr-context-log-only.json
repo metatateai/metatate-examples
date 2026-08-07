@@ -1,0 +1,101 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "master",
+      "schema": "public",
+      "table": "employees"
+    },
+    "authorization_id": "accef000-0000-4000-8000-000000000143",
+    "can_proceed_now": false,
+    "conditions": [],
+    "context_facts": {
+      "category": "pii.contact",
+      "masking": {
+        "exempt_roles": [
+          "DATA_STEWARD",
+          "PRIVACY_ADMIN"
+        ],
+        "type": "partial"
+      },
+      "pii": true,
+      "sensitivity": "confidential",
+      "subcategory": null
+    },
+    "decision": "log_only",
+    "decision_id": "accef000-0000-4000-8000-000000000097",
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": null,
+    "instructions": [
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000097",
+        "decision_reason": "employee-gdpr v1 compliance:spec.compliance.regulations:gdpr \u2192 log_only on master.public.employees",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "advisory",
+        "instruction_family": "compliance",
+        "instruction_key": "compliance:spec.compliance.regulations:gdpr",
+        "parameters": {
+          "regulation": "GDPR"
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000067",
+          "policy_name": "Employee GDPR context",
+          "policy_version_id": "accef000-0000-4000-8000-000000000068",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "compliance.regulatory",
+        "scenario_lane": "human",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "employees"
+        },
+        "weight": 0.55
+      }
+    ],
+    "next_actions": [
+      "Proceed with logging/observation obligations \u2014 this instruction records advisory governance state."
+    ],
+    "obligations": [],
+    "prohibitions": [],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "employee-gdpr v1 compliance:spec.compliance.regulations:gdpr \u2192 log_only on master.public.employees",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
+    "scenario_key": "compliance.regulatory",
+    "scenario_lane": "human",
+    "state": "answered"
+  },
+  "arguments": {
+    "asset": {
+      "database": "master",
+      "schema": "public",
+      "table": "employees"
+    },
+    "scenario_key": "compliance.regulatory",
+    "use": "review the GDPR context for employee records"
+  },
+  "case_id": "employee-gdpr-context-log-only",
+  "tool": "authorize_use"
+}

@@ -54,7 +54,7 @@ def build_governed_sql_agent(client: Any) -> Any:
         validation = client.validate_query_context(
             state["draft_sql"],
             scenario_key=state["scenario_key"],
-            default_database="acmecloud_demo",
+            default_database="master",
             default_schema="public",
             purpose_key=state.get("purpose_key"),
         )

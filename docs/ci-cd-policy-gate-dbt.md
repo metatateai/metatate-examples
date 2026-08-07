@@ -80,20 +80,20 @@ Notes:
 
 - On forked PRs `GITHUB_TOKEN` is read-only — the comment step degrades
   (skip `github-token` there); the summary and strict gate still work.
-- `mode: offline` replays the recorded AcmeCloud fixtures — demo/smoke only
+- `mode: offline` replays the recorded Customer 360 fixtures — demo/smoke only
   (the repo's own CI smoke-tests the action this way, asserting the sample
   project's release is refused).
 
 ## The sample project
 
 `cicd_policy_gate/dbt_project/` is a tiny runnable dbt project over the
-AcmeCloud schema whose models use bare table names, so raw SQL == compiled
+Customer 360 schema whose models use bare table names, so raw SQL == compiled
 SQL == the recorded fixture strings — the whole flow replays offline with
 zero new fixtures. `artifacts/manifest.json` and
 `artifacts/manifest_previous.json` are checked-in manifest fixtures (only the
 keys the adapter reads), so CI needs no dbt install; regenerate them with
 real dbt via `dbt compile` against any profile targeting
-`acmecloud_demo.public`.
+`master.public`.
 
 Acceptance: `scripts/run_cicd_dbt_adapter_acceptance.sh` pins the adapter's
 full/diff/changed-files selections, the byte-equality of model SQL with the

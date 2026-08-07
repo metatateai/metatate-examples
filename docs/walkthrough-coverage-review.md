@@ -1,19 +1,19 @@
 # Walkthrough: Coverage Review — Finding And Closing Governance Gaps
 
-Real estates are never perfectly governed, and the AcmeCloud demo is honest
+Real estates are never perfectly governed, and the Customer 360 demo is honest
 about that on purpose: `legacy_customer_backup` is cataloged but has **no
 policy at all**. This walkthrough is the governance-lead arc — find the gap,
 see how it answers, close it, and watch the answer change.
 
 Run it with the `metatate` plugin in Claude Code
 ([setup](walkthrough-claude-code.md)) against a workspace serving the
-AcmeCloud demo.
+Customer 360 demo.
 
 ## 1. Review coverage
 
 ```text
 /metatate:policy-review
-Review policy coverage for the acmecloud_demo.public schema. What is
+Review policy coverage for the master.public schema. What is
 ungoverned or thin?
 ```
 

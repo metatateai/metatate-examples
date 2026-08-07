@@ -1,0 +1,51 @@
+{
+  "answer": {
+    "answer_state": "answered",
+    "findings": [
+      {
+        "decision": "allow",
+        "finding_id": "accef000-0000-4000-8000-000000000111",
+        "reason_code": null,
+        "ref": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "customers"
+        },
+        "status": "evaluated"
+      }
+    ],
+    "kind": "validation",
+    "provenance": {
+      "actor": {
+        "bound_role": null,
+        "kind": null,
+        "name": "customer-360-demo-mcp"
+      },
+      "envelope_version": 3,
+      "evaluated_at": "2026-07-30T00:00:00.000Z",
+      "evaluator_version": "metatate-mcp-server@0.3.0",
+      "publication": {
+        "is_current": true,
+        "publication_id": "accef000-0000-4000-8000-000000000001",
+        "published_at": "2026-07-16T00:00:00.000Z"
+      }
+    },
+    "purpose_context": {
+      "purpose_category": "analytics",
+      "purpose_key": "analytics.reporting",
+      "registry_version": 2
+    },
+    "query_fingerprint": "sha256:812ce96e522f00fb080151b6ab4983d718190a1441f887b121c8a7ccada8216a",
+    "reason_code": null,
+    "statement_kind": "select",
+    "validation_id": "accef000-0000-4000-8000-000000000110",
+    "verdict": "pass"
+  },
+  "arguments": {
+    "kind": "validation",
+    "validation_id": "accef000-0000-4000-8000-000000000110"
+  },
+  "case_id": "explain_safe_validation",
+  "tool": "explain_why"
+}

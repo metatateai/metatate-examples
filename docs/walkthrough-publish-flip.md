@@ -9,7 +9,7 @@ This is a product-UI walkthrough: **no MCP tool authors or publishes
 governance** (ADR-0012), so the authoring steps happen in the app. The decision
 tools *do* record durable, citable evidence — that is what makes `explain_why`
 work below — but none of them edit a policy or cut a publication. Run it against
-your own workspace with the AcmeCloud demo loaded and a terminal beside the app.
+your own workspace with the Customer 360 demo loaded and a terminal beside the app.
 
 ## 0. Baseline: a typed "I don't know"
 
@@ -20,7 +20,7 @@ from common import get_client
 client = get_client()  # METATATE_EXAMPLES_MODE=live
 
 answer = client.authorize_use(
-    {"database": "acmecloud_demo", "schema": "public", "table": "legacy_customer_backup"},
+    {"database": "master", "schema": "public", "table": "legacy_customer_backup"},
     use="report on the legacy customer backup",
     scenario_key="purpose.allowed_use",
 )
@@ -35,7 +35,7 @@ fabricated decision.
 ## 1. Author a policy (nothing changes)
 
 In the app: **Policies → New policy**. Target
-`acmecloud_demo.public.legacy_customer_backup`, permit `analytics` and
+`master.public.legacy_customer_backup`, permit `analytics` and
 `reporting`, and save the draft.
 
 Re-run the call above: **still `not_enough_published_state`.** Drafts are
@@ -56,7 +56,7 @@ addition, because under B3 it is load-bearing:
 
 ```python
 answer = client.authorize_use(
-    {"database": "acmecloud_demo", "schema": "public", "table": "legacy_customer_backup"},
+    {"database": "master", "schema": "public", "table": "legacy_customer_backup"},
     use="report on the legacy customer backup",
     scenario_key="purpose.allowed_use",
     purpose_key="analytics.reporting",   # B3: declare WHY, not just what

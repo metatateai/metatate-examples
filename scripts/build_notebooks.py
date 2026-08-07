@@ -79,7 +79,7 @@ mode = os.getenv("METATATE_EXAMPLES_MODE", "offline")
 if mode == "live" and not os.getenv("METATATE_MCP_URL"):
     print("Live mode needs a Metatate endpoint. Fastest path (about 5 minutes):")
     print("  1. Create a free account: https://app.getmetatate.com/sign-up?ref=examples")
-    print("  2. Workspace dashboard: 'Load the demo' banner -> 'Load the AcmeCloud demo'")
+    print("  2. Workspace dashboard: 'Load the demo' banner -> 'Load the Customer 360 demo'")
     print("  3. MCP Tools -> Tokens: issue a token; Connect tab has your endpoint URL")
     print("  4. export METATATE_MCP_URL=... METATATE_SAAS_MCP_TOKEN=...")
     print("     (full steps: docs/live-mode-saas.md)")
@@ -88,8 +88,14 @@ client = get_client()
 print(f"Metatate examples mode: {mode}")
 
 
-def asset(table, column=None, schema="public"):
-    ref = {"database": "acmecloud_demo", "schema": schema, "table": table}
+PRODUCT_DATABASE_TABLES = {"product_usage_events", "support_tickets", "ml_feature_store"}
+
+
+def asset(table, column=None, schema="public", database=None):
+    resolved_database = database or (
+        "product" if table in PRODUCT_DATABASE_TABLES else "master"
+    )
+    ref = {"database": resolved_database, "schema": schema, "table": table}
     if column:
         ref["column"] = column
     return ref
@@ -128,21 +134,21 @@ def setup_notebook() -> dict:
                 """
                 # 00 - Setup: Live Or Offline
 
-                This notebook checks the AcmeCloud fixture and initializes the shared Metatate client.
+                This notebook checks the Customer 360 fixture and initializes the shared Metatate client.
 
                 Offline mode is the default. It replays RECORDED Metatate Cloud answers (captured
                 from a live workspace by `scripts/record_offline_fixtures.py`), so what you study
                 offline is exactly what the live endpoint returns — typed answers with
                 `state`, lowercase decision vocabulary, structured conditions, and publication provenance.
 
-                Live mode calls your Metatate Cloud workspace's MCP endpoint (no account yet? create one free at [app.getmetatate.com/sign-up?ref=examples](https://app.getmetatate.com/sign-up?ref=examples) and load the AcmeCloud demo from the dashboard's **"New here?" banner → Load the demo**). Set `METATATE_EXAMPLES_MODE=live`, export `METATATE_MCP_URL` and your access token, then start Jupyter — see [docs/live-mode-saas.md](../docs/live-mode-saas.md).
+                Live mode calls your Metatate Cloud workspace's MCP endpoint (no account yet? create one free at [app.getmetatate.com/sign-up?ref=examples](https://app.getmetatate.com/sign-up?ref=examples) and load the Customer 360 demo from the dashboard's **"New here?" banner → Load the demo**). Set `METATATE_EXAMPLES_MODE=live`, export `METATATE_MCP_URL` and your access token, then start Jupyter — see [docs/live-mode-saas.md](../docs/live-mode-saas.md).
                 """
             ),
             code(SETUP_CELL),
             markdown("## Load Synthetic Tables"),
             code(
                 """
-                table_dir = repo_root / "sample-data" / "acmecloud" / "tables"
+                table_dir = repo_root / "sample-data" / "customer-360" / "tables"
                 tables = {}
                 for path in sorted(table_dir.glob("*.csv")):
                     tables[path.stem] = pd.read_csv(path)
@@ -335,7 +341,7 @@ def cookbook_notebook() -> dict:
                 safe = client.validate_query_context(
                     "SELECT region, SUM(arr) FROM customers GROUP BY region",
                     scenario_key="purpose.allowed_use",
-                    default_database="acmecloud_demo",
+                    default_database="master",
                     default_schema="public",
                     purpose_key="analytics.reporting",
                 )
@@ -344,7 +350,7 @@ def cookbook_notebook() -> dict:
                 detail = client.validate_query_context(
                     "SELECT customer_name, email FROM customers WHERE region = 'EU'",
                     scenario_key="purpose.allowed_use",
-                    default_database="acmecloud_demo",
+                    default_database="master",
                     default_schema="public",
                 )
                 print(f"detail query    -> {detail['verdict']} (a masked column is referenced)")
@@ -402,7 +408,7 @@ def langgraph_notebook() -> dict:
                     answer = client.validate_query_context(
                         sql,
                         scenario_key=scenario_key,
-                        default_database="acmecloud_demo",
+                        default_database="master",
                         default_schema="public",
                         purpose_key=PURPOSE_BY_SQL.get(sql),
                     )
@@ -567,7 +573,7 @@ def governed_text_to_sql_notebook() -> dict:
                     answer = client.validate_query_context(
                         sql,
                         scenario_key=scenario_key,
-                        default_database="acmecloud_demo",
+                        default_database="master",
                         default_schema="public",
                         purpose_key=PURPOSE_BY_SQL.get(sql),
                     )
@@ -604,7 +610,7 @@ def red_team_notebook() -> dict:
 
                 Repeatable risky-prompt checks: each case states the governed question AND the
                 typed answer it must produce. The same matrix lives in the estate spec
-                (`sample-data/acmecloud/expected-decisions.yaml`) and is asserted against the
+                (`sample-data/customer-360/expected-decisions.yaml`) and is asserted against the
                 engine-derived state in the product's test suite.
                 """
             ),
@@ -766,7 +772,7 @@ def governed_rag_ingestion_gate_notebook() -> dict:
                 retrieval_sql = client.validate_query_context(
                     "SELECT region, SUM(arr) FROM customers GROUP BY region",
                     scenario_key="purpose.allowed_use",
-                    default_database="acmecloud_demo",
+                    default_database="master",
                     default_schema="public",
                     purpose_key="analytics.reporting",
                 )
@@ -899,7 +905,7 @@ def llamaindex_retrieval_notebook() -> dict:
                     answer = client.validate_query_context(
                         sql,
                         scenario_key=scenario_key,
-                        default_database="acmecloud_demo",
+                        default_database="master",
                         default_schema="public",
                         purpose_key=PURPOSE_BY_SQL.get(sql),
                     )
@@ -1128,7 +1134,7 @@ def governance_states_notebook() -> dict:
                 work_email = client.validate_query_context(
                     "SELECT work_email FROM employees",
                     scenario_key="purpose.allowed_use",
-                    default_database="acmecloud_demo",
+                    default_database="master",
                     default_schema="public",
                 )
                 print(f"SELECT work_email -> {work_email['verdict']}")
@@ -1167,14 +1173,14 @@ def governance_states_notebook() -> dict:
                 card = client.validate_query_context(
                     "SELECT card_last4 FROM payment_methods",
                     scenario_key="purpose.allowed_use",
-                    default_database="acmecloud_demo",
+                    default_database="master",
                     default_schema="public",
                 )
                 print(f"card_last4 (analytics intent) -> {card['verdict']} (tokenized column referenced)")
 
                 salary = client.validate_query_context(
                     "SELECT salary FROM employees",
-                    default_database="acmecloud_demo",
+                    default_database="master",
                     default_schema="public",
                 )
                 print(f"salary (NO stated intent)    -> {salary['verdict']} (role-gated read applies to any SQL)")
@@ -1340,7 +1346,7 @@ def sql_gauntlet_notebook() -> dict:
                 joined = client.validate_query_context(
                     "SELECT c.region, SUM(s.arr) FROM customers c JOIN subscriptions s ON s.customer_id = c.customer_id GROUP BY c.region",
                     scenario_key="purpose.allowed_use",
-                    default_database="acmecloud_demo",
+                    default_database="master",
                     default_schema="public",
                     purpose_key="analytics.reporting",
                 )
@@ -1362,7 +1368,7 @@ def sql_gauntlet_notebook() -> dict:
                 star = client.validate_query_context(
                     "SELECT * FROM payment_methods LIMIT 5",
                     scenario_key="purpose.allowed_use",
-                    default_database="acmecloud_demo",
+                    default_database="master",
                     default_schema="public",
                 )
                 print(f"SELECT *                    -> {star['verdict']} (both tokenized card columns participate)")
@@ -1370,7 +1376,7 @@ def sql_gauntlet_notebook() -> dict:
                 narrow = client.validate_query_context(
                     "SELECT payment_method_id FROM payment_methods",
                     scenario_key="purpose.allowed_use",
-                    default_database="acmecloud_demo",
+                    default_database="master",
                     default_schema="public",
                 )
                 print(f"SELECT payment_method_id    -> {narrow['verdict']} (no masked column referenced)")
@@ -1389,7 +1395,7 @@ def sql_gauntlet_notebook() -> dict:
                 cte = client.validate_query_context(
                     "WITH recent AS (SELECT customer_id, arr FROM subscriptions WHERE end_date IS NULL) SELECT customer_id, SUM(arr) FROM recent GROUP BY customer_id",
                     scenario_key="purpose.allowed_use",
-                    default_database="acmecloud_demo",
+                    default_database="master",
                     default_schema="public",
                     purpose_key="analytics.reporting",
                 )
@@ -1411,7 +1417,7 @@ def sql_gauntlet_notebook() -> dict:
                 legacy = client.validate_query_context(
                     "SELECT c.customer_name, l.exported_at FROM customers c JOIN legacy_customer_backup l ON l.customer_id = c.customer_id",
                     scenario_key="purpose.allowed_use",
-                    default_database="acmecloud_demo",
+                    default_database="master",
                     default_schema="public",
                     purpose_key="analytics.reporting",
                 )
@@ -1435,14 +1441,14 @@ def sql_gauntlet_notebook() -> dict:
                 analytics = client.validate_query_context(
                     "SELECT region, COUNT(*) FROM customers GROUP BY region",
                     scenario_key="purpose.allowed_use",
-                    default_database="acmecloud_demo",
+                    default_database="master",
                     default_schema="public",
                     purpose_key="analytics.reporting",
                 )
                 marketing = client.validate_query_context(
                     "SELECT region, COUNT(*) FROM customers GROUP BY region",
                     scenario_key="purpose.prohibited_use",
-                    default_database="acmecloud_demo",
+                    default_database="master",
                     default_schema="public",
                 )
                 print(f"analytics intent -> {analytics['verdict']}")
@@ -1464,7 +1470,7 @@ def sql_gauntlet_notebook() -> dict:
                 finance = client.validate_query_context(
                     "SELECT i.invoice_id, r.amount FROM finance.invoices i JOIN finance.revenue_ledger r ON r.invoice_id = i.invoice_id",
                     scenario_key="purpose.allowed_use",
-                    default_database="acmecloud_demo",
+                    default_database="master",
                     default_schema="public",
                     purpose_key="compliance.reporting",
                 )
@@ -1652,7 +1658,7 @@ def audit_evidence_notebook() -> dict:
             code(
                 """
                 analytics = client.authorize_use(
-                    {"database": "acmecloud_demo", "schema": "public", "table": "customers"},
+                    {"database": "master", "schema": "public", "table": "customers"},
                     use="build a churn analytics dashboard",
                     scenario_key="purpose.allowed_use",
                     purpose_key="analytics.reporting",
@@ -1660,7 +1666,7 @@ def audit_evidence_notebook() -> dict:
                 safe_query = client.validate_query_context(
                     "SELECT region, SUM(arr) FROM customers GROUP BY region",
                     scenario_key="purpose.allowed_use",
-                    default_database="acmecloud_demo",
+                    default_database="master",
                     default_schema="public",
                     purpose_key="analytics.reporting",
                 )
@@ -1694,6 +1700,186 @@ def audit_evidence_notebook() -> dict:
     )
 
 
+def purpose_bound_access_windows_notebook() -> dict:
+    return notebook(
+        [
+            markdown(
+                """
+                # 16 - Purpose-bound Agent Data Windows
+
+                One agent-access requirement has four variables: database,
+                purpose, window anchor, and lookback length. This notebook makes
+                all four combinations explicit instead of hiding them behind one
+                generic retention rule:
+
+                | Database | Purpose | Window |
+                | --- | --- | --- |
+                | `master` | research | rolling 90 days |
+                | `master` | commercial | rolling 30 days |
+                | `product` | research | as-of 90 days |
+                | `product` | commercial | as-of 30 days |
+
+                Rolling windows are anchored to the server evaluation time. As-of
+                windows are reproducible: the caller must state the anchor in
+                `data_access_context.as_of`. Authorization returns the required
+                bounds; query validation proves SQL is no broader than them.
+                """
+            ),
+            code(SETUP_CELL),
+            code(
+                """
+                # The access-window policies are bound to the exact `agent`
+                # role. Offline mode replays those recordings; live mode uses
+                # a separate agent-bound token so the rest of the pack can
+                # retain its identity-neutral release credential.
+                agent_client = get_client(token_env="METATATE_SAAS_MCP_AGENT_TOKEN")
+                """
+            ),
+            markdown("## 1. Authorize every combination"),
+            code(
+                """
+                AS_OF = "2026-08-01T00:00:00Z"
+
+                authorization_cases = [
+                    ("master / research", dict(
+                        asset=asset("customers"),
+                        use="research recent customer behavior",
+                        scenario_key="access.read",
+                        purpose_key="research.general",
+                    )),
+                    ("master / commercial", dict(
+                        asset=asset("customers"),
+                        use="prepare a commercial customer analysis",
+                        scenario_key="access.read",
+                        purpose_key="commercial.general",
+                    )),
+                    ("product / research", dict(
+                        asset=asset("product_usage_events", database="product"),
+                        use="reproduce product research as of a fixed date",
+                        scenario_key="access.read",
+                        purpose_key="research.general",
+                        data_access_context={"as_of": AS_OF},
+                    )),
+                    ("product / commercial", dict(
+                        asset=asset("product_usage_events", database="product"),
+                        use="reproduce a commercial product analysis as of a fixed date",
+                        scenario_key="access.read",
+                        purpose_key="commercial.general",
+                        data_access_context={"as_of": AS_OF},
+                    )),
+                ]
+
+                authorizations = {}
+                for label, arguments in authorization_cases:
+                    answer = agent_client.authorize_use(**arguments)
+                    authorizations[label] = answer
+                    window = next(
+                        (c for c in answer.get("conditions", [])
+                         if c.get("kind") == "data_window_required"),
+                        {},
+                    )
+                    projection = window.get("projection") or {}
+                    print(
+                        f"{label:22} -> {answer_label(answer):12} "
+                        f"{projection.get('type', '?'):7} "
+                        f"{projection.get('lookback_days', '?')} days"
+                    )
+                """
+            ),
+            markdown(
+                """
+                The decision is conditional, not an unconditional allow. The
+                condition is executable evidence: it names the time column and
+                exact lower/upper bounds an agent must apply before reading data.
+                """
+            ),
+            markdown("## 2. Missing context fails closed"),
+            code(
+                """
+                missing_purpose = agent_client.authorize_use(
+                    asset("customers"),
+                    use="read recent customer records",
+                    scenario_key="access.read",
+                )
+                missing_as_of = agent_client.authorize_use(
+                    asset("product_usage_events", database="product"),
+                    use="read product events for research",
+                    scenario_key="access.read",
+                    purpose_key="research.general",
+                )
+
+                print("missing purpose ->", missing_purpose["state"], missing_purpose["reason_code"])
+                print("missing as_of   ->", missing_as_of["state"], missing_as_of["reason_code"])
+                """
+            ),
+            markdown(
+                """
+                Metatate does not infer research versus commercial use, and it
+                does not substitute the current time for a missing as-of anchor.
+                Both omissions return a typed review requirement.
+                """
+            ),
+            markdown("## 3. Prove the SQL stays inside the authorized window"),
+            code(
+                """
+                validation_cases = [
+                    ("master research 90", dict(
+                        sql="SELECT customer_id, account_status FROM master.public.customers WHERE created_at >= CURRENT_TIMESTAMP - INTERVAL '90 days' AND created_at <= CURRENT_TIMESTAMP",
+                        scenario_key="access.read", default_database="master", default_schema="public",
+                        purpose_key="research.general",
+                    )),
+                    ("master commercial 30", dict(
+                        sql="SELECT customer_id, account_status FROM master.public.customers WHERE created_at >= CURRENT_TIMESTAMP - INTERVAL '30 days' AND created_at <= CURRENT_TIMESTAMP",
+                        scenario_key="access.read", default_database="master", default_schema="public",
+                        purpose_key="commercial.general",
+                    )),
+                    ("product research 90", dict(
+                        sql="SELECT customer_id, event_name FROM product.public.product_usage_events WHERE occurred_at >= TIMESTAMPTZ '2026-05-03T00:00:00Z' AND occurred_at <= TIMESTAMPTZ '2026-08-01T00:00:00Z'",
+                        scenario_key="access.read", default_database="product", default_schema="public",
+                        purpose_key="research.general", data_access_context={"as_of": AS_OF},
+                    )),
+                    ("product commercial 30", dict(
+                        sql="SELECT customer_id, event_name FROM product.public.product_usage_events WHERE occurred_at >= TIMESTAMPTZ '2026-07-02T00:00:00Z' AND occurred_at <= TIMESTAMPTZ '2026-08-01T00:00:00Z'",
+                        scenario_key="access.read", default_database="product", default_schema="public",
+                        purpose_key="commercial.general", data_access_context={"as_of": AS_OF},
+                    )),
+                ]
+
+                for label, arguments in validation_cases:
+                    answer = agent_client.validate_query_context(**arguments)
+                    print(f"{label:24} -> {answer.get('verdict')} / {answer.get('state')}")
+                """
+            ),
+            markdown("## 4. A wider window is rejected"),
+            code(
+                """
+                broad_rolling = agent_client.validate_query_context(
+                    "SELECT customer_id, account_status FROM master.public.customers WHERE created_at >= CURRENT_TIMESTAMP - INTERVAL '90 days' AND created_at <= CURRENT_TIMESTAMP",
+                    scenario_key="access.read", default_database="master", default_schema="public",
+                    purpose_key="commercial.general",
+                )
+                broad_as_of = agent_client.validate_query_context(
+                    "SELECT customer_id, event_name FROM product.public.product_usage_events WHERE occurred_at >= TIMESTAMPTZ '2026-05-03T00:00:00Z' AND occurred_at <= TIMESTAMPTZ '2026-08-01T00:00:00Z'",
+                    scenario_key="access.read", default_database="product", default_schema="public",
+                    purpose_key="commercial.general", data_access_context={"as_of": AS_OF},
+                )
+
+                print("commercial rolling 90 ->", broad_rolling.get("verdict"))
+                print("commercial as-of 90   ->", broad_as_of.get("verdict"))
+                """
+            ),
+            markdown(
+                """
+                The commercial policy permits 30 days. Asking for 90 days is a
+                broader read and fails, even though the same SQL shape is valid
+                for research. Database, purpose, anchor type, and duration all
+                remain decision-bearing inputs.
+                """
+            ),
+        ]
+    )
+
+
 NOTEBOOKS = {
     "00_setup_live_or_offline.ipynb": setup_notebook,
     "01_decision_layer_cookbook.ipynb": cookbook_notebook,
@@ -1711,6 +1897,7 @@ NOTEBOOKS = {
     "13_sql_gauntlet_validate_query_context.ipynb": sql_gauntlet_notebook,
     "14_governed_agent_end_to_end.ipynb": governed_agent_arc_notebook,
     "15_audit_evidence_packet.ipynb": audit_evidence_notebook,
+    "16_purpose_bound_agent_data_windows.ipynb": purpose_bound_access_windows_notebook,
 }
 
 

@@ -2,8 +2,8 @@ name: Live SaaS MCP Validation
 
 # Runs the notebook pack + acceptance scripts against the Metatate SaaS
 # (cross-platform) MCP endpoint. Prereq (operator step, not CI): the target
-# workspace serves the AcmeCloud demo publication — locally via
-# metatate-saas/scripts/acmecloud-demo-fixtures.sh, on staging by applying the
+# workspace serves the Customer 360 demo publication — locally via
+# metatate-saas/scripts/customer-360-demo-fixtures.sh, on staging by applying the
 # same script once. The token is a real workspace-issued MCP access token
 # (MCP module → Tokens), never the deterministic local fixture token.
 
@@ -41,6 +41,7 @@ jobs:
       METATATE_MCP_URL: ${{ secrets.METATATE_SAAS_MCP_URL }}
       METATATE_MCP_PAT_ENV: METATATE_SAAS_MCP_TOKEN
       METATATE_SAAS_MCP_TOKEN: ${{ secrets.METATATE_SAAS_MCP_TOKEN }}
+      METATATE_SAAS_MCP_AGENT_TOKEN: ${{ secrets.METATATE_SAAS_MCP_AGENT_TOKEN }}
       METATATE_MCP_TIMEOUT_SECONDS: "120"
       METATATE_MCP_RETRY_ATTEMPTS: "4"
       METATATE_MCP_RETRY_BACKOFF_SECONDS: "1"
@@ -53,7 +54,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
           cache: pip
           cache-dependency-path: |
             requirements.txt
@@ -70,6 +71,7 @@ jobs:
         run: |
           test -n "${METATATE_MCP_URL}"
           test -n "${METATATE_SAAS_MCP_TOKEN}"
+          test -n "${METATATE_SAAS_MCP_AGENT_TOKEN}"
 
       - name: Static validation
         run: PYTHONDONTWRITEBYTECODE=1 python3 scripts/validate_examples.py

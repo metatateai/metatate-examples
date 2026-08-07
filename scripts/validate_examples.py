@@ -25,7 +25,7 @@ def main() -> None:
         "scripts/purpose_contract_acceptance.py",
         "scripts/build_purpose_manifest.py",
         "scripts/live_expected_decision_parity.py",
-        "sample-data/acmecloud/purpose-mapping-manifest.json",
+        "sample-data/customer-360/purpose-mapping-manifest.json",
         "docs/b3-purpose-conversion.md",
         "scripts/run_purpose_contract_acceptance.sh",
         "docs/live-mode-saas.md",
@@ -35,8 +35,8 @@ def main() -> None:
         "docs/human-exception-workflow.md",
         "docs/release-process.md",
         "docs/validation-matrix.md",
-        "sample-data/acmecloud/catalog.yaml",
-        "sample-data/acmecloud/expected-decisions.yaml",
+        "sample-data/customer-360/catalog.yaml",
+        "sample-data/customer-360/expected-decisions.yaml",
         "common/metatate_client.py",
         "cicd_policy_gate/__init__.py",
         "cicd_policy_gate/cli.py",
@@ -127,7 +127,7 @@ def validate_json_files() -> None:
     sys.path.insert(0, str(ROOT))
     from common.fixture_cases import CASES
 
-    fixture_dir = ROOT / "sample-data" / "acmecloud" / "metatate-responses"
+    fixture_dir = ROOT / "sample-data" / "customer-360" / "metatate-responses"
     by_id = {str(case["id"]): case for case in CASES}
     recorded = set()
     for path in fixture_dir.glob("*.json"):
@@ -207,14 +207,14 @@ def validate_json_files() -> None:
 
 
 def validate_csv_files() -> None:
-    for path in (ROOT / "sample-data" / "acmecloud" / "tables").glob("*.csv"):
+    for path in (ROOT / "sample-data" / "customer-360" / "tables").glob("*.csv"):
         with path.open("r", encoding="utf-8", newline="") as handle:
             rows = list(csv.DictReader(handle))
         assert rows, f"{path} has no rows"
 
 
 def validate_policy_files() -> None:
-    for path in (ROOT / "sample-data" / "acmecloud" / "policies").glob("*.yaml"):
+    for path in (ROOT / "sample-data" / "customer-360" / "policies").glob("*.yaml"):
         text = path.read_text(encoding="utf-8")
         for marker in ("apiVersion: metatate.io/v1", "kind: DataPolicy", "spec:", "selector:"):
             assert marker in text, f"{path} missing {marker}"
@@ -237,7 +237,7 @@ def validate_policy_files() -> None:
 
 def validate_notebooks() -> None:
     notebooks = sorted((ROOT / "notebooks").glob("*.ipynb"))
-    assert len(notebooks) == 16, "expected sixteen starter notebooks"
+    assert len(notebooks) == 17, "expected seventeen starter notebooks"
     for path in notebooks:
         with path.open("r", encoding="utf-8") as handle:
             payload = json.load(handle)
@@ -494,6 +494,13 @@ def validate_ci_workflows() -> None:
         "scripts/run_notebook_pack.sh",
     ):
         assert marker in offline, f"offline CI workflow missing {marker}"
+    framework_step = offline.index("scripts/run_framework_runtime_acceptance.sh")
+    notebook_step = offline.index("scripts/run_notebook_pack.sh")
+    action_runtime_step = offline.index("uses: ./")
+    assert framework_step < action_runtime_step and notebook_step < action_runtime_step, (
+        "the composite policy-gate action provisions Python 3.11 and must run after "
+        "the Python 3.12 framework and notebook acceptance suites"
+    )
 
     saas = (ROOT / ".github" / "workflows" / "live-saas-mcp-validation.yml").read_text(encoding="utf-8")
     for marker in (

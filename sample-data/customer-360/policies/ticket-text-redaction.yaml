@@ -1,0 +1,31 @@
+# Customer 360 estate spec — support ticket free-text redaction.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: ticket-text-redaction
+  version: 1.0.0
+  description: >-
+    Free-text support ticket bodies are redacted outside support workflows —
+    customer-authored text can embed arbitrary personal data.
+  tags: [pii, support]
+  businessContext:
+    domain: Customer Data
+    owner: Support Operations
+    steward: privacy-review@example.com
+    purpose: Customer support tickets used for support workflows and support analytics.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [product]
+    schemas: [public]
+    columns:
+      - product.public.support_tickets.ticket_text
+  classification:
+    sensitivity: confidential
+    category: pii
+  accessControl:
+    masking:
+      type: redact
+extensions:
+  displayName: Ticket free-text redaction

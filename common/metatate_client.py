@@ -1,7 +1,7 @@
 """Metatate client helpers used by the notebooks — native typed-answer contract.
 
 Offline mode replays RECORDED Metatate Cloud answers (committed under
-`sample-data/acmecloud/metatate-responses/`, captured by
+`sample-data/customer-360/metatate-responses/`, captured by
 `scripts/record_offline_fixtures.py` from a live workspace) — the payloads a
 reader studies offline are byte-shaped like the live endpoint's. Live mode
 calls your Metatate Cloud workspace's MCP endpoint (see docs/live-mode-saas.md).
@@ -31,7 +31,7 @@ except ImportError:  # pragma: no cover - dotenv is a notebook convenience.
 from .fixture_cases import CASES, case_for
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-FIXTURE_DIR = REPO_ROOT / "sample-data" / "acmecloud" / "metatate-responses"
+FIXTURE_DIR = REPO_ROOT / "sample-data" / "customer-360" / "metatate-responses"
 
 
 class MetatateToolError(RuntimeError):
@@ -91,6 +91,7 @@ class OfflineMetatateClient:
         destination: dict[str, str] | None = None,
         consumer_jurisdiction: str | None = None,
         purpose_key: str | None = None,
+        data_access_context: dict[str, str] | None = None,
         on_behalf_of: str | None = None,
         satisfied_conditions: list[dict[str, str]] | None = None,
     ) -> dict[str, Any]:
@@ -109,6 +110,7 @@ class OfflineMetatateClient:
                     "destination": destination,
                     "consumer_jurisdiction": consumer_jurisdiction,
                     "purpose_key": purpose_key,
+                    "data_access_context": data_access_context,
                     "on_behalf_of": on_behalf_of,
                     "satisfied_conditions": satisfied_conditions,
                 }
@@ -126,6 +128,7 @@ class OfflineMetatateClient:
         destination: dict[str, str] | None = None,
         consumer_jurisdiction: str | None = None,
         purpose_key: str | None = None,
+        data_access_context: dict[str, str] | None = None,
         on_behalf_of: str | None = None,
     ) -> dict[str, Any]:
         return self._dispatch(
@@ -141,6 +144,7 @@ class OfflineMetatateClient:
                     "destination": destination,
                     "consumer_jurisdiction": consumer_jurisdiction,
                     "purpose_key": purpose_key,
+                    "data_access_context": data_access_context,
                     "on_behalf_of": on_behalf_of,
                 }
             ),
@@ -213,12 +217,19 @@ class ManagedMCPMetatateClient:
     typed tool errors. The concrete live client is
     :class:`common.saas_client.MetatateCloudClient`."""
 
-    def __init__(self, endpoint: str | None = None) -> None:
+    def __init__(
+        self,
+        endpoint: str | None = None,
+        *,
+        token_env: str | None = None,
+    ) -> None:
         if load_dotenv:
             load_dotenv(REPO_ROOT / ".env")
 
         self.endpoint = endpoint or _mcp_endpoint_from_env()
-        self.token_env = os.getenv("METATATE_MCP_PAT_ENV", "METATATE_SAAS_MCP_TOKEN")
+        self.token_env = token_env or os.getenv(
+            "METATATE_MCP_PAT_ENV", "METATATE_SAAS_MCP_TOKEN"
+        )
         self.timeout_seconds = int(os.getenv("METATATE_MCP_TIMEOUT_SECONDS", "120"))
         self.retry_attempts = max(1, int(os.getenv("METATATE_MCP_RETRY_ATTEMPTS", "4")))
         self.retry_backoff_seconds = float(os.getenv("METATATE_MCP_RETRY_BACKOFF_SECONDS", "1"))
@@ -332,7 +343,7 @@ class ManagedMCPMetatateClient:
         return min(self.retry_backoff_seconds * (2 ** (attempt - 1)), 8.0)
 
 
-def get_client() -> Any:
+def get_client(*, token_env: str | None = None) -> Any:
     if load_dotenv:
         load_dotenv(REPO_ROOT / ".env")
     mode = os.getenv("METATATE_EXAMPLES_MODE", "offline").strip().lower()
@@ -346,7 +357,7 @@ def get_client() -> Any:
             )
         from .saas_client import MetatateCloudClient
 
-        return MetatateCloudClient()
+        return MetatateCloudClient(token_env=token_env)
     if mode != "offline":
         raise ValueError("METATATE_EXAMPLES_MODE must be offline or live")
     return OfflineMetatateClient()

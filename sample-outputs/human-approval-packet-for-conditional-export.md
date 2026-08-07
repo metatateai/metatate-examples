@@ -2,7 +2,7 @@
 
 Captured from the executed OFFLINE notebook (`notebooks/09_human_approval_packet_for_conditional_export.ipynb`), which replays
 recorded Metatate Cloud answers — live mode against a workspace serving the
-AcmeCloud demo publication produces the same decisions.
+Customer 360 demo publication produces the same decisions.
 
 
 ```text
@@ -18,11 +18,11 @@ Human-in-the-loop exception workflow
 req-001: ready_without_exception (pass) evidence=accef000-0000-4000-8000-000000000001
 req-002: resumed_with_controls (conditional) evidence=accef000-0000-4000-8000-000000000010
   queue: privacy-review
-  rationale: Transfer to SALESFORCE (US) for consumer jurisdiction EU requires approval and anonymization and role PRIVACY_ADMIN (policy AcmeCloud transfer guardrails).
+  rationale: Transfer to SALESFORCE (US) for consumer jurisdiction EU requires approval and anonymization and role PRIVACY_ADMIN (policy Customer 360 transfer guardrails).
   reviewer: privacy-review@example.com -> approve
   resume: resume_controlled_workflow
 req-003: blocked_by_policy (deny) evidence=accef000-0000-4000-8000-000000000030
-  rationale: acme-customer-use v1 ai_governance:spec.aiGovernance:training → deny on acmecloud_demo.public.support_tickets
+  rationale: customer-use-guardrails v1 ai_governance:spec.aiGovernance:training → deny on master.public.support_tickets
 ```
 
 ```text
@@ -34,7 +34,7 @@ req-003: blocked_by_policy (deny) evidence=accef000-0000-4000-8000-000000000030
   "owner": "Revenue Operations",
   "decision": "conditional",
   "evidence_id": "accef000-0000-4000-8000-000000000010",
-  "source": "acmecloud_demo.public.customers",
+  "source": "master.public.customers",
   "destination": {
     "system": "SALESFORCE",
     "jurisdiction": "US"
@@ -42,14 +42,14 @@ req-003: blocked_by_policy (deny) evidence=accef000-0000-4000-8000-000000000030
   "consumer_jurisdiction": "EU",
   "required_controls": [
     "This data must be anonymized before the transfer.",
-    "Transfer to SALESFORCE (US) for consumer jurisdiction EU requires approval and anonymization and role PRIVACY_ADMIN (policy AcmeCloud transfer guardrails)."
+    "Transfer to SALESFORCE (US) for consumer jurisdiction EU requires approval and anonymization and role PRIVACY_ADMIN (policy Customer 360 transfer guardrails)."
   ],
   "required_attestations": [
     "approval_recorded",
     "anonymization_before_transfer"
   ],
   "obligations": [],
-  "rationale": "Transfer to SALESFORCE (US) for consumer jurisdiction EU requires approval and anonymization and role PRIVACY_ADMIN (policy AcmeCloud transfer guardrails).",
+  "rationale": "Transfer to SALESFORCE (US) for consumer jurisdiction EU requires approval and anonymization and role PRIVACY_ADMIN (policy Customer 360 transfer guardrails).",
   "reviewer_note": "You may proceed only after satisfying the stated condition(s) below (e.g. obtain the named approval, anonymize first, or act as a granted role).",
   "reviewer_queue": "privacy-review",
   "policy_response_state": "answered"

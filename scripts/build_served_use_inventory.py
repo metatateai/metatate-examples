@@ -42,9 +42,9 @@ sys.path.insert(0, str(REPO))
 
 from scripts.build_purpose_manifest import _load_dispositions  # noqa: E402
 
-POLICY_DIR = REPO / "sample-data" / "acmecloud" / "policies"
-FIXTURE_DIR = REPO / "sample-data" / "acmecloud" / "metatate-responses"
-INVENTORY = REPO / "sample-data" / "acmecloud" / "served-use-inventory.json"
+POLICY_DIR = REPO / "sample-data" / "customer-360" / "policies"
+FIXTURE_DIR = REPO / "sample-data" / "customer-360" / "metatate-responses"
+INVENTORY = REPO / "sample-data" / "customer-360" / "served-use-inventory.json"
 
 USES_RE = re.compile(r"(permittedUses|prohibitedUses):\s*\[([^\]]*)\]")
 
@@ -149,7 +149,7 @@ def build() -> dict[str, Any]:
             "of one entry cannot collapse."
         ),
         "_sources": {
-            "canonical": "sample-data/acmecloud/policies/*.yaml permittedUses/prohibitedUses",
+            "canonical": "sample-data/customer-360/policies/*.yaml permittedUses/prohibitedUses",
             "served": "structured usage_guidance parameters.uses in the recordings",
         },
         "totals": {

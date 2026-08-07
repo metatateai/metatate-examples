@@ -3,10 +3,10 @@
 Each case is a real Metatate Cloud tool call (native typed-answer contract).
 `scripts/record_offline_fixtures.py` replays every case against a live
 workspace and commits the typed answers under
-`sample-data/acmecloud/metatate-responses/`; `OfflineMetatateClient` routes
+`sample-data/customer-360/metatate-responses/`; `OfflineMetatateClient` routes
 incoming calls back to those recordings by matching the same request shapes.
 
-The authorize/validate ids mirror `sample-data/acmecloud/expected-decisions.yaml`
+The authorize/validate ids mirror `sample-data/customer-360/expected-decisions.yaml`
 (the estate spec's behavior contract), so the offline pack demonstrates the
 exact cases the product asserts against its engine-derived state.
 """
@@ -15,12 +15,23 @@ from __future__ import annotations
 
 from typing import Any
 
-DATABASE = "acmecloud_demo"
+DATABASE = "master"
+PRODUCT_DATABASE = "product"
 SCHEMA = "public"
+
+DATABASE_BY_TABLE = {
+    "product_usage_events": PRODUCT_DATABASE,
+    "support_tickets": PRODUCT_DATABASE,
+    "ml_feature_store": PRODUCT_DATABASE,
+}
 
 
 def asset(table: str, column: str | None = None, schema: str = SCHEMA) -> dict[str, str]:
-    ref: dict[str, str] = {"database": DATABASE, "schema": schema, "table": table}
+    ref: dict[str, str] = {
+        "database": DATABASE_BY_TABLE.get(table, DATABASE),
+        "schema": schema,
+        "table": table,
+    }
     if column is not None:
         ref["column"] = column
     return ref
@@ -319,7 +330,7 @@ CASES: list[dict[str, Any]] = [
         "arguments": {
             "sql": "SELECT ticket_text FROM support_tickets",
             "scenario_key": "ai.training",
-            "default_database": DATABASE,
+            "default_database": PRODUCT_DATABASE,
             "default_schema": SCHEMA,
         },
     },
@@ -560,6 +571,151 @@ CASES: list[dict[str, Any]] = [
         "arguments": {
             "kind": "validation",
             "validation_id": "@safe-aggregate-pass.validation_id",
+        },
+    },
+    # ---- Customer 360 purpose-bound access windows ---------------------------
+    # Four explicit combinations make the policy matrix visible rather than
+    # asking a reader to infer one dimension from another.
+    {
+        "id": "master-research-rolling-90-conditional",
+        "tool": "authorize_use",
+        "bound_role": "agent",
+        "arguments": {
+            "asset": asset("customers"),
+            "scenario_key": "access.read",
+            "use": "research recent customer behavior",
+            "purpose_key": "research.general",
+        },
+    },
+    {
+        "id": "master-commercial-rolling-30-conditional",
+        "tool": "authorize_use",
+        "bound_role": "agent",
+        "arguments": {
+            "asset": asset("customers"),
+            "scenario_key": "access.read",
+            "use": "prepare a commercial customer analysis",
+            "purpose_key": "commercial.general",
+        },
+    },
+    {
+        "id": "product-research-as-of-90-conditional",
+        "tool": "authorize_use",
+        "bound_role": "agent",
+        "arguments": {
+            "asset": asset("product_usage_events"),
+            "scenario_key": "access.read",
+            "use": "reproduce product research as of a fixed date",
+            "purpose_key": "research.general",
+            "data_access_context": {"as_of": "2026-08-01T00:00:00Z"},
+        },
+    },
+    {
+        "id": "product-commercial-as-of-30-conditional",
+        "tool": "authorize_use",
+        "bound_role": "agent",
+        "arguments": {
+            "asset": asset("product_usage_events"),
+            "scenario_key": "access.read",
+            "use": "reproduce a commercial product analysis as of a fixed date",
+            "purpose_key": "commercial.general",
+            "data_access_context": {"as_of": "2026-08-01T00:00:00Z"},
+        },
+    },
+    {
+        "id": "master-access-purpose-missing-review",
+        "tool": "authorize_use",
+        "bound_role": "agent",
+        "arguments": {
+            "asset": asset("customers"),
+            "scenario_key": "access.read",
+            "use": "read recent customer records",
+        },
+    },
+    {
+        "id": "product-access-as-of-missing-review",
+        "tool": "authorize_use",
+        "bound_role": "agent",
+        "arguments": {
+            "asset": asset("product_usage_events"),
+            "scenario_key": "access.read",
+            "use": "read product events for research",
+            "purpose_key": "research.general",
+        },
+    },
+    {
+        "id": "master-research-rolling-90-pass",
+        "tool": "validate_query_context",
+        "bound_role": "agent",
+        "arguments": {
+            "sql": "SELECT customer_id, account_status FROM master.public.customers WHERE created_at >= CURRENT_TIMESTAMP - INTERVAL '90 days' AND created_at <= CURRENT_TIMESTAMP",
+            "scenario_key": "access.read",
+            "default_database": DATABASE,
+            "default_schema": SCHEMA,
+            "purpose_key": "research.general",
+        },
+    },
+    {
+        "id": "master-commercial-rolling-30-pass",
+        "tool": "validate_query_context",
+        "bound_role": "agent",
+        "arguments": {
+            "sql": "SELECT customer_id, account_status FROM master.public.customers WHERE created_at >= CURRENT_TIMESTAMP - INTERVAL '30 days' AND created_at <= CURRENT_TIMESTAMP",
+            "scenario_key": "access.read",
+            "default_database": DATABASE,
+            "default_schema": SCHEMA,
+            "purpose_key": "commercial.general",
+        },
+    },
+    {
+        "id": "master-commercial-rolling-90-fail",
+        "tool": "validate_query_context",
+        "bound_role": "agent",
+        "arguments": {
+            "sql": "SELECT customer_id, account_status FROM master.public.customers WHERE created_at >= CURRENT_TIMESTAMP - INTERVAL '90 days' AND created_at <= CURRENT_TIMESTAMP",
+            "scenario_key": "access.read",
+            "default_database": DATABASE,
+            "default_schema": SCHEMA,
+            "purpose_key": "commercial.general",
+        },
+    },
+    {
+        "id": "product-research-as-of-90-pass",
+        "tool": "validate_query_context",
+        "bound_role": "agent",
+        "arguments": {
+            "sql": "SELECT customer_id, event_name FROM product.public.product_usage_events WHERE occurred_at >= TIMESTAMPTZ '2026-05-03T00:00:00Z' AND occurred_at <= TIMESTAMPTZ '2026-08-01T00:00:00Z'",
+            "scenario_key": "access.read",
+            "default_database": PRODUCT_DATABASE,
+            "default_schema": SCHEMA,
+            "purpose_key": "research.general",
+            "data_access_context": {"as_of": "2026-08-01T00:00:00Z"},
+        },
+    },
+    {
+        "id": "product-commercial-as-of-30-pass",
+        "tool": "validate_query_context",
+        "bound_role": "agent",
+        "arguments": {
+            "sql": "SELECT customer_id, event_name FROM product.public.product_usage_events WHERE occurred_at >= TIMESTAMPTZ '2026-07-02T00:00:00Z' AND occurred_at <= TIMESTAMPTZ '2026-08-01T00:00:00Z'",
+            "scenario_key": "access.read",
+            "default_database": PRODUCT_DATABASE,
+            "default_schema": SCHEMA,
+            "purpose_key": "commercial.general",
+            "data_access_context": {"as_of": "2026-08-01T00:00:00Z"},
+        },
+    },
+    {
+        "id": "product-commercial-as-of-90-fail",
+        "tool": "validate_query_context",
+        "bound_role": "agent",
+        "arguments": {
+            "sql": "SELECT customer_id, event_name FROM product.public.product_usage_events WHERE occurred_at >= TIMESTAMPTZ '2026-05-03T00:00:00Z' AND occurred_at <= TIMESTAMPTZ '2026-08-01T00:00:00Z'",
+            "scenario_key": "access.read",
+            "default_database": PRODUCT_DATABASE,
+            "default_schema": SCHEMA,
+            "purpose_key": "commercial.general",
+            "data_access_context": {"as_of": "2026-08-01T00:00:00Z"},
         },
     },
 ]

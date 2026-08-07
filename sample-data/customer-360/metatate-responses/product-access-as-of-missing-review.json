@@ -1,0 +1,118 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "product",
+      "schema": "public",
+      "table": "product_usage_events"
+    },
+    "authorization_id": "accef000-0000-4000-8000-000000000183",
+    "can_proceed_now": false,
+    "conditions": [],
+    "conflict": null,
+    "context_facts": {
+      "category": "operational.telemetry",
+      "masking": {
+        "exempt_roles": [],
+        "type": "hash"
+      },
+      "pii": false,
+      "sensitivity": "confidential",
+      "subcategory": null
+    },
+    "decision": "require_review",
+    "evaluated_actor_role": "agent",
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": {
+      "purpose_category": "research",
+      "purpose_key": "research.general",
+      "registry_version": 2
+    },
+    "instructions": [
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "require_review",
+        "decision_id": "accef000-0000-4000-8000-000000000178",
+        "decision_reason": "Access-window context is incomplete: the as-of rule requires data_access_context.as_of (policy Product data agent access windows).",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "access_window",
+        "instruction_key": "access_window:spec.accessWindows",
+        "parameters": {
+          "actorRoles": [
+            "agent",
+            "analyst"
+          ],
+          "rules": [
+            {
+              "lookbackDays": 90,
+              "purposeKey": "research.general",
+              "type": "as_of"
+            },
+            {
+              "lookbackDays": 30,
+              "purposeKey": "commercial.general",
+              "type": "as_of"
+            }
+          ],
+          "timeColumn": "occurred_at"
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000179",
+          "policy_name": "Product data agent access windows",
+          "policy_version_id": "accef000-0000-4000-8000-000000000180",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "access.read",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "product",
+          "schema": "public",
+          "table": "product_usage_events"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "Obtain data-steward review before proceeding with this use."
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "Access-window context is incomplete: the as-of rule requires data_access_context.as_of (policy Product data agent access windows).",
+    "reason_code": "access_window_context_required",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
+    "scenario_key": "access.read",
+    "scenario_lane": "platform",
+    "state": "review_required"
+  },
+  "arguments": {
+    "asset": {
+      "database": "product",
+      "schema": "public",
+      "table": "product_usage_events"
+    },
+    "purpose_key": "research.general",
+    "scenario_key": "access.read",
+    "use": "read product events for research"
+  },
+  "case_id": "product-access-as-of-missing-review",
+  "tool": "authorize_use"
+}

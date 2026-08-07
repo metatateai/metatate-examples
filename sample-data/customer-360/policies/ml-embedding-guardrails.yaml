@@ -1,0 +1,49 @@
+# Customer 360 estate spec — embedding and automated-decisioning guardrails.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: ml-embedding-guardrails
+  version: 1.0.0
+  description: >-
+    Feature vectors may be stored in embedding indexes; fully automated
+    decisioning on churn scores is prohibited without human review.
+  tags: [ml]
+  businessContext:
+    domain: Machine Learning
+    owner: ML Platform
+    steward: ml-platform@example.com
+    purpose: Embedding-storage and automated-decisioning guardrails.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [product]
+    schemas: [public]
+    tables: [ml_feature_store]
+  classification:
+    sensitivity: internal
+    category: operational
+  usage:
+    # B3 (deliberate): `embedding_storage` stays an UNMAPPED legacy free
+    # string. The policy text says feature vectors may be STORED in
+    # embedding indexes; it does not establish retrieval/model-context use
+    # at inference, so mapping it to `ai.inference` would be inferring
+    # coverage the author never wrote. Under B3 this permitted row answers
+    # `review_required` for every purpose — the correct, fail-closed
+    # outcome, and the demo's honest legacy-vocabulary case. The
+    # retrieval-context policy supplies the legitimate `ai.inference`
+    # allow example.
+    permittedUses: [embedding_storage]
+    # `ai` is the CATEGORY TOKEN: automated decisioning is prohibited across
+    # EVERY ai.* purpose, which is what the policy means. It is not a key,
+    # and it deliberately does not narrow to one purpose.
+    prohibitedUses: [ai]
+extensions:
+  displayName: ML embedding guardrails
+  scenarioMap:
+    "usage_guidance:spec.usage.permittedUses:permitted":
+      scenarioKey: ai.embedding_storage
+      source: user_confirmed
+    "usage_guidance:spec.usage.prohibitedUses:prohibited":
+      scenarioKey: ai.automated_decisioning
+      source: user_confirmed

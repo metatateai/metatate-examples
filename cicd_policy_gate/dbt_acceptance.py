@@ -51,7 +51,7 @@ def main() -> int:
     assert by_id["dbt-active_customer_activation"]["sql"] == MARKETING_SQL
     assert by_id["dbt-active_customer_activation"]["scenario_key"] == "purpose.prohibited_use"
     assert by_id["dbt-eu_customer_arr_detail"]["scenario_key"] == "purpose.allowed_use"
-    assert by_id["dbt-eu_customer_arr_detail"]["default_database"] == "acmecloud_demo"
+    assert by_id["dbt-eu_customer_arr_detail"]["default_database"] == "master"
     assert by_id["dbt-eu_customer_arr_detail"]["default_schema"] == "public"
     assert by_id["dbt-exposure-salesforce_customer_sync"]["kind"] == "export_job"
     assert by_id["dbt-exposure-salesforce_customer_sync"]["destination"] == {
@@ -62,10 +62,10 @@ def main() -> int:
 
     # The skip report: the ephemeral model and the un-annotated exposure.
     skip_reasons = {entry["unique_id"]: entry["reason"] for entry in skipped}
-    assert "model.acmecloud_analytics.stg_customers_ephemeral" in skip_reasons
-    assert "ephemeral" in skip_reasons["model.acmecloud_analytics.stg_customers_ephemeral"]
-    assert "exposure.acmecloud_analytics.weekly_kpi_email" in skip_reasons
-    assert "meta.metatate" in skip_reasons["exposure.acmecloud_analytics.weekly_kpi_email"]
+    assert "model.customer360_analytics.stg_customers_ephemeral" in skip_reasons
+    assert "ephemeral" in skip_reasons["model.customer360_analytics.stg_customers_ephemeral"]
+    assert "exposure.customer360_analytics.weekly_kpi_email" in skip_reasons
+    assert "meta.metatate" in skip_reasons["exposure.customer360_analytics.weekly_kpi_email"]
     assert len(skipped) == 2, f"unexpected skips: {skipped}"
 
     # ---- end to end: the adapter output reproduces the pr-042 gate matrix ---

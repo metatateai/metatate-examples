@@ -35,8 +35,8 @@ sys.path.insert(0, str(REPO))
 from common.fixture_cases import CASES, case_for, signature  # noqa: E402
 from common.metatate_client import MetatateToolError, OfflineMetatateClient  # noqa: E402
 
-FIXTURE_DIR = REPO / "sample-data" / "acmecloud" / "metatate-responses"
-EXPECTED_DECISIONS = REPO / "sample-data" / "acmecloud" / "expected-decisions.yaml"
+FIXTURE_DIR = REPO / "sample-data" / "customer-360" / "metatate-responses"
+EXPECTED_DECISIONS = REPO / "sample-data" / "customer-360" / "expected-decisions.yaml"
 
 TYPED_TOOLS = {"authorize_use", "validate_query_context"}
 failures: list[str] = []
@@ -66,6 +66,9 @@ def _call_through_client(client: Any, case: dict[str, Any]) -> dict[str, Any]:
             destination=a.get("destination"),
             consumer_jurisdiction=a.get("consumer_jurisdiction"),
             purpose_key=a.get("purpose_key"),
+            data_access_context=a.get("data_access_context"),
+            on_behalf_of=a.get("on_behalf_of"),
+            satisfied_conditions=a.get("satisfied_conditions"),
         )
     return client.validate_query_context(
         a["sql"],
@@ -77,6 +80,8 @@ def _call_through_client(client: Any, case: dict[str, Any]) -> dict[str, Any]:
         destination=a.get("destination"),
         consumer_jurisdiction=a.get("consumer_jurisdiction"),
         purpose_key=a.get("purpose_key"),
+        data_access_context=a.get("data_access_context"),
+        on_behalf_of=a.get("on_behalf_of"),
     )
 
 
@@ -115,7 +120,7 @@ def section_router_exactness(client: OfflineMetatateClient) -> None:
     # An unrecorded call must fail closed with the typed code — never a guess.
     try:
         client.authorize_use(
-            {"database": "acmecloud_demo", "schema": "public", "table": "customers"},
+            {"database": "master", "schema": "public", "table": "customers"},
             use="a use nobody ever recorded",
             scenario_key="purpose.allowed_use",
         )
@@ -138,7 +143,7 @@ def section_consumer_exactness() -> None:
         UNSAFE_ANALYTICS_SQL,
     )
 
-    DB, SCHEMA = "acmecloud_demo", "public"
+    DB, PRODUCT_DB, SCHEMA = "master", "product", "public"
 
     # (label, tool, arguments, expected case id)
     expectations = [
@@ -161,7 +166,7 @@ def section_consumer_exactness() -> None:
         # coverage) is what authorizes it. Asserting a purpose here would have
         # re-introduced the divergence from canonical.
         ("arc feature-store reroute (canonically purpose-blind)", "authorize_use",
-         {"asset": {"database": DB, "schema": SCHEMA, "table": "ml_feature_store"},
+         {"asset": {"database": PRODUCT_DB, "schema": SCHEMA, "table": "ml_feature_store"},
           "use": "train the churn model on derived features",
           "scenario_key": "ai.training"}, "ml-training-features-allow"),
     ]
@@ -237,11 +242,11 @@ def section_purpose_boundary(client: OfflineMetatateClient) -> None:
     #    case for the SAME question must be exactly one absent key apart, and must
     #    resolve differently.
     allow = case_for("authorize_use", {
-        "asset": {"database": "acmecloud_demo", "schema": "public", "table": "customers"},
+        "asset": {"database": "master", "schema": "public", "table": "customers"},
         "use": "build a churn analytics dashboard", "scenario_key": "purpose.allowed_use",
         "purpose_key": "analytics.reporting"})
     blind = case_for("authorize_use", {
-        "asset": {"database": "acmecloud_demo", "schema": "public", "table": "customers"},
+        "asset": {"database": "master", "schema": "public", "table": "customers"},
         "use": "build a churn analytics dashboard", "scenario_key": "purpose.allowed_use"})
     check(allow is not None and blind is not None and allow["id"] != blind["id"],
           "the same question with and without purpose resolves to DIFFERENT cases",
@@ -373,7 +378,7 @@ def section_recorder_preflight() -> None:
     # {"ref": {...,"table":...}}. Reading a flat "table" key yields None for every
     # asset and reports the ENTIRE estate as missing — a false alarm that looks
     # exactly like a wrong workspace. Assert the nested read is what's used.
-    nested_assets = [{"ref": {"database": "acmecloud_demo", "schema": "public", "table": t}}
+    nested_assets = [{"ref": {"database": "master", "schema": "public", "table": t}}
                      for t in sorted(required)]
     served_nested = {str((a.get("ref") or {}).get("table"))
                      for a in nested_assets if isinstance(a.get("ref"), dict)}
@@ -403,6 +408,62 @@ def section_recorder_preflight() -> None:
               f"a served ungoverned table ({sample}) is detected as unexpectedly governed")
 
 
+def section_live_agent_routing() -> None:
+    """The live gate must preserve new inputs and use the role-bound token.
+
+    Offline exact routing cannot catch a live adapter dropping
+    `data_access_context`, and a single identity-neutral credential cannot
+    exercise an `actorRoles: [agent]` policy. Both relationships are pinned
+    here without making a network call.
+    """
+    print("\nE2. Live access-window routing preserves context and actor identity")
+    from scripts.live_expected_decision_parity import _call, _client_for_case
+
+    class CaptureClient:
+        def __init__(self) -> None:
+            self.arguments: dict[str, Any] | None = None
+
+        def authorize_use(self, asset: dict[str, str], **arguments: Any) -> dict[str, Any]:
+            self.arguments = {"asset": asset, **arguments}
+            return self.arguments
+
+        def validate_query_context(self, sql: str, **arguments: Any) -> dict[str, Any]:
+            self.arguments = {"sql": sql, **arguments}
+            return self.arguments
+
+    by_id = {str(case["id"]): case for case in CASES}
+    product = by_id["product-commercial-as-of-30-pass"]
+    captured = CaptureClient()
+    answer = _call(captured, product)
+    check(
+        answer.get("data_access_context") == {"as_of": "2026-08-01T00:00:00Z"},
+        "live parity forwards data_access_context.as_of unchanged",
+        f"got {answer.get('data_access_context')!r}",
+    )
+    check(
+        answer.get("purpose_key") == "commercial.general",
+        "live parity forwards the decision-bearing purpose unchanged",
+        f"got {answer.get('purpose_key')!r}",
+    )
+
+    default_client, agent_client = object(), object()
+    check(
+        _client_for_case(product, default_client, agent_client) is agent_client,
+        "agent-bound cases use the separate agent credential",
+    )
+    neutral = by_id["analytics-customers-allow"]
+    check(
+        _client_for_case(neutral, default_client, agent_client) is default_client,
+        "identity-neutral cases retain the default release credential",
+    )
+    try:
+        _client_for_case(product, default_client, None)
+    except RuntimeError:
+        check(True, "an absent agent client fails loudly instead of weakening the case")
+    else:
+        check(False, "an absent agent client fails loudly instead of weakening the case")
+
+
 def section_manifest_drift() -> None:
     print("\nF. Purpose mapping manifest is generated, not hand-edited")
     import subprocess
@@ -429,7 +490,7 @@ def section_do_not_map_tripwire() -> None:
     question to a human, not a gate that fires on the right answer.
     """
     print("\nG. do_not_map set tripwire (guards the DATA, not the behaviour)")
-    manifest = json.loads((REPO / "sample-data" / "acmecloud"
+    manifest = json.loads((REPO / "sample-data" / "customer-360"
                            / "purpose-mapping-manifest.json").read_text())
     got = sorted(e["authored_entry"]
                  for e in manifest["authored_entries_that_must_remain_unmapped"])
@@ -438,7 +499,7 @@ def section_do_not_map_tripwire() -> None:
     check(got == ACCEPTED,
           f"FENCE: do_not_map set is exactly {ACCEPTED}",
           f"got {got} — if this change is intended, rule on it in metatate-saas "
-          f"docs/b3-acmecloud-purpose-vocabulary-manifest.md FIRST, then update "
+          f"docs/b3-customer360-purpose-vocabulary-manifest.md FIRST, then update "
           f"the vendored dispositions and this tripwire together")
 
     # And the corollary: an entry that is merely unmapped must NOT be asserted as
@@ -470,7 +531,7 @@ def section_classification_drift() -> None:
     person will "fix" a legitimate mapping by reverting it.
     """
     print("\nK. Classification drift tripwire (change requires review, not reversal)")
-    inv = json.loads((REPO / "sample-data" / "acmecloud"
+    inv = json.loads((REPO / "sample-data" / "customer-360"
                       / "served-use-inventory.json").read_text())
     actual = {e["entry"]: e["disposition"]["classification"] for e in inv["entries"]}
 
@@ -506,7 +567,7 @@ def section_classification_drift() -> None:
     # The two ideas must not silently merge: a fenced entry is pinned AND
     # forbidden; an untouched entry is pinned only.
     fenced = {e["authored_entry"]
-              for e in json.loads((REPO / "sample-data" / "acmecloud"
+              for e in json.loads((REPO / "sample-data" / "customer-360"
                                    / "purpose-mapping-manifest.json").read_text())
               ["authored_entries_that_must_remain_unmapped"]}
     untouched_pinned = {k for k, v in PINNED.items() if v == "unmapped_untouched"}
@@ -534,7 +595,7 @@ def section_authored_uses_accounted_for() -> None:
     # derived family token is classified mechanically by the dot rule. Only
     # entries that are neither need an explicit row — requiring one for
     # `compliance.reporting` would be asking the file to restate the registry.
-    inv = json.loads((REPO / "sample-data" / "acmecloud"
+    inv = json.loads((REPO / "sample-data" / "customer-360"
                       / "served-use-inventory.json").read_text())
     self_dispositioning = {
         e["entry"] for e in inv["entries"]
@@ -594,7 +655,7 @@ def section_served_use_inventory() -> None:
     check(r.returncode == 0, "served-use-inventory.json matches its canonical sources",
           (r.stdout + r.stderr).strip()[:200])
 
-    inv = json.loads((REPO / "sample-data" / "acmecloud" / "served-use-inventory.json").read_text())
+    inv = json.loads((REPO / "sample-data" / "customer-360" / "served-use-inventory.json").read_text())
     entries = {e["entry"]: e for e in inv["entries"]}
     totals = inv["totals"]
 
@@ -676,7 +737,7 @@ def section_zero_quarantine() -> None:
     were restored.
     """
     print("\nL. Zero quarantined current-behaviour cases (with negative control)")
-    manifest_path = REPO / "sample-data" / "acmecloud" / "purpose-mapping-manifest.json"
+    manifest_path = REPO / "sample-data" / "customer-360" / "purpose-mapping-manifest.json"
     manifest = json.loads(manifest_path.read_text())
     quarantined = [e["case_id"] for e in manifest["purposeful_and_blind_cases"]
                    if e.get("quarantined")]
@@ -688,7 +749,7 @@ def section_zero_quarantine() -> None:
     # The quarantine set must be DERIVED, not literal. Prove it by adding a
     # quarantine to the DATA and confirming the generated manifest follows.
     from scripts.build_purpose_manifest import build as build_manifest
-    data = REPO / "sample-data" / "acmecloud" / "expected-decisions.yaml"
+    data = REPO / "sample-data" / "customer-360" / "expected-decisions.yaml"
     original = data.read_text()
     victim = "finance-invoices-allowed-use"
     try:
@@ -894,6 +955,7 @@ def main() -> int:
     section_purpose_boundary(client)
     section_cross_surface()
     section_recorder_preflight()
+    section_live_agent_routing()
     section_manifest_drift()
     section_do_not_map_tripwire()
     section_classification_drift()

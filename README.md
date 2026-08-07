@@ -4,7 +4,7 @@
 
 Metatate is a programmable decision layer for governed data. It gives agents and workflows structured context about meaning, policy, allowed use, transfer rules, and decision rationale before they touch data.
 
-This repository is the public examples cookbook for **Metatate Cloud**. It uses one synthetic B2B SaaS company, AcmeCloud, so every notebook builds on the same tables, policies, and expected decisions.
+This repository is the public examples cookbook for **Metatate Cloud**. It uses one synthetic B2B SaaS company, Customer 360, so every notebook builds on the same tables, policies, and expected decisions.
 
 Prefer these workflows inside your coding agent? Installable integration
 plugins live in
@@ -27,8 +27,8 @@ own**:
 2. On your new workspace's dashboard, follow the **"New here?" banner → Load
    the demo**, then click **Load the full estate** — the notebooks and
    walkthroughs expect the complete governed domain this repo specifies
-   (eleven governed tables across two schemas plus a deliberately ungoverned
-   legacy corner, eighteen policies, one live publication). The smaller starter sample the
+   (eleven governed tables across two logical databases and two schemas plus a deliberately
+   ungoverned legacy corner, twenty policies, one live publication). The smaller starter sample the
    onboarding page also offers is a first-run product tour, not enough for
    this cookbook.
 3. Open **MCP Tools → Tokens** and issue an access token (shown once).
@@ -45,31 +45,31 @@ Full details (and the local-stack path for contributors) are in
 
 ## Demo Domain
 
-AcmeCloud covers customer operations, revenue, product usage, support, and prepared exports.
+Customer 360 covers customer operations, revenue, product usage, support, and prepared exports.
 
 The domain is defined as a machine-readable **estate spec** in
-`sample-data/acmecloud/` — `catalog.yaml` (tables, columns, descriptions,
+`sample-data/customer-360/` — `catalog.yaml` (tables, columns, descriptions,
 tags, and the initial column classification against the Metatate taxonomy,
-including tenant custom types), eighteen real Metatate Cloud policy documents in
+including tenant custom types), twenty real Metatate Cloud policy documents in
 `policies/`, and `expected-decisions.yaml` (the behavior contract). The
 product derives the demo workspace from this spec with its real governance
 engine, so what these examples document is exactly what the engine serves.
 
 Governed tables:
 
-- `acmecloud_demo.public.customers`
-- `acmecloud_demo.public.subscriptions`
-- `acmecloud_demo.public.product_usage_events`
-- `acmecloud_demo.public.support_tickets`
-- `acmecloud_demo.public.customer_exports`
-- `acmecloud_demo.public.payment_methods` (PCI scope)
-- `acmecloud_demo.public.employees` (HR)
-- `acmecloud_demo.public.ml_feature_store` (AI lifecycle)
-- `acmecloud_demo.public.marketing_prospects` (the governance-debt corner)
-- `acmecloud_demo.finance.invoices` (second schema)
-- `acmecloud_demo.finance.revenue_ledger` (second schema)
+- `master.public.customers`
+- `master.public.subscriptions`
+- `product.public.product_usage_events`
+- `product.public.support_tickets`
+- `master.public.customer_exports`
+- `master.public.payment_methods` (PCI scope)
+- `master.public.employees` (HR)
+- `product.public.ml_feature_store` (AI lifecycle)
+- `master.public.marketing_prospects` (the governance-debt corner)
+- `master.finance.invoices` (second schema)
+- `master.finance.revenue_ledger` (second schema)
 
-Plus `acmecloud_demo.public.legacy_customer_backup` — cataloged but
+Plus `master.public.legacy_customer_backup` — cataloged but
 **deliberately ungoverned**, so the typed `not_enough_published_state`
 answer and coverage-gap reviews have something real to point at.
 
@@ -89,6 +89,7 @@ Demo policy behavior:
 - the wider decision vocabulary is served honestly: retention answers `retain` (with a structured obligation), row-level access answers `conditional` (`role_restricted`), compliance context answers `log_only`, and the enforced PCI mask carries a `mask` obligation naming the method
 - plain-English uses map deterministically to canonical scenarios with no `scenario_key` at all — and ambiguous text refuses with a typed `scenario_unresolved`
 - the `finance` schema (`invoices`, `revenue_ledger`) carries its own guardrails: a multi-schema estate, one decision layer
+- agent reads are purpose- and time-bound: `master` uses rolling 90/30-day windows for research/commercial work, while `product` uses reproducible as-of 90/30-day windows; broader or unprovable SQL fails closed
 
 ## Notebook Pack
 
@@ -110,6 +111,12 @@ Demo policy behavior:
 | `13_sql_gauntlet_validate_query_context.ipynb` | JOINs, `SELECT *`, CTEs, joins into ungoverned tables, and byte-identical SQL passing or failing on intent. |
 | `14_governed_agent_end_to_end.ipynb` | The flagship arc: one brief, eleven governed calls — rulebook first, self-revised SQL, a conditional export resumed with controls, a denied fine-tune rerouted, every decision explained. |
 | `15_audit_evidence_packet.ipynb` | A day of decisions as an audit-ready report: citations by policy version, the explain chain proving currency, and the honest corners on the record. |
+| `16_purpose_bound_agent_data_windows.ipynb` | Four-variable agent access: database × purpose × rolling/as-of anchor × 90/30-day lookback, with authorization and SQL proof. |
+
+See the committed
+[expected output](sample-outputs/purpose-bound-agent-data-windows.md) for the
+four policy combinations, the fail-closed context controls, and the SQL proof
+boundary.
 
 ## Walkthroughs (live, beyond the notebooks)
 
@@ -164,7 +171,7 @@ Pull requests run the offline validation workflow in
 the acceptance suites, and the static checks. Release candidates should also
 run the manual live SaaS workflow in
 `.github/workflows/live-saas-mcp-validation.yml` against a workspace serving
-the AcmeCloud demo publication.
+the Customer 360 demo publication.
 
 Runtime coverage is separate from core notebook execution:
 
@@ -176,6 +183,7 @@ Runtime coverage is separate from core notebook execution:
 - `10_llamaindex_governed_retrieval_pattern.ipynb` is paired with a deterministic LlamaIndex `FunctionTool` runtime acceptance script.
 - `14_governed_agent_end_to_end.ipynb` is backed by the reusable `governed_agent_arc` package and an acceptance script that pins the arc's exact eleven-call decision sequence.
 - `15_audit_evidence_packet.ipynb` is backed by the reusable `audit_evidence` package and an acceptance script that pins the packet structure (4/4 explained and current, both honest corners on the record).
+- `16_purpose_bound_agent_data_windows.ipynb` exercises twelve canonical cases: four authorizations, two missing-context controls, four valid SQL windows, and two over-broad SQL failures.
 
 The LangGraph, OpenAI, and LlamaIndex runtime checks invoke real framework objects, but they intentionally do not call an LLM. Review [docs/validation-matrix.md](docs/validation-matrix.md) and [docs/framework-runtime-acceptance.md](docs/framework-runtime-acceptance.md) for the exact coverage.
 
@@ -276,7 +284,9 @@ cp .env.example .env
 
 Configure `.env` with your endpoint, keep the token in your shell, and see
 [docs/live-mode-saas.md](docs/live-mode-saas.md) for the full walkthrough
-(including the local-stack path for contributors).
+(including the local-stack path for contributors). The purpose-bound access
+window notebook additionally uses a separate `{read}` token whose bound role is
+exactly `agent`; the live guide shows how to issue and export both credentials.
 
 ## Repository Map
 
@@ -291,10 +301,10 @@ governed_agent_arc/             The flagship one-brief-end-to-end agent arc
 human_exception_workflow/       Human review and exception workflow example
 request_lifecycle/              Live-only request_access/check_request walkthrough
 notebooks/                      Notebook-first walkthroughs (generated)
-sample-data/acmecloud/tables/   Small synthetic CSV tables
+sample-data/customer-360/tables/   Small synthetic CSV tables
 starter-policies/               Estate-agnostic starter pack for YOUR workspace
-sample-data/acmecloud/policies/ Example policy YAML
-sample-data/acmecloud/metatate-responses/
+sample-data/customer-360/policies/ Example policy YAML
+sample-data/customer-360/metatate-responses/
                                 Offline Metatate response fixtures
 sample-outputs/                 Curated expected output summaries
 scripts/                        Validation and notebook execution helpers

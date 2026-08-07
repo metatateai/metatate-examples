@@ -1,6 +1,6 @@
 # Walkthrough: Group Once, Govern The Group (Collections)
 
-AcmeCloud's "Customer 360" is a **collection**: five tables that mean one
+Customer 360's "Customer 360" is a **collection**: five tables that mean one
 thing to the business. One policy targets the collection by id — and at
 deploy time, Metatate expands it to serving rows for every member, each
 answer citing the collection as its resolution path. Membership changes are
@@ -10,7 +10,7 @@ This is a product-UI walkthrough: **no MCP tool authors or publishes
 governance** (ADR-0012), so the membership change happens in the app. The
 decision tools *do* record durable, citable evidence, but none of them edit a
 policy or cut a publication. Run it against your own workspace with the
-AcmeCloud demo loaded and a terminal beside the app.
+Customer 360 demo loaded and a terminal beside the app.
 
 ## 0. See the group
 
@@ -19,7 +19,7 @@ AcmeCloud demo loaded and a terminal beside the app.
 
 ## 1. See the policy that targets it
 
-**Policies → "AcmeCloud Customer 360 context."** The target is the
+**Policies → "Customer 360 Customer 360 context."** The target is the
 collection itself — not a list of tables. The policy permits
 `customer_360_reporting` (served under the `sharing.internal` scenario) for
 whatever the collection contains at publish time.
@@ -31,7 +31,7 @@ from common import get_client
 client = get_client()  # METATATE_EXAMPLES_MODE=live
 
 answer = client.authorize_use(
-    {"database": "acmecloud_demo", "schema": "public", "table": "subscriptions"},
+    {"database": "master", "schema": "public", "table": "subscriptions"},
     use="share account health summaries with the success team",
     scenario_key="sharing.internal",
     purpose_key="analytics.reporting",
@@ -56,7 +56,7 @@ favourable — a review cites its sources exactly as an allow does.
 
 ```python
 answer = client.authorize_use(
-    {"database": "acmecloud_demo", "schema": "public", "table": "product_usage_events"},
+    {"database": "product", "schema": "public", "table": "product_usage_events"},
     use="share usage summaries with the success team",
     scenario_key="sharing.internal",
 )

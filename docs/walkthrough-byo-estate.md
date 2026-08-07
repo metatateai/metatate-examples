@@ -1,6 +1,6 @@
 # Walkthrough: Your Estate, Governed By Friday
 
-Everything else in this repo runs against AcmeCloud. This walkthrough is the
+Everything else in this repo runs against Customer 360. This walkthrough is the
 bridge to YOUR data: connect a real source, let classification find the
 personal data, publish four estate-agnostic starter policies, and watch the
 same typed answers the notebooks demonstrate come back about your own tables.
@@ -57,7 +57,7 @@ Then **Deployments → review and publish**. The four templates:
 No placeholders to edit: taxonomy targeting makes them estate-agnostic
 (add `databases:`/`schemas:` under a selector to narrow scope). They are
 DEFAULTS — replace them with asset-specific policies as your governance
-matures; the AcmeCloud policy corpus (`sample-data/acmecloud/policies/`)
+matures; the Customer 360 policy corpus (`sample-data/customer-360/policies/`)
 shows what the mature versions look like.
 
 ## 4. Measure the delta

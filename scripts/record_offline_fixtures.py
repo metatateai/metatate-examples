@@ -2,8 +2,8 @@
 """Record the offline fixture set from a live Metatate Cloud workspace.
 
 Replays every case in `common/fixture_cases.py` against the configured live
-endpoint (the workspace must serve the AcmeCloud demo publication) and writes
-the typed answers to `sample-data/acmecloud/metatate-responses/{case_id}.json`.
+endpoint (the workspace must serve the Customer 360 demo publication) and writes
+the typed answers to `sample-data/customer-360/metatate-responses/{case_id}.json`.
 
 The recordings are then NORMALIZED for stable diffs while staying internally
 consistent: every uuid is rewritten (in order of first appearance, and
@@ -15,14 +15,17 @@ Usage (local stack example — docs/live-mode-saas.md):
     export METATATE_EXAMPLES_MODE=live
     export METATATE_MCP_URL=http://localhost:3200/mcp
     export METATATE_SAAS_MCP_TOKEN=mtt_...
+    export METATATE_SAAS_MCP_AGENT_TOKEN=mtt_...  # bound_role=agent cases
     python3 scripts/record_offline_fixtures.py
 """
 
 from __future__ import annotations
 
 import json
+import os
 import re
 import sys
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -32,7 +35,7 @@ sys.path.insert(0, str(ROOT))
 from common.fixture_cases import CASES  # noqa: E402
 from common.saas_client import MetatateCloudClient  # noqa: E402
 
-FIXTURE_DIR = ROOT / "sample-data" / "acmecloud" / "metatate-responses"
+FIXTURE_DIR = ROOT / "sample-data" / "customer-360" / "metatate-responses"
 UUID_RE = re.compile(r"\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b")
 PINNED_PUBLISHED_AT = "2026-07-16T00:00:00.000Z"
 PINNED_EVALUATED_AT = "2026-07-30T00:00:00.000Z"
@@ -61,9 +64,40 @@ def normalize(recordings: list[dict[str, Any]]) -> list[dict[str, Any]]:
             mapping[raw] = f"accef000-0000-4000-8000-{len(mapping) + 1:012d}"
     del text
 
+    # Rolling windows are anchored to server evaluation time. Pin the anchor,
+    # derived lower bound, and every human-readable occurrence together so a
+    # rerecord is stable while the relationship remains true. As-of windows
+    # keep their caller-declared timestamp verbatim.
+    timestamp_mapping: dict[str, str] = {}
+    pinned_anchor = datetime.fromisoformat(PINNED_EVALUATED_AT.replace("Z", "+00:00"))
+
+    def collect_rolling_windows(value: Any) -> None:
+        if isinstance(value, dict):
+            if (
+                value.get("type") == "rolling"
+                and isinstance(value.get("lookback_days"), int)
+                and isinstance(value.get("anchor_at"), str)
+                and isinstance(value.get("lower_bound_at"), str)
+            ):
+                lower = pinned_anchor - timedelta(days=int(value["lookback_days"]))
+                timestamp_mapping[str(value["anchor_at"])] = PINNED_EVALUATED_AT
+                timestamp_mapping[str(value["lower_bound_at"])] = (
+                    lower.astimezone(timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")
+                )
+            for child in value.values():
+                collect_rolling_windows(child)
+        elif isinstance(value, list):
+            for child in value:
+                collect_rolling_windows(child)
+
+    collect_rolling_windows(recordings)
+
     def swap(value: Any) -> Any:
         if isinstance(value, str):
-            return UUID_RE.sub(lambda m: mapping.get(m.group(0), m.group(0)), value)
+            replaced = UUID_RE.sub(lambda m: mapping.get(m.group(0), m.group(0)), value)
+            for raw, pinned in timestamp_mapping.items():
+                replaced = replaced.replace(raw, pinned)
+            return replaced
         if isinstance(value, list):
             return [swap(item) for item in value]
         if isinstance(value, dict):
@@ -121,7 +155,7 @@ def preflight(client: "MetatateCloudClient") -> None:
     a partial fixture set that still *looks* like a recording — the first run
     of this pack died on `asset_not_found` two-thirds of the way through, after
     having already written files. Worse, a workspace could be selected by a
-    misleading slug: the tenant named `acmecloud-demo` serves only 5 of the 11
+    misleading slug: the tenant named `customer360-demo` serves only 5 of the 11
     tables the cases need. So the gate checks the ESTATE, never the name.
     """
     answer = client.call_tool("discover_context", {})
@@ -164,12 +198,24 @@ def preflight(client: "MetatateCloudClient") -> None:
 def main() -> int:
     client = MetatateCloudClient()
     preflight(client)
+    agent_client: MetatateCloudClient | None = None
+    if any(case.get("bound_role") == "agent" for case in CASES):
+        if not os.getenv("METATATE_SAAS_MCP_AGENT_TOKEN"):
+            raise SystemExit(
+                "recording FAILED: agent-bound cases require "
+                "METATATE_SAAS_MCP_AGENT_TOKEN (a {read} token with bound_role=agent)"
+            )
+        agent_client = MetatateCloudClient(token_env="METATATE_SAAS_MCP_AGENT_TOKEN")
+        preflight(agent_client)
     recorded: dict[str, dict[str, Any]] = {}
     ordered: list[dict[str, Any]] = []
 
     for case in CASES:
         arguments = resolve_reference(dict(case["arguments"]), recorded)
-        answer = client.call_tool(str(case["tool"]), arguments)
+        case_client = agent_client if case.get("bound_role") == "agent" else client
+        if case_client is None:
+            raise RuntimeError("agent client was not initialized")
+        answer = case_client.call_tool(str(case["tool"]), arguments)
         recording = {
             "case_id": case["id"],
             "tool": case["tool"],

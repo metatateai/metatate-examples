@@ -45,7 +45,7 @@ ARIA = (
     "current."
 )
 DESC = (
-    "A Python session against the AcmeCloud demo domain running the governed "
+    "A Python session against the Customer 360 demo domain running the governed "
     "agent arc (notebook 14). inspect_governance_rules returns 18 active "
     "rules. validate_query_context returns WARN for a masked-column draft, "
     "then PASS for the revised aggregate (fixtures email-detail-warn and "

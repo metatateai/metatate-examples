@@ -2,7 +2,7 @@
 
 Captured from the executed OFFLINE notebook (`notebooks/12_governance_states_and_the_wider_estate.ipynb`), which replays
 recorded Metatate Cloud answers — live mode against a workspace serving the
-AcmeCloud demo publication produces the same decisions.
+Customer 360 demo publication produces the same decisions.
 
 
 ```text
@@ -18,8 +18,8 @@ employees.full_name masking -> review_required (decision_requires_review)
 ```text
 state:    answered
 decision: deny
-reason:   acme-employee-access v1 role_grant:spec.accessControl.deniedRoles:public:deny → deny on acmecloud_demo.public.employees
-prohibition: acme-employee-access v1 role_grant:spec.accessControl.deniedRoles:public:deny → deny on acmecloud_demo.public.employees
+reason:   employee-data-access v1 role_grant:spec.accessControl.deniedRoles:public:deny → deny on master.public.employees
+prohibition: employee-data-access v1 role_grant:spec.accessControl.deniedRoles:public:deny → deny on master.public.employees
 can_proceed_now: False
   cited: role_grant:spec.accessControl.deniedRoles:public:deny -> deny
   cited: role_grant:spec.accessControl.allowedRoles:hr_admin:allow -> allow
@@ -41,13 +41,13 @@ features, ai.automated_decisioning       -> deny
 
 ```text
 SELECT work_email -> warn
-  mask_partial via [taxonomy] acme-email-masking v1 masking:spec.accessControl.masking → mask_partial on acmecloud_demo.public.employees.work_email
-  allow via [selector] acme-employee-access v1 usage_guidance:spec.usage.permittedUses:permitted → allow on acmecloud_demo.public.employees
+  mask_partial via [taxonomy] email-masking v1 masking:spec.accessControl.masking → mask_partial on master.public.employees.work_email
+  allow via [selector] employee-data-access v1 usage_guidance:spec.usage.permittedUses:permitted → allow on master.public.employees
 ```
 
 ```text
 sharing.internal on subscriptions -> allow
-  cited via [collection]: AcmeCloud Customer 360 context
+  cited via [collection]: Customer 360 Customer 360 context
 ```
 
 ```text
@@ -57,22 +57,22 @@ salary (NO stated intent)    -> fail (role-gated read applies to any SQL)
 
 ```text
 marketing_prospects outreach -> review_required (conflicted_published_state)
-  cited: AcmeCloud prospect outreach privacy block -> deny
-  cited: AcmeCloud prospect outreach enablement -> allow
+  cited: Customer 360 prospect outreach privacy block -> deny
+  cited: Customer 360 prospect outreach enablement -> allow
 ```
 
 ```text
 state:    answered
 decision: retain
-reason:   acme-retention v1 retention:spec.retention → retain on acmecloud_demo.public.subscriptions
-obligation [retain]: acmecloud_demo.public.subscriptions
+reason:   revenue-retention-guardrails v1 retention:spec.retention → retain on master.public.subscriptions
+obligation [retain]: master.public.subscriptions
 can_proceed_now: False
 ```
 
 ```text
 state:    answered
 decision: conditional
-reason:   acme-employee-rows v1 row_access:spec.rowFilter.rules → conditional on acmecloud_demo.public.employees
+reason:   employee-region-row-filter v1 row_access:spec.rowFilter.rules → conditional on master.public.employees
 condition [role_restricted]: Row-level access is restricted to role(s): PEOPLE_OPS.
 can_proceed_now: False
 ```
@@ -81,8 +81,8 @@ can_proceed_now: False
 compliance.regulatory -> log_only (regulatory context, not a permission)
 state:    answered
 decision: mask_full
-reason:   acme-payment-protection v1 masking:spec.accessControl.masking → mask_full on acmecloud_demo.public.payment_methods.card_token
-obligation [mask]: acmecloud_demo.public.payment_methods.card_token
+reason:   payment-data-protection v1 masking:spec.accessControl.masking → mask_full on master.public.payment_methods.card_token
+obligation [mask]: master.public.payment_methods.card_token
 can_proceed_now: False
 ```
 

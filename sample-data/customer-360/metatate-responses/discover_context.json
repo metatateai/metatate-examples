@@ -1,0 +1,340 @@
+{
+  "answer": {
+    "assets": [
+      {
+        "instruction_count": 4,
+        "ref": {
+          "column": null,
+          "database": "master",
+          "schema": "finance",
+          "table": "invoices"
+        },
+        "scenario_keys": [
+          "classification.sensitivity",
+          "metadata.domain",
+          "purpose.allowed_use",
+          "sharing.public"
+        ]
+      },
+      {
+        "instruction_count": 4,
+        "ref": {
+          "column": null,
+          "database": "master",
+          "schema": "finance",
+          "table": "revenue_ledger"
+        },
+        "scenario_keys": [
+          "classification.sensitivity",
+          "metadata.domain",
+          "purpose.allowed_use",
+          "sharing.public"
+        ]
+      },
+      {
+        "instruction_count": 8,
+        "ref": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "customer_exports"
+        },
+        "scenario_keys": [
+          "classification.sensitivity",
+          "metadata.domain",
+          "residency.cross_border_transfer",
+          "sharing.internal"
+        ]
+      },
+      {
+        "instruction_count": 1,
+        "ref": {
+          "column": "email",
+          "database": "master",
+          "schema": "public",
+          "table": "customer_exports"
+        },
+        "scenario_keys": [
+          "masking.display"
+        ]
+      },
+      {
+        "instruction_count": 20,
+        "ref": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "customers"
+        },
+        "scenario_keys": [
+          "access.read",
+          "ai.inference",
+          "ai.training",
+          "classification.sensitivity",
+          "classification.taxonomy",
+          "metadata.domain",
+          "metadata.lineage",
+          "protection.anonymization",
+          "purpose.allowed_use",
+          "purpose.prohibited_use",
+          "residency.cross_border_transfer",
+          "sharing.internal"
+        ]
+      },
+      {
+        "instruction_count": 1,
+        "ref": {
+          "column": "email",
+          "database": "master",
+          "schema": "public",
+          "table": "customers"
+        },
+        "scenario_keys": [
+          "masking.display"
+        ]
+      },
+      {
+        "instruction_count": 21,
+        "ref": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "employees"
+        },
+        "scenario_keys": [
+          "access.read",
+          "access.row_filter",
+          "classification.sensitivity",
+          "compliance.regulatory",
+          "metadata.domain",
+          "metadata.lineage",
+          "purpose.allowed_use",
+          "retention.lifecycle",
+          "sharing.public"
+        ]
+      },
+      {
+        "instruction_count": 1,
+        "ref": {
+          "column": "full_name",
+          "database": "master",
+          "schema": "public",
+          "table": "employees"
+        },
+        "scenario_keys": [
+          "masking.display"
+        ]
+      },
+      {
+        "instruction_count": 1,
+        "ref": {
+          "column": "national_id",
+          "database": "master",
+          "schema": "public",
+          "table": "employees"
+        },
+        "scenario_keys": [
+          "masking.display"
+        ]
+      },
+      {
+        "instruction_count": 1,
+        "ref": {
+          "column": "salary",
+          "database": "master",
+          "schema": "public",
+          "table": "employees"
+        },
+        "scenario_keys": [
+          "masking.display"
+        ]
+      },
+      {
+        "instruction_count": 1,
+        "ref": {
+          "column": "work_email",
+          "database": "master",
+          "schema": "public",
+          "table": "employees"
+        },
+        "scenario_keys": [
+          "masking.display"
+        ]
+      },
+      {
+        "instruction_count": 8,
+        "ref": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "marketing_prospects"
+        },
+        "scenario_keys": [
+          "classification.sensitivity",
+          "metadata.domain",
+          "purpose.allowed_use"
+        ]
+      },
+      {
+        "instruction_count": 1,
+        "ref": {
+          "column": "contact_email",
+          "database": "master",
+          "schema": "public",
+          "table": "marketing_prospects"
+        },
+        "scenario_keys": [
+          "masking.display"
+        ]
+      },
+      {
+        "instruction_count": 2,
+        "ref": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "payment_methods"
+        },
+        "scenario_keys": [
+          "classification.sensitivity",
+          "metadata.domain"
+        ]
+      },
+      {
+        "instruction_count": 1,
+        "ref": {
+          "column": "card_last4",
+          "database": "master",
+          "schema": "public",
+          "table": "payment_methods"
+        },
+        "scenario_keys": [
+          "masking.display"
+        ]
+      },
+      {
+        "instruction_count": 1,
+        "ref": {
+          "column": "card_token",
+          "database": "master",
+          "schema": "public",
+          "table": "payment_methods"
+        },
+        "scenario_keys": [
+          "masking.display"
+        ]
+      },
+      {
+        "instruction_count": 7,
+        "ref": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "subscriptions"
+        },
+        "scenario_keys": [
+          "classification.sensitivity",
+          "metadata.domain",
+          "purpose.allowed_use",
+          "retention.lifecycle",
+          "sharing.internal"
+        ]
+      },
+      {
+        "instruction_count": 13,
+        "ref": {
+          "column": null,
+          "database": "product",
+          "schema": "public",
+          "table": "ml_feature_store"
+        },
+        "scenario_keys": [
+          "ai.automated_decisioning",
+          "ai.embedding_storage",
+          "ai.inference",
+          "ai.retrieval_context",
+          "ai.training",
+          "ai.vendor_transfer",
+          "classification.sensitivity",
+          "metadata.domain",
+          "sharing.internal"
+        ]
+      },
+      {
+        "instruction_count": 14,
+        "ref": {
+          "column": null,
+          "database": "product",
+          "schema": "public",
+          "table": "product_usage_events"
+        },
+        "scenario_keys": [
+          "access.read",
+          "ai.inference",
+          "ai.training",
+          "classification.sensitivity",
+          "classification.taxonomy",
+          "metadata.domain",
+          "metadata.lineage",
+          "protection.anonymization",
+          "purpose.allowed_use",
+          "purpose.prohibited_use"
+        ]
+      },
+      {
+        "instruction_count": 1,
+        "ref": {
+          "column": "device_id",
+          "database": "product",
+          "schema": "public",
+          "table": "product_usage_events"
+        },
+        "scenario_keys": [
+          "masking.display"
+        ]
+      },
+      {
+        "instruction_count": 14,
+        "ref": {
+          "column": null,
+          "database": "product",
+          "schema": "public",
+          "table": "support_tickets"
+        },
+        "scenario_keys": [
+          "ai.inference",
+          "ai.training",
+          "classification.sensitivity",
+          "classification.taxonomy",
+          "metadata.domain",
+          "metadata.lineage",
+          "protection.anonymization",
+          "purpose.allowed_use",
+          "purpose.prohibited_use",
+          "sharing.internal"
+        ]
+      },
+      {
+        "instruction_count": 1,
+        "ref": {
+          "column": "ticket_text",
+          "database": "product",
+          "schema": "public",
+          "table": "support_tickets"
+        },
+        "scenario_keys": [
+          "masking.display"
+        ]
+      }
+    ],
+    "next_cursor": null,
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "state": "answered"
+  },
+  "arguments": {},
+  "case_id": "discover_context",
+  "tool": "discover_context"
+}

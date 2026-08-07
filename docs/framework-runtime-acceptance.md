@@ -25,7 +25,7 @@ Offline mode uses committed Metatate response fixtures.
 
 ## Run Live Through MCP
 
-Live mode uses the same environment as the notebooks: a workspace serving the AcmeCloud demo publication, its MCP endpoint, and a workspace-issued access token.
+Live mode uses the same environment as the notebooks: a workspace serving the Customer 360 demo publication, its MCP endpoint, and a workspace-issued access token.
 
 ```bash
 METATATE_EXAMPLES_MODE=live \

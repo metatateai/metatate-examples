@@ -12,7 +12,7 @@ inputs:
   mode:
     description: >-
       "live" (default) gates against your workspace's MCP endpoint;
-      "offline" replays the recorded AcmeCloud fixtures (demo/smoke only).
+      "offline" replays the recorded Customer 360 fixtures (demo/smoke only).
     default: live
   changes:
     description: Path to a prebuilt gate change-set JSON (skips the dbt adapter).

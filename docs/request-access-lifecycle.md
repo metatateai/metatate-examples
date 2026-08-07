@@ -10,7 +10,7 @@ Preview the exact flow without calling an endpoint:
 python3 -m request_lifecycle.cli
 ```
 
-To run it against your workspace, load the AcmeCloud demo and create a token
+To run it against your workspace, load the Customer 360 demo and create a token
 with both `read` and `request` scopes. Then export the normal live-mode
 variables and run:
 
@@ -42,6 +42,6 @@ the condition is satisfied. A revoked or expired grant is refused.
 
 This workflow is intentionally absent from automated live CI. The repository's
 shared release credential is read-only, and an automated `request_access` would
-create a real open request without a confirming user. The AcmeCloud demo's
+create a real open request without a confirming user. The Customer 360 demo's
 Activity records come from the product's authoritative database fixture, not
 from the MCP response recordings in this repository.

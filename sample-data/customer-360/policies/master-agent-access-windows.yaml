@@ -1,0 +1,37 @@
+# Customer 360 estate spec — purpose-bound agent windows for the master database.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: master-agent-access-windows
+  version: 1.0.0
+  description: >-
+    Agents may read customer master data for the most recent 90 days for
+    research, or the most recent 30 days for commercial work.
+  tags: [agent_access, purpose_bound, time_window]
+  businessContext:
+    domain: Customer 360
+    owner: Data Platform
+    steward: data-governance@example.com
+    purpose: Purpose-bound agent access to current customer master records.
+spec:
+  enforcementMode: enforce
+  priority: 700
+  selector:
+    databases: [master]
+    schemas: [public]
+    tables: [customers]
+  classification:
+    sensitivity: confidential
+    category: pii
+  accessWindows:
+    actorRoles: [agent, analyst]
+    timeColumn: created_at
+    rules:
+      - purposeKey: research.general
+        type: rolling
+        lookbackDays: 90
+      - purposeKey: commercial.general
+        type: rolling
+        lookbackDays: 30
+extensions:
+  displayName: Master data agent access windows

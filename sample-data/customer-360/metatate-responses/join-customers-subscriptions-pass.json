@@ -1,0 +1,153 @@
+{
+  "answer": {
+    "advisory": true,
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": {
+      "purpose_category": "analytics",
+      "purpose_key": "analytics.reporting",
+      "registry_version": 2
+    },
+    "findings": [
+      {
+        "conflict": null,
+        "decision": "allow",
+        "decision_reason": "Purpose `analytics.reporting` is named by this policy's permitted-uses list (policy Customer use guardrails).",
+        "finding_id": "accef000-0000-4000-8000-000000000155",
+        "instructions": [
+          {
+            "category": "advisory",
+            "conflict_group_id": null,
+            "conflict_status": "none",
+            "conflicts_with": [],
+            "decision": "allow",
+            "decision_id": "accef000-0000-4000-8000-000000000025",
+            "decision_reason": "Purpose `analytics.reporting` is named by this policy's permitted-uses list (policy Customer use guardrails).",
+            "effective_from": null,
+            "effective_until": null,
+            "enforcement_mode": "enforce",
+            "instruction_family": "usage_guidance",
+            "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+            "parameters": {
+              "kind": "permitted",
+              "uses": [
+                "analytics",
+                "reporting",
+                "support"
+              ]
+            },
+            "primary_resolution_source": "selector",
+            "priority": 2,
+            "provenance": {
+              "policy_id": "accef000-0000-4000-8000-000000000006",
+              "policy_name": "Customer use guardrails",
+              "policy_version_id": "accef000-0000-4000-8000-000000000007",
+              "version_number": 1
+            },
+            "resolution_paths": [
+              {
+                "ref": null,
+                "source": "selector"
+              }
+            ],
+            "scenario_key": "purpose.allowed_use",
+            "scenario_lane": "human",
+            "scope": {
+              "column": null,
+              "database": "master",
+              "schema": "public",
+              "table": "customers"
+            },
+            "weight": 1
+          }
+        ],
+        "reason_code": null,
+        "ref": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "customers"
+        },
+        "status": "evaluated"
+      },
+      {
+        "conflict": null,
+        "decision": "allow",
+        "decision_reason": "Purpose `analytics.reporting` is named by this policy's permitted-uses list (policy Revenue retention guardrails).",
+        "finding_id": "accef000-0000-4000-8000-000000000156",
+        "instructions": [
+          {
+            "category": "advisory",
+            "conflict_group_id": null,
+            "conflict_status": "none",
+            "conflicts_with": [],
+            "decision": "allow",
+            "decision_id": "accef000-0000-4000-8000-000000000157",
+            "decision_reason": "Purpose `analytics.reporting` is named by this policy's permitted-uses list (policy Revenue retention guardrails).",
+            "effective_from": null,
+            "effective_until": null,
+            "enforcement_mode": "enforce",
+            "instruction_family": "usage_guidance",
+            "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+            "parameters": {
+              "kind": "permitted",
+              "uses": [
+                "analytics",
+                "reporting",
+                "renewal_planning"
+              ]
+            },
+            "primary_resolution_source": "selector",
+            "priority": 1,
+            "provenance": {
+              "policy_id": "accef000-0000-4000-8000-000000000140",
+              "policy_name": "Revenue retention guardrails",
+              "policy_version_id": "accef000-0000-4000-8000-000000000141",
+              "version_number": 1
+            },
+            "resolution_paths": [
+              {
+                "ref": null,
+                "source": "selector"
+              }
+            ],
+            "scenario_key": "purpose.allowed_use",
+            "scenario_lane": "human",
+            "scope": {
+              "column": null,
+              "database": "master",
+              "schema": "public",
+              "table": "subscriptions"
+            },
+            "weight": 0.55
+          }
+        ],
+        "reason_code": null,
+        "ref": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "subscriptions"
+        },
+        "status": "evaluated"
+      }
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "state": "answered",
+    "validation_id": "accef000-0000-4000-8000-000000000154",
+    "verdict": "pass"
+  },
+  "arguments": {
+    "default_database": "master",
+    "default_schema": "public",
+    "purpose_key": "analytics.reporting",
+    "scenario_key": "purpose.allowed_use",
+    "sql": "SELECT c.region, SUM(s.arr) FROM customers c JOIN subscriptions s ON s.customer_id = c.customer_id GROUP BY c.region"
+  },
+  "case_id": "join-customers-subscriptions-pass",
+  "tool": "validate_query_context"
+}

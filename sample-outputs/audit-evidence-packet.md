@@ -2,7 +2,7 @@
 
 Captured from the executed OFFLINE notebook (`notebooks/15_audit_evidence_packet.ipynb`), which replays
 recorded Metatate Cloud answers — live mode against a workspace serving the
-AcmeCloud demo publication produces the same decisions.
+Customer 360 demo publication produces the same decisions.
 
 
 ```text
@@ -21,39 +21,39 @@ Publication `accef000-0000-4000-8000-000000000001` (published 2026-07-16T00:00:0
 ## Decisions
 
 ### 1. Can we build a churn analytics dashboard on customers?
-- Asset: `acmecloud_demo.public.customers` — scenario `purpose.allowed_use`
+- Asset: `master.public.customers` — scenario `purpose.allowed_use`
 - Decision: **allow** (state answered)
 - Evidence: `accef000-0000-4000-8000-000000000020`
-- Cited policy: AcmeCloud customer use guardrails v1 (instruction `usage_guidance:spec.usage.permittedUses:permitted`)
+- Cited policy: Customer 360 customer use guardrails v1 (instruction `usage_guidance:spec.usage.permittedUses:permitted`)
 - Explain chain: current = true
 
 ### 2. Can we sync approved customer fields to Salesforce for EU consumers?
-- Asset: `acmecloud_demo.public.customers` — scenario `residency.cross_border_transfer`
+- Asset: `master.public.customers` — scenario `residency.cross_border_transfer`
 - Decision: **conditional** (state answered)
 - Evidence: `accef000-0000-4000-8000-000000000010`
-- Cited policy: AcmeCloud transfer guardrails v1 (instruction `transfer_governance:spec.transferGovernance`)
+- Cited policy: Customer 360 transfer guardrails v1 (instruction `transfer_governance:spec.transferGovernance`)
 - Conditions: anonymize_first, approval_required
 - Explain chain: current = true
 
 ### 3. Can we fine-tune the support assistant on raw ticket text?
-- Asset: `acmecloud_demo.public.support_tickets` — scenario `ai.training`
+- Asset: `master.public.support_tickets` — scenario `ai.training`
 - Decision: **deny** (state answered)
 - Evidence: `accef000-0000-4000-8000-000000000043`
-- Cited policy: AcmeCloud customer use guardrails v1 (instruction `ai_governance:spec.aiGovernance:training`)
+- Cited policy: Customer 360 customer use guardrails v1 (instruction `ai_governance:spec.aiGovernance:training`)
 - Prohibitions cited: 1
 - Explain chain: current = true
 
 ### 4. Can we train the churn model on derived features instead?
-- Asset: `acmecloud_demo.public.ml_feature_store` — scenario `ai.training`
+- Asset: `master.public.ml_feature_store` — scenario `ai.training`
 - Decision: **allow** (state answered)
 - Evidence: `accef000-0000-4000-8000-000000000064`
-- Cited policy: AcmeCloud ML feature AI lifecycle v1 (instruction `ai_governance:spec.aiGovernance:training`)
+- Cited policy: Customer 360 ML feature AI lifecycle v1 (instruction `ai_governance:spec.aiGovernance:training`)
 - Explain chain: current = true
 
 ## Honest corners
 
-- `acmecloud_demo.public.legacy_customer_backup` (purpose.allowed_use): **not_enough_published_state** (no_published_instruction_state) — the estate refused to guess.
-- `acmecloud_demo.public.employees.full_name` (masking.display): **review_required** (decision_requires_review) — the estate refused to guess.
+- `master.public.legacy_customer_backup` (purpose.allowed_use): **not_enough_published_state** (no_published_instruction_state) — the estate refused to guess.
+- `master.public.employees.full_name` (masking.display): **review_required** (decision_requires_review) — the estate refused to guess.
 
 ## Ledger
 

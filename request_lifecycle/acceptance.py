@@ -21,6 +21,7 @@ from request_lifecycle.workflow import (  # noqa: E402
 AUTH_ID = "a1000000-0000-4000-8000-000000000001"
 REQUEST_ID = "a1000000-0000-4000-8000-000000000002"
 EXCEPTION_ID = "a1000000-0000-4000-8000-000000000003"
+TENANT_SLUG = "customer-360"
 
 
 class FakeClient:
@@ -55,13 +56,13 @@ def main() -> int:
     assert preview()["required_token_scopes"] == ["read", "request"]
 
     client = FakeClient()
-    assert submit(client, "acme", input_fn=_answers("no"), output=lambda _s: None) is None
+    assert submit(client, TENANT_SLUG, input_fn=_answers("no"), output=lambda _s: None) is None
     assert client.calls == [], "a rejected first confirmation must make zero MCP calls"
 
     client = FakeClient()
     assert submit(
         client,
-        "acme",
+        TENANT_SLUG,
         input_fn=_answers("START", "not the bound confirmation"),
         output=lambda _s: None,
     ) is None
@@ -70,7 +71,7 @@ def main() -> int:
     client = FakeClient()
     submitted = submit(
         client,
-        "acme",
+        TENANT_SLUG,
         input_fn=_answers("START", f"REQUEST {AUTH_ID}"),
         output=lambda _s: None,
     )
