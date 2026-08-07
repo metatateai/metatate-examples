@@ -27,9 +27,9 @@ Required repository secrets:
 - `METATATE_SAAS_MCP_URL` — a workspace MCP endpoint (Connect tab of the MCP module)
 - `METATATE_SAAS_MCP_TOKEN` — a workspace-issued MCP access token (Tokens tab; never the deterministic local fixture token)
 
-Prerequisite (operator step, not CI): the target workspace serves the AcmeCloud
-demo publication — via the in-app **Load the AcmeCloud demo** action, or on a
-local/staging stack via `metatate-saas/scripts/acmecloud-demo-fixtures.sh`.
+Prerequisite (operator step, not CI): the target workspace serves the Customer 360
+demo publication — via the in-app **Load the Customer 360 demo** action, or on a
+local/staging stack via `metatate-saas/scripts/customer360-demo-fixtures.sh`.
 
 The live gate checks:
 

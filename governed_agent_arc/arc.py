@@ -37,11 +37,12 @@ ARC_BRIEF = (
 
 MAX_REVISIONS = 1
 
-_DATABASE = "acmecloud_demo"
+_DATABASE = "master"
+_PRODUCT_DATABASE = "product"
 _SCHEMA = "public"
 _CUSTOMERS = {"database": _DATABASE, "schema": _SCHEMA, "table": "customers"}
-_TICKETS = {"database": _DATABASE, "schema": _SCHEMA, "table": "support_tickets"}
-_FEATURES = {"database": _DATABASE, "schema": _SCHEMA, "table": "ml_feature_store"}
+_TICKETS = {"database": _PRODUCT_DATABASE, "schema": _SCHEMA, "table": "support_tickets"}
+_FEATURES = {"database": _PRODUCT_DATABASE, "schema": _SCHEMA, "table": "ml_feature_store"}
 
 # The export leg mirrors human_exception_workflow's canonical Salesforce
 # request (same use text and transfer context as the recorded fixture).

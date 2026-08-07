@@ -29,14 +29,14 @@ def main() -> int:
     assert set(export.conditions) == {"approval_required", "anonymize_first"}
     assert export.explanation_current is True
 
-    assert deny.asset == "acmecloud_demo.public.support_tickets"
+    assert deny.asset == "product.public.support_tickets"
     assert deny.decision == "deny" and deny.explanation_current is True
-    assert reroute.asset == "acmecloud_demo.public.ml_feature_store"
+    assert reroute.asset == "product.public.ml_feature_store"
     assert reroute.decision == "allow" and reroute.explanation_current is True
 
     assert legacy.state == "not_enough_published_state"
     assert legacy.reason_code == "no_published_instruction_state"
-    assert review.asset == "acmecloud_demo.public.employees.full_name"
+    assert review.asset == "master.public.employees.full_name"
     assert review.state == "review_required"
 
     # Every answered decision is explained and CURRENT; both corners honest.
@@ -66,7 +66,7 @@ def main() -> int:
     # decision_id, and an authorization_id is the durable call receipt rather
     # than the serving-row decision cited by that call.
     authorization = client.authorize_use(
-        {"database": "acmecloud_demo", "schema": "public", "table": "customers"},
+        {"database": "master", "schema": "public", "table": "customers"},
         use="build a churn analytics dashboard",
         scenario_key="purpose.allowed_use",
         purpose_key="analytics.reporting",
@@ -83,7 +83,7 @@ def main() -> int:
     validation = client.validate_query_context(
         "SELECT region, SUM(arr) FROM customers GROUP BY region",
         scenario_key="purpose.allowed_use",
-        default_database="acmecloud_demo",
+        default_database="master",
         default_schema="public",
         purpose_key="analytics.reporting",
     )

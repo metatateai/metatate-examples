@@ -38,7 +38,7 @@
   the served-use inventory assertions) and a **release gate**
   `scripts/live_expected_decision_parity.py` in the live workflow.
 
-- **Served-use inventory** (`sample-data/acmecloud/served-use-inventory.json`,
+- **Served-use inventory** (`sample-data/customer-360/served-use-inventory.json`,
   generated). The pack serves **18 distinct authored entries across 19
   (entry, list-kind) pairs**; the #374 change-set manifest covers 9, and had been
   read as a complete inventory. The inventory is generated from the canonical
@@ -62,7 +62,7 @@
   notebook sections that demonstrated them are restored.
 
 - BYO-estate bootstrap: `docs/walkthrough-byo-estate.md` bridges from the
-  AcmeCloud demo to YOUR data — connect any of the six connector kinds,
+  Customer 360 demo to YOUR data — connect any of the six connector kinds,
   review classification, publish the new `starter-policies/` pack (four
   estate-agnostic, TAXONOMY-targeted DataPolicy templates: email masking,
   PII usage guardrails, AI-training default-deny, transfers
@@ -151,7 +151,7 @@
 
 ## 0.1.0
 
-- Rebuilt the examples repo around the AcmeCloud synthetic B2B SaaS dataset.
+- Rebuilt the examples repo around the Customer 360 synthetic B2B SaaS dataset.
 - Added offline Metatate response fixtures.
 - Added live Snowflake fixture SQL aligned with the Native App MCP serving-table model.
 - Added four starter notebooks:

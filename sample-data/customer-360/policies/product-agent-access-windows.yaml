@@ -1,0 +1,37 @@
+# Customer 360 estate spec — purpose-bound agent windows for the product database.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: product-agent-access-windows
+  version: 1.0.0
+  description: >-
+    Agents may read product events using a caller-declared as-of date: a
+    90-day lookback for research, or a 30-day lookback for commercial work.
+  tags: [agent_access, purpose_bound, time_window]
+  businessContext:
+    domain: Product Analytics
+    owner: Product Analytics
+    steward: product-data@example.com
+    purpose: Reproducible purpose-bound agent access to product event history.
+spec:
+  enforcementMode: enforce
+  priority: 700
+  selector:
+    databases: [product]
+    schemas: [public]
+    tables: [product_usage_events]
+  classification:
+    sensitivity: confidential
+    category: operational.telemetry
+  accessWindows:
+    actorRoles: [agent, analyst]
+    timeColumn: occurred_at
+    rules:
+      - purposeKey: research.general
+        type: as_of
+        lookbackDays: 90
+      - purposeKey: commercial.general
+        type: as_of
+        lookbackDays: 30
+extensions:
+  displayName: Product data agent access windows

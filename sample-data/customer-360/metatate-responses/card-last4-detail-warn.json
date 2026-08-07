@@ -1,0 +1,82 @@
+{
+  "answer": {
+    "advisory": true,
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": null,
+    "findings": [
+      {
+        "conflict": null,
+        "decision": "mask_full",
+        "decision_reason": "payment-data-protection v1 masking:spec.accessControl.masking \u2192 mask_full on master.public.payment_methods.card_last4",
+        "finding_id": "accef000-0000-4000-8000-000000000122",
+        "instructions": [
+          {
+            "category": "enforceable",
+            "conflict_group_id": null,
+            "conflict_status": "none",
+            "conflicts_with": [],
+            "decision": "mask_full",
+            "decision_id": "accef000-0000-4000-8000-000000000123",
+            "decision_reason": "payment-data-protection v1 masking:spec.accessControl.masking \u2192 mask_full on master.public.payment_methods.card_last4",
+            "effective_from": null,
+            "effective_until": null,
+            "enforcement_mode": "enforce",
+            "instruction_family": "masking",
+            "instruction_key": "masking:spec.accessControl.masking",
+            "parameters": {
+              "type": "tokenize"
+            },
+            "primary_resolution_source": "selector",
+            "priority": 3,
+            "provenance": {
+              "policy_id": "accef000-0000-4000-8000-000000000124",
+              "policy_name": "Payment data protection",
+              "policy_version_id": "accef000-0000-4000-8000-000000000125",
+              "version_number": 1
+            },
+            "resolution_paths": [
+              {
+                "ref": null,
+                "source": "selector"
+              }
+            ],
+            "scenario_key": "masking.display",
+            "scenario_lane": "platform",
+            "scope": {
+              "column": "card_last4",
+              "database": "master",
+              "schema": "public",
+              "table": "payment_methods"
+            },
+            "weight": 1
+          }
+        ],
+        "reason_code": null,
+        "ref": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "payment_methods"
+        },
+        "status": "evaluated"
+      }
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "state": "answered",
+    "validation_id": "accef000-0000-4000-8000-000000000121",
+    "verdict": "warn"
+  },
+  "arguments": {
+    "default_database": "master",
+    "default_schema": "public",
+    "scenario_key": "purpose.allowed_use",
+    "sql": "SELECT card_last4 FROM payment_methods"
+  },
+  "case_id": "card-last4-detail-warn",
+  "tool": "validate_query_context"
+}

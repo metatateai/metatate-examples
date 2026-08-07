@@ -34,7 +34,7 @@ DEFAULT_REQUESTS: list[dict[str, Any]] = [
         # reporting; saying so is what makes this a `pass` rather than a
         # fail-closed review.
         "purpose_key": "analytics.reporting",
-        "default_database": "acmecloud_demo",
+        "default_database": "master",
         "default_schema": "public",
         "owner": "Revenue Operations",
     },
@@ -43,7 +43,7 @@ DEFAULT_REQUESTS: list[dict[str, Any]] = [
         "kind": "authorization",
         "title": "Export customer fields to Salesforce",
         "description": "Sync customer fields to Salesforce for account operations.",
-        "asset": {"database": "acmecloud_demo", "schema": "public", "table": "customers"},
+        "asset": {"database": "master", "schema": "public", "table": "customers"},
         "use": "sync approved customer fields to the CRM",
         "scenario_key": "residency.cross_border_transfer",
         "operation": "export",
@@ -58,7 +58,7 @@ DEFAULT_REQUESTS: list[dict[str, Any]] = [
         "kind": "authorization",
         "title": "Fine-tune support assistant on raw tickets",
         "description": "Train a support assistant on raw ticket text.",
-        "asset": {"database": "acmecloud_demo", "schema": "public", "table": "support_tickets"},
+        "asset": {"database": "product", "schema": "public", "table": "support_tickets"},
         "use": "fine-tune a support assistant on ticket text",
         "scenario_key": "ai.training",
         "owner": "Support Operations",

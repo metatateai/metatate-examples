@@ -1,0 +1,31 @@
+# Customer 360 estate spec — full masking for high-risk employee columns.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: salary-masking
+  version: 1.0.0
+  description: >-
+    Salary and national identifiers are fully masked outside payroll.
+  tags: [hr, pii]
+  businessContext:
+    domain: People Operations
+    owner: People Operations
+    steward: hr-data@example.com
+    purpose: Display protection for compensation and government identifiers.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [master]
+    schemas: [public]
+    columns:
+      - master.public.employees.salary
+      - master.public.employees.national_id
+  classification:
+    sensitivity: restricted
+    category: pii
+  accessControl:
+    masking:
+      type: full
+extensions:
+  displayName: Salary and identifier masking

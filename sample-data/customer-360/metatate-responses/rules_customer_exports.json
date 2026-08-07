@@ -1,0 +1,442 @@
+{
+  "answer": {
+    "asset": {
+      "column": null,
+      "database": "master",
+      "schema": "public",
+      "table": "customer_exports"
+    },
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "rules": [
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "mask_partial",
+        "decision_id": "accef000-0000-4000-8000-000000000034",
+        "decision_reason": "email-masking v1 masking:spec.accessControl.masking \u2192 mask_partial on master.public.customer_exports.email",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "masking",
+        "instruction_key": "masking:spec.accessControl.masking",
+        "parameters": {
+          "exemptRoles": [
+            "DATA_STEWARD",
+            "PRIVACY_ADMIN"
+          ],
+          "type": "partial"
+        },
+        "primary_resolution_source": "taxonomy",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000003",
+          "policy_name": "Email masking (taxonomy)",
+          "policy_version_id": "accef000-0000-4000-8000-000000000004",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": "pii.contact.email",
+            "source": "taxonomy"
+          }
+        ],
+        "scenario_key": "masking.display",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": "email",
+          "database": "master",
+          "schema": "public",
+          "table": "customer_exports"
+        },
+        "weight": 1
+      },
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "conditional",
+        "decision_id": "accef000-0000-4000-8000-000000000035",
+        "decision_reason": "transfer-guardrails v1 transfer_governance:spec.transferGovernance \u2192 conditional on master.public.customer_exports",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "transfer_governance",
+        "instruction_key": "transfer_governance:spec.transferGovernance",
+        "parameters": {
+          "defaultEffect": "conditional",
+          "rules": [
+            {
+              "consumerJurisdictions": [
+                "EU"
+              ],
+              "destinationJurisdictions": [
+                "US"
+              ],
+              "destinationSystems": [
+                "SALESFORCE"
+              ],
+              "effect": "conditional",
+              "operations": [
+                "export"
+              ],
+              "requiredRole": "PRIVACY_ADMIN",
+              "requiresAnonymization": true,
+              "requiresApproval": true
+            },
+            {
+              "destinationSystems": [
+                "ADS_PLATFORM"
+              ],
+              "effect": "deny"
+            },
+            {
+              "destinationSystems": [
+                "EXTERNAL_LLM_VENDOR"
+              ],
+              "effect": "deny"
+            }
+          ]
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000014",
+          "policy_name": "Transfer guardrails",
+          "policy_version_id": "accef000-0000-4000-8000-000000000015",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "residency.cross_border_transfer",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "customer_exports"
+        },
+        "weight": 1
+      },
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000036",
+        "decision_reason": "transfer-guardrails v1 business_context:metadata.businessContext \u2192 log_only on master.public.customer_exports",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "business_context",
+        "instruction_key": "business_context:metadata.businessContext",
+        "parameters": {
+          "domain": "Customer Data",
+          "owner": "Data Platform",
+          "purpose": "Prepared customer exports under destination-aware transfer governance.",
+          "steward": "privacy-review@example.com"
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000014",
+          "policy_name": "Transfer guardrails",
+          "policy_version_id": "accef000-0000-4000-8000-000000000015",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "metadata.domain",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "customer_exports"
+        },
+        "weight": 1
+      },
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000037",
+        "decision_reason": "transfer-guardrails v1 classification:spec.classification \u2192 log_only on master.public.customer_exports",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "classification",
+        "instruction_key": "classification:spec.classification",
+        "parameters": {
+          "category": "pii",
+          "sensitivity": "restricted",
+          "subcategory": null
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000014",
+          "policy_name": "Transfer guardrails",
+          "policy_version_id": "accef000-0000-4000-8000-000000000015",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "classification.sensitivity",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "customer_exports"
+        },
+        "weight": 1
+      },
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000038",
+        "decision_reason": "customer-360-context v1 business_context:metadata.businessContext \u2192 log_only on master.public.customer_exports",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "business_context",
+        "instruction_key": "business_context:metadata.businessContext",
+        "parameters": {
+          "domain": "Customer 360",
+          "owner": "Revenue Operations",
+          "purpose": "Cross-team internal sharing rules for the customer 360 view.",
+          "steward": "privacy-review@example.com"
+        },
+        "primary_resolution_source": "collection",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000027",
+          "policy_name": "Customer 360 context",
+          "policy_version_id": "accef000-0000-4000-8000-000000000028",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": "accef000-0000-4000-8000-000000000029",
+            "source": "collection"
+          }
+        ],
+        "scenario_key": "metadata.domain",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "customer_exports"
+        },
+        "weight": 1
+      },
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000039",
+        "decision_reason": "customer-360-context v1 classification:spec.classification \u2192 log_only on master.public.customer_exports",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "classification",
+        "instruction_key": "classification:spec.classification",
+        "parameters": {
+          "category": "pii",
+          "sensitivity": "confidential",
+          "subcategory": null
+        },
+        "primary_resolution_source": "collection",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000027",
+          "policy_name": "Customer 360 context",
+          "policy_version_id": "accef000-0000-4000-8000-000000000028",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": "accef000-0000-4000-8000-000000000029",
+            "source": "collection"
+          }
+        ],
+        "scenario_key": "classification.sensitivity",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "customer_exports"
+        },
+        "weight": 1
+      },
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "allow",
+        "decision_id": "accef000-0000-4000-8000-000000000040",
+        "decision_reason": "customer-360-context v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on master.public.customer_exports",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "usage_guidance",
+        "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+        "parameters": {
+          "kind": "permitted",
+          "uses": [
+            "analytics.reporting"
+          ]
+        },
+        "primary_resolution_source": "collection",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000027",
+          "policy_name": "Customer 360 context",
+          "policy_version_id": "accef000-0000-4000-8000-000000000028",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": "accef000-0000-4000-8000-000000000029",
+            "source": "collection"
+          }
+        ],
+        "scenario_key": "sharing.internal",
+        "scenario_lane": "human",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "customer_exports"
+        },
+        "weight": 1
+      },
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000041",
+        "decision_reason": "email-masking v1 business_context:metadata.businessContext \u2192 log_only on master.public.customer_exports",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "business_context",
+        "instruction_key": "business_context:metadata.businessContext",
+        "parameters": {
+          "domain": "Customer Data",
+          "owner": "Privacy Office",
+          "purpose": "Display protection for customer contact email addresses.",
+          "steward": "privacy-review@example.com"
+        },
+        "primary_resolution_source": "taxonomy",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000003",
+          "policy_name": "Email masking (taxonomy)",
+          "policy_version_id": "accef000-0000-4000-8000-000000000004",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": "pii.contact.email",
+            "source": "taxonomy"
+          }
+        ],
+        "scenario_key": "metadata.domain",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "customer_exports"
+        },
+        "weight": 1
+      },
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000042",
+        "decision_reason": "email-masking v1 classification:spec.classification \u2192 log_only on master.public.customer_exports",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "classification",
+        "instruction_key": "classification:spec.classification",
+        "parameters": {
+          "category": "pii.contact",
+          "sensitivity": "confidential",
+          "subcategory": null
+        },
+        "primary_resolution_source": "taxonomy",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000003",
+          "policy_name": "Email masking (taxonomy)",
+          "policy_version_id": "accef000-0000-4000-8000-000000000004",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": "pii.contact.email",
+            "source": "taxonomy"
+          }
+        ],
+        "scenario_key": "classification.sensitivity",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "customer_exports"
+        },
+        "weight": 1
+      }
+    ],
+    "scenario_key": null,
+    "state": "answered"
+  },
+  "arguments": {
+    "asset": {
+      "database": "master",
+      "schema": "public",
+      "table": "customer_exports"
+    }
+  },
+  "case_id": "rules_customer_exports",
+  "tool": "inspect_governance_rules"
+}

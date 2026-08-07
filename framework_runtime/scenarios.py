@@ -14,11 +14,11 @@ from typing import Any
 from common import get_client
 
 
-DATABASE = "acmecloud_demo"
+DATABASE = "master"
 SCHEMA = "public"
 TABLE_NAME = f"{DATABASE}.{SCHEMA}.customers"
 
-# The three recorded validation cases (sample-data/acmecloud/metatate-responses):
+# The three recorded validation cases (sample-data/customer-360/metatate-responses):
 # a safe aggregate (pass), a PII detail read (warn — masked column referenced),
 # and a prohibited marketing read (fail).
 SAFE_ANALYTICS_SQL = "SELECT region, SUM(arr) FROM customers GROUP BY region"

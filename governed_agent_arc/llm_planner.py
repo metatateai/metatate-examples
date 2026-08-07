@@ -30,7 +30,7 @@ class LlmPlanner:
             "Draft ONE PostgreSQL SELECT for this task and return only the SQL, "
             "no fences, no prose.\n"
             f"Task: {brief}\n"
-            "Table: acmecloud_demo.public.customers"
+            "Table: master.public.customers"
             "(customer_id, customer_name, email, account_status, arr, region, "
             "marketing_consent, created_at).\n"
             f"Active governance rule families on the table: {', '.join(families)}."

@@ -1,0 +1,103 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "master",
+      "schema": "public",
+      "table": "subscriptions"
+    },
+    "authorization_id": "accef000-0000-4000-8000-000000000108",
+    "can_proceed_now": true,
+    "conditions": [],
+    "context_facts": {
+      "category": "pii",
+      "masking": null,
+      "pii": true,
+      "sensitivity": "confidential",
+      "subcategory": null
+    },
+    "decision": "allow",
+    "decision_id": "accef000-0000-4000-8000-000000000109",
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": {
+      "purpose_category": "analytics",
+      "purpose_key": "analytics.reporting",
+      "registry_version": 2
+    },
+    "instructions": [
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "allow",
+        "decision_id": "accef000-0000-4000-8000-000000000109",
+        "decision_reason": "Purpose `analytics.reporting` is named by this policy's permitted-uses list (policy Customer 360 context).",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "usage_guidance",
+        "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+        "parameters": {
+          "kind": "permitted",
+          "uses": [
+            "analytics.reporting"
+          ]
+        },
+        "primary_resolution_source": "collection",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000027",
+          "policy_name": "Customer 360 context",
+          "policy_version_id": "accef000-0000-4000-8000-000000000028",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": "accef000-0000-4000-8000-000000000029",
+            "source": "collection"
+          }
+        ],
+        "scenario_key": "sharing.internal",
+        "scenario_lane": "human",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "subscriptions"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "Proceed \u2014 the current published instructions allow this use."
+    ],
+    "obligations": [],
+    "prohibitions": [],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "Purpose `analytics.reporting` is named by this policy's permitted-uses list (policy Customer 360 context).",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
+    "scenario_key": "sharing.internal",
+    "scenario_lane": "human",
+    "state": "answered"
+  },
+  "arguments": {
+    "asset": {
+      "database": "master",
+      "schema": "public",
+      "table": "subscriptions"
+    },
+    "purpose_key": "analytics.reporting",
+    "scenario_key": "sharing.internal",
+    "use": "share account health summaries with the success team"
+  },
+  "case_id": "customer-360-internal-sharing-allow",
+  "tool": "authorize_use"
+}

@@ -2,7 +2,7 @@
 
 Captured from the executed OFFLINE notebook (`notebooks/01_decision_layer_cookbook.ipynb`), which replays
 recorded Metatate Cloud answers — live mode against a workspace serving the
-AcmeCloud demo publication produces the same decisions.
+Customer 360 demo publication produces the same decisions.
 
 
 ```text
@@ -34,7 +34,7 @@ state: answered  effective: mask_partial
   "pii": true,
   "ref": {
     "column": "email",
-    "database": "acmecloud_demo",
+    "database": "master",
     "schema": "public",
     "table": "customers"
   }
@@ -87,31 +87,31 @@ transfer decision: conditional (residency.cross_border_transfer)
 ```text
 state:    answered
 decision: allow
-reason:   acme-customer-use v1 usage_guidance:spec.usage.permittedUses:permitted → allow on acmecloud_demo.public.customers
+reason:   customer-use-guardrails v1 usage_guidance:spec.usage.permittedUses:permitted → allow on master.public.customers
 can_proceed_now: True
 ```
 
 ```text
 state:    answered
 decision: deny
-reason:   acme-customer-use v1 usage_guidance:spec.usage.prohibitedUses:prohibited → deny on acmecloud_demo.public.customers
-prohibition: acme-customer-use v1 usage_guidance:spec.usage.prohibitedUses:prohibited → deny on acmecloud_demo.public.customers
+reason:   customer-use-guardrails v1 usage_guidance:spec.usage.prohibitedUses:prohibited → deny on master.public.customers
+prohibition: customer-use-guardrails v1 usage_guidance:spec.usage.prohibitedUses:prohibited → deny on master.public.customers
 can_proceed_now: False
 ```
 
 ```text
 aggregate query -> pass
 detail query    -> warn (a masked column is referenced)
-  mask_partial: acme-email-masking v1 masking:spec.accessControl.masking → mask_partial on acmecloud_demo.public.customers.email
-  allow: acme-customer-use v1 usage_guidance:spec.usage.permittedUses:permitted → allow on acmecloud_demo.public.customers
+  mask_partial: email-masking v1 masking:spec.accessControl.masking → mask_partial on master.public.customers.email
+  allow: customer-use-guardrails v1 usage_guidance:spec.usage.permittedUses:permitted → allow on master.public.customers
 ```
 
 ```text
 current: True
-Decision 'allow' on acmecloud_demo.public.customers was produced by policy 'AcmeCloud customer use guardrails' v1 (instruction 'usage_guidance:spec.usage.permittedUses:permitted', scenario 'purpose.allowed_use', current publication): acme-customer-use v1 usage_guidance:spec.usage.permittedUses:permitted → allow on acmecloud_demo.public.customers
+Decision 'allow' on master.public.customers was produced by policy 'Customer 360 customer use guardrails' v1 (instruction 'usage_guidance:spec.usage.permittedUses:permitted', scenario 'purpose.allowed_use', current publication): customer-use-guardrails v1 usage_guidance:spec.usage.permittedUses:permitted → allow on master.public.customers
 {
   "policy_id": "accef000-0000-4000-8000-000000000006",
-  "policy_name": "AcmeCloud customer use guardrails",
+  "policy_name": "Customer 360 customer use guardrails",
   "policy_version_id": "accef000-0000-4000-8000-000000000007",
   "version_number": 1
 }

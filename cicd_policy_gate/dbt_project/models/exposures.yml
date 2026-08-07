@@ -18,7 +18,7 @@ exposures:
     meta:
       metatate:
         kind: export_job
-        asset: { database: acmecloud_demo, schema: public, table: customers }
+        asset: { database: master, schema: public, table: customers }
         use: sync approved customer fields to the CRM
         scenario_key: residency.cross_border_transfer
         operation: export
@@ -38,7 +38,7 @@ exposures:
     meta:
       metatate:
         kind: ai_training_job
-        asset: { database: acmecloud_demo, schema: public, table: support_tickets }
+        asset: { database: product, schema: public, table: support_tickets }
         use: fine-tune a support assistant on ticket text
         scenario_key: ai.training
 

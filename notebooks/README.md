@@ -1,6 +1,6 @@
 # Notebooks
 
-These notebooks default to offline mode. They use committed Metatate response fixtures from `sample-data/acmecloud/metatate-responses`.
+These notebooks default to offline mode. They use committed Metatate response fixtures from `sample-data/customer-360/metatate-responses`.
 
 Set `METATATE_EXAMPLES_MODE=live` to call your Metatate Cloud workspace's MCP
 endpoint instead (see `docs/live-mode-saas.md`).
@@ -23,10 +23,15 @@ endpoint instead (see `docs/live-mode-saas.md`).
 14. `13_sql_gauntlet_validate_query_context.ipynb`
 15. `14_governed_agent_end_to_end.ipynb`
 16. `15_audit_evidence_packet.ipynb`
+17. `16_purpose_bound_agent_data_windows.ipynb`
 
 Notebook `06_ci_gate_for_data_ai_changes.ipynb` uses the reusable `cicd_policy_gate` package. The same gate can be run from CI with `scripts/run_cicd_policy_gate.sh`.
 
 Notebook `15_audit_evidence_packet.ipynb` uses the reusable `audit_evidence` package. The same packet can be assembled from a terminal with `scripts/run_audit_evidence.sh`.
+
+Notebook `16_purpose_bound_agent_data_windows.ipynb` makes the full database ×
+purpose × anchor × duration matrix executable, including missing-context and
+over-broad-query negative controls.
 
 Notebook `09_human_approval_packet_for_conditional_export.ipynb` uses the reusable `human_exception_workflow` package. The same workflow can be run from a terminal with `scripts/run_human_exception_workflow.sh`.
 

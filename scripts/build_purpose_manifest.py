@@ -22,8 +22,8 @@ sys.path.insert(0, str(REPO))
 
 from common.fixture_cases import CASES  # noqa: E402
 
-FIXTURE_DIR = REPO / "sample-data" / "acmecloud" / "metatate-responses"
-MANIFEST = REPO / "sample-data" / "acmecloud" / "purpose-mapping-manifest.json"
+FIXTURE_DIR = REPO / "sample-data" / "customer-360" / "metatate-responses"
+MANIFEST = REPO / "sample-data" / "customer-360" / "purpose-mapping-manifest.json"
 
 # NO HAND-LISTED SET LIVES HERE.
 #
@@ -34,7 +34,7 @@ MANIFEST = REPO / "sample-data" / "acmecloud" / "purpose-mapping-manifest.json"
 # deliberately MAPPED by #374, so a gate built on that list would have failed on
 # correct canonical state. The list is gone. If you are about to add one back,
 # add it to the source manifest instead.
-DISPOSITIONS = REPO / "sample-data" / "acmecloud" / "purpose-vocabulary-dispositions.yaml"
+DISPOSITIONS = REPO / "sample-data" / "customer-360" / "purpose-vocabulary-dispositions.yaml"
 
 
 def _load_dispositions() -> dict[str, Any]:
@@ -84,7 +84,7 @@ def _load_dispositions() -> dict[str, Any]:
     return {"entries": entries, "prohibition_bite_checks": bite}
 
 
-EXPECTED_DECISIONS = REPO / "sample-data" / "acmecloud" / "expected-decisions.yaml"
+EXPECTED_DECISIONS = REPO / "sample-data" / "customer-360" / "expected-decisions.yaml"
 
 
 def _quarantined_ids() -> set[str]:
@@ -241,8 +241,8 @@ def build() -> dict[str, Any]:
             "statement about detection frequency; see the parity check's own scope note."
         ),
         "_dispositions_source": (
-            "sample-data/acmecloud/purpose-vocabulary-dispositions.yaml (vendored from "
-            "metatate-saas docs/b3-acmecloud-purpose-vocabulary-manifest.md @ 19a3fdd)"
+            "sample-data/customer-360/purpose-vocabulary-dispositions.yaml (vendored from "
+            "metatate-saas docs/b3-customer360-purpose-vocabulary-manifest.md @ 19a3fdd)"
         ),
         "purposeful_and_blind_cases": entries,
         "authored_entries_mapped": mapped,

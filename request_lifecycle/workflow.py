@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import Any, Callable
 
-ASSET = {"database": "acmecloud_demo", "schema": "public", "table": "customers"}
+ASSET = {"database": "master", "schema": "public", "table": "customers"}
 AUTHORIZATION_ARGUMENTS: dict[str, Any] = {
     "asset": ASSET,
     "use": "sync approved customer fields to the CRM",

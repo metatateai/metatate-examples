@@ -54,10 +54,10 @@ scripts/run_notebook_pack.sh
 
 Identifiers are lowercase normalized names in a structured reference (the
 client lowercases FQNs for you), so this usually means the workspace you are
-calling does not serve the AcmeCloud demo publication. Load it with the
-one-click **Load the AcmeCloud demo** action on the workspace dashboard;
+calling does not serve the Customer 360 demo publication. Load it with the
+one-click **Load the Customer 360 demo** action on the workspace dashboard;
 contributors on the local `metatate-saas` stack run
-`./scripts/acmecloud-demo-fixtures.sh` instead.
+`./scripts/customer-360-demo-fixtures.sh` instead.
 
 ## `not_enough_published_state`
 

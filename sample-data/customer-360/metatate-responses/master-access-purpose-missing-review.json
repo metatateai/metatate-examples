@@ -1,0 +1,116 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "master",
+      "schema": "public",
+      "table": "customers"
+    },
+    "authorization_id": "accef000-0000-4000-8000-000000000182",
+    "can_proceed_now": false,
+    "conditions": [],
+    "conflict": null,
+    "context_facts": {
+      "category": "pii",
+      "masking": {
+        "exempt_roles": [
+          "DATA_STEWARD",
+          "PRIVACY_ADMIN"
+        ],
+        "type": "partial"
+      },
+      "pii": true,
+      "sensitivity": "confidential",
+      "subcategory": null
+    },
+    "decision": "require_review",
+    "evaluated_actor_role": "agent",
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": null,
+    "instructions": [
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "require_review",
+        "decision_id": "accef000-0000-4000-8000-000000000010",
+        "decision_reason": "Access-window context is incomplete: no purpose_key was supplied (policy Master data agent access windows).",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "access_window",
+        "instruction_key": "access_window:spec.accessWindows",
+        "parameters": {
+          "actorRoles": [
+            "agent",
+            "analyst"
+          ],
+          "rules": [
+            {
+              "lookbackDays": 90,
+              "purposeKey": "research.general",
+              "type": "rolling"
+            },
+            {
+              "lookbackDays": 30,
+              "purposeKey": "commercial.general",
+              "type": "rolling"
+            }
+          ],
+          "timeColumn": "created_at"
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000011",
+          "policy_name": "Master data agent access windows",
+          "policy_version_id": "accef000-0000-4000-8000-000000000012",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "access.read",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "customers"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "Obtain data-steward review before proceeding with this use."
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "Access-window context is incomplete: no purpose_key was supplied (policy Master data agent access windows).",
+    "reason_code": "access_window_context_required",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
+    "scenario_key": "access.read",
+    "scenario_lane": "platform",
+    "state": "review_required"
+  },
+  "arguments": {
+    "asset": {
+      "database": "master",
+      "schema": "public",
+      "table": "customers"
+    },
+    "scenario_key": "access.read",
+    "use": "read recent customer records"
+  },
+  "case_id": "master-access-purpose-missing-review",
+  "tool": "authorize_use"
+}

@@ -1,0 +1,115 @@
+{
+  "answer": {
+    "advisory": true,
+    "evaluated_actor_role": "agent",
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": {
+      "purpose_category": "commercial",
+      "purpose_key": "commercial.general",
+      "registry_version": 2
+    },
+    "findings": [
+      {
+        "conflict": null,
+        "decision": "deny",
+        "decision_reason": "The query must prove created_at from CURRENT_TIMESTAMP minus at most 30 days through CURRENT_TIMESTAMP.",
+        "finding_id": "accef000-0000-4000-8000-000000000189",
+        "instructions": [
+          {
+            "category": "enforceable",
+            "conflict_group_id": null,
+            "conflict_status": "none",
+            "conflicts_with": [],
+            "decision": "deny",
+            "decision_id": "accef000-0000-4000-8000-000000000010",
+            "decision_reason": "The query must prove created_at from CURRENT_TIMESTAMP minus at most 30 days through CURRENT_TIMESTAMP.",
+            "effective_from": null,
+            "effective_until": null,
+            "enforcement_mode": "enforce",
+            "instruction_family": "access_window",
+            "instruction_key": "access_window:spec.accessWindows",
+            "parameters": {
+              "actorRoles": [
+                "agent",
+                "analyst"
+              ],
+              "queryEvaluation": {
+                "reason": "The query must prove created_at from CURRENT_TIMESTAMP minus at most 30 days through CURRENT_TIMESTAMP.",
+                "status": "violated",
+                "window": {
+                  "anchor_at": "2026-07-30T00:00:00.000Z",
+                  "lookback_days": 30,
+                  "lower_bound_at": "2026-06-30T00:00:00.000Z",
+                  "matched_purpose_key": "commercial.general",
+                  "time_column": "created_at",
+                  "type": "rolling"
+                }
+              },
+              "rules": [
+                {
+                  "lookbackDays": 90,
+                  "purposeKey": "research.general",
+                  "type": "rolling"
+                },
+                {
+                  "lookbackDays": 30,
+                  "purposeKey": "commercial.general",
+                  "type": "rolling"
+                }
+              ],
+              "timeColumn": "created_at"
+            },
+            "primary_resolution_source": "selector",
+            "priority": 2,
+            "provenance": {
+              "policy_id": "accef000-0000-4000-8000-000000000011",
+              "policy_name": "Master data agent access windows",
+              "policy_version_id": "accef000-0000-4000-8000-000000000012",
+              "version_number": 1
+            },
+            "resolution_paths": [
+              {
+                "ref": null,
+                "source": "selector"
+              }
+            ],
+            "scenario_key": "access.read",
+            "scenario_lane": "platform",
+            "scope": {
+              "column": null,
+              "database": "master",
+              "schema": "public",
+              "table": "customers"
+            },
+            "weight": 1
+          }
+        ],
+        "reason_code": null,
+        "ref": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "customers"
+        },
+        "status": "evaluated"
+      }
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "state": "answered",
+    "validation_id": "accef000-0000-4000-8000-000000000188",
+    "verdict": "fail"
+  },
+  "arguments": {
+    "default_database": "master",
+    "default_schema": "public",
+    "purpose_key": "commercial.general",
+    "scenario_key": "access.read",
+    "sql": "SELECT customer_id, account_status FROM master.public.customers WHERE created_at >= CURRENT_TIMESTAMP - INTERVAL '90 days' AND created_at <= CURRENT_TIMESTAMP"
+  },
+  "case_id": "master-commercial-rolling-90-fail",
+  "tool": "validate_query_context"
+}

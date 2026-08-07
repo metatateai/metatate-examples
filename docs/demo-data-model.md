@@ -1,14 +1,14 @@
-# AcmeCloud Demo Data Model
+# Customer 360 Demo Data Model
 
-AcmeCloud is a synthetic B2B SaaS company. The dataset is intentionally small so the examples stay readable, but it includes enough variety to demonstrate policy-aware agent behavior.
+Customer 360 is a synthetic B2B SaaS company. The dataset is intentionally small so the examples stay readable, but it includes enough variety to demonstrate policy-aware agent behavior.
 
-The machine-readable estate spec lives in `sample-data/acmecloud/`
+The machine-readable estate spec lives in `sample-data/customer-360/`
 (`catalog.yaml`, eighteen policy DSL documents in `policies/`, and
 `expected-decisions.yaml`); this page is the narrative companion.
 
 ## Tables
 
-### `ACMECLOUD_DEMO.PUBLIC.CUSTOMERS`
+### `MASTER.PUBLIC.CUSTOMERS`
 
 Customer master data used by revenue operations, support, analytics, and approved reporting workflows.
 
@@ -20,7 +20,7 @@ Key governance points:
 - blocks model training
 - has transfer rules for exports
 
-### `ACMECLOUD_DEMO.PUBLIC.SUBSCRIPTIONS`
+### `MASTER.PUBLIC.SUBSCRIPTIONS`
 
 Subscription and ARR facts used by revenue reporting and renewal planning.
 
@@ -30,7 +30,7 @@ Key governance points:
 - usable for finance analytics and internal reporting
 - has retention context
 
-### `ACMECLOUD_DEMO.PUBLIC.PRODUCT_USAGE_EVENTS`
+### `PRODUCT.PUBLIC.PRODUCT_USAGE_EVENTS`
 
 Product event data used for product analytics and support diagnostics.
 
@@ -40,7 +40,7 @@ Key governance points:
 - monitored for privacy-sensitive use
 - usable for product analytics and support
 
-### `ACMECLOUD_DEMO.PUBLIC.SUPPORT_TICKETS`
+### `PRODUCT.PUBLIC.SUPPORT_TICKETS`
 
 Support text and case metadata.
 
@@ -50,7 +50,7 @@ Key governance points:
 - support workflows and internal analytics are allowed
 - model training is blocked
 
-### `ACMECLOUD_DEMO.PUBLIC.CUSTOMER_EXPORTS`
+### `MASTER.PUBLIC.CUSTOMER_EXPORTS`
 
 Prepared export table used to demonstrate outbound transfer governance.
 
@@ -91,8 +91,8 @@ That keeps the examples focused on the decision layer rather than legal interpre
 
 ## Estate v3 additions
 
-- `marketing_prospects` — the GOVERNANCE-DEBT corner: `acme-prospect-outreach`
-  (Growth Marketing) permits the exact use `acme-prospect-privacy` (Privacy
+- `marketing_prospects` — the GOVERNANCE-DEBT corner: `prospect-outreach-permit`
+  (Growth Marketing) permits the exact use `prospect-outreach-block` (Privacy
   Office) prohibits, at the same priority, on the same scenario — the block
   policy deliberately omits the prohibited-use scenario remap, so both rows
   land on `purpose.allowed_use` and the engine serves a typed
@@ -100,7 +100,7 @@ That keeps the examples focused on the decision layer rather than legal interpre
   to this table so every other case stays clean; `contact_email` picks up the
   taxonomy email mask like any other classified email column.
 - `finance.invoices` + `finance.revenue_ledger` — a SECOND SCHEMA under the
-  same connector, governed by `acme-finance-guardrails` (financial reporting
+  same connector, governed by `finance-data-guardrails` (financial reporting
   and audit support permitted; external disclosure prohibited and remapped to
   `sharing.public`). Schema-qualified assets and cross-schema SQL answer
   exactly like `public` ones.

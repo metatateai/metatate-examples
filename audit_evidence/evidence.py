@@ -20,11 +20,13 @@ from typing import Any
 
 from common import get_client
 
-_DB = "acmecloud_demo"
+_DB = "master"
+_PRODUCT_DB_TABLES = {"product_usage_events", "support_tickets", "ml_feature_store"}
 
 
 def _asset(table: str, column: str | None = None, schema: str = "public") -> dict[str, str]:
-    ref = {"database": _DB, "schema": schema, "table": table}
+    database = "product" if table in _PRODUCT_DB_TABLES else _DB
+    ref = {"database": database, "schema": schema, "table": table}
     if column:
         ref["column"] = column
     return ref

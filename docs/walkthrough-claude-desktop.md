@@ -8,7 +8,7 @@ a question gets typed governance answers back in chat.
 
 ## Setup (once, ~5 minutes)
 
-1. A workspace serving the AcmeCloud demo publication
+1. A workspace serving the Customer 360 demo publication
    ([README → Run It Live In 5 Minutes](../README.md#run-it-live-in-5-minutes)).
 2. Your endpoint URL from **MCP Tools → Connect** and an access token from
    **MCP Tools → Tokens** (`mtt_…`, shown exactly once).
@@ -63,7 +63,7 @@ members, the PCI payment table, HR, the ML feature store — with instruction
 counts and scenario keys.
 
 **2. "Before we plan anything: what are ALL the active rules on
-`acmecloud_demo.public.customers`?"**
+`master.public.customers`?"**
 
 Claude calls `inspect_governance_rules` and summarizes the rulebook —
 masking on the email column, AI training denied, marketing prohibited, the
@@ -86,13 +86,13 @@ Claude chains the `decision_id` into `explain_why`: the instruction, the
 policy version, and whether the decision is still in the CURRENT publication.
 
 **6. "Is this safe to run for analytics?
-`SELECT customer_name, email FROM acmecloud_demo.public.customers WHERE region = 'EU'`"**
+`SELECT customer_name, email FROM master.public.customers WHERE region = 'EU'`"**
 
 **warn** — a masked column is referenced — and Claude proposes the minimized
 aggregate instead. The same guard the notebooks and the CI gate enforce, now
 in a chat window.
 
-**7. "What about `acmecloud_demo.public.legacy_customer_backup`?"**
+**7. "What about `master.public.legacy_customer_backup`?"**
 
 `not_enough_published_state`: cataloged but ungoverned, and the agent is told
 exactly that — no fabricated decision. The

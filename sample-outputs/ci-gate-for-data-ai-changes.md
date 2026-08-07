@@ -2,7 +2,7 @@
 
 Captured from the executed OFFLINE notebook (`notebooks/06_ci_gate_for_data_ai_changes.ipynb`), which replays
 recorded Metatate Cloud answers — live mode against a workspace serving the
-AcmeCloud demo publication produces the same decisions.
+Customer 360 demo publication produces the same decisions.
 
 
 ```text
@@ -21,7 +21,7 @@ chg-003: fail (fail)
   controls: Mask or drop email before shipping this query.
 chg-004: needs_controls (conditional)
   reason_codes: TRANSFER_CONDITIONAL, ANONYMIZATION_REQUIRED, APPROVAL_REQUIRED
-  controls: This data must be anonymized before the transfer.; Transfer to SALESFORCE (US) for consumer jurisdiction EU requires approval and anonymization and role PRIVACY_ADMIN (policy AcmeCloud transfer guardrails).
+  controls: This data must be anonymized before the transfer.; Transfer to SALESFORCE (US) for consumer jurisdiction EU requires approval and anonymization and role PRIVACY_ADMIN (policy Customer 360 transfer guardrails).
 chg-005: fail (deny)
   reason_codes: AI_TRAINING_BLOCKED
 ```

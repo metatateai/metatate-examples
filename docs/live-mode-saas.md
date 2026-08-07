@@ -40,36 +40,44 @@ offline output is byte-shaped like the live endpoint's.
 ```bash
 export METATATE_EXAMPLES_MODE=live
 export METATATE_MCP_URL=https://<your-workspace-mcp-host>/mcp   # full path incl. /mcp
-export METATATE_SAAS_MCP_TOKEN=mtt_...    # MCP module → Tokens (shown once)
+export METATATE_SAAS_MCP_TOKEN=mtt_...       # {read}; identity-neutral pack
+export METATATE_SAAS_MCP_AGENT_TOKEN=mtt_... # {read}; bound role exactly `agent`
 ```
 
 `METATATE_MCP_BACKEND=saas` is the default (and the only backend in this
 repo); exporting it is harmless but no longer required.
 
-Optional: `METATATE_MCP_TOKEN_ENV` renames the token variable;
+Notebook 16 and the live expected-decision gate use the second token because
+the access-window policy is role-bound. Keeping it separate prevents the
+agent identity from silently changing the older identity-neutral cases.
+
+Optional: `METATATE_MCP_PAT_ENV` renames the default token variable;
 `METATATE_SAAS_DEFAULT_DATABASE` / `METATATE_SAAS_DEFAULT_SCHEMA` (default
-`acmecloud_demo` / `public`) qualify 1- and 2-part table names.
+`master` / `public`) qualify 1- and 2-part table names.
 
 ## Demo state
 
-The workspace must serve the AcmeCloud demo publication.
+The workspace must serve the Customer 360 demo publication.
 
 **Self-serve (recommended):** create a free account at
 [app.getmetatate.com/sign-up?ref=examples](https://app.getmetatate.com/sign-up?ref=examples)
 and create a workspace. On the workspace dashboard, follow the **"New here?"
-banner → Load the demo**, then click **Load the AcmeCloud demo**. It
+banner → Load the demo**, then click **Load the Customer 360 demo**. It
 provisions the whole domain (a sample connector that never syncs, the
-AcmeCloud policies, and a live publication) and is fully reversible via
-"Remove demo". Then issue a token in **MCP Tools → Tokens**, copy the
-endpoint from **MCP Tools → Connect**, and export the environment above.
+Customer 360 policies, and a live publication) and is fully reversible via
+"Remove demo". Then issue two tokens in **MCP Tools → Tokens**: one ordinary
+`{read}` token and one `{read}` token with bound role `agent`. Copy the endpoint
+from **MCP Tools → Connect**, and export the environment above.
 
 **Local stack (contributors / operators):** in the metatate-saas repo:
 
 ```bash
 pnpm db:start                       # or pnpm db:reset for a clean slate
-./scripts/acmecloud-demo-fixtures.sh    # publishes the AcmeCloud governed domain
+./scripts/customer-360-demo-fixtures.sh    # publishes the Customer 360 governed domain
 export METATATE_SAAS_MCP_TOKEN="$(psql postgres://postgres:postgres@127.0.0.1:54322/postgres -Atc \
-  "select 'mtt_' || encode(extensions.digest('metatate-seed-mcp-token:acmecloud-demo-mcp','sha256'),'hex')")"
+  "select 'mtt_' || encode(extensions.digest('metatate-seed-mcp-token:customer-360-demo-mcp','sha256'),'hex')")"
+export METATATE_SAAS_MCP_AGENT_TOKEN="$(psql postgres://postgres:postgres@127.0.0.1:54322/postgres -Atc \
+  "select 'mtt_' || encode(extensions.digest('metatate-seed-mcp-token:customer-360-demo-agent-mcp','sha256'),'hex')")"
 PORT=3200 pnpm --filter mcp-server dev  # needs SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY
 export METATATE_MCP_URL=http://localhost:3200/mcp
 ```
@@ -89,8 +97,9 @@ scripts/run_notebook_pack.sh                   # notebooks 00–12, except 11
 scripts/run_langgraph_runtime_notebook.sh      # notebook 11 (framework deps)
 ```
 
-CI: `.github/workflows/live-saas-mcp-validation.yml`
-(workflow_dispatch; secrets `METATATE_SAAS_MCP_URL`, `METATATE_SAAS_MCP_TOKEN`).
+CI: `.github/workflows/live-saas-mcp-validation.yml` (workflow_dispatch;
+secrets `METATATE_SAAS_MCP_URL`, `METATATE_SAAS_MCP_TOKEN`, and
+`METATATE_SAAS_MCP_AGENT_TOKEN`).
 
 ## Semantics worth knowing
 
@@ -103,7 +112,7 @@ CI: `.github/workflows/live-saas-mcp-validation.yml`
   `consumer_jurisdiction`, and `operation` flow to the server, which evaluates
   the authored transfer rules per destination (SALESFORCE → CONDITIONAL with
   approval + anonymization, ADS_PLATFORM / EXTERNAL_LLM_VENDOR → deny on the
-  AcmeCloud policy).
+  Customer 360 policy).
 - **`explain_why` chains natively.** `decision_id` explains a cited serving
   decision, `authorization_id` explains the durable `authorize_use` evaluation,
   and `validation_id` explains the durable `validate_query_context` evaluation.

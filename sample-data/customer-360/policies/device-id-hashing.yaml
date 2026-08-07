@@ -1,0 +1,30 @@
+# Customer 360 estate spec — device identifier hashing.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: device-id-hashing
+  version: 1.0.0
+  description: >-
+    Device identifiers in product telemetry are hashed before analytical use.
+  tags: [telemetry, privacy_sensitive]
+  businessContext:
+    domain: Product Analytics
+    owner: Product Analytics
+    steward: product-data@example.com
+    purpose: Product telemetry for feature analytics and support diagnostics.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [product]
+    schemas: [public]
+    columns:
+      - product.public.product_usage_events.device_id
+  classification:
+    sensitivity: confidential
+    category: operational.telemetry
+  accessControl:
+    masking:
+      type: hash
+extensions:
+  displayName: Device identifier hashing

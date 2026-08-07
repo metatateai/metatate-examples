@@ -2,7 +2,7 @@
 #
 # Wherever YOUR catalog classifies personal data: any export is conditional
 # on recorded approval until destination-specific rules replace this default
-# (the AcmeCloud transfer policy shows the destination-aware matrix:
+# (the Customer 360 transfer policy shows the destination-aware matrix:
 # named systems, jurisdictions, per-destination effects).
 apiVersion: metatate.io/v1
 kind: DataPolicy

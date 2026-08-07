@@ -1,0 +1,105 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "master",
+      "schema": "finance",
+      "table": "revenue_ledger"
+    },
+    "authorization_id": "accef000-0000-4000-8000-000000000152",
+    "can_proceed_now": false,
+    "conditions": [],
+    "context_facts": {
+      "category": "financial",
+      "masking": null,
+      "pii": false,
+      "sensitivity": "internal",
+      "subcategory": null
+    },
+    "decision": "deny",
+    "decision_id": "accef000-0000-4000-8000-000000000153",
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": null,
+    "instructions": [
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "deny",
+        "decision_id": "accef000-0000-4000-8000-000000000153",
+        "decision_reason": "finance-data-guardrails v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on master.finance.revenue_ledger",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "usage_guidance",
+        "instruction_key": "usage_guidance:spec.usage.prohibitedUses:prohibited",
+        "parameters": {
+          "kind": "prohibited",
+          "uses": [
+            "sharing.external"
+          ]
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000150",
+          "policy_name": "Finance data guardrails",
+          "policy_version_id": "accef000-0000-4000-8000-000000000151",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "sharing.public",
+        "scenario_lane": "human",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "finance",
+          "table": "revenue_ledger"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "Do not proceed with this use.",
+      "Request an approved exception or an alternative asset from the data steward."
+    ],
+    "obligations": [],
+    "prohibitions": [
+      {
+        "detail": "finance-data-guardrails v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on master.finance.revenue_ledger",
+        "required_by_policy": "Finance data guardrails",
+        "source": "prohibited_use"
+      }
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "finance-data-guardrails v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on master.finance.revenue_ledger",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
+    "scenario_key": "sharing.public",
+    "scenario_lane": "human",
+    "state": "answered"
+  },
+  "arguments": {
+    "asset": {
+      "database": "master",
+      "schema": "finance",
+      "table": "revenue_ledger"
+    },
+    "scenario_key": "sharing.public",
+    "use": "publish ledger extracts on the public status page"
+  },
+  "case_id": "finance-ledger-public-sharing-deny",
+  "tool": "authorize_use"
+}

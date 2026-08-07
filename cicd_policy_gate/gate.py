@@ -382,7 +382,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--changes",
         default=str(DEFAULT_CHANGESET_PATH),
-        help="Path to a JSON change set. Defaults to the AcmeCloud PR fixture.",
+        help="Path to a JSON change set. Defaults to the Customer 360 PR fixture.",
     )
     parser.add_argument(
         "--output",

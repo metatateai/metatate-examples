@@ -1,0 +1,62 @@
+{
+  "answer": {
+    "current": true,
+    "explanation": "Decision 'allow' on master.public.customers was produced by policy 'Customer use guardrails' v1 (instruction 'usage_guidance:spec.usage.permittedUses:permitted', scenario 'purpose.allowed_use', current publication): customer-use-guardrails v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on master.public.customers",
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "record": {
+      "category": "advisory",
+      "conflict_group_id": null,
+      "conflict_status": "none",
+      "conflicts_with": [],
+      "decision": "allow",
+      "decision_id": "accef000-0000-4000-8000-000000000025",
+      "decision_reason": "customer-use-guardrails v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on master.public.customers",
+      "effective_from": null,
+      "effective_until": null,
+      "enforcement_mode": "enforce",
+      "instruction_family": "usage_guidance",
+      "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+      "parameters": {
+        "kind": "permitted",
+        "uses": [
+          "analytics",
+          "reporting",
+          "support"
+        ]
+      },
+      "primary_resolution_source": "selector",
+      "priority": 2,
+      "provenance": {
+        "policy_id": "accef000-0000-4000-8000-000000000006",
+        "policy_name": "Customer use guardrails",
+        "policy_version_id": "accef000-0000-4000-8000-000000000007",
+        "version_number": 1
+      },
+      "resolution_paths": [
+        {
+          "ref": null,
+          "source": "selector"
+        }
+      ],
+      "scenario_key": "purpose.allowed_use",
+      "scenario_lane": "human",
+      "scope": {
+        "column": null,
+        "database": "master",
+        "schema": "public",
+        "table": "customers"
+      },
+      "weight": 1
+    },
+    "state": "answered"
+  },
+  "arguments": {
+    "decision_id": "accef000-0000-4000-8000-000000000025",
+    "kind": "decision"
+  },
+  "case_id": "explain_analytics_decision",
+  "tool": "explain_why"
+}

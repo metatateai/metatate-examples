@@ -1,0 +1,42 @@
+# Customer 360 estate spec — destination-aware transfer governance.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: transfer-guardrails
+  version: 1.0.0
+  description: >-
+    Customer exports require destination-aware authorization before leaving
+    the platform.
+  tags: [pii, restricted_transfer]
+  businessContext:
+    domain: Customer Data
+    owner: Data Platform
+    steward: privacy-review@example.com
+    purpose: Prepared customer exports under destination-aware transfer governance.
+spec:
+  enforcementMode: enforce
+  priority: 600
+  selector:
+    databases: [master]
+    schemas: [public]
+    tables: [customers, customer_exports]
+  classification:
+    sensitivity: restricted
+    category: pii
+  transferGovernance:
+    defaultEffect: conditional
+    rules:
+      - effect: conditional
+        operations: [export]
+        destinationSystems: [SALESFORCE]
+        destinationJurisdictions: [US]
+        consumerJurisdictions: [EU]
+        requiresApproval: true
+        requiresAnonymization: true
+        requiredRole: PRIVACY_ADMIN
+      - effect: deny
+        destinationSystems: [ADS_PLATFORM]
+      - effect: deny
+        destinationSystems: [EXTERNAL_LLM_VENDOR]
+extensions:
+  displayName: Transfer guardrails

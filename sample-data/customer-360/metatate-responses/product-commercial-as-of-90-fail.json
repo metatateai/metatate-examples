@@ -1,0 +1,120 @@
+{
+  "answer": {
+    "advisory": true,
+    "evaluated_actor_role": "agent",
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": {
+      "as_of": "2026-08-01T00:00:00Z"
+    },
+    "evaluated_purpose": {
+      "purpose_category": "commercial",
+      "purpose_key": "commercial.general",
+      "registry_version": 2
+    },
+    "findings": [
+      {
+        "conflict": null,
+        "decision": "deny",
+        "decision_reason": "The query must prove an as-of occurred_at range within 2026-07-02T00:00:00.000Z through 2026-08-01T00:00:00.000Z.",
+        "finding_id": "accef000-0000-4000-8000-000000000195",
+        "instructions": [
+          {
+            "category": "enforceable",
+            "conflict_group_id": null,
+            "conflict_status": "none",
+            "conflicts_with": [],
+            "decision": "deny",
+            "decision_id": "accef000-0000-4000-8000-000000000178",
+            "decision_reason": "The query must prove an as-of occurred_at range within 2026-07-02T00:00:00.000Z through 2026-08-01T00:00:00.000Z.",
+            "effective_from": null,
+            "effective_until": null,
+            "enforcement_mode": "enforce",
+            "instruction_family": "access_window",
+            "instruction_key": "access_window:spec.accessWindows",
+            "parameters": {
+              "actorRoles": [
+                "agent",
+                "analyst"
+              ],
+              "queryEvaluation": {
+                "reason": "The query must prove an as-of occurred_at range within 2026-07-02T00:00:00.000Z through 2026-08-01T00:00:00.000Z.",
+                "status": "violated",
+                "window": {
+                  "anchor_at": "2026-08-01T00:00:00.000Z",
+                  "lookback_days": 30,
+                  "lower_bound_at": "2026-07-02T00:00:00.000Z",
+                  "matched_purpose_key": "commercial.general",
+                  "time_column": "occurred_at",
+                  "type": "as_of"
+                }
+              },
+              "rules": [
+                {
+                  "lookbackDays": 90,
+                  "purposeKey": "research.general",
+                  "type": "as_of"
+                },
+                {
+                  "lookbackDays": 30,
+                  "purposeKey": "commercial.general",
+                  "type": "as_of"
+                }
+              ],
+              "timeColumn": "occurred_at"
+            },
+            "primary_resolution_source": "selector",
+            "priority": 2,
+            "provenance": {
+              "policy_id": "accef000-0000-4000-8000-000000000179",
+              "policy_name": "Product data agent access windows",
+              "policy_version_id": "accef000-0000-4000-8000-000000000180",
+              "version_number": 1
+            },
+            "resolution_paths": [
+              {
+                "ref": null,
+                "source": "selector"
+              }
+            ],
+            "scenario_key": "access.read",
+            "scenario_lane": "platform",
+            "scope": {
+              "column": null,
+              "database": "product",
+              "schema": "public",
+              "table": "product_usage_events"
+            },
+            "weight": 1
+          }
+        ],
+        "reason_code": null,
+        "ref": {
+          "column": null,
+          "database": "product",
+          "schema": "public",
+          "table": "product_usage_events"
+        },
+        "status": "evaluated"
+      }
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "state": "answered",
+    "validation_id": "accef000-0000-4000-8000-000000000194",
+    "verdict": "fail"
+  },
+  "arguments": {
+    "data_access_context": {
+      "as_of": "2026-08-01T00:00:00Z"
+    },
+    "default_database": "product",
+    "default_schema": "public",
+    "purpose_key": "commercial.general",
+    "scenario_key": "access.read",
+    "sql": "SELECT customer_id, event_name FROM product.public.product_usage_events WHERE occurred_at >= TIMESTAMPTZ '2026-05-03T00:00:00Z' AND occurred_at <= TIMESTAMPTZ '2026-08-01T00:00:00Z'"
+  },
+  "case_id": "product-commercial-as-of-90-fail",
+  "tool": "validate_query_context"
+}
