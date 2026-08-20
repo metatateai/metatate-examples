@@ -1,0 +1,139 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "care",
+      "schema": "public",
+      "table": "member_records"
+    },
+    "authorization_id": "accef000-0000-4000-8000-000000000271",
+    "can_proceed_now": false,
+    "conditions": [
+      {
+        "kind": "consent_required",
+        "projection": {
+          "basis_column": "research_consent",
+          "kind": "consent",
+          "matched_purpose_key": "research.general",
+          "requirement": "Research use requires an active research authorization recorded in research_consent."
+        },
+        "required_by_policy": "Care consent requirements",
+        "required_role": null,
+        "requirement": "Research use requires an active research authorization recorded in research_consent.",
+        "satisfied": false,
+        "satisfied_by": "Restrict the use to rows whose research_consent records consent for research.general, then proceed.",
+        "satisfied_by_exception_id": null
+      }
+    ],
+    "context_facts": {
+      "category": "pii",
+      "masking": {
+        "exempt_roles": [
+          "clinical"
+        ],
+        "type": "full"
+      },
+      "pii": true,
+      "sensitivity": "restricted",
+      "subcategory": null
+    },
+    "decision": "conditional",
+    "decision_id": "accef000-0000-4000-8000-000000000268",
+    "evaluated_actor_role": "research",
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": {
+      "purpose_category": "research",
+      "purpose_key": "research.general",
+      "registry_version": 3
+    },
+    "instructions": [
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "conditional",
+        "decision_id": "accef000-0000-4000-8000-000000000268",
+        "decision_reason": "Use for research.general requires the recorded consent basis in research_consent (policy Care consent requirements).",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "consent_requirement",
+        "instruction_key": "consent_requirement:spec.consentRequirements",
+        "parameters": {
+          "rules": [
+            {
+              "basisColumn": "coverage_status",
+              "purposeKey": "care.eligibility",
+              "requirement": "Eligibility reads require an active coverage authorization on file (coverage_status = 'active')."
+            },
+            {
+              "basisColumn": "research_consent",
+              "purposeKey": "research.general",
+              "requirement": "Research use requires an active research authorization recorded in research_consent."
+            },
+            {
+              "basisColumn": "consumer_marketing_consent",
+              "purposeKey": "marketing.advertising",
+              "requirement": "Consumer marketing requires an explicit opt-in recorded in consumer_marketing_consent."
+            }
+          ]
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000269",
+          "policy_name": "Care consent requirements",
+          "policy_version_id": "accef000-0000-4000-8000-000000000270",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "consent.required",
+        "scenario_lane": "human",
+        "scope": {
+          "column": null,
+          "database": "care",
+          "schema": "public",
+          "table": "member_records"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "You may proceed only after satisfying the stated condition(s) below (e.g. obtain the named approval, anonymize first, or act as a granted role).",
+      "If the condition cannot be met, treat this use as denied."
+    ],
+    "obligations": [],
+    "prohibitions": [],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "Use for research.general requires the recorded consent basis in research_consent (policy Care consent requirements).",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
+    "scenario_key": "consent.required",
+    "scenario_lane": "human",
+    "state": "answered",
+    "validity_evaluated_at": "2026-08-20T21:47:46.262Z"
+  },
+  "arguments": {
+    "asset": {
+      "database": "care",
+      "schema": "public",
+      "table": "member_records"
+    },
+    "purpose_key": "research.general",
+    "scenario_key": "consent.required",
+    "use": "analyze member outcomes for a research study"
+  },
+  "case_id": "care-consent-research-conditional",
+  "tool": "authorize_use"
+}

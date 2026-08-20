@@ -7,14 +7,14 @@
     "evaluated_purpose": {
       "purpose_category": "compliance",
       "purpose_key": "compliance.reporting",
-      "registry_version": 2
+      "registry_version": 3
     },
     "findings": [
       {
         "conflict": null,
         "decision": "allow",
         "decision_reason": "Purpose `compliance.reporting` is named by this policy's permitted-uses list (policy Finance data guardrails).",
-        "finding_id": "accef000-0000-4000-8000-000000000172",
+        "finding_id": "accef000-0000-4000-8000-000000000183",
         "instructions": [
           {
             "category": "advisory",
@@ -22,7 +22,7 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "allow",
-            "decision_id": "accef000-0000-4000-8000-000000000149",
+            "decision_id": "accef000-0000-4000-8000-000000000160",
             "decision_reason": "Purpose `compliance.reporting` is named by this policy's permitted-uses list (policy Finance data guardrails).",
             "effective_from": null,
             "effective_until": null,
@@ -39,9 +39,9 @@
             "primary_resolution_source": "selector",
             "priority": 2,
             "provenance": {
-              "policy_id": "accef000-0000-4000-8000-000000000150",
+              "policy_id": "accef000-0000-4000-8000-000000000161",
               "policy_name": "Finance data guardrails",
-              "policy_version_id": "accef000-0000-4000-8000-000000000151",
+              "policy_version_id": "accef000-0000-4000-8000-000000000162",
               "version_number": 1
             },
             "resolution_paths": [
@@ -74,7 +74,7 @@
         "conflict": null,
         "decision": "allow",
         "decision_reason": "Purpose `compliance.reporting` is named by this policy's permitted-uses list (policy Finance data guardrails).",
-        "finding_id": "accef000-0000-4000-8000-000000000173",
+        "finding_id": "accef000-0000-4000-8000-000000000184",
         "instructions": [
           {
             "category": "advisory",
@@ -82,7 +82,7 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "allow",
-            "decision_id": "accef000-0000-4000-8000-000000000174",
+            "decision_id": "accef000-0000-4000-8000-000000000185",
             "decision_reason": "Purpose `compliance.reporting` is named by this policy's permitted-uses list (policy Finance data guardrails).",
             "effective_from": null,
             "effective_until": null,
@@ -99,9 +99,9 @@
             "primary_resolution_source": "selector",
             "priority": 2,
             "provenance": {
-              "policy_id": "accef000-0000-4000-8000-000000000150",
+              "policy_id": "accef000-0000-4000-8000-000000000161",
               "policy_name": "Finance data guardrails",
-              "policy_version_id": "accef000-0000-4000-8000-000000000151",
+              "policy_version_id": "accef000-0000-4000-8000-000000000162",
               "version_number": 1
             },
             "resolution_paths": [
@@ -136,7 +136,8 @@
       "published_at": "2026-07-16T00:00:00.000Z"
     },
     "state": "answered",
-    "validation_id": "accef000-0000-4000-8000-000000000171",
+    "validation_id": "accef000-0000-4000-8000-000000000182",
+    "validity_evaluated_at": "2026-08-20T21:47:45.856Z",
     "verdict": "pass"
   },
   "arguments": {

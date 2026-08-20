@@ -18,7 +18,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "mask_full",
-        "decision_id": "accef000-0000-4000-8000-000000000084",
+        "decision_id": "accef000-0000-4000-8000-000000000095",
         "decision_reason": "salary-masking v1 masking:spec.accessControl.masking \u2192 mask_full on master.public.employees.national_id",
         "effective_from": null,
         "effective_until": null,
@@ -31,9 +31,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000085",
+          "policy_id": "accef000-0000-4000-8000-000000000096",
           "policy_name": "Salary and identifier masking",
-          "policy_version_id": "accef000-0000-4000-8000-000000000086",
+          "policy_version_id": "accef000-0000-4000-8000-000000000097",
           "version_number": 1
         },
         "resolution_paths": [
@@ -58,7 +58,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "mask_full",
-        "decision_id": "accef000-0000-4000-8000-000000000087",
+        "decision_id": "accef000-0000-4000-8000-000000000098",
         "decision_reason": "salary-masking v1 masking:spec.accessControl.masking \u2192 mask_full on master.public.employees.salary",
         "effective_from": null,
         "effective_until": null,
@@ -71,9 +71,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000085",
+          "policy_id": "accef000-0000-4000-8000-000000000096",
           "policy_name": "Salary and identifier masking",
-          "policy_version_id": "accef000-0000-4000-8000-000000000086",
+          "policy_version_id": "accef000-0000-4000-8000-000000000097",
           "version_number": 1
         },
         "resolution_paths": [
@@ -98,7 +98,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "require_review",
-        "decision_id": "accef000-0000-4000-8000-000000000062",
+        "decision_id": "accef000-0000-4000-8000-000000000073",
         "decision_reason": "hr-name-review v1 masking:spec.accessControl.masking \u2192 require_review on master.public.employees.full_name",
         "effective_from": null,
         "effective_until": null,
@@ -111,9 +111,9 @@
         "primary_resolution_source": "selector",
         "priority": 1,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000063",
+          "policy_id": "accef000-0000-4000-8000-000000000074",
           "policy_name": "HR name review masking",
-          "policy_version_id": "accef000-0000-4000-8000-000000000064",
+          "policy_version_id": "accef000-0000-4000-8000-000000000075",
           "version_number": 1
         },
         "resolution_paths": [
@@ -138,7 +138,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "mask_partial",
-        "decision_id": "accef000-0000-4000-8000-000000000088",
+        "decision_id": "accef000-0000-4000-8000-000000000099",
         "decision_reason": "email-masking v1 masking:spec.accessControl.masking \u2192 mask_partial on master.public.employees.work_email",
         "effective_from": null,
         "effective_until": null,
@@ -182,7 +182,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "deny",
-        "decision_id": "accef000-0000-4000-8000-000000000056",
+        "decision_id": "accef000-0000-4000-8000-000000000067",
         "decision_reason": "employee-data-access v1 role_grant:spec.accessControl.deniedRoles:public:deny \u2192 deny on master.public.employees",
         "effective_from": null,
         "effective_until": null,
@@ -196,9 +196,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000057",
+          "policy_id": "accef000-0000-4000-8000-000000000068",
           "policy_name": "Employee data access",
-          "policy_version_id": "accef000-0000-4000-8000-000000000058",
+          "policy_version_id": "accef000-0000-4000-8000-000000000069",
           "version_number": 1
         },
         "resolution_paths": [
@@ -223,7 +223,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "deny",
-        "decision_id": "accef000-0000-4000-8000-000000000066",
+        "decision_id": "accef000-0000-4000-8000-000000000077",
         "decision_reason": "employee-gdpr v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on master.public.employees",
         "effective_from": null,
         "effective_until": null,
@@ -239,9 +239,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000067",
+          "policy_id": "accef000-0000-4000-8000-000000000078",
           "policy_name": "Employee GDPR context",
-          "policy_version_id": "accef000-0000-4000-8000-000000000068",
+          "policy_version_id": "accef000-0000-4000-8000-000000000079",
           "version_number": 1
         },
         "resolution_paths": [
@@ -266,7 +266,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "require_review",
-        "decision_id": "accef000-0000-4000-8000-000000000089",
+        "decision_id": "accef000-0000-4000-8000-000000000100",
         "decision_reason": "employee-gdpr v1 retention:spec.retention \u2192 require_review on master.public.employees",
         "effective_from": null,
         "effective_until": null,
@@ -281,9 +281,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000067",
+          "policy_id": "accef000-0000-4000-8000-000000000078",
           "policy_name": "Employee GDPR context",
-          "policy_version_id": "accef000-0000-4000-8000-000000000068",
+          "policy_version_id": "accef000-0000-4000-8000-000000000079",
           "version_number": 1
         },
         "resolution_paths": [
@@ -308,7 +308,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "conditional",
-        "decision_id": "accef000-0000-4000-8000-000000000090",
+        "decision_id": "accef000-0000-4000-8000-000000000101",
         "decision_reason": "employee-region-row-filter v1 row_access:spec.rowFilter.rules \u2192 conditional on master.public.employees",
         "effective_from": null,
         "effective_until": null,
@@ -328,9 +328,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000091",
+          "policy_id": "accef000-0000-4000-8000-000000000102",
           "policy_name": "Employee region row filter",
-          "policy_version_id": "accef000-0000-4000-8000-000000000092",
+          "policy_version_id": "accef000-0000-4000-8000-000000000103",
           "version_number": 1
         },
         "resolution_paths": [
@@ -355,7 +355,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000093",
+        "decision_id": "accef000-0000-4000-8000-000000000104",
         "decision_reason": "employee-data-access v1 business_context:metadata.businessContext \u2192 log_only on master.public.employees",
         "effective_from": null,
         "effective_until": null,
@@ -371,554 +371,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000057",
+          "policy_id": "accef000-0000-4000-8000-000000000068",
           "policy_name": "Employee data access",
-          "policy_version_id": "accef000-0000-4000-8000-000000000058",
-          "version_number": 1
-        },
-        "resolution_paths": [
-          {
-            "ref": null,
-            "source": "selector"
-          }
-        ],
-        "scenario_key": "metadata.domain",
-        "scenario_lane": "platform",
-        "scope": {
-          "column": null,
-          "database": "master",
-          "schema": "public",
-          "table": "employees"
-        },
-        "weight": 1
-      },
-      {
-        "category": "enforceable",
-        "conflict_group_id": null,
-        "conflict_status": "none",
-        "conflicts_with": [],
-        "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000094",
-        "decision_reason": "employee-data-access v1 classification:spec.classification \u2192 log_only on master.public.employees",
-        "effective_from": null,
-        "effective_until": null,
-        "enforcement_mode": "enforce",
-        "instruction_family": "classification",
-        "instruction_key": "classification:spec.classification",
-        "parameters": {
-          "category": "pii",
-          "sensitivity": "confidential",
-          "subcategory": null
-        },
-        "primary_resolution_source": "selector",
-        "priority": 2,
-        "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000057",
-          "policy_name": "Employee data access",
-          "policy_version_id": "accef000-0000-4000-8000-000000000058",
-          "version_number": 1
-        },
-        "resolution_paths": [
-          {
-            "ref": null,
-            "source": "selector"
-          }
-        ],
-        "scenario_key": "classification.sensitivity",
-        "scenario_lane": "platform",
-        "scope": {
-          "column": null,
-          "database": "master",
-          "schema": "public",
-          "table": "employees"
-        },
-        "weight": 1
-      },
-      {
-        "category": "advisory",
-        "conflict_group_id": null,
-        "conflict_status": "none",
-        "conflicts_with": [],
-        "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000095",
-        "decision_reason": "employee-gdpr v1 business_context:metadata.businessContext \u2192 log_only on master.public.employees",
-        "effective_from": null,
-        "effective_until": null,
-        "enforcement_mode": "advisory",
-        "instruction_family": "business_context",
-        "instruction_key": "business_context:metadata.businessContext",
-        "parameters": {
-          "domain": "People Operations",
-          "owner": "People Operations",
-          "purpose": "Regulatory context for employee personal data.",
-          "steward": "privacy-review@example.com"
-        },
-        "primary_resolution_source": "selector",
-        "priority": 2,
-        "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000067",
-          "policy_name": "Employee GDPR context",
-          "policy_version_id": "accef000-0000-4000-8000-000000000068",
-          "version_number": 1
-        },
-        "resolution_paths": [
-          {
-            "ref": null,
-            "source": "selector"
-          }
-        ],
-        "scenario_key": "metadata.domain",
-        "scenario_lane": "platform",
-        "scope": {
-          "column": null,
-          "database": "master",
-          "schema": "public",
-          "table": "employees"
-        },
-        "weight": 0.55
-      },
-      {
-        "category": "enforceable",
-        "conflict_group_id": null,
-        "conflict_status": "none",
-        "conflicts_with": [],
-        "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000096",
-        "decision_reason": "employee-gdpr v1 classification:spec.classification \u2192 log_only on master.public.employees",
-        "effective_from": null,
-        "effective_until": null,
-        "enforcement_mode": "advisory",
-        "instruction_family": "classification",
-        "instruction_key": "classification:spec.classification",
-        "parameters": {
-          "category": "pii",
-          "sensitivity": "confidential",
-          "subcategory": null
-        },
-        "primary_resolution_source": "selector",
-        "priority": 2,
-        "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000067",
-          "policy_name": "Employee GDPR context",
-          "policy_version_id": "accef000-0000-4000-8000-000000000068",
-          "version_number": 1
-        },
-        "resolution_paths": [
-          {
-            "ref": null,
-            "source": "selector"
-          }
-        ],
-        "scenario_key": "classification.sensitivity",
-        "scenario_lane": "platform",
-        "scope": {
-          "column": null,
-          "database": "master",
-          "schema": "public",
-          "table": "employees"
-        },
-        "weight": 0.55
-      },
-      {
-        "category": "advisory",
-        "conflict_group_id": null,
-        "conflict_status": "none",
-        "conflicts_with": [],
-        "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000097",
-        "decision_reason": "employee-gdpr v1 compliance:spec.compliance.regulations:gdpr \u2192 log_only on master.public.employees",
-        "effective_from": null,
-        "effective_until": null,
-        "enforcement_mode": "advisory",
-        "instruction_family": "compliance",
-        "instruction_key": "compliance:spec.compliance.regulations:gdpr",
-        "parameters": {
-          "regulation": "GDPR"
-        },
-        "primary_resolution_source": "selector",
-        "priority": 2,
-        "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000067",
-          "policy_name": "Employee GDPR context",
-          "policy_version_id": "accef000-0000-4000-8000-000000000068",
-          "version_number": 1
-        },
-        "resolution_paths": [
-          {
-            "ref": null,
-            "source": "selector"
-          }
-        ],
-        "scenario_key": "compliance.regulatory",
-        "scenario_lane": "human",
-        "scope": {
-          "column": null,
-          "database": "master",
-          "schema": "public",
-          "table": "employees"
-        },
-        "weight": 0.55
-      },
-      {
-        "category": "advisory",
-        "conflict_group_id": null,
-        "conflict_status": "none",
-        "conflicts_with": [],
-        "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000098",
-        "decision_reason": "employee-gdpr v1 lineage:metadata.sourceType \u2192 log_only on master.public.employees",
-        "effective_from": null,
-        "effective_until": null,
-        "enforcement_mode": "advisory",
-        "instruction_family": "lineage",
-        "instruction_key": "lineage:metadata.sourceType",
-        "parameters": {
-          "sourceType": "hris_sync"
-        },
-        "primary_resolution_source": "selector",
-        "priority": 2,
-        "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000067",
-          "policy_name": "Employee GDPR context",
-          "policy_version_id": "accef000-0000-4000-8000-000000000068",
-          "version_number": 1
-        },
-        "resolution_paths": [
-          {
-            "ref": null,
-            "source": "selector"
-          }
-        ],
-        "scenario_key": "metadata.lineage",
-        "scenario_lane": "platform",
-        "scope": {
-          "column": null,
-          "database": "master",
-          "schema": "public",
-          "table": "employees"
-        },
-        "weight": 0.55
-      },
-      {
-        "category": "advisory",
-        "conflict_group_id": null,
-        "conflict_status": "none",
-        "conflicts_with": [],
-        "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000099",
-        "decision_reason": "employee-region-row-filter v1 business_context:metadata.businessContext \u2192 log_only on master.public.employees",
-        "effective_from": null,
-        "effective_until": null,
-        "enforcement_mode": "enforce",
-        "instruction_family": "business_context",
-        "instruction_key": "business_context:metadata.businessContext",
-        "parameters": {
-          "domain": "People Operations",
-          "owner": "People Operations",
-          "purpose": "Regional row-level scoping for employee reads.",
-          "steward": "hr-data@example.com"
-        },
-        "primary_resolution_source": "selector",
-        "priority": 2,
-        "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000091",
-          "policy_name": "Employee region row filter",
-          "policy_version_id": "accef000-0000-4000-8000-000000000092",
-          "version_number": 1
-        },
-        "resolution_paths": [
-          {
-            "ref": null,
-            "source": "selector"
-          }
-        ],
-        "scenario_key": "metadata.domain",
-        "scenario_lane": "platform",
-        "scope": {
-          "column": null,
-          "database": "master",
-          "schema": "public",
-          "table": "employees"
-        },
-        "weight": 1
-      },
-      {
-        "category": "enforceable",
-        "conflict_group_id": null,
-        "conflict_status": "none",
-        "conflicts_with": [],
-        "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000100",
-        "decision_reason": "employee-region-row-filter v1 classification:spec.classification \u2192 log_only on master.public.employees",
-        "effective_from": null,
-        "effective_until": null,
-        "enforcement_mode": "enforce",
-        "instruction_family": "classification",
-        "instruction_key": "classification:spec.classification",
-        "parameters": {
-          "category": "pii",
-          "sensitivity": "confidential",
-          "subcategory": null
-        },
-        "primary_resolution_source": "selector",
-        "priority": 2,
-        "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000091",
-          "policy_name": "Employee region row filter",
-          "policy_version_id": "accef000-0000-4000-8000-000000000092",
-          "version_number": 1
-        },
-        "resolution_paths": [
-          {
-            "ref": null,
-            "source": "selector"
-          }
-        ],
-        "scenario_key": "classification.sensitivity",
-        "scenario_lane": "platform",
-        "scope": {
-          "column": null,
-          "database": "master",
-          "schema": "public",
-          "table": "employees"
-        },
-        "weight": 1
-      },
-      {
-        "category": "advisory",
-        "conflict_group_id": null,
-        "conflict_status": "none",
-        "conflicts_with": [],
-        "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000101",
-        "decision_reason": "salary-masking v1 business_context:metadata.businessContext \u2192 log_only on master.public.employees",
-        "effective_from": null,
-        "effective_until": null,
-        "enforcement_mode": "enforce",
-        "instruction_family": "business_context",
-        "instruction_key": "business_context:metadata.businessContext",
-        "parameters": {
-          "domain": "People Operations",
-          "owner": "People Operations",
-          "purpose": "Display protection for compensation and government identifiers.",
-          "steward": "hr-data@example.com"
-        },
-        "primary_resolution_source": "selector",
-        "priority": 2,
-        "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000085",
-          "policy_name": "Salary and identifier masking",
-          "policy_version_id": "accef000-0000-4000-8000-000000000086",
-          "version_number": 1
-        },
-        "resolution_paths": [
-          {
-            "ref": null,
-            "source": "selector"
-          }
-        ],
-        "scenario_key": "metadata.domain",
-        "scenario_lane": "platform",
-        "scope": {
-          "column": null,
-          "database": "master",
-          "schema": "public",
-          "table": "employees"
-        },
-        "weight": 1
-      },
-      {
-        "category": "enforceable",
-        "conflict_group_id": null,
-        "conflict_status": "none",
-        "conflicts_with": [],
-        "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000102",
-        "decision_reason": "salary-masking v1 classification:spec.classification \u2192 log_only on master.public.employees",
-        "effective_from": null,
-        "effective_until": null,
-        "enforcement_mode": "enforce",
-        "instruction_family": "classification",
-        "instruction_key": "classification:spec.classification",
-        "parameters": {
-          "category": "pii",
-          "sensitivity": "restricted",
-          "subcategory": null
-        },
-        "primary_resolution_source": "selector",
-        "priority": 2,
-        "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000085",
-          "policy_name": "Salary and identifier masking",
-          "policy_version_id": "accef000-0000-4000-8000-000000000086",
-          "version_number": 1
-        },
-        "resolution_paths": [
-          {
-            "ref": null,
-            "source": "selector"
-          }
-        ],
-        "scenario_key": "classification.sensitivity",
-        "scenario_lane": "platform",
-        "scope": {
-          "column": null,
-          "database": "master",
-          "schema": "public",
-          "table": "employees"
-        },
-        "weight": 1
-      },
-      {
-        "category": "enforceable",
-        "conflict_group_id": null,
-        "conflict_status": "none",
-        "conflicts_with": [],
-        "decision": "allow",
-        "decision_id": "accef000-0000-4000-8000-000000000059",
-        "decision_reason": "employee-data-access v1 role_grant:spec.accessControl.allowedRoles:hr_admin:allow \u2192 allow on master.public.employees",
-        "effective_from": null,
-        "effective_until": null,
-        "enforcement_mode": "enforce",
-        "instruction_family": "role_grant",
-        "instruction_key": "role_grant:spec.accessControl.allowedRoles:hr_admin:allow",
-        "parameters": {
-          "action": "allow",
-          "role": "HR_ADMIN"
-        },
-        "primary_resolution_source": "selector",
-        "priority": 2,
-        "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000057",
-          "policy_name": "Employee data access",
-          "policy_version_id": "accef000-0000-4000-8000-000000000058",
-          "version_number": 1
-        },
-        "resolution_paths": [
-          {
-            "ref": null,
-            "source": "selector"
-          }
-        ],
-        "scenario_key": "access.read",
-        "scenario_lane": "platform",
-        "scope": {
-          "column": null,
-          "database": "master",
-          "schema": "public",
-          "table": "employees"
-        },
-        "weight": 1
-      },
-      {
-        "category": "enforceable",
-        "conflict_group_id": null,
-        "conflict_status": "none",
-        "conflicts_with": [],
-        "decision": "allow",
-        "decision_id": "accef000-0000-4000-8000-000000000060",
-        "decision_reason": "employee-data-access v1 role_grant:spec.accessControl.allowedRoles:people_ops:allow \u2192 allow on master.public.employees",
-        "effective_from": null,
-        "effective_until": null,
-        "enforcement_mode": "enforce",
-        "instruction_family": "role_grant",
-        "instruction_key": "role_grant:spec.accessControl.allowedRoles:people_ops:allow",
-        "parameters": {
-          "action": "allow",
-          "role": "PEOPLE_OPS"
-        },
-        "primary_resolution_source": "selector",
-        "priority": 2,
-        "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000057",
-          "policy_name": "Employee data access",
-          "policy_version_id": "accef000-0000-4000-8000-000000000058",
-          "version_number": 1
-        },
-        "resolution_paths": [
-          {
-            "ref": null,
-            "source": "selector"
-          }
-        ],
-        "scenario_key": "access.read",
-        "scenario_lane": "platform",
-        "scope": {
-          "column": null,
-          "database": "master",
-          "schema": "public",
-          "table": "employees"
-        },
-        "weight": 1
-      },
-      {
-        "category": "advisory",
-        "conflict_group_id": null,
-        "conflict_status": "none",
-        "conflicts_with": [],
-        "decision": "allow",
-        "decision_id": "accef000-0000-4000-8000-000000000103",
-        "decision_reason": "employee-data-access v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on master.public.employees",
-        "effective_from": null,
-        "effective_until": null,
-        "enforcement_mode": "enforce",
-        "instruction_family": "usage_guidance",
-        "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
-        "parameters": {
-          "kind": "permitted",
-          "uses": [
-            "reporting"
-          ]
-        },
-        "primary_resolution_source": "selector",
-        "priority": 2,
-        "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000057",
-          "policy_name": "Employee data access",
-          "policy_version_id": "accef000-0000-4000-8000-000000000058",
-          "version_number": 1
-        },
-        "resolution_paths": [
-          {
-            "ref": null,
-            "source": "selector"
-          }
-        ],
-        "scenario_key": "purpose.allowed_use",
-        "scenario_lane": "human",
-        "scope": {
-          "column": null,
-          "database": "master",
-          "schema": "public",
-          "table": "employees"
-        },
-        "weight": 1
-      },
-      {
-        "category": "advisory",
-        "conflict_group_id": null,
-        "conflict_status": "none",
-        "conflicts_with": [],
-        "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000104",
-        "decision_reason": "hr-name-review v1 business_context:metadata.businessContext \u2192 log_only on master.public.employees",
-        "effective_from": null,
-        "effective_until": null,
-        "enforcement_mode": "monitor",
-        "instruction_family": "business_context",
-        "instruction_key": "business_context:metadata.businessContext",
-        "parameters": {
-          "domain": "People Operations",
-          "owner": "People Operations",
-          "purpose": "Monitored rollout of a custom masking routine for display names.",
-          "steward": "hr-data@example.com"
-        },
-        "primary_resolution_source": "selector",
-        "priority": 1,
-        "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000063",
-          "policy_name": "HR name review masking",
-          "policy_version_id": "accef000-0000-4000-8000-000000000064",
+          "policy_version_id": "accef000-0000-4000-8000-000000000069",
           "version_number": 1
         },
         "resolution_paths": [
@@ -944,10 +399,10 @@
         "conflicts_with": [],
         "decision": "log_only",
         "decision_id": "accef000-0000-4000-8000-000000000105",
-        "decision_reason": "hr-name-review v1 classification:spec.classification \u2192 log_only on master.public.employees",
+        "decision_reason": "employee-data-access v1 classification:spec.classification \u2192 log_only on master.public.employees",
         "effective_from": null,
         "effective_until": null,
-        "enforcement_mode": "monitor",
+        "enforcement_mode": "enforce",
         "instruction_family": "classification",
         "instruction_key": "classification:spec.classification",
         "parameters": {
@@ -956,11 +411,11 @@
           "subcategory": null
         },
         "primary_resolution_source": "selector",
-        "priority": 1,
+        "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000063",
-          "policy_name": "HR name review masking",
-          "policy_version_id": "accef000-0000-4000-8000-000000000064",
+          "policy_id": "accef000-0000-4000-8000-000000000068",
+          "policy_name": "Employee data access",
+          "policy_version_id": "accef000-0000-4000-8000-000000000069",
           "version_number": 1
         },
         "resolution_paths": [
@@ -986,6 +441,551 @@
         "conflicts_with": [],
         "decision": "log_only",
         "decision_id": "accef000-0000-4000-8000-000000000106",
+        "decision_reason": "employee-gdpr v1 business_context:metadata.businessContext \u2192 log_only on master.public.employees",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "advisory",
+        "instruction_family": "business_context",
+        "instruction_key": "business_context:metadata.businessContext",
+        "parameters": {
+          "domain": "People Operations",
+          "owner": "People Operations",
+          "purpose": "Regulatory context for employee personal data.",
+          "steward": "privacy-review@example.com"
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000078",
+          "policy_name": "Employee GDPR context",
+          "policy_version_id": "accef000-0000-4000-8000-000000000079",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "metadata.domain",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "employees"
+        },
+        "weight": 0.55
+      },
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000107",
+        "decision_reason": "employee-gdpr v1 classification:spec.classification \u2192 log_only on master.public.employees",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "advisory",
+        "instruction_family": "classification",
+        "instruction_key": "classification:spec.classification",
+        "parameters": {
+          "category": "pii",
+          "sensitivity": "confidential",
+          "subcategory": null
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000078",
+          "policy_name": "Employee GDPR context",
+          "policy_version_id": "accef000-0000-4000-8000-000000000079",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "classification.sensitivity",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "employees"
+        },
+        "weight": 0.55
+      },
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000108",
+        "decision_reason": "employee-gdpr v1 compliance:spec.compliance.regulations:gdpr \u2192 log_only on master.public.employees",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "advisory",
+        "instruction_family": "compliance",
+        "instruction_key": "compliance:spec.compliance.regulations:gdpr",
+        "parameters": {
+          "regulation": "GDPR"
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000078",
+          "policy_name": "Employee GDPR context",
+          "policy_version_id": "accef000-0000-4000-8000-000000000079",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "compliance.regulatory",
+        "scenario_lane": "human",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "employees"
+        },
+        "weight": 0.55
+      },
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000109",
+        "decision_reason": "employee-gdpr v1 lineage:metadata.sourceType \u2192 log_only on master.public.employees",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "advisory",
+        "instruction_family": "lineage",
+        "instruction_key": "lineage:metadata.sourceType",
+        "parameters": {
+          "sourceType": "hris_sync"
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000078",
+          "policy_name": "Employee GDPR context",
+          "policy_version_id": "accef000-0000-4000-8000-000000000079",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "metadata.lineage",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "employees"
+        },
+        "weight": 0.55
+      },
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000110",
+        "decision_reason": "employee-region-row-filter v1 business_context:metadata.businessContext \u2192 log_only on master.public.employees",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "business_context",
+        "instruction_key": "business_context:metadata.businessContext",
+        "parameters": {
+          "domain": "People Operations",
+          "owner": "People Operations",
+          "purpose": "Regional row-level scoping for employee reads.",
+          "steward": "hr-data@example.com"
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000102",
+          "policy_name": "Employee region row filter",
+          "policy_version_id": "accef000-0000-4000-8000-000000000103",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "metadata.domain",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "employees"
+        },
+        "weight": 1
+      },
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000111",
+        "decision_reason": "employee-region-row-filter v1 classification:spec.classification \u2192 log_only on master.public.employees",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "classification",
+        "instruction_key": "classification:spec.classification",
+        "parameters": {
+          "category": "pii",
+          "sensitivity": "confidential",
+          "subcategory": null
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000102",
+          "policy_name": "Employee region row filter",
+          "policy_version_id": "accef000-0000-4000-8000-000000000103",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "classification.sensitivity",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "employees"
+        },
+        "weight": 1
+      },
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000112",
+        "decision_reason": "salary-masking v1 business_context:metadata.businessContext \u2192 log_only on master.public.employees",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "business_context",
+        "instruction_key": "business_context:metadata.businessContext",
+        "parameters": {
+          "domain": "People Operations",
+          "owner": "People Operations",
+          "purpose": "Display protection for compensation and government identifiers.",
+          "steward": "hr-data@example.com"
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000096",
+          "policy_name": "Salary and identifier masking",
+          "policy_version_id": "accef000-0000-4000-8000-000000000097",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "metadata.domain",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "employees"
+        },
+        "weight": 1
+      },
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000113",
+        "decision_reason": "salary-masking v1 classification:spec.classification \u2192 log_only on master.public.employees",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "classification",
+        "instruction_key": "classification:spec.classification",
+        "parameters": {
+          "category": "pii",
+          "sensitivity": "restricted",
+          "subcategory": null
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000096",
+          "policy_name": "Salary and identifier masking",
+          "policy_version_id": "accef000-0000-4000-8000-000000000097",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "classification.sensitivity",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "employees"
+        },
+        "weight": 1
+      },
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "allow",
+        "decision_id": "accef000-0000-4000-8000-000000000070",
+        "decision_reason": "employee-data-access v1 role_grant:spec.accessControl.allowedRoles:hr_admin:allow \u2192 allow on master.public.employees",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "role_grant",
+        "instruction_key": "role_grant:spec.accessControl.allowedRoles:hr_admin:allow",
+        "parameters": {
+          "action": "allow",
+          "role": "HR_ADMIN"
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000068",
+          "policy_name": "Employee data access",
+          "policy_version_id": "accef000-0000-4000-8000-000000000069",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "access.read",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "employees"
+        },
+        "weight": 1
+      },
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "allow",
+        "decision_id": "accef000-0000-4000-8000-000000000071",
+        "decision_reason": "employee-data-access v1 role_grant:spec.accessControl.allowedRoles:people_ops:allow \u2192 allow on master.public.employees",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "role_grant",
+        "instruction_key": "role_grant:spec.accessControl.allowedRoles:people_ops:allow",
+        "parameters": {
+          "action": "allow",
+          "role": "PEOPLE_OPS"
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000068",
+          "policy_name": "Employee data access",
+          "policy_version_id": "accef000-0000-4000-8000-000000000069",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "access.read",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "employees"
+        },
+        "weight": 1
+      },
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "allow",
+        "decision_id": "accef000-0000-4000-8000-000000000114",
+        "decision_reason": "employee-data-access v1 usage_guidance:spec.usage.permittedUses:permitted \u2192 allow on master.public.employees",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "usage_guidance",
+        "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+        "parameters": {
+          "kind": "permitted",
+          "uses": [
+            "reporting"
+          ]
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000068",
+          "policy_name": "Employee data access",
+          "policy_version_id": "accef000-0000-4000-8000-000000000069",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "purpose.allowed_use",
+        "scenario_lane": "human",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "employees"
+        },
+        "weight": 1
+      },
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000115",
+        "decision_reason": "hr-name-review v1 business_context:metadata.businessContext \u2192 log_only on master.public.employees",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "monitor",
+        "instruction_family": "business_context",
+        "instruction_key": "business_context:metadata.businessContext",
+        "parameters": {
+          "domain": "People Operations",
+          "owner": "People Operations",
+          "purpose": "Monitored rollout of a custom masking routine for display names.",
+          "steward": "hr-data@example.com"
+        },
+        "primary_resolution_source": "selector",
+        "priority": 1,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000074",
+          "policy_name": "HR name review masking",
+          "policy_version_id": "accef000-0000-4000-8000-000000000075",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "metadata.domain",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "employees"
+        },
+        "weight": 1
+      },
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000116",
+        "decision_reason": "hr-name-review v1 classification:spec.classification \u2192 log_only on master.public.employees",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "monitor",
+        "instruction_family": "classification",
+        "instruction_key": "classification:spec.classification",
+        "parameters": {
+          "category": "pii",
+          "sensitivity": "confidential",
+          "subcategory": null
+        },
+        "primary_resolution_source": "selector",
+        "priority": 1,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000074",
+          "policy_name": "HR name review masking",
+          "policy_version_id": "accef000-0000-4000-8000-000000000075",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "classification.sensitivity",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "employees"
+        },
+        "weight": 1
+      },
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "log_only",
+        "decision_id": "accef000-0000-4000-8000-000000000117",
         "decision_reason": "email-masking v1 business_context:metadata.businessContext \u2192 log_only on master.public.employees",
         "effective_from": null,
         "effective_until": null,
@@ -1028,7 +1028,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "log_only",
-        "decision_id": "accef000-0000-4000-8000-000000000107",
+        "decision_id": "accef000-0000-4000-8000-000000000118",
         "decision_reason": "email-masking v1 classification:spec.classification \u2192 log_only on master.public.employees",
         "effective_from": null,
         "effective_until": null,

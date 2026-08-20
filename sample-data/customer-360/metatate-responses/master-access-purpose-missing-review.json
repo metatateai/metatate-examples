@@ -7,7 +7,7 @@
       "schema": "public",
       "table": "customers"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000182",
+    "authorization_id": "accef000-0000-4000-8000-000000000193",
     "can_proceed_now": false,
     "conditions": [],
     "conflict": null,
@@ -36,7 +36,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "require_review",
-        "decision_id": "accef000-0000-4000-8000-000000000010",
+        "decision_id": "accef000-0000-4000-8000-000000000016",
         "decision_reason": "Access-window context is incomplete: no purpose_key was supplied (policy Master data agent access windows).",
         "effective_from": null,
         "effective_until": null,
@@ -65,9 +65,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000011",
+          "policy_id": "accef000-0000-4000-8000-000000000017",
           "policy_name": "Master data agent access windows",
-          "policy_version_id": "accef000-0000-4000-8000-000000000012",
+          "policy_version_id": "accef000-0000-4000-8000-000000000018",
           "version_number": 1
         },
         "resolution_paths": [
@@ -100,7 +100,8 @@
     "satisfied_exceptions": [],
     "scenario_key": "access.read",
     "scenario_lane": "platform",
-    "state": "review_required"
+    "state": "review_required",
+    "validity_evaluated_at": "2026-08-20T21:47:45.936Z"
   },
   "arguments": {
     "asset": {

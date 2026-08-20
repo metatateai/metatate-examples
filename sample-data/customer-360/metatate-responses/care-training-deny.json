@@ -1,0 +1,111 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "care",
+      "schema": "public",
+      "table": "member_records"
+    },
+    "authorization_id": "accef000-0000-4000-8000-000000000263",
+    "can_proceed_now": false,
+    "conditions": [],
+    "context_facts": {
+      "category": "pii",
+      "masking": {
+        "exempt_roles": [
+          "clinical"
+        ],
+        "type": "full"
+      },
+      "pii": true,
+      "sensitivity": "restricted",
+      "subcategory": null
+    },
+    "decision": "deny",
+    "decision_id": "accef000-0000-4000-8000-000000000264",
+    "evaluated_actor_role": "research",
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": null,
+    "instructions": [
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "deny",
+        "decision_id": "accef000-0000-4000-8000-000000000264",
+        "decision_reason": "care-research-anonymization v1 ai_governance:spec.aiGovernance:training \u2192 deny on care.public.member_records",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "ai_governance",
+        "instruction_key": "ai_governance:spec.aiGovernance:training",
+        "parameters": {
+          "allowInference": null,
+          "allowTraining": false,
+          "requiresAnonymization": true,
+          "restrictions": []
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000261",
+          "policy_name": "Care research anonymization",
+          "policy_version_id": "accef000-0000-4000-8000-000000000262",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "ai.training",
+        "scenario_lane": "agent",
+        "scope": {
+          "column": null,
+          "database": "care",
+          "schema": "public",
+          "table": "member_records"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "Do not proceed with this use.",
+      "Request an approved exception or an alternative asset from the data steward."
+    ],
+    "obligations": [],
+    "prohibitions": [
+      {
+        "detail": "care-research-anonymization v1 ai_governance:spec.aiGovernance:training \u2192 deny on care.public.member_records",
+        "required_by_policy": "Care research anonymization",
+        "source": "ai_governance"
+      }
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "care-research-anonymization v1 ai_governance:spec.aiGovernance:training \u2192 deny on care.public.member_records",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
+    "scenario_key": "ai.training",
+    "scenario_lane": "agent",
+    "state": "answered",
+    "validity_evaluated_at": "2026-08-20T21:47:46.235Z"
+  },
+  "arguments": {
+    "asset": {
+      "database": "care",
+      "schema": "public",
+      "table": "member_records"
+    },
+    "scenario_key": "ai.training",
+    "use": "train a model on member records"
+  },
+  "case_id": "care-training-deny",
+  "tool": "authorize_use"
+}

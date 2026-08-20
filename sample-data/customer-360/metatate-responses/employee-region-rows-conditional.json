@@ -7,7 +7,7 @@
       "schema": "public",
       "table": "employees"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000142",
+    "authorization_id": "accef000-0000-4000-8000-000000000153",
     "can_proceed_now": false,
     "conditions": [
       {
@@ -45,7 +45,7 @@
       "subcategory": null
     },
     "decision": "conditional",
-    "decision_id": "accef000-0000-4000-8000-000000000090",
+    "decision_id": "accef000-0000-4000-8000-000000000101",
     "evaluated_actor_role": null,
     "evaluated_at": "2026-07-30T00:00:00.000Z",
     "evaluated_data_access_context": null,
@@ -57,7 +57,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "conditional",
-        "decision_id": "accef000-0000-4000-8000-000000000090",
+        "decision_id": "accef000-0000-4000-8000-000000000101",
         "decision_reason": "employee-region-row-filter v1 row_access:spec.rowFilter.rules \u2192 conditional on master.public.employees",
         "effective_from": null,
         "effective_until": null,
@@ -77,9 +77,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000091",
+          "policy_id": "accef000-0000-4000-8000-000000000102",
           "policy_name": "Employee region row filter",
-          "policy_version_id": "accef000-0000-4000-8000-000000000092",
+          "policy_version_id": "accef000-0000-4000-8000-000000000103",
           "version_number": 1
         },
         "resolution_paths": [
@@ -114,7 +114,8 @@
     "satisfied_exceptions": [],
     "scenario_key": "access.row_filter",
     "scenario_lane": "platform",
-    "state": "answered"
+    "state": "answered",
+    "validity_evaluated_at": "2026-08-20T21:47:45.719Z"
   },
   "arguments": {
     "asset": {

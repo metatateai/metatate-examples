@@ -84,6 +84,16 @@
       "resolved_kind": "purpose_key"
     },
     {
+      "authored_entry": "verification_outreach",
+      "kind": "deliberate_conflict",
+      "list": "both",
+      "matches": null,
+      "policy": null,
+      "resolved_category": null,
+      "resolved_key": null,
+      "resolved_kind": "purpose_key"
+    },
+    {
       "authored_entry": "analytics",
       "kind": "registry_category",
       "list": "permitted",
@@ -211,6 +221,31 @@
       }
     },
     {
+      "case_id": "gov-conflict-verification-review",
+      "covers_authored_entry": "verification_outreach",
+      "expected_projection": {
+        "decision": "require_review",
+        "reason_code": "conflicted_published_state",
+        "state": "review_required"
+      }
+    },
+    {
+      "case_id": "adtech-personalization-prohibited-deny",
+      "covers_authored_entry": "marketing.personalization (registry key, prohibited)",
+      "expected_projection": {
+        "decision": "deny",
+        "state": "answered"
+      }
+    },
+    {
+      "case_id": "care-marketing-outreach-deny",
+      "covers_authored_entry": "marketing.advertising (registry key, prohibited on care)",
+      "expected_projection": {
+        "decision": "deny",
+        "state": "answered"
+      }
+    },
+    {
       "case_id": "marketing-customers-deny",
       "covers_authored_entry": "advertising/marketing/personalization (discovered, unmapped, prohibited)",
       "expected_projection": {
@@ -231,7 +266,7 @@
         "evaluated_purpose": null,
         "has_decision_id": true,
         "state": "answered",
-        "usage_guidance_rows_cited": 1
+        "usage_guidance_rows_cited": 2
       },
       "kind": "purpose_blind",
       "quarantined": false,
@@ -248,7 +283,7 @@
         "evaluated_purpose": "analytics.reporting",
         "has_decision_id": true,
         "state": "answered",
-        "usage_guidance_rows_cited": 1
+        "usage_guidance_rows_cited": 2
       },
       "kind": "purposeful",
       "quarantined": false,
@@ -266,7 +301,7 @@
         "has_decision_id": false,
         "reason_code": "decision_requires_review",
         "state": "review_required",
-        "usage_guidance_rows_cited": 1
+        "usage_guidance_rows_cited": 2
       },
       "kind": "purpose_missing_control",
       "quarantined": false,
@@ -572,7 +607,7 @@
         "evaluated_purpose": "analytics.reporting",
         "has_decision_id": false,
         "state": "answered",
-        "usage_guidance_rows_cited": 1,
+        "usage_guidance_rows_cited": 2,
         "verdict": "pass"
       },
       "kind": "purposeful",
@@ -590,7 +625,7 @@
         "evaluated_purpose": null,
         "has_decision_id": false,
         "state": "answered",
-        "usage_guidance_rows_cited": 1,
+        "usage_guidance_rows_cited": 2,
         "verdict": "warn"
       },
       "kind": "purpose_blind",
@@ -608,7 +643,7 @@
         "evaluated_purpose": null,
         "has_decision_id": false,
         "state": "answered",
-        "usage_guidance_rows_cited": 1,
+        "usage_guidance_rows_cited": 2,
         "verdict": "fail"
       },
       "kind": "purpose_blind",
@@ -848,7 +883,7 @@
         "evaluated_purpose": "analytics.reporting",
         "has_decision_id": false,
         "state": "answered",
-        "usage_guidance_rows_cited": 2,
+        "usage_guidance_rows_cited": 3,
         "verdict": "pass"
       },
       "kind": "purposeful",
@@ -914,7 +949,7 @@
         "evaluated_purpose": "analytics.reporting",
         "has_decision_id": false,
         "state": "answered",
-        "usage_guidance_rows_cited": 1,
+        "usage_guidance_rows_cited": 2,
         "verdict": "warn"
       },
       "kind": "purposeful",
@@ -931,7 +966,7 @@
         "evaluated_purpose": "analytics.reporting",
         "has_decision_id": false,
         "state": "answered",
-        "usage_guidance_rows_cited": 1,
+        "usage_guidance_rows_cited": 2,
         "verdict": "pass"
       },
       "kind": "purposeful",
@@ -948,7 +983,7 @@
         "evaluated_purpose": null,
         "has_decision_id": false,
         "state": "answered",
-        "usage_guidance_rows_cited": 1,
+        "usage_guidance_rows_cited": 2,
         "verdict": "fail"
       },
       "kind": "purpose_blind",
@@ -1173,6 +1208,714 @@
         "state": "answered",
         "usage_guidance_rows_cited": 0,
         "verdict": "fail"
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "validate_query_context"
+    },
+    {
+      "case_id": "adtech-personalization-allowed-use-review",
+      "declared_purpose_key": "marketing.personalization",
+      "expected_offline_projection": {
+        "citing_families": [
+          "usage_guidance"
+        ],
+        "decision": "require_review",
+        "evaluated_purpose": "marketing.personalization",
+        "has_decision_id": false,
+        "reason_code": "decision_requires_review",
+        "state": "review_required",
+        "usage_guidance_rows_cited": 2
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "adtech-personalization-prohibited-deny",
+      "declared_purpose_key": "marketing.personalization",
+      "expected_offline_projection": {
+        "citing_families": [
+          "usage_guidance"
+        ],
+        "decision": "deny",
+        "evaluated_purpose": "marketing.personalization",
+        "has_decision_id": true,
+        "state": "answered",
+        "usage_guidance_rows_cited": 2
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "adtech-consent-measurement-conditional",
+      "declared_purpose_key": "analytics.reporting",
+      "expected_offline_projection": {
+        "citing_families": [
+          "consent_requirement"
+        ],
+        "decision": "conditional",
+        "evaluated_purpose": "analytics.reporting",
+        "has_decision_id": true,
+        "state": "answered",
+        "usage_guidance_rows_cited": 0
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "adtech-consent-personalization-conditional",
+      "declared_purpose_key": "marketing.personalization",
+      "expected_offline_projection": {
+        "citing_families": [
+          "consent_requirement"
+        ],
+        "decision": "conditional",
+        "evaluated_purpose": "marketing.personalization",
+        "has_decision_id": true,
+        "state": "answered",
+        "usage_guidance_rows_cited": 0
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "adtech-consent-activation-conditional",
+      "declared_purpose_key": "sharing.third_party",
+      "expected_offline_projection": {
+        "citing_families": [
+          "consent_requirement"
+        ],
+        "decision": "conditional",
+        "evaluated_purpose": "sharing.third_party",
+        "has_decision_id": true,
+        "state": "answered",
+        "usage_guidance_rows_cited": 0
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "adtech-consent-purpose-missing-review",
+      "declared_purpose_key": null,
+      "expected_offline_projection": {
+        "citing_families": [
+          "consent_requirement"
+        ],
+        "decision": "require_review",
+        "evaluated_purpose": null,
+        "has_decision_id": false,
+        "reason_code": "consent_context_required",
+        "state": "review_required",
+        "usage_guidance_rows_cited": 0
+      },
+      "kind": "purpose_missing_control",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "adtech-export-approved-dsp-conditional",
+      "declared_purpose_key": null,
+      "expected_offline_projection": {
+        "citing_families": [
+          "transfer_governance"
+        ],
+        "decision": "conditional",
+        "evaluated_purpose": null,
+        "has_decision_id": true,
+        "state": "answered",
+        "usage_guidance_rows_cited": 0
+      },
+      "kind": "purpose_blind",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "adtech-export-unlisted-dsp-deny",
+      "declared_purpose_key": null,
+      "expected_offline_projection": {
+        "citing_families": [
+          "transfer_governance"
+        ],
+        "decision": "deny",
+        "evaluated_purpose": null,
+        "has_decision_id": true,
+        "state": "answered",
+        "usage_guidance_rows_cited": 0
+      },
+      "kind": "purpose_blind",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "adtech-consent-sql-analytics-pass",
+      "declared_purpose_key": "analytics.reporting",
+      "expected_offline_projection": {
+        "citing_families": [
+          "usage_guidance"
+        ],
+        "evaluated_purpose": "analytics.reporting",
+        "has_decision_id": false,
+        "state": "answered",
+        "usage_guidance_rows_cited": 2,
+        "verdict": "pass"
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "validate_query_context"
+    },
+    {
+      "case_id": "adtech-consent-sql-personalization-warn",
+      "declared_purpose_key": "marketing.personalization",
+      "expected_offline_projection": {
+        "citing_families": [
+          "usage_guidance"
+        ],
+        "evaluated_purpose": "marketing.personalization",
+        "has_decision_id": false,
+        "reason_code": "decision_requires_review",
+        "state": "review_required",
+        "usage_guidance_rows_cited": 2,
+        "verdict": "warn"
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "validate_query_context"
+    },
+    {
+      "case_id": "pay-fraud-network-allow",
+      "declared_purpose_key": "fraud.detection",
+      "expected_offline_projection": {
+        "citing_families": [
+          "usage_guidance"
+        ],
+        "decision": "allow",
+        "evaluated_purpose": "fraud.detection",
+        "has_decision_id": true,
+        "state": "answered",
+        "usage_guidance_rows_cited": 1
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "pay-fraud-transactions-review",
+      "declared_purpose_key": "fraud.detection",
+      "expected_offline_projection": {
+        "citing_families": [
+          "usage_guidance"
+        ],
+        "decision": "require_review",
+        "evaluated_purpose": "fraud.detection",
+        "has_decision_id": false,
+        "reason_code": "decision_requires_review",
+        "state": "review_required",
+        "usage_guidance_rows_cited": 1
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "pay-ops-transactions-allow",
+      "declared_purpose_key": "operations.support",
+      "expected_offline_projection": {
+        "citing_families": [
+          "usage_guidance"
+        ],
+        "decision": "allow",
+        "evaluated_purpose": "operations.support",
+        "has_decision_id": true,
+        "state": "answered",
+        "usage_guidance_rows_cited": 1
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "pay-audit-processor-allow",
+      "declared_purpose_key": "compliance.audit",
+      "expected_offline_projection": {
+        "citing_families": [
+          "usage_guidance"
+        ],
+        "decision": "allow",
+        "evaluated_purpose": "compliance.audit",
+        "has_decision_id": true,
+        "state": "answered",
+        "usage_guidance_rows_cited": 1
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "pay-analytics-reconciled-conditional",
+      "declared_purpose_key": "analytics.reporting",
+      "expected_offline_projection": {
+        "citing_families": [
+          "ai_governance"
+        ],
+        "decision": "conditional",
+        "evaluated_purpose": "analytics.reporting",
+        "has_decision_id": true,
+        "state": "answered",
+        "usage_guidance_rows_cited": 0
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "pay-fraud-wrong-source-warn",
+      "declared_purpose_key": "fraud.detection",
+      "expected_offline_projection": {
+        "citing_families": [
+          "usage_guidance"
+        ],
+        "evaluated_purpose": "fraud.detection",
+        "has_decision_id": false,
+        "reason_code": "decision_requires_review",
+        "state": "review_required",
+        "usage_guidance_rows_cited": 1,
+        "verdict": "warn"
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "validate_query_context"
+    },
+    {
+      "case_id": "pay-fraud-right-source-pass",
+      "declared_purpose_key": "fraud.detection",
+      "expected_offline_projection": {
+        "citing_families": [
+          "usage_guidance"
+        ],
+        "evaluated_purpose": "fraud.detection",
+        "has_decision_id": false,
+        "state": "answered",
+        "usage_guidance_rows_cited": 1,
+        "verdict": "pass"
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "validate_query_context"
+    },
+    {
+      "case_id": "pay-reconciled-quality-warn",
+      "declared_purpose_key": "analytics.reporting",
+      "expected_offline_projection": {
+        "citing_families": [
+          "ai_governance"
+        ],
+        "evaluated_purpose": "analytics.reporting",
+        "has_decision_id": false,
+        "state": "answered",
+        "usage_guidance_rows_cited": 0,
+        "verdict": "warn"
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "validate_query_context"
+    },
+    {
+      "case_id": "care-clinical-read-allow",
+      "declared_purpose_key": null,
+      "expected_offline_projection": {
+        "citing_families": [
+          "role_grant"
+        ],
+        "decision": "allow",
+        "evaluated_purpose": null,
+        "has_decision_id": true,
+        "state": "answered",
+        "usage_guidance_rows_cited": 0
+      },
+      "kind": "purpose_blind",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "care-member-services-read-review",
+      "declared_purpose_key": null,
+      "expected_offline_projection": {
+        "citing_families": [
+          "role_grant"
+        ],
+        "decision": "require_review",
+        "evaluated_purpose": null,
+        "has_decision_id": false,
+        "reason_code": "decision_requires_review",
+        "state": "review_required",
+        "usage_guidance_rows_cited": 0
+      },
+      "kind": "purpose_blind",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "care-research-read-review",
+      "declared_purpose_key": null,
+      "expected_offline_projection": {
+        "citing_families": [
+          "role_grant"
+        ],
+        "decision": "require_review",
+        "evaluated_purpose": null,
+        "has_decision_id": false,
+        "reason_code": "decision_requires_review",
+        "state": "review_required",
+        "usage_guidance_rows_cited": 0
+      },
+      "kind": "purpose_blind",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "care-marketing-read-review",
+      "declared_purpose_key": null,
+      "expected_offline_projection": {
+        "citing_families": [
+          "role_grant"
+        ],
+        "decision": "require_review",
+        "evaluated_purpose": null,
+        "has_decision_id": false,
+        "reason_code": "decision_requires_review",
+        "state": "review_required",
+        "usage_guidance_rows_cited": 0
+      },
+      "kind": "purpose_blind",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "care-notes-clinical-allow",
+      "declared_purpose_key": null,
+      "expected_offline_projection": {
+        "citing_families": [
+          "masking"
+        ],
+        "decision": "allow",
+        "evaluated_purpose": null,
+        "has_decision_id": true,
+        "state": "answered",
+        "usage_guidance_rows_cited": 0
+      },
+      "kind": "purpose_blind",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "care-notes-member-services-mask",
+      "declared_purpose_key": null,
+      "expected_offline_projection": {
+        "citing_families": [
+          "masking"
+        ],
+        "decision": "mask_full",
+        "evaluated_purpose": null,
+        "has_decision_id": true,
+        "state": "answered",
+        "usage_guidance_rows_cited": 0
+      },
+      "kind": "purpose_blind",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "care-eligibility-allow",
+      "declared_purpose_key": "care.eligibility",
+      "expected_offline_projection": {
+        "citing_families": [
+          "usage_guidance"
+        ],
+        "decision": "allow",
+        "evaluated_purpose": "care.eligibility",
+        "has_decision_id": true,
+        "state": "answered",
+        "usage_guidance_rows_cited": 1
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "care-research-anonymize-conditional",
+      "declared_purpose_key": "research.general",
+      "expected_offline_projection": {
+        "citing_families": [
+          "ai_governance"
+        ],
+        "decision": "conditional",
+        "evaluated_purpose": "research.general",
+        "has_decision_id": true,
+        "state": "answered",
+        "usage_guidance_rows_cited": 0
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "care-training-deny",
+      "declared_purpose_key": null,
+      "expected_offline_projection": {
+        "citing_families": [
+          "ai_governance"
+        ],
+        "decision": "deny",
+        "evaluated_purpose": null,
+        "has_decision_id": true,
+        "state": "answered",
+        "usage_guidance_rows_cited": 0
+      },
+      "kind": "purpose_blind",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "care-marketing-outreach-deny",
+      "declared_purpose_key": "marketing.advertising",
+      "expected_offline_projection": {
+        "citing_families": [
+          "usage_guidance"
+        ],
+        "decision": "deny",
+        "evaluated_purpose": "marketing.advertising",
+        "has_decision_id": true,
+        "state": "answered",
+        "usage_guidance_rows_cited": 1
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "care-consent-eligibility-conditional",
+      "declared_purpose_key": "care.eligibility",
+      "expected_offline_projection": {
+        "citing_families": [
+          "consent_requirement"
+        ],
+        "decision": "conditional",
+        "evaluated_purpose": "care.eligibility",
+        "has_decision_id": true,
+        "state": "answered",
+        "usage_guidance_rows_cited": 0
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "care-consent-research-conditional",
+      "declared_purpose_key": "research.general",
+      "expected_offline_projection": {
+        "citing_families": [
+          "consent_requirement"
+        ],
+        "decision": "conditional",
+        "evaluated_purpose": "research.general",
+        "has_decision_id": true,
+        "state": "answered",
+        "usage_guidance_rows_cited": 0
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "care-consent-marketing-conditional",
+      "declared_purpose_key": "marketing.advertising",
+      "expected_offline_projection": {
+        "citing_families": [
+          "consent_requirement"
+        ],
+        "decision": "conditional",
+        "evaluated_purpose": "marketing.advertising",
+        "has_decision_id": true,
+        "state": "answered",
+        "usage_guidance_rows_cited": 0
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "care-consent-treatment-purpose-unruled-review",
+      "declared_purpose_key": "care.treatment",
+      "expected_offline_projection": {
+        "citing_families": [
+          "consent_requirement"
+        ],
+        "decision": "require_review",
+        "evaluated_purpose": "care.treatment",
+        "has_decision_id": false,
+        "reason_code": "consent_context_required",
+        "state": "review_required",
+        "usage_guidance_rows_cited": 0
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "care-notes-sql-clinical-pass",
+      "declared_purpose_key": "care.treatment",
+      "expected_offline_projection": {
+        "citing_families": [
+          "masking",
+          "usage_guidance"
+        ],
+        "evaluated_purpose": "care.treatment",
+        "has_decision_id": false,
+        "state": "answered",
+        "usage_guidance_rows_cited": 1,
+        "verdict": "pass"
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "validate_query_context"
+    },
+    {
+      "case_id": "care-notes-sql-member-services-warn",
+      "declared_purpose_key": "care.treatment",
+      "expected_offline_projection": {
+        "citing_families": [
+          "masking",
+          "usage_guidance"
+        ],
+        "evaluated_purpose": "care.treatment",
+        "has_decision_id": false,
+        "state": "answered",
+        "usage_guidance_rows_cited": 1,
+        "verdict": "warn"
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "validate_query_context"
+    },
+    {
+      "case_id": "gov-determination-statute-2025-allow",
+      "declared_purpose_key": "benefits.determination",
+      "expected_offline_projection": {
+        "citing_families": [
+          "usage_guidance"
+        ],
+        "decision": "allow",
+        "evaluated_purpose": "benefits.determination",
+        "has_decision_id": true,
+        "state": "answered",
+        "usage_guidance_rows_cited": 1
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "gov-statute-as-of-2027-conditional",
+      "declared_purpose_key": "benefits.determination",
+      "expected_offline_projection": {
+        "citing_families": [
+          "ai_governance"
+        ],
+        "decision": "conditional",
+        "evaluated_purpose": "benefits.determination",
+        "has_decision_id": true,
+        "state": "answered",
+        "usage_guidance_rows_cited": 0
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "gov-qualifying-conditions-not-yet-effective",
+      "declared_purpose_key": "benefits.determination",
+      "expected_offline_projection": {
+        "citing_families": [],
+        "evaluated_purpose": "benefits.determination",
+        "has_decision_id": false,
+        "reason_code": "not_currently_effective",
+        "state": "not_enough_published_state",
+        "usage_guidance_rows_cited": 0
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "gov-categorical-precedence-conditional",
+      "declared_purpose_key": "benefits.determination",
+      "expected_offline_projection": {
+        "citing_families": [
+          "ai_governance",
+          "usage_guidance"
+        ],
+        "decision": "conditional",
+        "evaluated_purpose": "benefits.determination",
+        "has_decision_id": true,
+        "state": "answered",
+        "usage_guidance_rows_cited": 1
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "gov-conflict-verification-review",
+      "declared_purpose_key": null,
+      "expected_offline_projection": {
+        "citing_families": [
+          "usage_guidance"
+        ],
+        "decision": "require_review",
+        "evaluated_purpose": null,
+        "has_decision_id": false,
+        "reason_code": "conflicted_published_state",
+        "state": "review_required",
+        "usage_guidance_rows_cited": 2
+      },
+      "kind": "purpose_blind",
+      "quarantined": false,
+      "tool": "authorize_use"
+    },
+    {
+      "case_id": "gov-determination-2025-pass",
+      "declared_purpose_key": "benefits.determination",
+      "expected_offline_projection": {
+        "citing_families": [
+          "usage_guidance"
+        ],
+        "evaluated_purpose": "benefits.determination",
+        "has_decision_id": false,
+        "state": "answered",
+        "usage_guidance_rows_cited": 1,
+        "verdict": "pass"
+      },
+      "kind": "purposeful",
+      "quarantined": false,
+      "tool": "validate_query_context"
+    },
+    {
+      "case_id": "gov-determination-as-of-2027-warn",
+      "declared_purpose_key": "benefits.determination",
+      "expected_offline_projection": {
+        "citing_families": [
+          "ai_governance"
+        ],
+        "evaluated_purpose": "benefits.determination",
+        "has_decision_id": false,
+        "state": "answered",
+        "usage_guidance_rows_cited": 0,
+        "verdict": "warn"
       },
       "kind": "purposeful",
       "quarantined": false,

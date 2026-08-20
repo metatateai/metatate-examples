@@ -1,0 +1,32 @@
+# Customer 360 estate spec — Government pack: the estate's SECOND sanctioned
+# conflict pair (the prospect-outreach pattern). This half permits
+# verification outreach; benefits-verification-block prohibits the SAME
+# string at the SAME priority — an unmanaged same-band disagreement the
+# estate surfaces honestly as a conflicted answer.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: benefits-verification-permit
+  version: 1.0.0
+  description: >-
+    Caseworkers may contact applicants to verify application details.
+  tags: [government, pii]
+  businessContext:
+    domain: Benefits Program
+    owner: Program Administration
+    steward: program-policy@example.com
+    purpose: Applicant contact for verification of filed details.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [benefits]
+    schemas: [public]
+    tables: [applicants]
+  classification:
+    sensitivity: restricted
+    category: pii
+  usage:
+    permittedUses: [verification_outreach]
+extensions:
+  displayName: Benefits verification permit

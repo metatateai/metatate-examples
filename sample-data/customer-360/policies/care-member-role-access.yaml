@@ -1,0 +1,34 @@
+# Customer 360 estate spec — Healthcare pack: table-grain role gate.
+# One record, four contexts: only the CLINICAL role reads the full record
+# on a treatment basis at this grain; every other identity fails closed to
+# review here — member services reads through the eligibility purpose lane,
+# never as a general table reader. Illustrative, not clinical guidance.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: care-member-role-access
+  version: 1.0.0
+  description: >-
+    The full member record is readable only by the clinical role on a
+    treatment basis; any other identity requires review. Coverage work
+    reads through the eligibility purpose, not a table-wide grant.
+  tags: [health, pii, privacy_sensitive]
+  businessContext:
+    domain: Care Data
+    owner: Care Operations
+    steward: health-governance@example.com
+    purpose: Role-scoped read access to the one-person member record.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [care]
+    schemas: [public]
+    tables: [member_records]
+  classification:
+    sensitivity: restricted
+    category: pii
+  accessControl:
+    allowedRoles: [clinical]
+extensions:
+  displayName: Care member role access

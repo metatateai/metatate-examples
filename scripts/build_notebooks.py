@@ -1880,6 +1880,716 @@ def purpose_bound_access_windows_notebook() -> dict:
     )
 
 
+def adtech_consent_notebook() -> dict:
+    return notebook(
+        [
+            markdown(
+                """
+                # 17 - AdTech: Consent as Three Permissions in One Field
+
+                A single `marketing_consent = true` collapses three distinct
+                permissions. A person may permit measurement but not
+                personalization, or activation but not cross-context sharing —
+                an agent reading one boolean treats all uses as allowed, which
+                is a compliance violation, not a data error.
+
+                The estate keeps the legacy boolean AND the fixed model: three
+                purpose-scoped consent bases, served per declared purpose.
+
+                | Declared purpose | Consent basis | Lane |
+                | --- | --- | --- |
+                | `analytics.reporting` (measurement) | `consent_measurement` | consent question |
+                | `marketing.personalization` | `consent_personalization` | consent question |
+                | `sharing.third_party` (activation) | `consent_activation` | consent + transfer |
+
+                Metatate never reads data values: each answer is a typed
+                `consent_required` condition naming the exact basis column the
+                agent must verify — never satisfiable by caller assertion.
+                """
+            ),
+            code(SETUP_CELL),
+            markdown("## 1. One field, three questions"),
+            code(
+                """
+                consent_cases = [
+                    ("measurement", dict(
+                        asset=asset("customers"),
+                        use="measure campaign reach across customers",
+                        scenario_key="consent.required",
+                        purpose_key="analytics.reporting",
+                    )),
+                    ("personalization", dict(
+                        asset=asset("customers"),
+                        use="personalize offers from customer records",
+                        scenario_key="consent.required",
+                        purpose_key="marketing.personalization",
+                    )),
+                    ("activation", dict(
+                        asset=asset("customers"),
+                        use="activate an audience with a demand-side partner",
+                        scenario_key="consent.required",
+                        purpose_key="sharing.third_party",
+                    )),
+                ]
+
+                consents = {}
+                for label, arguments in consent_cases:
+                    answer = client.authorize_use(**arguments)
+                    consents[label] = answer
+                    condition = next(
+                        (c for c in answer.get("conditions", [])
+                         if c.get("kind") == "consent_required"),
+                        {},
+                    )
+                    projection = condition.get("projection") or {}
+                    print(
+                        f"{label:16} -> {answer_label(answer):12} "
+                        f"verify {projection.get('basis_column', '?')}"
+                    )
+                """
+            ),
+            markdown(
+                """
+                Same record, three different verification requirements — the
+                purpose selects the consent basis, and the typed projection
+                names the exact column the agent must check before proceeding.
+                """
+            ),
+            markdown("## 2. Consent recorded is not use permitted"),
+            code(
+                """
+                allowed_lane = client.authorize_use(
+                    asset("customers"),
+                    use="personalize offers from customer records",
+                    scenario_key="purpose.allowed_use",
+                    purpose_key="marketing.personalization",
+                )
+                prohibited_lane = client.authorize_use(
+                    asset("customers"),
+                    use="personalize offers from customer records",
+                    scenario_key="purpose.prohibited_use",
+                    purpose_key="marketing.personalization",
+                )
+                print("allowed-use lane    ->", answer_label(allowed_lane))
+                print("prohibited-use lane ->", answer_label(prohibited_lane))
+                """
+            ),
+            markdown(
+                """
+                Personalization of the raw record is not merely
+                consent-conditioned — no permit covers it (review) and the
+                prohibition names it outright (deny). Consent and permission
+                are separate questions with separate answers.
+                """
+            ),
+            markdown("## 3. Missing purpose fails closed"),
+            code(
+                """
+                missing_purpose = client.authorize_use(
+                    asset("customers"),
+                    use="use customer records for an advertising workflow",
+                    scenario_key="consent.required",
+                )
+                print("missing purpose ->", missing_purpose["state"], missing_purpose["reason_code"])
+                """
+            ),
+            markdown("## 4. Activation is a transfer"),
+            code(
+                """
+                approved = client.authorize_use(
+                    asset("ad_audience_exports"),
+                    use="activate the consented audience with an approved partner",
+                    scenario_key="residency.cross_border_transfer",
+                    operation="export",
+                    destination={"system": "APPROVED_DSP_A"},
+                )
+                unlisted = client.authorize_use(
+                    asset("ad_audience_exports"),
+                    use="activate the audience with an unlisted platform",
+                    scenario_key="residency.cross_border_transfer",
+                    operation="export",
+                    destination={"system": "UNLISTED_DSP"},
+                )
+                print("approved partner ->", answer_label(approved))
+                print("unlisted partner ->", answer_label(unlisted))
+                """
+            ),
+            markdown("## 5. The purpose flips the verdict, not the SQL"),
+            code(
+                """
+                CONSENT_SQL = "SELECT customer_id, consent_measurement, consent_personalization, consent_activation FROM customers"
+
+                measurement_sql = client.validate_query_context(
+                    CONSENT_SQL,
+                    scenario_key="purpose.allowed_use",
+                    default_database="master", default_schema="public",
+                    purpose_key="analytics.reporting",
+                )
+                personalization_sql = client.validate_query_context(
+                    CONSENT_SQL,
+                    scenario_key="purpose.allowed_use",
+                    default_database="master", default_schema="public",
+                    purpose_key="marketing.personalization",
+                )
+                print("measurement     ->", measurement_sql.get("verdict"), "/", measurement_sql.get("state"))
+                print("personalization ->", personalization_sql.get("verdict"), "/", personalization_sql.get("state"))
+                """
+            ),
+            markdown("## 6. The receipt"),
+            code(
+                """
+                receipt = client.explain_why(
+                    authorization_id=consents["measurement"]["authorization_id"],
+                )
+                print("decision  :", receipt["decision"], "/", receipt["answer_state"])
+                print("cited rows:", len(receipt["cited_decision_ids"]))
+                print("evaluated :", receipt["provenance"]["evaluated_at"])
+                """
+            ),
+            markdown(
+                """
+                Byte-identical SQL, two verdicts — the declared purpose is the
+                decision-bearing input. And every determination above is a
+                durable, citable record: the receipt reconstructs what was
+                asked, which policy answered, and why.
+                """
+            ),
+        ]
+    )
+
+
+def payments_source_of_truth_notebook() -> dict:
+    return notebook(
+        [
+            markdown(
+                """
+                # 18 - Payments: Local Data Is Not the Source of Truth
+
+                A transaction's true state lives across the processor, the
+                network, and the local ledger — and they disagree in real time.
+                The local record says "settled" while the network says
+                "pending reversal". Correctness comes from reconciliation, and
+                WHICH source wins depends on the QUESTION:
+
+                | Question (purpose) | Authoritative source |
+                | --- | --- |
+                | `fraud.detection` | `network_settlements` |
+                | `operations.support` (customer balance) | `payment_transactions` |
+                | `compliance.audit` (fees) | `processor_settlements` |
+                | `analytics.reporting` | reconciled rows only |
+
+                That authority matrix is an ORGANIZATIONAL JUDGMENT — exactly
+                what Metatate serves. The platform never computes reconciliation;
+                it tells the agent which source wins and what to verify.
+                """
+            ),
+            code(SETUP_CELL),
+            markdown("## 1. Meaning first: three systems, three truths"),
+            code(
+                """
+                local_meaning = client.inspect_data_meaning(
+                    ref=asset("payment_transactions", "settlement_state", schema="finance"),
+                )
+                network_meaning = client.inspect_data_meaning(
+                    ref=asset("network_settlements", "settlement_state", schema="finance"),
+                )
+                print("local  :", local_meaning["meaning"])
+                print("network:", network_meaning["meaning"])
+                """
+            ),
+            markdown("## 2. Same transaction, three questions"),
+            code(
+                """
+                authority_cases = [
+                    ("fraud / network", dict(
+                        asset=asset("network_settlements", schema="finance"),
+                        use="investigate suspected fraud on a settled transaction",
+                        scenario_key="purpose.allowed_use",
+                        purpose_key="fraud.detection",
+                    )),
+                    ("fraud / local ledger", dict(
+                        asset=asset("payment_transactions", schema="finance"),
+                        use="investigate suspected fraud on a settled transaction",
+                        scenario_key="purpose.allowed_use",
+                        purpose_key="fraud.detection",
+                    )),
+                    ("balance / local ledger", dict(
+                        asset=asset("payment_transactions", schema="finance"),
+                        use="answer a customer-facing balance question",
+                        scenario_key="purpose.allowed_use",
+                        purpose_key="operations.support",
+                    )),
+                    ("fees / processor", dict(
+                        asset=asset("processor_settlements", schema="finance"),
+                        use="reconcile processor fees for the audit trail",
+                        scenario_key="purpose.allowed_use",
+                        purpose_key="compliance.audit",
+                    )),
+                ]
+
+                answers = {}
+                for label, arguments in authority_cases:
+                    answer = client.authorize_use(**arguments)
+                    answers[label] = answer
+                    print(f"{label:24} -> {answer_label(answer)}")
+                """
+            ),
+            markdown(
+                """
+                The SAME fraud question answers differently by SOURCE: the
+                network table allows, the local ledger fails closed to review —
+                with the guidance naming where the authoritative state lives.
+                """
+            ),
+            markdown("## 3. Analytics is conditional on reconciliation"),
+            code(
+                """
+                reconciled = client.authorize_use(
+                    asset("payment_transactions", schema="finance"),
+                    use="report revenue analytics over payment transactions",
+                    scenario_key="quality.reliability",
+                    purpose_key="analytics.reporting",
+                )
+                condition = next(
+                    (c for c in reconciled.get("conditions", [])
+                     if c.get("kind") == "ai_restriction"),
+                    {},
+                )
+                print(answer_label(reconciled), "->", condition.get("requirement", ""))
+                """
+            ),
+            markdown("## 4. The wrong-source query gets caught"),
+            code(
+                """
+                wrong_source = client.validate_query_context(
+                    "SELECT transaction_id, settlement_state FROM master.finance.payment_transactions WHERE settlement_state <> 'reconciled'",
+                    scenario_key="purpose.allowed_use",
+                    default_database="master", default_schema="public",
+                    purpose_key="fraud.detection",
+                )
+                right_source = client.validate_query_context(
+                    "SELECT transaction_id, settlement_state FROM master.finance.network_settlements",
+                    scenario_key="purpose.allowed_use",
+                    default_database="master", default_schema="public",
+                    purpose_key="fraud.detection",
+                )
+                print("fraud on local ledger ->", wrong_source.get("verdict"), "/", wrong_source.get("state"))
+                print("fraud on network      ->", right_source.get("verdict"), "/", right_source.get("state"))
+                """
+            ),
+            markdown(
+                """
+                Authority is served as judgment, not computed from data: the
+                policies carry which source wins per question, the conditions
+                carry what the agent must verify, and every answer cites the
+                governing policy. Reconciliation itself remains the estate's
+                job — Metatate makes the authority explicit and auditable.
+                """
+            ),
+        ]
+    )
+
+
+def healthcare_four_concepts_notebook() -> dict:
+    return notebook(
+        [
+            markdown(
+                """
+                # 19 - Healthcare: One Person as Four Concepts
+
+                The same individual is a PATIENT (clinical, treatment basis), a
+                MEMBER (coverage and eligibility), a CONSUMER (marketing, a
+                different consent regime), and a SUBJECT (research, protocol
+                governed). One record, four governing rule sets — an agent that
+                treats them as one identity applies the wrong permissions.
+
+                Identity is never a caller claim here: each context is a
+                separate MCP token whose `bound_role` was verified at issuance.
+
+                | Verified role | Table read | Clinical columns | Purpose lane |
+                | --- | --- | --- | --- |
+                | `clinical` | allow | visible | `care.treatment` |
+                | `member_services` | review | masked | `care.eligibility` |
+                | `research` | review | — | de-identified only |
+                | `marketing` | review | — | denied without opt-in |
+
+                Field-level specifics are illustrative, not clinical guidance.
+                """
+            ),
+            code(SETUP_CELL),
+            code(
+                """
+                # Four verified identities — four credentials. Offline mode
+                # replays the per-role recordings; live mode uses four separate
+                # role-bound tokens.
+                clinical = get_client(token_env="METATATE_SAAS_MCP_CLINICAL_TOKEN")
+                member_services = get_client(token_env="METATATE_SAAS_MCP_MEMBER_SERVICES_TOKEN")
+                research = get_client(token_env="METATATE_SAAS_MCP_RESEARCH_TOKEN")
+                marketing = get_client(token_env="METATATE_SAAS_MCP_MARKETING_TOKEN")
+                """
+            ),
+            markdown("## 1. The table-grain role gate"),
+            code(
+                """
+                read_cases = [
+                    ("clinical", clinical, "read the full member record on a treatment basis"),
+                    ("member_services", member_services, "read the full member record for coverage work"),
+                    ("research", research, "read member records for a research cohort"),
+                    ("marketing", marketing, "read member records for outreach targeting"),
+                ]
+
+                for label, role_client, use in read_cases:
+                    answer = role_client.authorize_use(
+                        asset("member_records", database="care"),
+                        use=use,
+                        scenario_key="access.read",
+                    )
+                    print(f"{label:16} -> {answer_label(answer)}")
+                """
+            ),
+            markdown(
+                """
+                Only the clinical role reads the full record at table grain — a
+                treatment basis. Every other identity fails closed to review
+                here: coverage work reads through the eligibility PURPOSE lane,
+                never a table-wide grant.
+                """
+            ),
+            markdown("## 2. The column-grain contrast"),
+            code(
+                """
+                notes_clinical = clinical.authorize_use(
+                    asset("member_records", "clinical_notes", database="care"),
+                    use="display clinician notes during treatment",
+                    scenario_key="masking.display",
+                )
+                notes_member = member_services.authorize_use(
+                    asset("member_records", "clinical_notes", database="care"),
+                    use="display the member record in a coverage tool",
+                    scenario_key="masking.display",
+                )
+                print("clinical        ->", answer_label(notes_clinical))
+                print("member_services ->", answer_label(notes_member))
+                """
+            ),
+            markdown("## 3. The member context reads through its purpose"),
+            code(
+                """
+                eligibility = member_services.authorize_use(
+                    asset("member_records", database="care"),
+                    use="check coverage eligibility for a claim",
+                    scenario_key="purpose.allowed_use",
+                    purpose_key="care.eligibility",
+                )
+                eligibility_consent = member_services.authorize_use(
+                    asset("member_records", database="care"),
+                    use="check coverage eligibility for a claim",
+                    scenario_key="consent.required",
+                    purpose_key="care.eligibility",
+                )
+                condition = next(
+                    (c for c in eligibility_consent.get("conditions", [])
+                     if c.get("kind") == "consent_required"),
+                    {},
+                )
+                projection = condition.get("projection") or {}
+                print("eligibility purpose ->", answer_label(eligibility))
+                print("eligibility consent ->", answer_label(eligibility_consent),
+                      "verify", projection.get("basis_column", "?"))
+                """
+            ),
+            markdown("## 4. The subject context: de-identified, protocol-gated"),
+            code(
+                """
+                anonymize = research.authorize_use(
+                    asset("member_records", database="care"),
+                    use="analyze member outcomes for a research study",
+                    scenario_key="protection.anonymization",
+                    purpose_key="research.general",
+                )
+                research_consent = research.authorize_use(
+                    asset("member_records", database="care"),
+                    use="analyze member outcomes for a research study",
+                    scenario_key="consent.required",
+                    purpose_key="research.general",
+                )
+                training = research.authorize_use(
+                    asset("member_records", database="care"),
+                    use="train a model on member records",
+                    scenario_key="ai.training",
+                )
+                print("research use      ->", answer_label(anonymize))
+                print("research consent  ->", answer_label(research_consent))
+                print("model training    ->", answer_label(training))
+                """
+            ),
+            markdown(
+                """
+                Research is conditional twice over: anonymize first, and verify
+                the recorded research authorization. "Only under an active
+                protocol" is the steward-granted exception lane
+                (`request_access` -> approval -> retry with the cited
+                exception), which notebook 09 walks end to end — never a policy
+                switch an agent can flip.
+                """
+            ),
+            markdown("## 5. The consumer context"),
+            code(
+                """
+                outreach = marketing.authorize_use(
+                    asset("member_records", database="care"),
+                    use="market wellness products to members",
+                    scenario_key="purpose.prohibited_use",
+                    purpose_key="marketing.advertising",
+                )
+                outreach_consent = marketing.authorize_use(
+                    asset("member_records", database="care"),
+                    use="market wellness products to members",
+                    scenario_key="consent.required",
+                    purpose_key="marketing.advertising",
+                )
+                treatment_consent = clinical.authorize_use(
+                    asset("member_records", database="care"),
+                    use="treat the member in a clinical encounter",
+                    scenario_key="consent.required",
+                    purpose_key="care.treatment",
+                )
+                print("marketing use      ->", answer_label(outreach))
+                print("marketing consent  ->", answer_label(outreach_consent))
+                print("treatment consent  ->", treatment_consent["state"], treatment_consent["reason_code"])
+                """
+            ),
+            markdown(
+                """
+                Marketing is denied on its purpose lane, and even its consent
+                question is only conditional on the recorded opt-in. Treatment
+                deliberately has NO consent rule — asking the consent question
+                for a purpose no rule names fails closed to review rather than
+                inventing an answer.
+                """
+            ),
+            markdown("## 6. The role flips the SQL verdict"),
+            code(
+                """
+                NOTES_SQL = "SELECT member_id, clinical_notes FROM care.public.member_records"
+
+                sql_clinical = clinical.validate_query_context(
+                    NOTES_SQL,
+                    scenario_key="purpose.allowed_use",
+                    default_database="master", default_schema="public",
+                    purpose_key="care.treatment",
+                )
+                sql_member = member_services.validate_query_context(
+                    NOTES_SQL,
+                    scenario_key="purpose.allowed_use",
+                    default_database="master", default_schema="public",
+                    purpose_key="care.treatment",
+                )
+                print("clinical        ->", sql_clinical.get("verdict"), "/", sql_clinical.get("state"))
+                print("member_services ->", sql_member.get("verdict"), "/", sql_member.get("state"))
+                """
+            ),
+            markdown("## 7. The receipt"),
+            code(
+                """
+                receipt = research.explain_why(
+                    authorization_id=anonymize["authorization_id"],
+                )
+                print("decision  :", receipt["decision"], "/", receipt["answer_state"])
+                print("cited rows:", len(receipt["cited_decision_ids"]))
+                print("evaluated :", receipt["provenance"]["evaluated_at"])
+                """
+            ),
+            markdown(
+                """
+                Same record, four verified identities, four access shapes —
+                each one a durable, citable decision. The role is never a
+                caller claim: it rides the token, and the provenance on every
+                answer states which identity was evaluated.
+                """
+            ),
+        ]
+    )
+
+
+def government_statute_notebook() -> dict:
+    return notebook(
+        [
+            markdown(
+                """
+                # 20 - Government: The Rules Live Outside the Record
+
+                Program eligibility is determined by statute — income
+                thresholds, categorical rules, exceptions, effective dates —
+                that live in law and policy manuals, not in the data. The
+                applicant record has the fields; nothing in it encodes which
+                rule version applies or when it changed.
+
+                Here the statutes are versioned, date-effective POLICIES layered
+                over the record:
+
+                | Mechanic | How it is served |
+                | --- | --- |
+                | Statute versions | validity windows (`effectiveFrom`/`Until`) |
+                | "As of the application date" | `data_access_context.as_of` |
+                | Categorical over income test | priority bands, visible in rank |
+                | Documented exceptions | the steward request lane |
+
+                Program mechanics are illustrative by design.
+                """
+            ),
+            code(SETUP_CELL),
+            markdown("## 1. Which statute answers today"),
+            code(
+                """
+                today = client.authorize_use(
+                    asset("applicants", database="benefits"),
+                    use="determine benefits eligibility for an application",
+                    scenario_key="compliance.regulatory",
+                    purpose_key="benefits.determination",
+                )
+                print("today ->", answer_label(today))
+                for row in today.get("instructions", []):
+                    print(
+                        f"  {row['provenance']['policy_name']:28}"
+                        f" effective_until={row.get('effective_until')}"
+                    )
+                """
+            ),
+            markdown("## 2. The as-of flip: evaluate under the statute in force at T"),
+            code(
+                """
+                as_of_2027 = client.authorize_use(
+                    asset("applicants", database="benefits"),
+                    use="determine benefits eligibility for an application",
+                    scenario_key="compliance.regulatory",
+                    purpose_key="benefits.determination",
+                    data_access_context={"as_of": "2027-02-01T00:00:00Z"},
+                )
+                condition = next(
+                    (c for c in as_of_2027.get("conditions", [])
+                     if c.get("kind") == "ai_restriction"),
+                    {},
+                )
+                print("as of 2027-02-01 ->", answer_label(as_of_2027))
+                print("  requirement:", condition.get("requirement", ""))
+                print("  validity_evaluated_at:", as_of_2027.get("validity_evaluated_at"))
+                """
+            ),
+            markdown(
+                """
+                Same call, one added instant: the 2025 statute leaves force and
+                the 2026 statute answers — with the partition instant stated in
+                the provenance. The record never changed; the RULES did.
+                """
+            ),
+            markdown("## 3. Published but not in force"),
+            code(
+                """
+                not_yet = client.authorize_use(
+                    asset("qualifying_conditions", database="benefits"),
+                    use="apply the modernized categorical checklist",
+                    scenario_key="compliance.regulatory",
+                    purpose_key="benefits.determination",
+                )
+                print("qualifying_conditions ->", not_yet["state"], "/", not_yet["reason_code"])
+                """
+            ),
+            markdown("## 4. Managed precedence: categorical over the income test"),
+            code(
+                """
+                precedence = client.authorize_use(
+                    asset("applicants", database="benefits"),
+                    use="run an automated benefits determination",
+                    scenario_key="ai.automated_decisioning",
+                    purpose_key="benefits.determination",
+                )
+                print("determination ->", answer_label(precedence))
+                for row in precedence.get("instructions", []):
+                    print(
+                        f"  priority={row['priority']} "
+                        f"{row['provenance']['policy_name']:32} {row['decision']}"
+                    )
+                """
+            ),
+            markdown(
+                """
+                The categorical permit (critical band) outranks the income test
+                (high band) in the ranked instructions — precedence is
+                governed, versioned, and visible. And the composition is
+                fail-safe: the income-test CONDITION still surfaces on the
+                answer, so a permitted determination never silently skips it.
+                """
+            ),
+            markdown("## 5. Managed precedence vs unmanaged disagreement"),
+            code(
+                """
+                conflict = client.authorize_use(
+                    asset("applicants", database="benefits"),
+                    use="run verification outreach against applicants",
+                    scenario_key="purpose.allowed_use",
+                )
+                print("verification outreach ->", conflict["state"], "/", conflict["reason_code"])
+                sources = (conflict.get("conflict") or {}).get("sources", [])
+                for source in sources:
+                    print("  conflicting:", source["provenance"]["policy_name"])
+                """
+            ),
+            markdown(
+                """
+                Contrast: two same-band policies disagree about verification
+                outreach, and the estate surfaces the CONFLICT with both
+                sources cited instead of silently picking a winner. Managed
+                precedence is governance; unmanaged disagreement is debt made
+                visible. Documented exceptions follow the steward request lane
+                (notebook 09): an exception can satisfy a review or a
+                condition — it never overrides a deny.
+                """
+            ),
+            markdown("## 6. The as-of instant flips the SQL verdict too"),
+            code(
+                """
+                DETERMINATION_SQL = "SELECT applicant_id, categorical_flag FROM benefits.public.applicants"
+
+                sql_today = client.validate_query_context(
+                    DETERMINATION_SQL,
+                    scenario_key="compliance.regulatory",
+                    default_database="master", default_schema="public",
+                    purpose_key="benefits.determination",
+                )
+                sql_2027 = client.validate_query_context(
+                    DETERMINATION_SQL,
+                    scenario_key="compliance.regulatory",
+                    default_database="master", default_schema="public",
+                    purpose_key="benefits.determination",
+                    data_access_context={"as_of": "2027-02-01T00:00:00Z"},
+                )
+                print("today          ->", sql_today.get("verdict"), "/", sql_today.get("state"))
+                print("as of 2027     ->", sql_2027.get("verdict"), "/", sql_2027.get("state"))
+                """
+            ),
+            markdown("## 7. The receipt"),
+            code(
+                """
+                receipt = client.explain_why(
+                    authorization_id=as_of_2027["authorization_id"],
+                )
+                print("decision  :", receipt["decision"], "/", receipt["answer_state"])
+                print("cited rows:", len(receipt["cited_decision_ids"]))
+                print("evaluated :", receipt["provenance"]["evaluated_at"])
+                """
+            ),
+            markdown(
+                """
+                "Which rule version applied?" is answerable after the fact: the
+                durable record carries the policy version, its effective
+                window, and the instant the validity partition used.
+                """
+            ),
+        ]
+    )
+
+
 NOTEBOOKS = {
     "00_setup_live_or_offline.ipynb": setup_notebook,
     "01_decision_layer_cookbook.ipynb": cookbook_notebook,
@@ -1898,6 +2608,10 @@ NOTEBOOKS = {
     "14_governed_agent_end_to_end.ipynb": governed_agent_arc_notebook,
     "15_audit_evidence_packet.ipynb": audit_evidence_notebook,
     "16_purpose_bound_agent_data_windows.ipynb": purpose_bound_access_windows_notebook,
+    "17_adtech_consent_three_permissions_one_field.ipynb": adtech_consent_notebook,
+    "18_payments_local_data_is_not_the_source_of_truth.ipynb": payments_source_of_truth_notebook,
+    "19_healthcare_one_person_four_concepts.ipynb": healthcare_four_concepts_notebook,
+    "20_government_rules_outside_the_record.ipynb": government_statute_notebook,
 }
 
 

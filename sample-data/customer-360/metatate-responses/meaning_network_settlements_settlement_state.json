@@ -1,0 +1,29 @@
+{
+  "answer": {
+    "classification": {
+      "category": "financial",
+      "sensitivity": "internal",
+      "subcategory": null
+    },
+    "data_type": "text",
+    "masking": null,
+    "meaning": "Network-confirmed settlement state \u2014 the reconciliation source of truth.",
+    "pii": false,
+    "ref": {
+      "column": "settlement_state",
+      "database": "master",
+      "schema": "finance",
+      "table": "network_settlements"
+    }
+  },
+  "arguments": {
+    "ref": {
+      "column": "settlement_state",
+      "database": "master",
+      "schema": "finance",
+      "table": "network_settlements"
+    }
+  },
+  "case_id": "meaning_network_settlements_settlement_state",
+  "tool": "inspect_data_meaning"
+}

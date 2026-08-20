@@ -1,0 +1,40 @@
+# Customer 360 estate spec — Government pack: managed precedence, lower band.
+# The income test is a CONDITION on automated determination (high band); the
+# categorical permit above it wins the ranking while this condition still
+# surfaces — the fail-safe composition, narrated honestly in notebook 20.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: benefits-income-test
+  version: 1.0.0
+  description: >-
+    Absent a verified categorical qualifier, the statutory income test
+    conditions any automated benefits determination.
+  tags: [government, pii]
+  businessContext:
+    domain: Benefits Program
+    owner: Program Administration
+    steward: program-policy@example.com
+    purpose: The income-test condition on automated determinations.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [benefits]
+    schemas: [public]
+    tables: [applicants]
+  classification:
+    sensitivity: restricted
+    category: pii
+  aiGovernance:
+    restrictions:
+      - >-
+        Income test §7: absent a verified categorical qualifier, monthly
+        income must fall under the statutory threshold for the household
+        size before an automated determination proceeds.
+extensions:
+  displayName: Benefits income test
+  scenarioMap:
+    "ai_governance:spec.aiGovernance:restrictions":
+      scenarioKey: ai.automated_decisioning
+      source: user_confirmed

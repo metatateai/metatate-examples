@@ -12,7 +12,7 @@
       "conflict_status": "none",
       "conflicts_with": [],
       "decision": "deny",
-      "decision_id": "accef000-0000-4000-8000-000000000049",
+      "decision_id": "accef000-0000-4000-8000-000000000060",
       "decision_reason": "customer-use-guardrails v1 ai_governance:spec.aiGovernance:training \u2192 deny on product.public.support_tickets",
       "effective_from": null,
       "effective_until": null,
@@ -28,9 +28,9 @@
       "primary_resolution_source": "selector",
       "priority": 2,
       "provenance": {
-        "policy_id": "accef000-0000-4000-8000-000000000006",
+        "policy_id": "accef000-0000-4000-8000-000000000009",
         "policy_name": "Customer use guardrails",
-        "policy_version_id": "accef000-0000-4000-8000-000000000007",
+        "policy_version_id": "accef000-0000-4000-8000-000000000010",
         "version_number": 1
       },
       "resolution_paths": [
@@ -52,7 +52,7 @@
     "state": "answered"
   },
   "arguments": {
-    "decision_id": "accef000-0000-4000-8000-000000000049",
+    "decision_id": "accef000-0000-4000-8000-000000000060",
     "kind": "decision"
   },
   "case_id": "explain_train_deny_decision",

@@ -7,25 +7,25 @@
       "schema": "public",
       "table": "marketing_prospects"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000130",
+    "authorization_id": "accef000-0000-4000-8000-000000000141",
     "can_proceed_now": false,
     "conditions": [],
     "conflict": {
-      "group_id": "accef000-0000-4000-8000-000000000134",
+      "group_id": "accef000-0000-4000-8000-000000000145",
       "sources": [
         {
           "category": "advisory",
-          "conflict_group_id": "accef000-0000-4000-8000-000000000134",
+          "conflict_group_id": "accef000-0000-4000-8000-000000000145",
           "conflict_status": "conflicted",
           "conflicts_with": [
             {
               "decision": "allow",
               "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
-              "policy_version_id": "accef000-0000-4000-8000-000000000135"
+              "policy_version_id": "accef000-0000-4000-8000-000000000146"
             }
           ],
           "decision": "deny",
-          "decision_id": "accef000-0000-4000-8000-000000000131",
+          "decision_id": "accef000-0000-4000-8000-000000000142",
           "decision_reason": "prospect-outreach-block v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on master.public.marketing_prospects",
           "effective_from": null,
           "effective_until": null,
@@ -41,9 +41,9 @@
           "primary_resolution_source": "selector",
           "priority": 2,
           "provenance": {
-            "policy_id": "accef000-0000-4000-8000-000000000132",
+            "policy_id": "accef000-0000-4000-8000-000000000143",
             "policy_name": "Prospect outreach privacy block",
-            "policy_version_id": "accef000-0000-4000-8000-000000000133",
+            "policy_version_id": "accef000-0000-4000-8000-000000000144",
             "version_number": 1
           },
           "resolution_paths": [
@@ -64,17 +64,17 @@
         },
         {
           "category": "advisory",
-          "conflict_group_id": "accef000-0000-4000-8000-000000000134",
+          "conflict_group_id": "accef000-0000-4000-8000-000000000145",
           "conflict_status": "conflicted",
           "conflicts_with": [
             {
               "decision": "deny",
               "instruction_key": "usage_guidance:spec.usage.prohibitedUses:prohibited",
-              "policy_version_id": "accef000-0000-4000-8000-000000000133"
+              "policy_version_id": "accef000-0000-4000-8000-000000000144"
             }
           ],
           "decision": "require_review",
-          "decision_id": "accef000-0000-4000-8000-000000000136",
+          "decision_id": "accef000-0000-4000-8000-000000000147",
           "decision_reason": "Permitted uses require a declared purpose; this call stated none (policy Prospect outreach enablement).",
           "effective_from": null,
           "effective_until": null,
@@ -90,9 +90,9 @@
           "primary_resolution_source": "selector",
           "priority": 2,
           "provenance": {
-            "policy_id": "accef000-0000-4000-8000-000000000137",
+            "policy_id": "accef000-0000-4000-8000-000000000148",
             "policy_name": "Prospect outreach enablement",
-            "policy_version_id": "accef000-0000-4000-8000-000000000135",
+            "policy_version_id": "accef000-0000-4000-8000-000000000146",
             "version_number": 1
           },
           "resolution_paths": [
@@ -134,17 +134,17 @@
     "instructions": [
       {
         "category": "advisory",
-        "conflict_group_id": "accef000-0000-4000-8000-000000000134",
+        "conflict_group_id": "accef000-0000-4000-8000-000000000145",
         "conflict_status": "conflicted",
         "conflicts_with": [
           {
             "decision": "allow",
             "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
-            "policy_version_id": "accef000-0000-4000-8000-000000000135"
+            "policy_version_id": "accef000-0000-4000-8000-000000000146"
           }
         ],
         "decision": "deny",
-        "decision_id": "accef000-0000-4000-8000-000000000131",
+        "decision_id": "accef000-0000-4000-8000-000000000142",
         "decision_reason": "prospect-outreach-block v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on master.public.marketing_prospects",
         "effective_from": null,
         "effective_until": null,
@@ -160,9 +160,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000132",
+          "policy_id": "accef000-0000-4000-8000-000000000143",
           "policy_name": "Prospect outreach privacy block",
-          "policy_version_id": "accef000-0000-4000-8000-000000000133",
+          "policy_version_id": "accef000-0000-4000-8000-000000000144",
           "version_number": 1
         },
         "resolution_paths": [
@@ -183,17 +183,17 @@
       },
       {
         "category": "advisory",
-        "conflict_group_id": "accef000-0000-4000-8000-000000000134",
+        "conflict_group_id": "accef000-0000-4000-8000-000000000145",
         "conflict_status": "conflicted",
         "conflicts_with": [
           {
             "decision": "deny",
             "instruction_key": "usage_guidance:spec.usage.prohibitedUses:prohibited",
-            "policy_version_id": "accef000-0000-4000-8000-000000000133"
+            "policy_version_id": "accef000-0000-4000-8000-000000000144"
           }
         ],
         "decision": "require_review",
-        "decision_id": "accef000-0000-4000-8000-000000000136",
+        "decision_id": "accef000-0000-4000-8000-000000000147",
         "decision_reason": "Permitted uses require a declared purpose; this call stated none (policy Prospect outreach enablement).",
         "effective_from": null,
         "effective_until": null,
@@ -209,9 +209,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000137",
+          "policy_id": "accef000-0000-4000-8000-000000000148",
           "policy_name": "Prospect outreach enablement",
-          "policy_version_id": "accef000-0000-4000-8000-000000000135",
+          "policy_version_id": "accef000-0000-4000-8000-000000000146",
           "version_number": 1
         },
         "resolution_paths": [
@@ -245,7 +245,8 @@
     "satisfied_exceptions": [],
     "scenario_key": "purpose.allowed_use",
     "scenario_lane": "human",
-    "state": "review_required"
+    "state": "review_required",
+    "validity_evaluated_at": "2026-08-20T21:47:45.701Z"
   },
   "arguments": {
     "asset": {

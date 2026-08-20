@@ -1,0 +1,43 @@
+# Customer 360 estate spec — Government pack: the successor statute.
+# Effective from 2027-01-01; also the ONLY coverage of qualifying_conditions,
+# which therefore answers not_currently_effective until the boundary — the
+# "published but not in force" teaching case. Cross-family with the 2025
+# statute by design, so the two versions share a lane without conflicting.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: benefits-statute-2026
+  version: 1.0.0
+  description: >-
+    From 2027-01-01, determinations must apply the modernized categorical
+    checklist before any income test; qualifying-condition records are
+    governed by this statute alone.
+  tags: [government, pii]
+  businessContext:
+    domain: Benefits Program
+    owner: Program Administration
+    steward: program-policy@example.com
+    purpose: The determination rule set effective on 2027-01-01.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [benefits]
+    schemas: [public]
+    tables: [applicants, qualifying_conditions]
+  classification:
+    sensitivity: restricted
+    category: pii
+  aiGovernance:
+    restrictions:
+      - >-
+        Statute 2026 §4: determinations on or after 2027-01-01 must apply
+        the modernized categorical checklist before any income test.
+  validity:
+    effectiveFrom: "2027-01-01T00:00:00Z"
+extensions:
+  displayName: Benefits statute 2026
+  scenarioMap:
+    "ai_governance:spec.aiGovernance:restrictions":
+      scenarioKey: compliance.regulatory
+      source: user_confirmed

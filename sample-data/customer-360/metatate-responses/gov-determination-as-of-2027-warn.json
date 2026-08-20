@@ -1,0 +1,98 @@
+{
+  "answer": {
+    "advisory": true,
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": {
+      "as_of": "2027-02-01T00:00:00Z"
+    },
+    "evaluated_purpose": {
+      "purpose_category": "benefits",
+      "purpose_key": "benefits.determination",
+      "registry_version": 3
+    },
+    "findings": [
+      {
+        "conflict": null,
+        "decision": "conditional",
+        "decision_reason": "benefits-statute-2026 v1 ai_governance:spec.aiGovernance:restrictions \u2192 conditional on benefits.public.applicants",
+        "finding_id": "accef000-0000-4000-8000-000000000305",
+        "instructions": [
+          {
+            "category": "advisory",
+            "conflict_group_id": null,
+            "conflict_status": "none",
+            "conflicts_with": [],
+            "decision": "conditional",
+            "decision_id": "accef000-0000-4000-8000-000000000283",
+            "decision_reason": "benefits-statute-2026 v1 ai_governance:spec.aiGovernance:restrictions \u2192 conditional on benefits.public.applicants",
+            "effective_from": "2027-01-01T00:00:00+00:00",
+            "effective_until": null,
+            "enforcement_mode": "enforce",
+            "instruction_family": "ai_governance",
+            "instruction_key": "ai_governance:spec.aiGovernance:restrictions",
+            "parameters": {
+              "allowInference": null,
+              "allowTraining": null,
+              "requiresAnonymization": null,
+              "restrictions": [
+                "Statute 2026 \u00a74: determinations on or after 2027-01-01 must apply the modernized categorical checklist before any income test."
+              ]
+            },
+            "primary_resolution_source": "selector",
+            "priority": 2,
+            "provenance": {
+              "policy_id": "accef000-0000-4000-8000-000000000284",
+              "policy_name": "Benefits statute 2026",
+              "policy_version_id": "accef000-0000-4000-8000-000000000285",
+              "version_number": 1
+            },
+            "resolution_paths": [
+              {
+                "ref": null,
+                "source": "selector"
+              }
+            ],
+            "scenario_key": "compliance.regulatory",
+            "scenario_lane": "human",
+            "scope": {
+              "column": null,
+              "database": "benefits",
+              "schema": "public",
+              "table": "applicants"
+            },
+            "weight": 1
+          }
+        ],
+        "reason_code": null,
+        "ref": {
+          "column": null,
+          "database": "benefits",
+          "schema": "public",
+          "table": "applicants"
+        },
+        "status": "evaluated"
+      }
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "state": "answered",
+    "validation_id": "accef000-0000-4000-8000-000000000304",
+    "validity_evaluated_at": "2027-02-01T00:00:00Z",
+    "verdict": "warn"
+  },
+  "arguments": {
+    "data_access_context": {
+      "as_of": "2027-02-01T00:00:00Z"
+    },
+    "default_database": "master",
+    "default_schema": "public",
+    "purpose_key": "benefits.determination",
+    "scenario_key": "compliance.regulatory",
+    "sql": "SELECT applicant_id, categorical_flag FROM benefits.public.applicants"
+  },
+  "case_id": "gov-determination-as-of-2027-warn",
+  "tool": "validate_query_context"
+}

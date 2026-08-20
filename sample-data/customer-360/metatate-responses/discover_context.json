@@ -2,6 +2,79 @@
   "answer": {
     "assets": [
       {
+        "instruction_count": 18,
+        "ref": {
+          "column": null,
+          "database": "benefits",
+          "schema": "public",
+          "table": "applicants"
+        },
+        "scenario_keys": [
+          "ai.automated_decisioning",
+          "classification.sensitivity",
+          "compliance.regulatory",
+          "metadata.domain",
+          "purpose.allowed_use"
+        ]
+      },
+      {
+        "instruction_count": 3,
+        "ref": {
+          "column": null,
+          "database": "benefits",
+          "schema": "public",
+          "table": "qualifying_conditions"
+        },
+        "scenario_keys": [
+          "classification.sensitivity",
+          "compliance.regulatory",
+          "metadata.domain"
+        ]
+      },
+      {
+        "instruction_count": 16,
+        "ref": {
+          "column": null,
+          "database": "care",
+          "schema": "public",
+          "table": "member_records"
+        },
+        "scenario_keys": [
+          "access.read",
+          "ai.training",
+          "classification.sensitivity",
+          "consent.required",
+          "metadata.domain",
+          "protection.anonymization",
+          "purpose.allowed_use",
+          "purpose.prohibited_use"
+        ]
+      },
+      {
+        "instruction_count": 1,
+        "ref": {
+          "column": "clinical_notes",
+          "database": "care",
+          "schema": "public",
+          "table": "member_records"
+        },
+        "scenario_keys": [
+          "masking.display"
+        ]
+      },
+      {
+        "instruction_count": 1,
+        "ref": {
+          "column": "diagnosis_code",
+          "database": "care",
+          "schema": "public",
+          "table": "member_records"
+        },
+        "scenario_keys": [
+          "masking.display"
+        ]
+      },
+      {
         "instruction_count": 4,
         "ref": {
           "column": null,
@@ -17,6 +90,49 @@
         ]
       },
       {
+        "instruction_count": 3,
+        "ref": {
+          "column": null,
+          "database": "master",
+          "schema": "finance",
+          "table": "network_settlements"
+        },
+        "scenario_keys": [
+          "classification.sensitivity",
+          "metadata.domain",
+          "purpose.allowed_use"
+        ]
+      },
+      {
+        "instruction_count": 4,
+        "ref": {
+          "column": null,
+          "database": "master",
+          "schema": "finance",
+          "table": "payment_transactions"
+        },
+        "scenario_keys": [
+          "classification.sensitivity",
+          "metadata.domain",
+          "purpose.allowed_use",
+          "quality.reliability"
+        ]
+      },
+      {
+        "instruction_count": 3,
+        "ref": {
+          "column": null,
+          "database": "master",
+          "schema": "finance",
+          "table": "processor_settlements"
+        },
+        "scenario_keys": [
+          "classification.sensitivity",
+          "metadata.domain",
+          "purpose.allowed_use"
+        ]
+      },
+      {
         "instruction_count": 4,
         "ref": {
           "column": null,
@@ -29,6 +145,20 @@
           "metadata.domain",
           "purpose.allowed_use",
           "sharing.public"
+        ]
+      },
+      {
+        "instruction_count": 3,
+        "ref": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "ad_audience_exports"
+        },
+        "scenario_keys": [
+          "classification.sensitivity",
+          "metadata.domain",
+          "residency.cross_border_transfer"
         ]
       },
       {
@@ -59,7 +189,7 @@
         ]
       },
       {
-        "instruction_count": 20,
+        "instruction_count": 27,
         "ref": {
           "column": null,
           "database": "master",
@@ -72,6 +202,7 @@
           "ai.training",
           "classification.sensitivity",
           "classification.taxonomy",
+          "consent.required",
           "metadata.domain",
           "metadata.lineage",
           "protection.anonymization",

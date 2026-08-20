@@ -12,7 +12,7 @@
       "conflict_status": "none",
       "conflicts_with": [],
       "decision": "allow",
-      "decision_id": "accef000-0000-4000-8000-000000000070",
+      "decision_id": "accef000-0000-4000-8000-000000000081",
       "decision_reason": "ml-feature-ai-lifecycle v1 ai_governance:spec.aiGovernance:training \u2192 allow on product.public.ml_feature_store",
       "effective_from": null,
       "effective_until": null,
@@ -28,9 +28,9 @@
       "primary_resolution_source": "selector",
       "priority": 2,
       "provenance": {
-        "policy_id": "accef000-0000-4000-8000-000000000071",
+        "policy_id": "accef000-0000-4000-8000-000000000082",
         "policy_name": "ML feature AI lifecycle",
-        "policy_version_id": "accef000-0000-4000-8000-000000000072",
+        "policy_version_id": "accef000-0000-4000-8000-000000000083",
         "version_number": 1
       },
       "resolution_paths": [
@@ -52,7 +52,7 @@
     "state": "answered"
   },
   "arguments": {
-    "decision_id": "accef000-0000-4000-8000-000000000070",
+    "decision_id": "accef000-0000-4000-8000-000000000081",
     "kind": "decision"
   },
   "case_id": "explain_ml_training_decision",

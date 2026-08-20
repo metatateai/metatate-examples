@@ -7,14 +7,14 @@
     "evaluated_purpose": {
       "purpose_category": "commercial",
       "purpose_key": "commercial.general",
-      "registry_version": 2
+      "registry_version": 3
     },
     "findings": [
       {
         "conflict": null,
         "decision": "allow",
         "decision_reason": "The query proves a rolling 30-day created_at window within the permitted 30 days.",
-        "finding_id": "accef000-0000-4000-8000-000000000187",
+        "finding_id": "accef000-0000-4000-8000-000000000198",
         "instructions": [
           {
             "category": "enforceable",
@@ -22,7 +22,7 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "allow",
-            "decision_id": "accef000-0000-4000-8000-000000000010",
+            "decision_id": "accef000-0000-4000-8000-000000000016",
             "decision_reason": "The query proves a rolling 30-day created_at window within the permitted 30 days.",
             "effective_from": null,
             "effective_until": null,
@@ -63,9 +63,9 @@
             "primary_resolution_source": "selector",
             "priority": 2,
             "provenance": {
-              "policy_id": "accef000-0000-4000-8000-000000000011",
+              "policy_id": "accef000-0000-4000-8000-000000000017",
               "policy_name": "Master data agent access windows",
-              "policy_version_id": "accef000-0000-4000-8000-000000000012",
+              "policy_version_id": "accef000-0000-4000-8000-000000000018",
               "version_number": 1
             },
             "resolution_paths": [
@@ -100,7 +100,8 @@
       "published_at": "2026-07-16T00:00:00.000Z"
     },
     "state": "answered",
-    "validation_id": "accef000-0000-4000-8000-000000000186",
+    "validation_id": "accef000-0000-4000-8000-000000000197",
+    "validity_evaluated_at": "2026-07-30T00:00:00.000Z",
     "verdict": "pass"
   },
   "arguments": {

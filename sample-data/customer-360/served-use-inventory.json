@@ -9,8 +9,9 @@
       "classification": "normalized_key",
       "derived_measurement": {
         "_note": "measurement of the current pack, not a contract",
-        "resolves_in_case_count": 3,
+        "resolves_in_case_count": 4,
         "resolves_in_cases": [
+          "adtech-personalization-prohibited-deny",
           "marketing-customers-deny",
           "marketing-detail-fail",
           "same-sql-marketing-intent-fail"
@@ -38,6 +39,7 @@
       "resolved_category": null,
       "resolved_key": "marketing.advertising",
       "served_in_cases": [
+        "adtech-personalization-prohibited-deny",
         "marketing-customers-deny",
         "marketing-detail-fail",
         "same-sql-marketing-intent-fail"
@@ -149,8 +151,11 @@
       "classification": "registry_category",
       "derived_measurement": {
         "_note": "measurement of the current pack, not a contract",
-        "resolves_in_case_count": 9,
+        "resolves_in_case_count": 12,
         "resolves_in_cases": [
+          "adtech-consent-sql-analytics-pass",
+          "adtech-consent-sql-personalization-warn",
+          "adtech-personalization-allowed-use-review",
           "analytics-customers-allow",
           "analytics-customers-purpose-missing-review",
           "cte-subscriptions-aggregate-pass",
@@ -184,6 +189,9 @@
       "resolved_category": "analytics",
       "resolved_key": null,
       "served_in_cases": [
+        "adtech-consent-sql-analytics-pass",
+        "adtech-consent-sql-personalization-warn",
+        "adtech-personalization-allowed-use-review",
         "analytics-customers-allow",
         "analytics-customers-purpose-missing-review",
         "cte-subscriptions-aggregate-pass",
@@ -199,9 +207,21 @@
       "classification": "registry_key",
       "derived_measurement": {
         "_note": "measurement of the current pack, not a contract",
-        "resolves_in_case_count": 1,
+        "resolves_in_case_count": 13,
         "resolves_in_cases": [
-          "customer-360-internal-sharing-allow"
+          "adtech-consent-sql-analytics-pass",
+          "adtech-consent-sql-personalization-warn",
+          "adtech-personalization-allowed-use-review",
+          "analytics-customers-allow",
+          "analytics-customers-purpose-missing-review",
+          "customer-360-internal-sharing-allow",
+          "email-detail-warn",
+          "join-customers-subscriptions-pass",
+          "join-legacy-ungoverned-warn",
+          "pay-fraud-network-allow",
+          "pay-fraud-right-source-pass",
+          "safe-aggregate-pass",
+          "same-sql-analytics-intent-pass"
         ]
       },
       "disposition": {
@@ -226,17 +246,144 @@
       "resolved_category": null,
       "resolved_key": null,
       "served_in_cases": [
-        "customer-360-internal-sharing-allow"
+        "adtech-consent-sql-analytics-pass",
+        "adtech-consent-sql-personalization-warn",
+        "adtech-personalization-allowed-use-review",
+        "analytics-customers-allow",
+        "analytics-customers-purpose-missing-review",
+        "customer-360-internal-sharing-allow",
+        "email-detail-warn",
+        "join-customers-subscriptions-pass",
+        "join-legacy-ungoverned-warn",
+        "pay-fraud-network-allow",
+        "pay-fraud-right-source-pass",
+        "safe-aggregate-pass",
+        "same-sql-analytics-intent-pass"
       ]
     },
     {
       "classification": "registry_key",
       "derived_measurement": {
         "_note": "measurement of the current pack, not a contract",
-        "resolves_in_case_count": 2,
+        "resolves_in_case_count": 3,
+        "resolves_in_cases": [
+          "gov-categorical-precedence-conditional",
+          "gov-determination-2025-pass",
+          "gov-determination-statute-2025-allow"
+        ]
+      },
+      "disposition": {
+        "classification": "registry_key",
+        "contains_dot": true,
+        "derived_family_token": false,
+        "has_explicit_disposition": false,
+        "in_canonical_pack": true,
+        "list_kinds": [
+          "permitted"
+        ],
+        "matches": null,
+        "resolved_category": null,
+        "resolved_key": null
+      },
+      "entry": "benefits.determination",
+      "has_disposition": false,
+      "list_kinds": [
+        "permitted"
+      ],
+      "matches": null,
+      "resolved_category": null,
+      "resolved_key": null,
+      "served_in_cases": [
+        "gov-categorical-precedence-conditional",
+        "gov-determination-2025-pass",
+        "gov-determination-statute-2025-allow"
+      ]
+    },
+    {
+      "classification": "registry_key",
+      "derived_measurement": {
+        "_note": "measurement of the current pack, not a contract",
+        "resolves_in_case_count": 3,
+        "resolves_in_cases": [
+          "care-eligibility-allow",
+          "care-notes-sql-clinical-pass",
+          "care-notes-sql-member-services-warn"
+        ]
+      },
+      "disposition": {
+        "classification": "registry_key",
+        "contains_dot": true,
+        "derived_family_token": false,
+        "has_explicit_disposition": false,
+        "in_canonical_pack": true,
+        "list_kinds": [
+          "permitted"
+        ],
+        "matches": null,
+        "resolved_category": null,
+        "resolved_key": null
+      },
+      "entry": "care.eligibility",
+      "has_disposition": false,
+      "list_kinds": [
+        "permitted"
+      ],
+      "matches": null,
+      "resolved_category": null,
+      "resolved_key": null,
+      "served_in_cases": [
+        "care-eligibility-allow",
+        "care-notes-sql-clinical-pass",
+        "care-notes-sql-member-services-warn"
+      ]
+    },
+    {
+      "classification": "registry_key",
+      "derived_measurement": {
+        "_note": "measurement of the current pack, not a contract",
+        "resolves_in_case_count": 3,
+        "resolves_in_cases": [
+          "care-eligibility-allow",
+          "care-notes-sql-clinical-pass",
+          "care-notes-sql-member-services-warn"
+        ]
+      },
+      "disposition": {
+        "classification": "registry_key",
+        "contains_dot": true,
+        "derived_family_token": false,
+        "has_explicit_disposition": false,
+        "in_canonical_pack": true,
+        "list_kinds": [
+          "permitted"
+        ],
+        "matches": null,
+        "resolved_category": null,
+        "resolved_key": null
+      },
+      "entry": "care.treatment",
+      "has_disposition": false,
+      "list_kinds": [
+        "permitted"
+      ],
+      "matches": null,
+      "resolved_category": null,
+      "resolved_key": null,
+      "served_in_cases": [
+        "care-eligibility-allow",
+        "care-notes-sql-clinical-pass",
+        "care-notes-sql-member-services-warn"
+      ]
+    },
+    {
+      "classification": "registry_key",
+      "derived_measurement": {
+        "_note": "measurement of the current pack, not a contract",
+        "resolves_in_case_count": 3,
         "resolves_in_cases": [
           "finance-cross-schema-join-pass",
-          "finance-invoices-allowed-use"
+          "finance-invoices-allowed-use",
+          "pay-audit-processor-allow"
         ]
       },
       "disposition": {
@@ -262,7 +409,8 @@
       "resolved_key": null,
       "served_in_cases": [
         "finance-cross-schema-join-pass",
-        "finance-invoices-allowed-use"
+        "finance-invoices-allowed-use",
+        "pay-audit-processor-allow"
       ]
     },
     {
@@ -336,11 +484,48 @@
       ]
     },
     {
+      "classification": "registry_key",
+      "derived_measurement": {
+        "_note": "measurement of the current pack, not a contract",
+        "resolves_in_case_count": 2,
+        "resolves_in_cases": [
+          "pay-fraud-network-allow",
+          "pay-fraud-right-source-pass"
+        ]
+      },
+      "disposition": {
+        "classification": "registry_key",
+        "contains_dot": true,
+        "derived_family_token": false,
+        "has_explicit_disposition": false,
+        "in_canonical_pack": true,
+        "list_kinds": [
+          "permitted"
+        ],
+        "matches": null,
+        "resolved_category": null,
+        "resolved_key": null
+      },
+      "entry": "fraud.detection",
+      "has_disposition": false,
+      "list_kinds": [
+        "permitted"
+      ],
+      "matches": null,
+      "resolved_category": null,
+      "resolved_key": null,
+      "served_in_cases": [
+        "pay-fraud-network-allow",
+        "pay-fraud-right-source-pass"
+      ]
+    },
+    {
       "classification": "registry_category",
       "derived_measurement": {
         "_note": "measurement of the current pack, not a contract",
-        "resolves_in_case_count": 3,
+        "resolves_in_case_count": 4,
         "resolves_in_cases": [
+          "adtech-personalization-prohibited-deny",
           "marketing-customers-deny",
           "marketing-detail-fail",
           "same-sql-marketing-intent-fail"
@@ -349,7 +534,7 @@
       "disposition": {
         "classification": "registry_category",
         "contains_dot": false,
-        "derived_family_token": false,
+        "derived_family_token": true,
         "has_explicit_disposition": true,
         "in_canonical_pack": true,
         "list_kinds": [
@@ -368,6 +553,83 @@
       "resolved_category": "marketing",
       "resolved_key": null,
       "served_in_cases": [
+        "adtech-personalization-prohibited-deny",
+        "marketing-customers-deny",
+        "marketing-detail-fail",
+        "same-sql-marketing-intent-fail"
+      ]
+    },
+    {
+      "classification": "registry_key",
+      "derived_measurement": {
+        "_note": "measurement of the current pack, not a contract",
+        "resolves_in_case_count": 1,
+        "resolves_in_cases": [
+          "care-marketing-outreach-deny"
+        ]
+      },
+      "disposition": {
+        "classification": "registry_key",
+        "contains_dot": true,
+        "derived_family_token": false,
+        "has_explicit_disposition": false,
+        "in_canonical_pack": true,
+        "list_kinds": [
+          "prohibited"
+        ],
+        "matches": null,
+        "resolved_category": null,
+        "resolved_key": null
+      },
+      "entry": "marketing.advertising",
+      "has_disposition": false,
+      "list_kinds": [
+        "prohibited"
+      ],
+      "matches": null,
+      "resolved_category": null,
+      "resolved_key": null,
+      "served_in_cases": [
+        "care-marketing-outreach-deny"
+      ]
+    },
+    {
+      "classification": "registry_key",
+      "derived_measurement": {
+        "_note": "measurement of the current pack, not a contract",
+        "resolves_in_case_count": 5,
+        "resolves_in_cases": [
+          "adtech-personalization-prohibited-deny",
+          "care-marketing-outreach-deny",
+          "marketing-customers-deny",
+          "marketing-detail-fail",
+          "same-sql-marketing-intent-fail"
+        ]
+      },
+      "disposition": {
+        "classification": "registry_key",
+        "contains_dot": true,
+        "derived_family_token": false,
+        "has_explicit_disposition": false,
+        "in_canonical_pack": true,
+        "list_kinds": [
+          "prohibited"
+        ],
+        "matches": null,
+        "resolved_category": null,
+        "resolved_key": null
+      },
+      "entry": "marketing.personalization",
+      "has_disposition": false,
+      "list_kinds": [
+        "prohibited"
+      ],
+      "matches": null,
+      "resolved_category": null,
+      "resolved_key": null,
+      "served_in_cases": [
+        "adtech-personalization-prohibited-deny",
+        "care-marketing-outreach-deny",
         "marketing-customers-deny",
         "marketing-detail-fail",
         "same-sql-marketing-intent-fail"
@@ -377,8 +639,9 @@
       "classification": "unmapped_untouched",
       "derived_measurement": {
         "_note": "measurement of the current pack, not a contract",
-        "resolves_in_case_count": 3,
+        "resolves_in_case_count": 4,
         "resolves_in_cases": [
+          "adtech-personalization-prohibited-deny",
           "marketing-customers-deny",
           "marketing-detail-fail",
           "same-sql-marketing-intent-fail"
@@ -406,17 +669,59 @@
       "resolved_category": null,
       "resolved_key": null,
       "served_in_cases": [
+        "adtech-personalization-prohibited-deny",
         "marketing-customers-deny",
         "marketing-detail-fail",
         "same-sql-marketing-intent-fail"
       ]
     },
     {
+      "classification": "registry_key",
+      "derived_measurement": {
+        "_note": "measurement of the current pack, not a contract",
+        "resolves_in_case_count": 4,
+        "resolves_in_cases": [
+          "pay-audit-processor-allow",
+          "pay-fraud-transactions-review",
+          "pay-fraud-wrong-source-warn",
+          "pay-ops-transactions-allow"
+        ]
+      },
+      "disposition": {
+        "classification": "registry_key",
+        "contains_dot": true,
+        "derived_family_token": false,
+        "has_explicit_disposition": false,
+        "in_canonical_pack": true,
+        "list_kinds": [
+          "permitted"
+        ],
+        "matches": null,
+        "resolved_category": null,
+        "resolved_key": null
+      },
+      "entry": "operations.support",
+      "has_disposition": false,
+      "list_kinds": [
+        "permitted"
+      ],
+      "matches": null,
+      "resolved_category": null,
+      "resolved_key": null,
+      "served_in_cases": [
+        "pay-audit-processor-allow",
+        "pay-fraud-transactions-review",
+        "pay-fraud-wrong-source-warn",
+        "pay-ops-transactions-allow"
+      ]
+    },
+    {
       "classification": "normalized_key",
       "derived_measurement": {
         "_note": "measurement of the current pack, not a contract",
-        "resolves_in_case_count": 3,
+        "resolves_in_case_count": 4,
         "resolves_in_cases": [
+          "adtech-personalization-prohibited-deny",
           "marketing-customers-deny",
           "marketing-detail-fail",
           "same-sql-marketing-intent-fail"
@@ -444,6 +749,7 @@
       "resolved_category": null,
       "resolved_key": "marketing.personalization",
       "served_in_cases": [
+        "adtech-personalization-prohibited-deny",
         "marketing-customers-deny",
         "marketing-detail-fail",
         "same-sql-marketing-intent-fail"
@@ -559,8 +865,11 @@
       "classification": "unmapped_untouched",
       "derived_measurement": {
         "_note": "measurement of the current pack, not a contract",
-        "resolves_in_case_count": 10,
+        "resolves_in_case_count": 13,
         "resolves_in_cases": [
+          "adtech-consent-sql-analytics-pass",
+          "adtech-consent-sql-personalization-warn",
+          "adtech-personalization-allowed-use-review",
           "analytics-customers-allow",
           "analytics-customers-purpose-missing-review",
           "cte-subscriptions-aggregate-pass",
@@ -595,6 +904,9 @@
       "resolved_category": null,
       "resolved_key": null,
       "served_in_cases": [
+        "adtech-consent-sql-analytics-pass",
+        "adtech-consent-sql-personalization-warn",
+        "adtech-personalization-allowed-use-review",
         "analytics-customers-allow",
         "analytics-customers-purpose-missing-review",
         "cte-subscriptions-aggregate-pass",
@@ -642,11 +954,54 @@
       ]
     },
     {
+      "classification": "registry_key",
+      "derived_measurement": {
+        "_note": "measurement of the current pack, not a contract",
+        "resolves_in_case_count": 4,
+        "resolves_in_cases": [
+          "adtech-personalization-prohibited-deny",
+          "marketing-customers-deny",
+          "marketing-detail-fail",
+          "same-sql-marketing-intent-fail"
+        ]
+      },
+      "disposition": {
+        "classification": "registry_key",
+        "contains_dot": true,
+        "derived_family_token": false,
+        "has_explicit_disposition": false,
+        "in_canonical_pack": true,
+        "list_kinds": [
+          "prohibited"
+        ],
+        "matches": null,
+        "resolved_category": null,
+        "resolved_key": null
+      },
+      "entry": "sharing.third_party",
+      "has_disposition": false,
+      "list_kinds": [
+        "prohibited"
+      ],
+      "matches": null,
+      "resolved_category": null,
+      "resolved_key": null,
+      "served_in_cases": [
+        "adtech-personalization-prohibited-deny",
+        "marketing-customers-deny",
+        "marketing-detail-fail",
+        "same-sql-marketing-intent-fail"
+      ]
+    },
+    {
       "classification": "unmapped_untouched",
       "derived_measurement": {
         "_note": "measurement of the current pack, not a contract",
-        "resolves_in_case_count": 8,
+        "resolves_in_case_count": 11,
         "resolves_in_cases": [
+          "adtech-consent-sql-analytics-pass",
+          "adtech-consent-sql-personalization-warn",
+          "adtech-personalization-allowed-use-review",
           "analytics-customers-allow",
           "analytics-customers-purpose-missing-review",
           "email-detail-warn",
@@ -679,6 +1034,9 @@
       "resolved_category": null,
       "resolved_key": null,
       "served_in_cases": [
+        "adtech-consent-sql-analytics-pass",
+        "adtech-consent-sql-personalization-warn",
+        "adtech-personalization-allowed-use-review",
         "analytics-customers-allow",
         "analytics-customers-purpose-missing-review",
         "email-detail-warn",
@@ -688,9 +1046,100 @@
         "same-sql-analytics-intent-pass",
         "support-tickets-unmapped-policy-use-review"
       ]
+    },
+    {
+      "classification": "deliberate_conflict",
+      "derived_measurement": {
+        "_note": "measurement of the current pack, not a contract",
+        "resolves_in_case_count": 1,
+        "resolves_in_cases": [
+          "gov-conflict-verification-review"
+        ]
+      },
+      "disposition": {
+        "classification": "deliberate_conflict",
+        "contains_dot": false,
+        "derived_family_token": false,
+        "has_explicit_disposition": true,
+        "in_canonical_pack": true,
+        "list_kinds": [
+          "permitted",
+          "prohibited"
+        ],
+        "matches": null,
+        "resolved_category": null,
+        "resolved_key": null
+      },
+      "entry": "verification_outreach",
+      "has_disposition": true,
+      "list_kinds": [
+        "permitted",
+        "prohibited"
+      ],
+      "matches": null,
+      "resolved_category": null,
+      "resolved_key": null,
+      "served_in_cases": [
+        "gov-conflict-verification-review"
+      ]
     }
   ],
   "occurrences": [
+    {
+      "entry": "analytics.reporting",
+      "list_kind": "permitted",
+      "policy": "adtech-audience-use-guardrails"
+    },
+    {
+      "entry": "marketing.personalization",
+      "list_kind": "prohibited",
+      "policy": "adtech-audience-use-guardrails"
+    },
+    {
+      "entry": "sharing.third_party",
+      "list_kind": "prohibited",
+      "policy": "adtech-audience-use-guardrails"
+    },
+    {
+      "entry": "benefits.determination",
+      "list_kind": "permitted",
+      "policy": "benefits-categorical-eligibility"
+    },
+    {
+      "entry": "benefits.determination",
+      "list_kind": "permitted",
+      "policy": "benefits-statute-2025"
+    },
+    {
+      "entry": "verification_outreach",
+      "list_kind": "prohibited",
+      "policy": "benefits-verification-block"
+    },
+    {
+      "entry": "verification_outreach",
+      "list_kind": "permitted",
+      "policy": "benefits-verification-permit"
+    },
+    {
+      "entry": "care.treatment",
+      "list_kind": "permitted",
+      "policy": "care-use-guardrails"
+    },
+    {
+      "entry": "care.eligibility",
+      "list_kind": "permitted",
+      "policy": "care-use-guardrails"
+    },
+    {
+      "entry": "marketing.advertising",
+      "list_kind": "prohibited",
+      "policy": "care-use-guardrails"
+    },
+    {
+      "entry": "marketing.personalization",
+      "list_kind": "prohibited",
+      "policy": "care-use-guardrails"
+    },
     {
       "entry": "analytics.reporting",
       "list_kind": "permitted",
@@ -777,6 +1226,31 @@
       "policy": "ml-feature-ai-lifecycle"
     },
     {
+      "entry": "fraud.detection",
+      "list_kind": "permitted",
+      "policy": "payments-network-authority"
+    },
+    {
+      "entry": "analytics.reporting",
+      "list_kind": "permitted",
+      "policy": "payments-network-authority"
+    },
+    {
+      "entry": "compliance.audit",
+      "list_kind": "permitted",
+      "policy": "payments-processor-reconciliation"
+    },
+    {
+      "entry": "operations.support",
+      "list_kind": "permitted",
+      "policy": "payments-processor-reconciliation"
+    },
+    {
+      "entry": "operations.support",
+      "list_kind": "permitted",
+      "policy": "payments-transaction-operations"
+    },
+    {
       "entry": "prospect_outreach",
       "list_kind": "prohibited",
       "policy": "prospect-outreach-block"
@@ -803,8 +1277,8 @@
     }
   ],
   "totals": {
-    "distinct_entries": 18,
-    "distinct_entry_listkind_pairs": 19,
-    "occurrences": 22
+    "distinct_entries": 27,
+    "distinct_entry_listkind_pairs": 29,
+    "occurrences": 38
   }
 }

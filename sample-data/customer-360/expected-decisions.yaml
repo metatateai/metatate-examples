@@ -203,6 +203,218 @@ authorize:
     bound_role: agent
     expect: { state: review_required, reason_code: access_window_context_required }
 
+  # ---- vertical pack: adtech — consent as three permissions in one field ----
+  - id: adtech-personalization-allowed-use-review
+    asset: { table: customers }
+    scenario_key: purpose.allowed_use
+    purpose_key: marketing.personalization
+    expect: { state: review_required, reason_code: decision_requires_review }
+  - id: adtech-personalization-prohibited-deny
+    asset: { table: customers }
+    scenario_key: purpose.prohibited_use
+    purpose_key: marketing.personalization
+    expect: { state: answered, decision: deny }
+  - id: adtech-consent-measurement-conditional
+    asset: { table: customers }
+    scenario_key: consent.required
+    purpose_key: analytics.reporting
+    expect:
+      state: answered
+      decision: conditional
+      conditions_include: [consent_required]
+  - id: adtech-consent-personalization-conditional
+    asset: { table: customers }
+    scenario_key: consent.required
+    purpose_key: marketing.personalization
+    expect:
+      state: answered
+      decision: conditional
+      conditions_include: [consent_required]
+  - id: adtech-consent-activation-conditional
+    asset: { table: customers }
+    scenario_key: consent.required
+    purpose_key: sharing.third_party
+    expect:
+      state: answered
+      decision: conditional
+      conditions_include: [consent_required]
+  - id: adtech-consent-purpose-missing-review
+    asset: { table: customers }
+    scenario_key: consent.required
+    expect: { state: review_required, reason_code: consent_context_required }
+  - id: adtech-export-approved-dsp-conditional
+    asset: { table: ad_audience_exports }
+    scenario_key: residency.cross_border_transfer
+    operation: export
+    destination: { system: APPROVED_DSP_A }
+    expect:
+      state: answered
+      decision: conditional
+      conditions_include: [approval_required]
+  - id: adtech-export-unlisted-dsp-deny
+    asset: { table: ad_audience_exports }
+    scenario_key: residency.cross_border_transfer
+    operation: export
+    destination: { system: UNLISTED_DSP }
+    expect: { state: answered, decision: deny }
+
+  # ---- vertical pack: payments — local data isn't the source of truth -------
+  - id: pay-fraud-network-allow
+    asset: { database: master, schema: finance, table: network_settlements }
+    scenario_key: purpose.allowed_use
+    purpose_key: fraud.detection
+    expect: { state: answered, decision: allow }
+  - id: pay-fraud-transactions-review
+    asset: { database: master, schema: finance, table: payment_transactions }
+    scenario_key: purpose.allowed_use
+    purpose_key: fraud.detection
+    expect: { state: review_required, reason_code: decision_requires_review }
+  - id: pay-ops-transactions-allow
+    asset: { database: master, schema: finance, table: payment_transactions }
+    scenario_key: purpose.allowed_use
+    purpose_key: operations.support
+    expect: { state: answered, decision: allow }
+  - id: pay-audit-processor-allow
+    asset: { database: master, schema: finance, table: processor_settlements }
+    scenario_key: purpose.allowed_use
+    purpose_key: compliance.audit
+    expect: { state: answered, decision: allow }
+  - id: pay-analytics-reconciled-conditional
+    asset: { database: master, schema: finance, table: payment_transactions }
+    scenario_key: quality.reliability
+    purpose_key: analytics.reporting
+    expect:
+      state: answered
+      decision: conditional
+      conditions_include: [ai_restriction]
+
+  # ---- vertical pack: healthcare — one person as four concepts --------------
+  - id: care-clinical-read-allow
+    asset: { database: care, table: member_records }
+    scenario_key: access.read
+    bound_role: clinical
+    expect: { state: answered, decision: allow }
+  - id: care-member-services-read-review
+    asset: { database: care, table: member_records }
+    scenario_key: access.read
+    bound_role: member_services
+    expect: { state: review_required, reason_code: decision_requires_review }
+  - id: care-research-read-review
+    asset: { database: care, table: member_records }
+    scenario_key: access.read
+    bound_role: research
+    expect: { state: review_required, reason_code: decision_requires_review }
+  - id: care-marketing-read-review
+    asset: { database: care, table: member_records }
+    scenario_key: access.read
+    bound_role: marketing
+    expect: { state: review_required, reason_code: decision_requires_review }
+  - id: care-notes-clinical-allow
+    asset: { database: care, table: member_records, column: clinical_notes }
+    scenario_key: masking.display
+    bound_role: clinical
+    expect: { state: answered, decision: allow }
+  - id: care-notes-member-services-mask
+    asset: { database: care, table: member_records, column: clinical_notes }
+    scenario_key: masking.display
+    bound_role: member_services
+    expect:
+      state: answered
+      decision: mask_full
+      obligations_include: [mask]
+  - id: care-eligibility-allow
+    asset: { database: care, table: member_records }
+    scenario_key: purpose.allowed_use
+    purpose_key: care.eligibility
+    bound_role: member_services
+    expect: { state: answered, decision: allow }
+  - id: care-research-anonymize-conditional
+    asset: { database: care, table: member_records }
+    scenario_key: protection.anonymization
+    purpose_key: research.general
+    bound_role: research
+    expect:
+      state: answered
+      decision: conditional
+      conditions_include: [anonymize_first]
+  - id: care-training-deny
+    asset: { database: care, table: member_records }
+    scenario_key: ai.training
+    bound_role: research
+    expect: { state: answered, decision: deny }
+  - id: care-marketing-outreach-deny
+    asset: { database: care, table: member_records }
+    scenario_key: purpose.prohibited_use
+    purpose_key: marketing.advertising
+    bound_role: marketing
+    expect: { state: answered, decision: deny }
+  - id: care-consent-eligibility-conditional
+    asset: { database: care, table: member_records }
+    scenario_key: consent.required
+    purpose_key: care.eligibility
+    bound_role: member_services
+    expect:
+      state: answered
+      decision: conditional
+      conditions_include: [consent_required]
+  - id: care-consent-research-conditional
+    asset: { database: care, table: member_records }
+    scenario_key: consent.required
+    purpose_key: research.general
+    bound_role: research
+    expect:
+      state: answered
+      decision: conditional
+      conditions_include: [consent_required]
+  - id: care-consent-marketing-conditional
+    asset: { database: care, table: member_records }
+    scenario_key: consent.required
+    purpose_key: marketing.advertising
+    bound_role: marketing
+    expect:
+      state: answered
+      decision: conditional
+      conditions_include: [consent_required]
+  - id: care-consent-treatment-purpose-unruled-review
+    asset: { database: care, table: member_records }
+    scenario_key: consent.required
+    purpose_key: care.treatment
+    bound_role: clinical
+    expect: { state: review_required, reason_code: consent_context_required }
+
+  # ---- vertical pack: government — the rules live outside the record --------
+  - id: gov-determination-statute-2025-allow
+    asset: { database: benefits, table: applicants }
+    scenario_key: compliance.regulatory
+    purpose_key: benefits.determination
+    expect: { state: answered, decision: allow }
+  - id: gov-statute-as-of-2027-conditional
+    asset: { database: benefits, table: applicants }
+    scenario_key: compliance.regulatory
+    purpose_key: benefits.determination
+    data_access_context: { as_of: '2027-02-01T00:00:00Z' }
+    expect:
+      state: answered
+      decision: conditional
+      conditions_include: [ai_restriction]
+  - id: gov-qualifying-conditions-not-yet-effective
+    asset: { database: benefits, table: qualifying_conditions }
+    scenario_key: compliance.regulatory
+    purpose_key: benefits.determination
+    expect: { state: not_enough_published_state, reason_code: not_currently_effective }
+  - id: gov-categorical-precedence-conditional
+    asset: { database: benefits, table: applicants }
+    scenario_key: ai.automated_decisioning
+    purpose_key: benefits.determination
+    expect:
+      state: answered
+      decision: conditional
+      conditions_include: [ai_restriction]
+  - id: gov-conflict-verification-review
+    asset: { database: benefits, table: applicants }
+    scenario_key: purpose.allowed_use
+    expect: { state: review_required, reason_code: conflicted_published_state }
+
 validate:
   - id: safe-aggregate-pass
     sql: SELECT region, SUM(arr) FROM customers GROUP BY region
@@ -347,6 +559,78 @@ validate:
     bound_role: agent
     data_access_context: { as_of: '2026-08-01T00:00:00Z' }
     expect: { verdict: fail }
+
+  # ---- vertical pack: adtech — the purpose flips the verdict, not the SQL ---
+  - id: adtech-consent-sql-analytics-pass
+    sql: SELECT customer_id, consent_measurement, consent_personalization, consent_activation FROM customers
+    scenario_key: purpose.allowed_use
+    columns: [customer_id, consent_measurement, consent_personalization, consent_activation]
+    purpose_key: analytics.reporting
+    expect: { verdict: pass }
+  - id: adtech-consent-sql-personalization-warn
+    sql: SELECT customer_id, consent_measurement, consent_personalization, consent_activation FROM customers
+    scenario_key: purpose.allowed_use
+    columns: [customer_id, consent_measurement, consent_personalization, consent_activation]
+    purpose_key: marketing.personalization
+    expect: { verdict: warn, state: review_required }
+
+  # ---- vertical pack: payments — the wrong source gets caught ---------------
+  - id: pay-fraud-wrong-source-warn
+    sql: SELECT transaction_id, settlement_state FROM master.finance.payment_transactions WHERE settlement_state <> 'reconciled'
+    scenario_key: purpose.allowed_use
+    tables: [master.finance.payment_transactions]
+    columns: [transaction_id, settlement_state]
+    purpose_key: fraud.detection
+    expect: { verdict: warn, state: review_required }
+  - id: pay-fraud-right-source-pass
+    sql: SELECT transaction_id, settlement_state FROM master.finance.network_settlements
+    scenario_key: purpose.allowed_use
+    tables: [master.finance.network_settlements]
+    columns: [transaction_id, settlement_state]
+    purpose_key: fraud.detection
+    expect: { verdict: pass }
+  - id: pay-reconciled-quality-warn
+    sql: SELECT transaction_id, amount FROM master.finance.payment_transactions
+    scenario_key: quality.reliability
+    tables: [master.finance.payment_transactions]
+    columns: [transaction_id, amount]
+    purpose_key: analytics.reporting
+    expect: { verdict: warn }
+
+  # ---- vertical pack: healthcare — the role flips the verdict ---------------
+  - id: care-notes-sql-clinical-pass
+    sql: SELECT member_id, clinical_notes FROM care.public.member_records
+    scenario_key: purpose.allowed_use
+    tables: [care.public.member_records]
+    columns: [member_id, clinical_notes]
+    purpose_key: care.treatment
+    bound_role: clinical
+    expect: { verdict: pass }
+  - id: care-notes-sql-member-services-warn
+    sql: SELECT member_id, clinical_notes FROM care.public.member_records
+    scenario_key: purpose.allowed_use
+    tables: [care.public.member_records]
+    columns: [member_id, clinical_notes]
+    purpose_key: care.treatment
+    bound_role: member_services
+    expect: { verdict: warn }
+
+  # ---- vertical pack: government — the as-of instant flips the verdict ------
+  - id: gov-determination-2025-pass
+    sql: SELECT applicant_id, categorical_flag FROM benefits.public.applicants
+    scenario_key: compliance.regulatory
+    tables: [benefits.public.applicants]
+    columns: [applicant_id, categorical_flag]
+    purpose_key: benefits.determination
+    expect: { verdict: pass }
+  - id: gov-determination-as-of-2027-warn
+    sql: SELECT applicant_id, categorical_flag FROM benefits.public.applicants
+    scenario_key: compliance.regulatory
+    tables: [benefits.public.applicants]
+    columns: [applicant_id, categorical_flag]
+    purpose_key: benefits.determination
+    data_access_context: { as_of: '2027-02-01T00:00:00Z' }
+    expect: { verdict: warn }
 
 # ---------------------------------------------------------------------------
 # EXAMPLES-ONLY additions (not in the metatate-saas matrix).

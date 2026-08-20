@@ -91,17 +91,26 @@ def _call_through_client(client: Any, case: dict[str, Any]) -> dict[str, Any]:
 def section_router_exactness(client: OfflineMetatateClient) -> None:
     print("\nA. Router exactness")
 
-    bad = [c["id"] for c in CASES if (case_for(c["tool"], c["arguments"]) or {}).get("id") != c["id"]]
+    bad = [
+        c["id"] for c in CASES
+        if (case_for(c["tool"], c["arguments"], c.get("bound_role")) or {}).get("id") != c["id"]
+    ]
     check(not bad, f"all {len(CASES)} cases self-match exactly", f"mismatched: {bad}")
 
     # Every case must be REACHABLE through the typed client, not just via
     # call_tool. This is the assertion that would have caught the defect.
     unreachable = []
+    # Role-bound cases are reachable only through the client representing that
+    # role's credential — offline exactly as live.
+    role_clients: dict[Any, OfflineMetatateClient] = {None: client}
     for case in CASES:
         if case["tool"] not in TYPED_TOOLS:
             continue
+        role = case.get("bound_role")
+        if role not in role_clients:
+            role_clients[role] = OfflineMetatateClient(bound_role=str(role))
         try:
-            _call_through_client(client, case)
+            _call_through_client(role_clients[role], case)
         except MetatateToolError as exc:
             unreachable.append((case["id"], exc.code))
         except Exception as exc:  # noqa: BLE001
@@ -112,7 +121,9 @@ def section_router_exactness(client: OfflineMetatateClient) -> None:
     # Signatures must be unique: two cases sharing a signature means one is dead.
     sigs: dict[str, list[str]] = {}
     for c in CASES:
-        sigs.setdefault(signature(c["tool"], c["arguments"]), []).append(c["id"])
+        sigs.setdefault(
+            signature(c["tool"], c["arguments"], c.get("bound_role")), []
+        ).append(c["id"])
     collisions = {k: v for k, v in sigs.items() if len(v) > 1}
     check(not collisions, "no two cases share a match signature",
           f"collisions: {list(collisions.values())}")
@@ -202,7 +213,7 @@ def section_purpose_boundary(client: OfflineMetatateClient) -> None:
         if case["tool"] not in TYPED_TOOLS:
             continue
         stripped = {k: v for k, v in case["arguments"].items() if k != "purpose_key"}
-        got = case_for(case["tool"], stripped)
+        got = case_for(case["tool"], stripped, case.get("bound_role"))
         if got is None:
             check(True, f"dropping purpose_key from {case['id']} -> offline_fixture_missing")
         else:
@@ -215,7 +226,7 @@ def section_purpose_boundary(client: OfflineMetatateClient) -> None:
     for case in purposeful:
         mutated = dict(case["arguments"])
         mutated["purpose_key"] = mutated["purpose_key"] + ".not_a_real_purpose"
-        check(case_for(case["tool"], mutated) is None,
+        check(case_for(case["tool"], mutated, case.get("bound_role")) is None,
               f"mutating purpose_key on {case['id']} -> no match (no approximate matching)")
 
     # 3. The converse of Carlos's third bullet: an explicit purpose-blind control
@@ -224,7 +235,7 @@ def section_purpose_boundary(client: OfflineMetatateClient) -> None:
                       if "purpose-missing" in c["id"] or "purpose-inexpressible" in c["id"]]
     check(bool(blind_controls), f"{len(blind_controls)} explicit purpose-blind controls exist")
     for case in blind_controls:
-        got = case_for(case["tool"], case["arguments"])
+        got = case_for(case["tool"], case["arguments"], case.get("bound_role"))
         check(got is not None and got["id"] == case["id"],
               f"purpose-blind control {case['id']} matches its own recording")
         check("purpose_key" not in case["arguments"],
@@ -233,7 +244,7 @@ def section_purpose_boundary(client: OfflineMetatateClient) -> None:
         # Adding a purpose to a blind control must not reach the control.
         with_purpose = dict(case["arguments"])
         with_purpose["purpose_key"] = "analytics.reporting"
-        got2 = case_for(case["tool"], with_purpose)
+        got2 = case_for(case["tool"], with_purpose, case.get("bound_role"))
         check(got2 is None or got2["id"] != case["id"],
               f"adding a purpose to {case['id']} does not land on the blind control",
               f"landed on {None if got2 is None else got2['id']}")
@@ -446,22 +457,28 @@ def section_live_agent_routing() -> None:
         f"got {answer.get('purpose_key')!r}",
     )
 
-    default_client, agent_client = object(), object()
+    default_client, agent_client, clinical_client = object(), object(), object()
+    role_clients = {"agent": agent_client, "clinical": clinical_client}
     check(
-        _client_for_case(product, default_client, agent_client) is agent_client,
+        _client_for_case(product, default_client, role_clients) is agent_client,
         "agent-bound cases use the separate agent credential",
+    )
+    clinical = by_id["care-clinical-read-allow"]
+    check(
+        _client_for_case(clinical, default_client, role_clients) is clinical_client,
+        "role-bound cases route to their role's credential (ROLE_TOKEN_ENVS)",
     )
     neutral = by_id["analytics-customers-allow"]
     check(
-        _client_for_case(neutral, default_client, agent_client) is default_client,
+        _client_for_case(neutral, default_client, role_clients) is default_client,
         "identity-neutral cases retain the default release credential",
     )
     try:
-        _client_for_case(product, default_client, None)
+        _client_for_case(product, default_client, {})
     except RuntimeError:
-        check(True, "an absent agent client fails loudly instead of weakening the case")
+        check(True, "an absent role client fails loudly instead of weakening the case")
     else:
-        check(False, "an absent agent client fails loudly instead of weakening the case")
+        check(False, "an absent role client fails loudly instead of weakening the case")
 
 
 def section_manifest_drift() -> None:
@@ -550,6 +567,7 @@ def section_classification_drift() -> None:
         "advertising":      "normalized_key",
         "personalization":  "normalized_key",
         "prospect_outreach": "deliberate_conflict",
+        "verification_outreach": "deliberate_conflict",
     }
     drifted = []
     for entry, want in sorted(PINNED.items()):

@@ -1,0 +1,32 @@
+# Customer 360 estate spec — Government pack: the blocking half of the
+# sanctioned conflict pair. Deliberately carries NO scenarioMap remap, so
+# both rows land on purpose.allowed_use and the estate serves a real
+# conflicted answer — contrast with the MANAGED band precedence next door.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: benefits-verification-block
+  version: 1.0.0
+  description: >-
+    Applicant contact is restricted while privacy review of outreach
+    practices is pending.
+  tags: [government, pii, privacy_sensitive]
+  businessContext:
+    domain: Benefits Program
+    owner: Privacy Office
+    steward: program-policy@example.com
+    purpose: Consent-first control over applicant contact data.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [benefits]
+    schemas: [public]
+    tables: [applicants]
+  classification:
+    sensitivity: restricted
+    category: pii
+  usage:
+    prohibitedUses: [verification_outreach]
+extensions:
+  displayName: Benefits verification block

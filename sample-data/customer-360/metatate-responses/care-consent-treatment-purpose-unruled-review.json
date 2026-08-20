@@ -1,0 +1,121 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "care",
+      "schema": "public",
+      "table": "member_records"
+    },
+    "authorization_id": "accef000-0000-4000-8000-000000000273",
+    "can_proceed_now": false,
+    "conditions": [],
+    "conflict": null,
+    "context_facts": {
+      "category": "pii",
+      "masking": {
+        "exempt_roles": [
+          "clinical"
+        ],
+        "type": "full"
+      },
+      "pii": true,
+      "sensitivity": "restricted",
+      "subcategory": null
+    },
+    "decision": "require_review",
+    "evaluated_actor_role": "clinical",
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": {
+      "purpose_category": "care",
+      "purpose_key": "care.treatment",
+      "registry_version": 3
+    },
+    "instructions": [
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "require_review",
+        "decision_id": "accef000-0000-4000-8000-000000000268",
+        "decision_reason": "Consent context is incomplete: the declared purpose has no authored consent rule (policy Care consent requirements).",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "consent_requirement",
+        "instruction_key": "consent_requirement:spec.consentRequirements",
+        "parameters": {
+          "rules": [
+            {
+              "basisColumn": "coverage_status",
+              "purposeKey": "care.eligibility",
+              "requirement": "Eligibility reads require an active coverage authorization on file (coverage_status = 'active')."
+            },
+            {
+              "basisColumn": "research_consent",
+              "purposeKey": "research.general",
+              "requirement": "Research use requires an active research authorization recorded in research_consent."
+            },
+            {
+              "basisColumn": "consumer_marketing_consent",
+              "purposeKey": "marketing.advertising",
+              "requirement": "Consumer marketing requires an explicit opt-in recorded in consumer_marketing_consent."
+            }
+          ]
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000269",
+          "policy_name": "Care consent requirements",
+          "policy_version_id": "accef000-0000-4000-8000-000000000270",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "consent.required",
+        "scenario_lane": "human",
+        "scope": {
+          "column": null,
+          "database": "care",
+          "schema": "public",
+          "table": "member_records"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "Obtain data-steward review before proceeding with this use."
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "Consent context is incomplete: the declared purpose has no authored consent rule (policy Care consent requirements).",
+    "reason_code": "consent_context_required",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
+    "scenario_key": "consent.required",
+    "scenario_lane": "human",
+    "state": "review_required",
+    "validity_evaluated_at": "2026-08-20T21:47:46.283Z"
+  },
+  "arguments": {
+    "asset": {
+      "database": "care",
+      "schema": "public",
+      "table": "member_records"
+    },
+    "purpose_key": "care.treatment",
+    "scenario_key": "consent.required",
+    "use": "treat the member in a clinical encounter"
+  },
+  "case_id": "care-consent-treatment-purpose-unruled-review",
+  "tool": "authorize_use"
+}

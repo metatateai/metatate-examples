@@ -7,7 +7,7 @@
       "schema": "public",
       "table": "subscriptions"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000138",
+    "authorization_id": "accef000-0000-4000-8000-000000000149",
     "can_proceed_now": false,
     "conditions": [],
     "context_facts": {
@@ -18,7 +18,7 @@
       "subcategory": null
     },
     "decision": "retain",
-    "decision_id": "accef000-0000-4000-8000-000000000139",
+    "decision_id": "accef000-0000-4000-8000-000000000150",
     "evaluated_actor_role": null,
     "evaluated_at": "2026-07-30T00:00:00.000Z",
     "evaluated_data_access_context": null,
@@ -30,7 +30,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "retain",
-        "decision_id": "accef000-0000-4000-8000-000000000139",
+        "decision_id": "accef000-0000-4000-8000-000000000150",
         "decision_reason": "revenue-retention-guardrails v1 retention:spec.retention \u2192 retain on master.public.subscriptions",
         "effective_from": null,
         "effective_until": null,
@@ -45,9 +45,9 @@
         "primary_resolution_source": "selector",
         "priority": 1,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000140",
+          "policy_id": "accef000-0000-4000-8000-000000000151",
           "policy_name": "Revenue retention guardrails",
-          "policy_version_id": "accef000-0000-4000-8000-000000000141",
+          "policy_version_id": "accef000-0000-4000-8000-000000000152",
           "version_number": 1
         },
         "resolution_paths": [
@@ -94,7 +94,8 @@
     "satisfied_exceptions": [],
     "scenario_key": "retention.lifecycle",
     "scenario_lane": "human",
-    "state": "answered"
+    "state": "answered",
+    "validity_evaluated_at": "2026-08-20T21:47:45.711Z"
   },
   "arguments": {
     "asset": {

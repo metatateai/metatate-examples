@@ -1,0 +1,39 @@
+# Customer 360 estate spec — AdTech pack: purpose boundaries for audience use.
+# Measurement is permitted; personalization and third-party activation are
+# hard-prohibited on the raw record (activation happens only through the
+# governed ad_audience_exports transfer lane).
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: adtech-audience-use-guardrails
+  version: 1.0.0
+  description: >-
+    Customer records support measurement; personalization and third-party
+    activation of the raw record are prohibited — activation runs only
+    through the audience-export transfer lane.
+  tags: [pii, privacy_sensitive, marketing]
+  businessContext:
+    domain: Customer Data
+    owner: Revenue Operations
+    steward: privacy-review@example.com
+    purpose: Purpose boundaries for advertising use of customer records.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [master]
+    schemas: [public]
+    tables: [customers]
+  classification:
+    sensitivity: confidential
+    category: pii
+  usage:
+    # B3: registry vocabulary (B3P authoring contract).
+    permittedUses: [analytics.reporting]
+    prohibitedUses: [marketing.personalization, sharing.third_party]
+extensions:
+  displayName: AdTech audience use guardrails
+  scenarioMap:
+    "usage_guidance:spec.usage.prohibitedUses:prohibited":
+      scenarioKey: purpose.prohibited_use
+      source: user_confirmed

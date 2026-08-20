@@ -10,7 +10,7 @@
         "conflict": null,
         "decision": "mask_full",
         "decision_reason": "salary-masking v1 masking:spec.accessControl.masking \u2192 mask_full on master.public.employees.salary",
-        "finding_id": "accef000-0000-4000-8000-000000000127",
+        "finding_id": "accef000-0000-4000-8000-000000000138",
         "instructions": [
           {
             "category": "enforceable",
@@ -18,7 +18,7 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "mask_full",
-            "decision_id": "accef000-0000-4000-8000-000000000087",
+            "decision_id": "accef000-0000-4000-8000-000000000098",
             "decision_reason": "salary-masking v1 masking:spec.accessControl.masking \u2192 mask_full on master.public.employees.salary",
             "effective_from": null,
             "effective_until": null,
@@ -31,9 +31,9 @@
             "primary_resolution_source": "selector",
             "priority": 2,
             "provenance": {
-              "policy_id": "accef000-0000-4000-8000-000000000085",
+              "policy_id": "accef000-0000-4000-8000-000000000096",
               "policy_name": "Salary and identifier masking",
-              "policy_version_id": "accef000-0000-4000-8000-000000000086",
+              "policy_version_id": "accef000-0000-4000-8000-000000000097",
               "version_number": 1
             },
             "resolution_paths": [
@@ -58,7 +58,7 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "deny",
-            "decision_id": "accef000-0000-4000-8000-000000000056",
+            "decision_id": "accef000-0000-4000-8000-000000000067",
             "decision_reason": "employee-data-access v1 role_grant:spec.accessControl.deniedRoles:public:deny \u2192 deny on master.public.employees",
             "effective_from": null,
             "effective_until": null,
@@ -72,9 +72,9 @@
             "primary_resolution_source": "selector",
             "priority": 2,
             "provenance": {
-              "policy_id": "accef000-0000-4000-8000-000000000057",
+              "policy_id": "accef000-0000-4000-8000-000000000068",
               "policy_name": "Employee data access",
-              "policy_version_id": "accef000-0000-4000-8000-000000000058",
+              "policy_version_id": "accef000-0000-4000-8000-000000000069",
               "version_number": 1
             },
             "resolution_paths": [
@@ -99,7 +99,7 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "require_review",
-            "decision_id": "accef000-0000-4000-8000-000000000059",
+            "decision_id": "accef000-0000-4000-8000-000000000070",
             "decision_reason": "Access is granted to role `HR_ADMIN`; the calling token declares no bound role (policy Employee data access).",
             "effective_from": null,
             "effective_until": null,
@@ -113,9 +113,9 @@
             "primary_resolution_source": "selector",
             "priority": 2,
             "provenance": {
-              "policy_id": "accef000-0000-4000-8000-000000000057",
+              "policy_id": "accef000-0000-4000-8000-000000000068",
               "policy_name": "Employee data access",
-              "policy_version_id": "accef000-0000-4000-8000-000000000058",
+              "policy_version_id": "accef000-0000-4000-8000-000000000069",
               "version_number": 1
             },
             "resolution_paths": [
@@ -140,7 +140,7 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "require_review",
-            "decision_id": "accef000-0000-4000-8000-000000000060",
+            "decision_id": "accef000-0000-4000-8000-000000000071",
             "decision_reason": "Access is granted to role `PEOPLE_OPS`; the calling token declares no bound role (policy Employee data access).",
             "effective_from": null,
             "effective_until": null,
@@ -154,9 +154,9 @@
             "primary_resolution_source": "selector",
             "priority": 2,
             "provenance": {
-              "policy_id": "accef000-0000-4000-8000-000000000057",
+              "policy_id": "accef000-0000-4000-8000-000000000068",
               "policy_name": "Employee data access",
-              "policy_version_id": "accef000-0000-4000-8000-000000000058",
+              "policy_version_id": "accef000-0000-4000-8000-000000000069",
               "version_number": 1
             },
             "resolution_paths": [
@@ -191,7 +191,8 @@
       "published_at": "2026-07-16T00:00:00.000Z"
     },
     "state": "answered",
-    "validation_id": "accef000-0000-4000-8000-000000000126",
+    "validation_id": "accef000-0000-4000-8000-000000000137",
+    "validity_evaluated_at": "2026-08-20T21:47:45.669Z",
     "verdict": "fail"
   },
   "arguments": {

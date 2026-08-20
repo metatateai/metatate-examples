@@ -1,0 +1,29 @@
+{
+  "answer": {
+    "classification": {
+      "category": "financial",
+      "sensitivity": "internal",
+      "subcategory": null
+    },
+    "data_type": "text",
+    "masking": null,
+    "meaning": "Local mirror of settlement progress; the authoritative settlement state lives in network_settlements.",
+    "pii": false,
+    "ref": {
+      "column": "settlement_state",
+      "database": "master",
+      "schema": "finance",
+      "table": "payment_transactions"
+    }
+  },
+  "arguments": {
+    "ref": {
+      "column": "settlement_state",
+      "database": "master",
+      "schema": "finance",
+      "table": "payment_transactions"
+    }
+  },
+  "case_id": "meaning_payment_transactions_settlement_state",
+  "tool": "inspect_data_meaning"
+}

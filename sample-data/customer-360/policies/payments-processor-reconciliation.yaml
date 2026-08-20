@@ -1,0 +1,30 @@
+# Customer 360 estate spec — Payments pack: the processor feed's authority.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: payments-processor-reconciliation
+  version: 1.0.0
+  description: >-
+    Processor settlement batches are authoritative for fees and support the
+    audit trail; they are not the network settlement truth.
+  tags: [financial, payments]
+  businessContext:
+    domain: Payments
+    owner: Payments Engineering
+    steward: finance-data@example.com
+    purpose: Fee reconciliation and audit reads of processor batches.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [master]
+    schemas: [finance]
+    tables: [processor_settlements]
+  classification:
+    sensitivity: internal
+    category: financial
+  usage:
+    # B3: registry vocabulary (B3P authoring contract).
+    permittedUses: [compliance.audit, operations.support]
+extensions:
+  displayName: Payments processor reconciliation

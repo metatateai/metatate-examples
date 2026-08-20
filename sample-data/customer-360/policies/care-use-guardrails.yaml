@@ -1,0 +1,37 @@
+# Customer 360 estate spec — Healthcare pack: purpose boundaries.
+# Treatment and eligibility are the permitted purposes; consumer marketing
+# of member data is prohibited on its own lane.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: care-use-guardrails
+  version: 1.0.0
+  description: >-
+    Member records support care delivery and coverage eligibility;
+    consumer-marketing use of member data is prohibited.
+  tags: [health, pii, privacy_sensitive]
+  businessContext:
+    domain: Care Data
+    owner: Care Operations
+    steward: health-governance@example.com
+    purpose: Purpose boundaries for the one-person member record.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [care]
+    schemas: [public]
+    tables: [member_records]
+  classification:
+    sensitivity: restricted
+    category: pii
+  usage:
+    # B3: registry vocabulary (B3P authoring contract; care.* keys are v3).
+    permittedUses: [care.treatment, care.eligibility]
+    prohibitedUses: [marketing.advertising, marketing.personalization]
+extensions:
+  displayName: Care use guardrails
+  scenarioMap:
+    "usage_guidance:spec.usage.prohibitedUses:prohibited":
+      scenarioKey: purpose.prohibited_use
+      source: user_confirmed

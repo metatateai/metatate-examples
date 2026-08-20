@@ -10,7 +10,7 @@
         "conflict": null,
         "decision": null,
         "decision_reason": null,
-        "finding_id": "accef000-0000-4000-8000-000000000161",
+        "finding_id": "accef000-0000-4000-8000-000000000172",
         "instructions": [],
         "reason_code": null,
         "ref": {
@@ -27,7 +27,8 @@
       "published_at": "2026-07-16T00:00:00.000Z"
     },
     "state": "answered",
-    "validation_id": "accef000-0000-4000-8000-000000000160",
+    "validation_id": "accef000-0000-4000-8000-000000000171",
+    "validity_evaluated_at": "2026-08-20T21:47:45.790Z",
     "verdict": "pass"
   },
   "arguments": {

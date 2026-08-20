@@ -7,7 +7,7 @@
       "schema": "public",
       "table": "ml_feature_store"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000075",
+    "authorization_id": "accef000-0000-4000-8000-000000000086",
     "can_proceed_now": false,
     "conditions": [],
     "conflict": null,
@@ -25,7 +25,7 @@
     "evaluated_purpose": {
       "purpose_category": "ai",
       "purpose_key": "ai.inference",
-      "registry_version": 2
+      "registry_version": 3
     },
     "instructions": [
       {
@@ -34,7 +34,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "require_review",
-        "decision_id": "accef000-0000-4000-8000-000000000076",
+        "decision_id": "accef000-0000-4000-8000-000000000087",
         "decision_reason": "This policy's permitted-uses list carries an entry outside the purpose registry and none names purpose `ai.inference` (policy ML embedding guardrails).",
         "effective_from": null,
         "effective_until": null,
@@ -50,9 +50,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000077",
+          "policy_id": "accef000-0000-4000-8000-000000000088",
           "policy_name": "ML embedding guardrails",
-          "policy_version_id": "accef000-0000-4000-8000-000000000078",
+          "policy_version_id": "accef000-0000-4000-8000-000000000089",
           "version_number": 1
         },
         "resolution_paths": [
@@ -85,7 +85,8 @@
     "satisfied_exceptions": [],
     "scenario_key": "ai.embedding_storage",
     "scenario_lane": "agent",
-    "state": "review_required"
+    "state": "review_required",
+    "validity_evaluated_at": "2026-08-20T21:47:45.558Z"
   },
   "arguments": {
     "asset": {

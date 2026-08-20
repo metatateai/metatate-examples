@@ -1,0 +1,30 @@
+# Customer 360 estate spec — Payments pack: the network settlement truth.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: payments-network-authority
+  version: 1.0.0
+  description: >-
+    Network-confirmed settlement records are the reconciliation source of
+    truth: fraud decisions and reconciled analytics read from here.
+  tags: [financial, payments]
+  businessContext:
+    domain: Payments
+    owner: Payments Engineering
+    steward: finance-data@example.com
+    purpose: Fraud investigation and reconciled reporting on network state.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [master]
+    schemas: [finance]
+    tables: [network_settlements]
+  classification:
+    sensitivity: internal
+    category: financial
+  usage:
+    # B3: registry vocabulary (B3P authoring contract).
+    permittedUses: [fraud.detection, analytics.reporting]
+extensions:
+  displayName: Payments network authority

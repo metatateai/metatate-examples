@@ -1,0 +1,48 @@
+# Customer 360 estate spec — AdTech pack: consent as three permissions.
+# One legacy boolean (marketing_consent) collapses three distinct purposes;
+# these rules serve the purpose-scoped verification the agent must apply.
+# The condition is NEVER satisfiable by caller assertion (P-1 contract).
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: adtech-consent-requirements
+  version: 1.0.0
+  description: >-
+    Customer-data use for measurement, personalization, or third-party
+    activation each requires its own recorded consent basis; the agent must
+    verify the purpose-scoped basis column before proceeding.
+  tags: [pii, privacy_sensitive, consent]
+  businessContext:
+    domain: Customer Data
+    owner: Revenue Operations
+    steward: privacy-review@example.com
+    purpose: Purpose-scoped consent verification for advertising workflows.
+spec:
+  enforcementMode: enforce
+  priority: 600
+  selector:
+    databases: [master]
+    schemas: [public]
+    tables: [customers]
+  classification:
+    sensitivity: confidential
+    category: pii
+  consentRequirements:
+    rules:
+      - purposeKey: analytics.reporting
+        basisColumn: consent_measurement
+        requirement: >-
+          Measurement use requires the customer's recorded measurement
+          consent (consent_measurement = 'granted').
+      - purposeKey: marketing.personalization
+        basisColumn: consent_personalization
+        requirement: >-
+          Personalization requires an explicit personalization opt-in
+          recorded in consent_personalization, and only first-party data.
+      - purposeKey: sharing.third_party
+        basisColumn: consent_activation
+        requirement: >-
+          Third-party activation requires an activation opt-in recorded in
+          consent_activation.
+extensions:
+  displayName: AdTech consent requirements

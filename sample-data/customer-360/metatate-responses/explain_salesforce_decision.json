@@ -12,7 +12,7 @@
       "conflict_status": "none",
       "conflicts_with": [],
       "decision": "conditional",
-      "decision_id": "accef000-0000-4000-8000-000000000013",
+      "decision_id": "accef000-0000-4000-8000-000000000019",
       "decision_reason": "transfer-guardrails v1 transfer_governance:spec.transferGovernance \u2192 conditional on master.public.customers",
       "effective_from": null,
       "effective_until": null,
@@ -57,9 +57,9 @@
       "primary_resolution_source": "selector",
       "priority": 2,
       "provenance": {
-        "policy_id": "accef000-0000-4000-8000-000000000014",
+        "policy_id": "accef000-0000-4000-8000-000000000020",
         "policy_name": "Transfer guardrails",
-        "policy_version_id": "accef000-0000-4000-8000-000000000015",
+        "policy_version_id": "accef000-0000-4000-8000-000000000021",
         "version_number": 1
       },
       "resolution_paths": [
@@ -81,7 +81,7 @@
     "state": "answered"
   },
   "arguments": {
-    "decision_id": "accef000-0000-4000-8000-000000000013",
+    "decision_id": "accef000-0000-4000-8000-000000000019",
     "kind": "decision"
   },
   "case_id": "explain_salesforce_decision",

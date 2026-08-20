@@ -21,6 +21,10 @@ NOTEBOOKS=(
   notebooks/13_sql_gauntlet_validate_query_context.ipynb
   notebooks/15_audit_evidence_packet.ipynb
   notebooks/16_purpose_bound_agent_data_windows.ipynb
+  notebooks/17_adtech_consent_three_permissions_one_field.ipynb
+  notebooks/18_payments_local_data_is_not_the_source_of_truth.ipynb
+  notebooks/19_healthcare_one_person_four_concepts.ipynb
+  notebooks/20_government_rules_outside_the_record.ipynb
 )
 
 if [[ "${METATATE_EXAMPLES_MODE}" == "live" ]]; then

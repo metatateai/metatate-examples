@@ -7,7 +7,7 @@
       "schema": "public",
       "table": "support_tickets"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000046",
+    "authorization_id": "accef000-0000-4000-8000-000000000057",
     "can_proceed_now": false,
     "conditions": [],
     "conflict": null,
@@ -28,7 +28,7 @@
     "evaluated_purpose": {
       "purpose_category": "operations",
       "purpose_key": "operations.support",
-      "registry_version": 2
+      "registry_version": 3
     },
     "instructions": [
       {
@@ -37,7 +37,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "require_review",
-        "decision_id": "accef000-0000-4000-8000-000000000047",
+        "decision_id": "accef000-0000-4000-8000-000000000058",
         "decision_reason": "This policy's permitted-uses list carries an entry outside the purpose registry and none names purpose `operations.support` (policy Customer use guardrails).",
         "effective_from": null,
         "effective_until": null,
@@ -55,9 +55,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000006",
+          "policy_id": "accef000-0000-4000-8000-000000000009",
           "policy_name": "Customer use guardrails",
-          "policy_version_id": "accef000-0000-4000-8000-000000000007",
+          "policy_version_id": "accef000-0000-4000-8000-000000000010",
           "version_number": 1
         },
         "resolution_paths": [
@@ -90,7 +90,8 @@
     "satisfied_exceptions": [],
     "scenario_key": "purpose.allowed_use",
     "scenario_lane": "human",
-    "state": "review_required"
+    "state": "review_required",
+    "validity_evaluated_at": "2026-08-20T21:47:45.464Z"
   },
   "arguments": {
     "asset": {

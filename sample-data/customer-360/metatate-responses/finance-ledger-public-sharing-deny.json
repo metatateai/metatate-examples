@@ -7,7 +7,7 @@
       "schema": "finance",
       "table": "revenue_ledger"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000152",
+    "authorization_id": "accef000-0000-4000-8000-000000000163",
     "can_proceed_now": false,
     "conditions": [],
     "context_facts": {
@@ -18,7 +18,7 @@
       "subcategory": null
     },
     "decision": "deny",
-    "decision_id": "accef000-0000-4000-8000-000000000153",
+    "decision_id": "accef000-0000-4000-8000-000000000164",
     "evaluated_actor_role": null,
     "evaluated_at": "2026-07-30T00:00:00.000Z",
     "evaluated_data_access_context": null,
@@ -30,7 +30,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "deny",
-        "decision_id": "accef000-0000-4000-8000-000000000153",
+        "decision_id": "accef000-0000-4000-8000-000000000164",
         "decision_reason": "finance-data-guardrails v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on master.finance.revenue_ledger",
         "effective_from": null,
         "effective_until": null,
@@ -46,9 +46,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000150",
+          "policy_id": "accef000-0000-4000-8000-000000000161",
           "policy_name": "Finance data guardrails",
-          "policy_version_id": "accef000-0000-4000-8000-000000000151",
+          "policy_version_id": "accef000-0000-4000-8000-000000000162",
           "version_number": 1
         },
         "resolution_paths": [
@@ -89,7 +89,8 @@
     "satisfied_exceptions": [],
     "scenario_key": "sharing.public",
     "scenario_lane": "human",
-    "state": "answered"
+    "state": "answered",
+    "validity_evaluated_at": "2026-08-20T21:47:45.766Z"
   },
   "arguments": {
     "asset": {

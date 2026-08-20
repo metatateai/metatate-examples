@@ -10,7 +10,7 @@
         "conflict": null,
         "decision": "mask_full",
         "decision_reason": "ticket-text-redaction v1 masking:spec.accessControl.masking \u2192 mask_full on product.public.support_tickets.ticket_text",
-        "finding_id": "accef000-0000-4000-8000-000000000117",
+        "finding_id": "accef000-0000-4000-8000-000000000128",
         "instructions": [
           {
             "category": "enforceable",
@@ -18,7 +18,7 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "mask_full",
-            "decision_id": "accef000-0000-4000-8000-000000000118",
+            "decision_id": "accef000-0000-4000-8000-000000000129",
             "decision_reason": "ticket-text-redaction v1 masking:spec.accessControl.masking \u2192 mask_full on product.public.support_tickets.ticket_text",
             "effective_from": null,
             "effective_until": null,
@@ -31,9 +31,9 @@
             "primary_resolution_source": "selector",
             "priority": 2,
             "provenance": {
-              "policy_id": "accef000-0000-4000-8000-000000000119",
+              "policy_id": "accef000-0000-4000-8000-000000000130",
               "policy_name": "Ticket free-text redaction",
-              "policy_version_id": "accef000-0000-4000-8000-000000000120",
+              "policy_version_id": "accef000-0000-4000-8000-000000000131",
               "version_number": 1
             },
             "resolution_paths": [
@@ -58,7 +58,7 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "deny",
-            "decision_id": "accef000-0000-4000-8000-000000000049",
+            "decision_id": "accef000-0000-4000-8000-000000000060",
             "decision_reason": "customer-use-guardrails v1 ai_governance:spec.aiGovernance:training \u2192 deny on product.public.support_tickets",
             "effective_from": null,
             "effective_until": null,
@@ -74,9 +74,9 @@
             "primary_resolution_source": "selector",
             "priority": 2,
             "provenance": {
-              "policy_id": "accef000-0000-4000-8000-000000000006",
+              "policy_id": "accef000-0000-4000-8000-000000000009",
               "policy_name": "Customer use guardrails",
-              "policy_version_id": "accef000-0000-4000-8000-000000000007",
+              "policy_version_id": "accef000-0000-4000-8000-000000000010",
               "version_number": 1
             },
             "resolution_paths": [
@@ -111,7 +111,8 @@
       "published_at": "2026-07-16T00:00:00.000Z"
     },
     "state": "answered",
-    "validation_id": "accef000-0000-4000-8000-000000000116",
+    "validation_id": "accef000-0000-4000-8000-000000000127",
+    "validity_evaluated_at": "2026-08-20T21:47:45.652Z",
     "verdict": "fail"
   },
   "arguments": {

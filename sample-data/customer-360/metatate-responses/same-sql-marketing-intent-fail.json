@@ -9,8 +9,8 @@
       {
         "conflict": null,
         "decision": "deny",
-        "decision_reason": "customer-use-guardrails v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on master.public.customers",
-        "finding_id": "accef000-0000-4000-8000-000000000170",
+        "decision_reason": "adtech-audience-use-guardrails v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on master.public.customers",
+        "finding_id": "accef000-0000-4000-8000-000000000181",
         "instructions": [
           {
             "category": "advisory",
@@ -18,7 +18,51 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "deny",
-            "decision_id": "accef000-0000-4000-8000-000000000008",
+            "decision_id": "accef000-0000-4000-8000-000000000005",
+            "decision_reason": "adtech-audience-use-guardrails v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on master.public.customers",
+            "effective_from": null,
+            "effective_until": null,
+            "enforcement_mode": "enforce",
+            "instruction_family": "usage_guidance",
+            "instruction_key": "usage_guidance:spec.usage.prohibitedUses:prohibited",
+            "parameters": {
+              "kind": "prohibited",
+              "uses": [
+                "marketing.personalization",
+                "sharing.third_party"
+              ]
+            },
+            "primary_resolution_source": "selector",
+            "priority": 2,
+            "provenance": {
+              "policy_id": "accef000-0000-4000-8000-000000000006",
+              "policy_name": "AdTech audience use guardrails",
+              "policy_version_id": "accef000-0000-4000-8000-000000000007",
+              "version_number": 1
+            },
+            "resolution_paths": [
+              {
+                "ref": null,
+                "source": "selector"
+              }
+            ],
+            "scenario_key": "purpose.prohibited_use",
+            "scenario_lane": "human",
+            "scope": {
+              "column": null,
+              "database": "master",
+              "schema": "public",
+              "table": "customers"
+            },
+            "weight": 1
+          },
+          {
+            "category": "advisory",
+            "conflict_group_id": null,
+            "conflict_status": "none",
+            "conflicts_with": [],
+            "decision": "deny",
+            "decision_id": "accef000-0000-4000-8000-000000000011",
             "decision_reason": "customer-use-guardrails v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on master.public.customers",
             "effective_from": null,
             "effective_until": null,
@@ -37,9 +81,9 @@
             "primary_resolution_source": "selector",
             "priority": 2,
             "provenance": {
-              "policy_id": "accef000-0000-4000-8000-000000000006",
+              "policy_id": "accef000-0000-4000-8000-000000000009",
               "policy_name": "Customer use guardrails",
-              "policy_version_id": "accef000-0000-4000-8000-000000000007",
+              "policy_version_id": "accef000-0000-4000-8000-000000000010",
               "version_number": 1
             },
             "resolution_paths": [
@@ -74,7 +118,8 @@
       "published_at": "2026-07-16T00:00:00.000Z"
     },
     "state": "answered",
-    "validation_id": "accef000-0000-4000-8000-000000000169",
+    "validation_id": "accef000-0000-4000-8000-000000000180",
+    "validity_evaluated_at": "2026-08-20T21:47:45.848Z",
     "verdict": "fail"
   },
   "arguments": {

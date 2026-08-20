@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- **Four vertical scenario packs — the estate speaks four industries.** AdTech
+  (consent as three purpose-scoped permissions, served as typed
+  `consent_required` conditions that are never caller-satisfiable), Payments
+  (the settlement source-of-truth authority matrix), Healthcare (one person as
+  four role-bound contexts — four new recording credentials with role-aware
+  offline routing), and Government (date-effective statute policies with the
+  `data_access_context.as_of` flip, band precedence, and the second sanctioned
+  conflict pair, `verification_outreach`). Seven new governed tables across the
+  new `care` and `benefits` logical databases, seventeen new policies (37
+  total), forty-six appended canonical cases (118 recordings), and notebooks
+  17-20 named after the use cases they model. The offline router now carries
+  the credential's `bound_role` in the match signature — byte-identical calls
+  under different role-bound tokens are different questions with different
+  recordings, offline exactly as live.
+
 - **B3 purposeful calls end to end.** Every governed call declares the
   `purpose_key` its canonical case declares, and the offline router matches on it
   **exactly** — no aliases, no approximate matching, no fallback between

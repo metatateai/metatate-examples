@@ -28,6 +28,10 @@ This repository separates examples from runtime acceptance tests.
 | Governed agent arc, end to end | `14_governed_agent_end_to_end.ipynb` | Yes; requires framework deps | Yes; requires framework deps and MCP env | `governed_agent_arc/acceptance.py` |
 | Audit evidence packet | `15_audit_evidence_packet.ipynb` | Yes | Yes | `audit_evidence/acceptance.py` |
 | Purpose-bound agent data windows | `16_purpose_bound_agent_data_windows.ipynb` | Yes | Yes | Twelve canonical offline/live cases + product parity gate |
+| AdTech: consent as three permissions | `17_adtech_consent_three_permissions_one_field.ipynb` | Yes | Yes | Eleven canonical offline/live cases + product parity gate |
+| Payments: local data isn't the source of truth | `18_payments_local_data_is_not_the_source_of_truth.ipynb` | Yes | Yes | Ten canonical offline/live cases + product parity gate |
+| Healthcare: one person as four concepts | `19_healthcare_one_person_four_concepts.ipynb` | Yes | Yes | Seventeen canonical offline/live cases across four role-bound credentials + product parity gate |
+| Government: the rules live outside the record | `20_government_rules_outside_the_record.ipynb` | Yes | Yes | Eight canonical offline/live cases incl. the as-of statute flip + product parity gate |
 | Server-backed request lifecycle | `docs/request-access-lifecycle.md` | Preview only | Interactive only; never CI | `request_lifecycle/acceptance.py` (fake client, non-writing) |
 
 ## Test Commands

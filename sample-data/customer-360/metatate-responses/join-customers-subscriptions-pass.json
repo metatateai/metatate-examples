@@ -7,14 +7,14 @@
     "evaluated_purpose": {
       "purpose_category": "analytics",
       "purpose_key": "analytics.reporting",
-      "registry_version": 2
+      "registry_version": 3
     },
     "findings": [
       {
         "conflict": null,
         "decision": "allow",
-        "decision_reason": "Purpose `analytics.reporting` is named by this policy's permitted-uses list (policy Customer use guardrails).",
-        "finding_id": "accef000-0000-4000-8000-000000000155",
+        "decision_reason": "Purpose `analytics.reporting` is named by this policy's permitted-uses list (policy AdTech audience use guardrails).",
+        "finding_id": "accef000-0000-4000-8000-000000000166",
         "instructions": [
           {
             "category": "advisory",
@@ -22,7 +22,50 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "allow",
-            "decision_id": "accef000-0000-4000-8000-000000000025",
+            "decision_id": "accef000-0000-4000-8000-000000000034",
+            "decision_reason": "Purpose `analytics.reporting` is named by this policy's permitted-uses list (policy AdTech audience use guardrails).",
+            "effective_from": null,
+            "effective_until": null,
+            "enforcement_mode": "enforce",
+            "instruction_family": "usage_guidance",
+            "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+            "parameters": {
+              "kind": "permitted",
+              "uses": [
+                "analytics.reporting"
+              ]
+            },
+            "primary_resolution_source": "selector",
+            "priority": 2,
+            "provenance": {
+              "policy_id": "accef000-0000-4000-8000-000000000006",
+              "policy_name": "AdTech audience use guardrails",
+              "policy_version_id": "accef000-0000-4000-8000-000000000007",
+              "version_number": 1
+            },
+            "resolution_paths": [
+              {
+                "ref": null,
+                "source": "selector"
+              }
+            ],
+            "scenario_key": "purpose.allowed_use",
+            "scenario_lane": "human",
+            "scope": {
+              "column": null,
+              "database": "master",
+              "schema": "public",
+              "table": "customers"
+            },
+            "weight": 1
+          },
+          {
+            "category": "advisory",
+            "conflict_group_id": null,
+            "conflict_status": "none",
+            "conflicts_with": [],
+            "decision": "allow",
+            "decision_id": "accef000-0000-4000-8000-000000000036",
             "decision_reason": "Purpose `analytics.reporting` is named by this policy's permitted-uses list (policy Customer use guardrails).",
             "effective_from": null,
             "effective_until": null,
@@ -40,9 +83,9 @@
             "primary_resolution_source": "selector",
             "priority": 2,
             "provenance": {
-              "policy_id": "accef000-0000-4000-8000-000000000006",
+              "policy_id": "accef000-0000-4000-8000-000000000009",
               "policy_name": "Customer use guardrails",
-              "policy_version_id": "accef000-0000-4000-8000-000000000007",
+              "policy_version_id": "accef000-0000-4000-8000-000000000010",
               "version_number": 1
             },
             "resolution_paths": [
@@ -75,7 +118,7 @@
         "conflict": null,
         "decision": "allow",
         "decision_reason": "Purpose `analytics.reporting` is named by this policy's permitted-uses list (policy Revenue retention guardrails).",
-        "finding_id": "accef000-0000-4000-8000-000000000156",
+        "finding_id": "accef000-0000-4000-8000-000000000167",
         "instructions": [
           {
             "category": "advisory",
@@ -83,7 +126,7 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "allow",
-            "decision_id": "accef000-0000-4000-8000-000000000157",
+            "decision_id": "accef000-0000-4000-8000-000000000168",
             "decision_reason": "Purpose `analytics.reporting` is named by this policy's permitted-uses list (policy Revenue retention guardrails).",
             "effective_from": null,
             "effective_until": null,
@@ -101,9 +144,9 @@
             "primary_resolution_source": "selector",
             "priority": 1,
             "provenance": {
-              "policy_id": "accef000-0000-4000-8000-000000000140",
+              "policy_id": "accef000-0000-4000-8000-000000000151",
               "policy_name": "Revenue retention guardrails",
-              "policy_version_id": "accef000-0000-4000-8000-000000000141",
+              "policy_version_id": "accef000-0000-4000-8000-000000000152",
               "version_number": 1
             },
             "resolution_paths": [
@@ -138,7 +181,8 @@
       "published_at": "2026-07-16T00:00:00.000Z"
     },
     "state": "answered",
-    "validation_id": "accef000-0000-4000-8000-000000000154",
+    "validation_id": "accef000-0000-4000-8000-000000000165",
+    "validity_evaluated_at": "2026-08-20T21:47:45.774Z",
     "verdict": "pass"
   },
   "arguments": {
