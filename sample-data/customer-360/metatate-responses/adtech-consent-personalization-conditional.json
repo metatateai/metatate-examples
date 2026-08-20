@@ -1,0 +1,140 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "master",
+      "schema": "public",
+      "table": "customers"
+    },
+    "authorization_id": "accef000-0000-4000-8000-000000000210",
+    "can_proceed_now": false,
+    "conditions": [
+      {
+        "kind": "consent_required",
+        "projection": {
+          "basis_column": "consent_personalization",
+          "kind": "consent",
+          "matched_purpose_key": "marketing.personalization",
+          "requirement": "Personalization requires an explicit personalization opt-in recorded in consent_personalization, and only first-party data."
+        },
+        "required_by_policy": "AdTech consent requirements",
+        "required_role": null,
+        "requirement": "Personalization requires an explicit personalization opt-in recorded in consent_personalization, and only first-party data.",
+        "satisfied": false,
+        "satisfied_by": "Restrict the use to rows whose consent_personalization records consent for marketing.personalization, then proceed.",
+        "satisfied_by_exception_id": null
+      }
+    ],
+    "context_facts": {
+      "category": "pii",
+      "masking": {
+        "exempt_roles": [
+          "DATA_STEWARD",
+          "PRIVACY_ADMIN"
+        ],
+        "type": "partial"
+      },
+      "pii": true,
+      "sensitivity": "confidential",
+      "subcategory": null
+    },
+    "decision": "conditional",
+    "decision_id": "accef000-0000-4000-8000-000000000012",
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": {
+      "purpose_category": "marketing",
+      "purpose_key": "marketing.personalization",
+      "registry_version": 3
+    },
+    "instructions": [
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "conditional",
+        "decision_id": "accef000-0000-4000-8000-000000000012",
+        "decision_reason": "Use for marketing.personalization requires the recorded consent basis in consent_personalization (policy AdTech consent requirements).",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "consent_requirement",
+        "instruction_key": "consent_requirement:spec.consentRequirements",
+        "parameters": {
+          "rules": [
+            {
+              "basisColumn": "consent_measurement",
+              "purposeKey": "analytics.reporting",
+              "requirement": "Measurement use requires the customer's recorded measurement consent (consent_measurement = 'granted')."
+            },
+            {
+              "basisColumn": "consent_personalization",
+              "purposeKey": "marketing.personalization",
+              "requirement": "Personalization requires an explicit personalization opt-in recorded in consent_personalization, and only first-party data."
+            },
+            {
+              "basisColumn": "consent_activation",
+              "purposeKey": "sharing.third_party",
+              "requirement": "Third-party activation requires an activation opt-in recorded in consent_activation."
+            }
+          ]
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000013",
+          "policy_name": "AdTech consent requirements",
+          "policy_version_id": "accef000-0000-4000-8000-000000000014",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "consent.required",
+        "scenario_lane": "human",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "customers"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "You may proceed only after satisfying the stated condition(s) below (e.g. obtain the named approval, anonymize first, or act as a granted role).",
+      "If the condition cannot be met, treat this use as denied."
+    ],
+    "obligations": [],
+    "prohibitions": [],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "Use for marketing.personalization requires the recorded consent basis in consent_personalization (policy AdTech consent requirements).",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
+    "scenario_key": "consent.required",
+    "scenario_lane": "human",
+    "state": "answered",
+    "validity_evaluated_at": "2026-08-20T21:47:46.033Z"
+  },
+  "arguments": {
+    "asset": {
+      "database": "master",
+      "schema": "public",
+      "table": "customers"
+    },
+    "purpose_key": "marketing.personalization",
+    "scenario_key": "consent.required",
+    "use": "personalize offers from customer records"
+  },
+  "case_id": "adtech-consent-personalization-conditional",
+  "tool": "authorize_use"
+}

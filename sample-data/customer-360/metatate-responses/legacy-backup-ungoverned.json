@@ -7,7 +7,7 @@
       "schema": "public",
       "table": "legacy_customer_backup"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000083",
+    "authorization_id": "accef000-0000-4000-8000-000000000094",
     "evaluated_actor_role": null,
     "evaluated_at": "2026-07-30T00:00:00.000Z",
     "evaluated_data_access_context": null,
@@ -21,7 +21,8 @@
     "satisfied_conditions": [],
     "scenario_key": "purpose.allowed_use",
     "state": "not_enough_published_state",
-    "unresolved_targets": []
+    "unresolved_targets": [],
+    "validity_evaluated_at": "2026-08-20T21:47:45.582Z"
   },
   "arguments": {
     "asset": {

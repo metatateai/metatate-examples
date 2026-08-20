@@ -1,0 +1,121 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": "clinical_notes",
+      "database": "care",
+      "schema": "public",
+      "table": "member_records"
+    },
+    "authorization_id": "accef000-0000-4000-8000-000000000254",
+    "can_proceed_now": false,
+    "conditions": [],
+    "context_facts": {
+      "category": "pii",
+      "masking": {
+        "exempt_roles": [
+          "clinical"
+        ],
+        "type": "full"
+      },
+      "pii": true,
+      "sensitivity": "restricted",
+      "subcategory": null
+    },
+    "decision": "mask_full",
+    "decision_id": "accef000-0000-4000-8000-000000000251",
+    "evaluated_actor_role": "member_services",
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": null,
+    "instructions": [
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "mask_full",
+        "decision_id": "accef000-0000-4000-8000-000000000251",
+        "decision_reason": "care-clinical-masking v1 masking:spec.accessControl.masking \u2192 mask_full on care.public.member_records.clinical_notes",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "masking",
+        "instruction_key": "masking:spec.accessControl.masking",
+        "parameters": {
+          "exemptRoles": [
+            "clinical"
+          ],
+          "type": "full"
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000252",
+          "policy_name": "Care clinical masking",
+          "policy_version_id": "accef000-0000-4000-8000-000000000253",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "masking.display",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": "clinical_notes",
+          "database": "care",
+          "schema": "public",
+          "table": "member_records"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "Apply the required masking to the affected columns before using the data.",
+      "Verify the consumer role is approved for sensitive-data handling."
+    ],
+    "obligations": [
+      {
+        "method": "full",
+        "projection": {
+          "config": {},
+          "exempt_roles": [
+            "clinical"
+          ],
+          "kind": "mask",
+          "method": "full"
+        },
+        "required_by_policy": "Care clinical masking",
+        "target": "care.public.member_records.clinical_notes",
+        "type": "mask"
+      }
+    ],
+    "prohibitions": [],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "care-clinical-masking v1 masking:spec.accessControl.masking \u2192 mask_full on care.public.member_records.clinical_notes",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
+    "scenario_key": "masking.display",
+    "scenario_lane": "platform",
+    "state": "answered",
+    "validity_evaluated_at": "2026-08-20T21:47:46.207Z"
+  },
+  "arguments": {
+    "asset": {
+      "column": "clinical_notes",
+      "database": "care",
+      "schema": "public",
+      "table": "member_records"
+    },
+    "scenario_key": "masking.display",
+    "use": "display the member record in a coverage tool"
+  },
+  "case_id": "care-notes-member-services-mask",
+  "tool": "authorize_use"
+}

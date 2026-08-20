@@ -1,0 +1,135 @@
+{
+  "answer": {
+    "advisory": true,
+    "evaluated_actor_role": "member_services",
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": {
+      "purpose_category": "care",
+      "purpose_key": "care.treatment",
+      "registry_version": 3
+    },
+    "findings": [
+      {
+        "conflict": null,
+        "decision": "mask_full",
+        "decision_reason": "care-clinical-masking v1 masking:spec.accessControl.masking \u2192 mask_full on care.public.member_records.clinical_notes",
+        "finding_id": "accef000-0000-4000-8000-000000000277",
+        "instructions": [
+          {
+            "category": "enforceable",
+            "conflict_group_id": null,
+            "conflict_status": "none",
+            "conflicts_with": [],
+            "decision": "mask_full",
+            "decision_id": "accef000-0000-4000-8000-000000000251",
+            "decision_reason": "care-clinical-masking v1 masking:spec.accessControl.masking \u2192 mask_full on care.public.member_records.clinical_notes",
+            "effective_from": null,
+            "effective_until": null,
+            "enforcement_mode": "enforce",
+            "instruction_family": "masking",
+            "instruction_key": "masking:spec.accessControl.masking",
+            "parameters": {
+              "exemptRoles": [
+                "clinical"
+              ],
+              "type": "full"
+            },
+            "primary_resolution_source": "selector",
+            "priority": 2,
+            "provenance": {
+              "policy_id": "accef000-0000-4000-8000-000000000252",
+              "policy_name": "Care clinical masking",
+              "policy_version_id": "accef000-0000-4000-8000-000000000253",
+              "version_number": 1
+            },
+            "resolution_paths": [
+              {
+                "ref": null,
+                "source": "selector"
+              }
+            ],
+            "scenario_key": "masking.display",
+            "scenario_lane": "platform",
+            "scope": {
+              "column": "clinical_notes",
+              "database": "care",
+              "schema": "public",
+              "table": "member_records"
+            },
+            "weight": 1
+          },
+          {
+            "category": "advisory",
+            "conflict_group_id": null,
+            "conflict_status": "none",
+            "conflicts_with": [],
+            "decision": "allow",
+            "decision_id": "accef000-0000-4000-8000-000000000256",
+            "decision_reason": "Purpose `care.treatment` is named by this policy's permitted-uses list (policy Care use guardrails).",
+            "effective_from": null,
+            "effective_until": null,
+            "enforcement_mode": "enforce",
+            "instruction_family": "usage_guidance",
+            "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+            "parameters": {
+              "kind": "permitted",
+              "uses": [
+                "care.treatment",
+                "care.eligibility"
+              ]
+            },
+            "primary_resolution_source": "selector",
+            "priority": 2,
+            "provenance": {
+              "policy_id": "accef000-0000-4000-8000-000000000257",
+              "policy_name": "Care use guardrails",
+              "policy_version_id": "accef000-0000-4000-8000-000000000258",
+              "version_number": 1
+            },
+            "resolution_paths": [
+              {
+                "ref": null,
+                "source": "selector"
+              }
+            ],
+            "scenario_key": "purpose.allowed_use",
+            "scenario_lane": "human",
+            "scope": {
+              "column": null,
+              "database": "care",
+              "schema": "public",
+              "table": "member_records"
+            },
+            "weight": 1
+          }
+        ],
+        "reason_code": null,
+        "ref": {
+          "column": null,
+          "database": "care",
+          "schema": "public",
+          "table": "member_records"
+        },
+        "status": "evaluated"
+      }
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "state": "answered",
+    "validation_id": "accef000-0000-4000-8000-000000000276",
+    "validity_evaluated_at": "2026-08-20T21:47:46.304Z",
+    "verdict": "warn"
+  },
+  "arguments": {
+    "default_database": "master",
+    "default_schema": "public",
+    "purpose_key": "care.treatment",
+    "scenario_key": "purpose.allowed_use",
+    "sql": "SELECT member_id, clinical_notes FROM care.public.member_records"
+  },
+  "case_id": "care-notes-sql-member-services-warn",
+  "tool": "validate_query_context"
+}

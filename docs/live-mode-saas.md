@@ -42,6 +42,12 @@ export METATATE_EXAMPLES_MODE=live
 export METATATE_MCP_URL=https://<your-workspace-mcp-host>/mcp   # full path incl. /mcp
 export METATATE_SAAS_MCP_TOKEN=mtt_...       # {read}; identity-neutral pack
 export METATATE_SAAS_MCP_AGENT_TOKEN=mtt_... # {read}; bound role exactly `agent`
+# Healthcare four-context notebook (19) — four more {read} tokens, bound
+# roles exactly `clinical`, `member_services`, `research`, `marketing`:
+export METATATE_SAAS_MCP_CLINICAL_TOKEN=mtt_...
+export METATATE_SAAS_MCP_MEMBER_SERVICES_TOKEN=mtt_...
+export METATATE_SAAS_MCP_RESEARCH_TOKEN=mtt_...
+export METATATE_SAAS_MCP_MARKETING_TOKEN=mtt_...
 ```
 
 `METATATE_MCP_BACKEND=saas` is the default (and the only backend in this
@@ -50,6 +56,9 @@ repo); exporting it is harmless but no longer required.
 Notebook 16 and the live expected-decision gate use the second token because
 the access-window policy is role-bound. Keeping it separate prevents the
 agent identity from silently changing the older identity-neutral cases.
+Notebook 19 extends the same pattern to four healthcare roles: each case's
+`bound_role` selects the CREDENTIAL (never a tool argument), and the recorder
+and parity gate fail closed when a role's token env is missing.
 
 Optional: `METATATE_MCP_PAT_ENV` renames the default token variable;
 `METATATE_SAAS_DEFAULT_DATABASE` / `METATATE_SAAS_DEFAULT_SCHEMA` (default

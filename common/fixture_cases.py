@@ -17,12 +17,29 @@ from typing import Any
 
 DATABASE = "master"
 PRODUCT_DATABASE = "product"
+CARE_DATABASE = "care"
+BENEFITS_DATABASE = "benefits"
 SCHEMA = "public"
 
 DATABASE_BY_TABLE = {
     "product_usage_events": PRODUCT_DATABASE,
     "support_tickets": PRODUCT_DATABASE,
     "ml_feature_store": PRODUCT_DATABASE,
+    "member_records": CARE_DATABASE,
+    "applicants": BENEFITS_DATABASE,
+    "qualifying_conditions": BENEFITS_DATABASE,
+}
+
+# One env var per bound role a case may carry. The recorder builds one live
+# client per role present in CASES (fail-closed when an env is missing), and
+# the live parity gate routes by the same map — a case's `bound_role` selects
+# the CREDENTIAL, never a tool argument (roles ride verified tokens only).
+ROLE_TOKEN_ENVS = {
+    "agent": "METATATE_SAAS_MCP_AGENT_TOKEN",
+    "clinical": "METATATE_SAAS_MCP_CLINICAL_TOKEN",
+    "member_services": "METATATE_SAAS_MCP_MEMBER_SERVICES_TOKEN",
+    "research": "METATATE_SAAS_MCP_RESEARCH_TOKEN",
+    "marketing": "METATATE_SAAS_MCP_MARKETING_TOKEN",
 }
 
 
@@ -718,6 +735,475 @@ CASES: list[dict[str, Any]] = [
             "data_access_context": {"as_of": "2026-08-01T00:00:00Z"},
         },
     },
+    # ---- vertical packs (APPENDED — same uuid-stability rule as above). -------
+    # AdTech: consent as three permissions in one field.
+    {
+        "id": "adtech-personalization-allowed-use-review",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("customers"),
+            "scenario_key": "purpose.allowed_use",
+            "use": "personalize offers from customer records",
+            "purpose_key": "marketing.personalization",
+        },
+    },
+    {
+        "id": "adtech-personalization-prohibited-deny",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("customers"),
+            "scenario_key": "purpose.prohibited_use",
+            "use": "personalize offers from customer records",
+            "purpose_key": "marketing.personalization",
+        },
+    },
+    {
+        "id": "adtech-consent-measurement-conditional",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("customers"),
+            "scenario_key": "consent.required",
+            "use": "measure campaign reach across customers",
+            "purpose_key": "analytics.reporting",
+        },
+    },
+    {
+        "id": "adtech-consent-personalization-conditional",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("customers"),
+            "scenario_key": "consent.required",
+            "use": "personalize offers from customer records",
+            "purpose_key": "marketing.personalization",
+        },
+    },
+    {
+        "id": "adtech-consent-activation-conditional",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("customers"),
+            "scenario_key": "consent.required",
+            "use": "activate an audience with a demand-side partner",
+            "purpose_key": "sharing.third_party",
+        },
+    },
+    {
+        "id": "adtech-consent-purpose-missing-review",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("customers"),
+            "scenario_key": "consent.required",
+            "use": "use customer records for an advertising workflow",
+        },
+    },
+    {
+        "id": "adtech-export-approved-dsp-conditional",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("ad_audience_exports"),
+            "scenario_key": "residency.cross_border_transfer",
+            "use": "activate the consented audience with an approved partner",
+            "operation": "export",
+            "destination": {"system": "APPROVED_DSP_A"},
+        },
+    },
+    {
+        "id": "adtech-export-unlisted-dsp-deny",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("ad_audience_exports"),
+            "scenario_key": "residency.cross_border_transfer",
+            "use": "activate the audience with an unlisted platform",
+            "operation": "export",
+            "destination": {"system": "UNLISTED_DSP"},
+        },
+    },
+    {
+        "id": "adtech-consent-sql-analytics-pass",
+        "tool": "validate_query_context",
+        "arguments": {
+            "sql": "SELECT customer_id, consent_measurement, consent_personalization, consent_activation FROM customers",
+            "scenario_key": "purpose.allowed_use",
+            "default_database": DATABASE,
+            "default_schema": SCHEMA,
+            "purpose_key": "analytics.reporting",
+        },
+    },
+    {
+        "id": "adtech-consent-sql-personalization-warn",
+        "tool": "validate_query_context",
+        "arguments": {
+            "sql": "SELECT customer_id, consent_measurement, consent_personalization, consent_activation FROM customers",
+            "scenario_key": "purpose.allowed_use",
+            "default_database": DATABASE,
+            "default_schema": SCHEMA,
+            "purpose_key": "marketing.personalization",
+        },
+    },
+    {
+        "id": "explain_adtech_consent_authorization",
+        "tool": "explain_why",
+        "arguments": {
+            "kind": "authorization",
+            "authorization_id": "@adtech-consent-measurement-conditional.authorization_id",
+        },
+    },
+    # Payments: local data isn't the source of truth.
+    {
+        "id": "meaning_payment_transactions_settlement_state",
+        "tool": "inspect_data_meaning",
+        "arguments": {"ref": asset("payment_transactions", "settlement_state", schema="finance")},
+    },
+    {
+        "id": "meaning_network_settlements_settlement_state",
+        "tool": "inspect_data_meaning",
+        "arguments": {"ref": asset("network_settlements", "settlement_state", schema="finance")},
+    },
+    {
+        "id": "pay-fraud-network-allow",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("network_settlements", schema="finance"),
+            "scenario_key": "purpose.allowed_use",
+            "use": "investigate suspected fraud on a settled transaction",
+            "purpose_key": "fraud.detection",
+        },
+    },
+    {
+        "id": "pay-fraud-transactions-review",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("payment_transactions", schema="finance"),
+            "scenario_key": "purpose.allowed_use",
+            "use": "investigate suspected fraud on a settled transaction",
+            "purpose_key": "fraud.detection",
+        },
+    },
+    {
+        "id": "pay-ops-transactions-allow",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("payment_transactions", schema="finance"),
+            "scenario_key": "purpose.allowed_use",
+            "use": "answer a customer-facing balance question",
+            "purpose_key": "operations.support",
+        },
+    },
+    {
+        "id": "pay-audit-processor-allow",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("processor_settlements", schema="finance"),
+            "scenario_key": "purpose.allowed_use",
+            "use": "reconcile processor fees for the audit trail",
+            "purpose_key": "compliance.audit",
+        },
+    },
+    {
+        "id": "pay-analytics-reconciled-conditional",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("payment_transactions", schema="finance"),
+            "scenario_key": "quality.reliability",
+            "use": "report revenue analytics over payment transactions",
+            "purpose_key": "analytics.reporting",
+        },
+    },
+    {
+        "id": "pay-fraud-wrong-source-warn",
+        "tool": "validate_query_context",
+        "arguments": {
+            "sql": "SELECT transaction_id, settlement_state FROM master.finance.payment_transactions WHERE settlement_state <> 'reconciled'",
+            "scenario_key": "purpose.allowed_use",
+            "default_database": DATABASE,
+            "default_schema": SCHEMA,
+            "purpose_key": "fraud.detection",
+        },
+    },
+    {
+        "id": "pay-fraud-right-source-pass",
+        "tool": "validate_query_context",
+        "arguments": {
+            "sql": "SELECT transaction_id, settlement_state FROM master.finance.network_settlements",
+            "scenario_key": "purpose.allowed_use",
+            "default_database": DATABASE,
+            "default_schema": SCHEMA,
+            "purpose_key": "fraud.detection",
+        },
+    },
+    {
+        "id": "pay-reconciled-quality-warn",
+        "tool": "validate_query_context",
+        "arguments": {
+            "sql": "SELECT transaction_id, amount FROM master.finance.payment_transactions",
+            "scenario_key": "quality.reliability",
+            "default_database": DATABASE,
+            "default_schema": SCHEMA,
+            "purpose_key": "analytics.reporting",
+        },
+    },
+    # Healthcare: one person as four concepts (per-role credentials).
+    {
+        "id": "care-clinical-read-allow",
+        "tool": "authorize_use",
+        "bound_role": "clinical",
+        "arguments": {
+            "asset": asset("member_records"),
+            "scenario_key": "access.read",
+            "use": "read the full member record on a treatment basis",
+        },
+    },
+    {
+        "id": "care-member-services-read-review",
+        "tool": "authorize_use",
+        "bound_role": "member_services",
+        "arguments": {
+            "asset": asset("member_records"),
+            "scenario_key": "access.read",
+            "use": "read the full member record for coverage work",
+        },
+    },
+    {
+        "id": "care-research-read-review",
+        "tool": "authorize_use",
+        "bound_role": "research",
+        "arguments": {
+            "asset": asset("member_records"),
+            "scenario_key": "access.read",
+            "use": "read member records for a research cohort",
+        },
+    },
+    {
+        "id": "care-marketing-read-review",
+        "tool": "authorize_use",
+        "bound_role": "marketing",
+        "arguments": {
+            "asset": asset("member_records"),
+            "scenario_key": "access.read",
+            "use": "read member records for outreach targeting",
+        },
+    },
+    {
+        "id": "care-notes-clinical-allow",
+        "tool": "authorize_use",
+        "bound_role": "clinical",
+        "arguments": {
+            "asset": asset("member_records", "clinical_notes"),
+            "scenario_key": "masking.display",
+            "use": "display clinician notes during treatment",
+        },
+    },
+    {
+        "id": "care-notes-member-services-mask",
+        "tool": "authorize_use",
+        "bound_role": "member_services",
+        "arguments": {
+            "asset": asset("member_records", "clinical_notes"),
+            "scenario_key": "masking.display",
+            "use": "display the member record in a coverage tool",
+        },
+    },
+    {
+        "id": "care-eligibility-allow",
+        "tool": "authorize_use",
+        "bound_role": "member_services",
+        "arguments": {
+            "asset": asset("member_records"),
+            "scenario_key": "purpose.allowed_use",
+            "use": "check coverage eligibility for a claim",
+            "purpose_key": "care.eligibility",
+        },
+    },
+    {
+        "id": "care-research-anonymize-conditional",
+        "tool": "authorize_use",
+        "bound_role": "research",
+        "arguments": {
+            "asset": asset("member_records"),
+            "scenario_key": "protection.anonymization",
+            "use": "analyze member outcomes for a research study",
+            "purpose_key": "research.general",
+        },
+    },
+    {
+        "id": "care-training-deny",
+        "tool": "authorize_use",
+        "bound_role": "research",
+        "arguments": {
+            "asset": asset("member_records"),
+            "scenario_key": "ai.training",
+            "use": "train a model on member records",
+        },
+    },
+    {
+        "id": "care-marketing-outreach-deny",
+        "tool": "authorize_use",
+        "bound_role": "marketing",
+        "arguments": {
+            "asset": asset("member_records"),
+            "scenario_key": "purpose.prohibited_use",
+            "use": "market wellness products to members",
+            "purpose_key": "marketing.advertising",
+        },
+    },
+    {
+        "id": "care-consent-eligibility-conditional",
+        "tool": "authorize_use",
+        "bound_role": "member_services",
+        "arguments": {
+            "asset": asset("member_records"),
+            "scenario_key": "consent.required",
+            "use": "check coverage eligibility for a claim",
+            "purpose_key": "care.eligibility",
+        },
+    },
+    {
+        "id": "care-consent-research-conditional",
+        "tool": "authorize_use",
+        "bound_role": "research",
+        "arguments": {
+            "asset": asset("member_records"),
+            "scenario_key": "consent.required",
+            "use": "analyze member outcomes for a research study",
+            "purpose_key": "research.general",
+        },
+    },
+    {
+        "id": "care-consent-marketing-conditional",
+        "tool": "authorize_use",
+        "bound_role": "marketing",
+        "arguments": {
+            "asset": asset("member_records"),
+            "scenario_key": "consent.required",
+            "use": "market wellness products to members",
+            "purpose_key": "marketing.advertising",
+        },
+    },
+    {
+        "id": "care-consent-treatment-purpose-unruled-review",
+        "tool": "authorize_use",
+        "bound_role": "clinical",
+        "arguments": {
+            "asset": asset("member_records"),
+            "scenario_key": "consent.required",
+            "use": "treat the member in a clinical encounter",
+            "purpose_key": "care.treatment",
+        },
+    },
+    {
+        "id": "care-notes-sql-clinical-pass",
+        "tool": "validate_query_context",
+        "bound_role": "clinical",
+        "arguments": {
+            "sql": "SELECT member_id, clinical_notes FROM care.public.member_records",
+            "scenario_key": "purpose.allowed_use",
+            "default_database": DATABASE,
+            "default_schema": SCHEMA,
+            "purpose_key": "care.treatment",
+        },
+    },
+    {
+        "id": "care-notes-sql-member-services-warn",
+        "tool": "validate_query_context",
+        "bound_role": "member_services",
+        "arguments": {
+            "sql": "SELECT member_id, clinical_notes FROM care.public.member_records",
+            "scenario_key": "purpose.allowed_use",
+            "default_database": DATABASE,
+            "default_schema": SCHEMA,
+            "purpose_key": "care.treatment",
+        },
+    },
+    {
+        "id": "explain_care_anonymize_authorization",
+        "tool": "explain_why",
+        "arguments": {
+            "kind": "authorization",
+            "authorization_id": "@care-research-anonymize-conditional.authorization_id",
+        },
+    },
+    # Government: the fields are there, the program rules aren't.
+    {
+        "id": "gov-determination-statute-2025-allow",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("applicants"),
+            "scenario_key": "compliance.regulatory",
+            "use": "determine benefits eligibility for an application",
+            "purpose_key": "benefits.determination",
+        },
+    },
+    {
+        "id": "gov-statute-as-of-2027-conditional",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("applicants"),
+            "scenario_key": "compliance.regulatory",
+            "use": "determine benefits eligibility for an application",
+            "purpose_key": "benefits.determination",
+            "data_access_context": {"as_of": "2027-02-01T00:00:00Z"},
+        },
+    },
+    {
+        "id": "gov-qualifying-conditions-not-yet-effective",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("qualifying_conditions"),
+            "scenario_key": "compliance.regulatory",
+            "use": "apply the modernized categorical checklist",
+            "purpose_key": "benefits.determination",
+        },
+    },
+    {
+        "id": "gov-categorical-precedence-conditional",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("applicants"),
+            "scenario_key": "ai.automated_decisioning",
+            "use": "run an automated benefits determination",
+            "purpose_key": "benefits.determination",
+        },
+    },
+    {
+        "id": "gov-conflict-verification-review",
+        "tool": "authorize_use",
+        "arguments": {
+            "asset": asset("applicants"),
+            "scenario_key": "purpose.allowed_use",
+            "use": "run verification outreach against applicants",
+        },
+    },
+    {
+        "id": "gov-determination-2025-pass",
+        "tool": "validate_query_context",
+        "arguments": {
+            "sql": "SELECT applicant_id, categorical_flag FROM benefits.public.applicants",
+            "scenario_key": "compliance.regulatory",
+            "default_database": DATABASE,
+            "default_schema": SCHEMA,
+            "purpose_key": "benefits.determination",
+        },
+    },
+    {
+        "id": "gov-determination-as-of-2027-warn",
+        "tool": "validate_query_context",
+        "arguments": {
+            "sql": "SELECT applicant_id, categorical_flag FROM benefits.public.applicants",
+            "scenario_key": "compliance.regulatory",
+            "default_database": DATABASE,
+            "default_schema": SCHEMA,
+            "purpose_key": "benefits.determination",
+            "data_access_context": {"as_of": "2027-02-01T00:00:00Z"},
+        },
+    },
+    {
+        "id": "explain_gov_statute_authorization",
+        "tool": "explain_why",
+        "arguments": {
+            "kind": "authorization",
+            "authorization_id": "@gov-statute-as-of-2027-conditional.authorization_id",
+        },
+    },
 ]
 
 
@@ -729,19 +1215,36 @@ def _norm(value: Any) -> Any:
     return value
 
 
-def signature(tool: str, arguments: dict[str, Any]) -> str:
-    """A stable matching signature for (tool, arguments)."""
+def signature(tool: str, arguments: dict[str, Any], bound_role: str | None = None) -> str:
+    """A stable matching signature for (tool, arguments, credential role).
+
+    `bound_role` is part of the signature because the CREDENTIAL selects the
+    answer: two byte-identical calls under different role-bound tokens are
+    different questions with different recordings (the healthcare role-flip
+    SQL pair). `None` keeps every pre-existing identity-neutral signature
+    byte-identical.
+    """
     import json
 
-    return json.dumps({"tool": tool, "arguments": _norm(arguments)}, sort_keys=True)
+    payload: dict[str, Any] = {"tool": tool, "arguments": _norm(arguments)}
+    if bound_role is not None:
+        payload["bound_role"] = bound_role
+    return json.dumps(payload, sort_keys=True)
 
 
-def case_for(tool: str, arguments: dict[str, Any]) -> dict[str, Any] | None:
-    """Find the canonical case matching a call (exact normalized match)."""
-    wanted = signature(tool, arguments)
+def case_for(
+    tool: str, arguments: dict[str, Any], bound_role: str | None = None
+) -> dict[str, Any] | None:
+    """Find the canonical case matching a call (exact normalized match).
+
+    The caller's credential role must equal the case's `bound_role` — a
+    role-bound case is unreachable from an identity-neutral client, exactly
+    like live (the token carries the role, never the arguments).
+    """
+    wanted = signature(tool, arguments, bound_role)
     for case in CASES:
         if case["tool"] != tool:
             continue
-        if signature(tool, case["arguments"]) == wanted:
+        if signature(tool, case["arguments"], case.get("bound_role")) == wanted:
             return case
     return None

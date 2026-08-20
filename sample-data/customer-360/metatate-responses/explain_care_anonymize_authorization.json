@@ -1,0 +1,51 @@
+{
+  "answer": {
+    "answer_state": "answered",
+    "authorization_id": "accef000-0000-4000-8000-000000000259",
+    "cited_decision_ids": [
+      "accef000-0000-4000-8000-000000000260"
+    ],
+    "decision": "conditional",
+    "evaluated": {
+      "asset": {
+        "column": null,
+        "database": "care",
+        "schema": "public",
+        "table": "member_records"
+      },
+      "consumer_jurisdiction": null,
+      "destination": null,
+      "operation": null,
+      "purpose_context": {
+        "purpose_category": "research",
+        "purpose_key": "research.general",
+        "registry_version": 3
+      },
+      "scenario_key": "protection.anonymization"
+    },
+    "kind": "authorization",
+    "provenance": {
+      "actor": {
+        "bound_role": "research",
+        "kind": "custom",
+        "name": "Customer 360 research examples agent"
+      },
+      "envelope_version": 3,
+      "evaluated_at": "2026-07-30T00:00:00.000Z",
+      "evaluator_version": "metatate-mcp-server@0.3.0",
+      "publication": {
+        "is_current": true,
+        "publication_id": "accef000-0000-4000-8000-000000000001",
+        "published_at": "2026-07-16T00:00:00.000Z"
+      }
+    },
+    "reason_code": null,
+    "satisfied_exception_ids": null
+  },
+  "arguments": {
+    "authorization_id": "accef000-0000-4000-8000-000000000259",
+    "kind": "authorization"
+  },
+  "case_id": "explain_care_anonymize_authorization",
+  "tool": "explain_why"
+}

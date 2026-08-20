@@ -44,6 +44,16 @@ customTypes:
     description: Model-derived churn propensity for a customer account.
     sensitivity: internal
     isPii: false
+  - id: custom.clinical_code
+    label: Clinical code
+    description: Clinical diagnosis or qualifying-condition code (illustrative).
+    sensitivity: restricted
+    isPii: true
+  - id: custom.clinical_free_text
+    label: Clinical free text
+    description: Clinician-authored free text that may embed health details.
+    sensitivity: restricted
+    isPii: true
 
 # Catalog collections: reusable, named sets of tables a policy can target by
 # id. "Customer 360" is the everything-about-a-customer view — the
@@ -92,6 +102,24 @@ tables:
       - name: marketing_consent
         dataType: text
         nullable: true
+        classification: { dataTypeId: custom.consent_flag, sensitivity: confidential, isPii: true, source: manual }
+      # AdTech pack: the single legacy boolean above collapses three distinct
+      # permissions; these purpose-scoped bases are the fixed model the
+      # consent-requirements policy serves per declared purpose.
+      - name: consent_measurement
+        dataType: text
+        nullable: true
+        description: Recorded consent to measurement/analytics use.
+        classification: { dataTypeId: custom.consent_flag, sensitivity: confidential, isPii: true, source: manual }
+      - name: consent_personalization
+        dataType: text
+        nullable: true
+        description: Recorded consent to personalization use.
+        classification: { dataTypeId: custom.consent_flag, sensitivity: confidential, isPii: true, source: manual }
+      - name: consent_activation
+        dataType: text
+        nullable: true
+        description: Recorded consent to third-party activation/sharing.
         classification: { dataTypeId: custom.consent_flag, sensitivity: confidential, isPii: true, source: manual }
       - name: created_at
         dataType: timestamptz
@@ -338,4 +366,210 @@ tables:
         nullable: false
       - name: ledger_account
         dataType: text
+        nullable: false
+  # ---------------------------------------------------------------------------
+  # AdTech pack: audiences derived only from consented signals; activation is
+  # a destination-aware transfer on its OWN table (never on customers, so the
+  # existing transfer-guardrails policy keeps its lane untouched).
+  # ---------------------------------------------------------------------------
+  - name: ad_audience_exports
+    description: Activation audiences awaiting destination-aware authorization.
+    tags: [marketing, restricted_transfer]
+    columns:
+      - name: export_id
+        dataType: uuid
+        nullable: false
+      - name: customer_id
+        dataType: uuid
+        nullable: false
+      - name: audience_segment
+        dataType: text
+        nullable: false
+        description: Audience derived only from consented signals.
+      - name: destination_system
+        dataType: text
+        nullable: false
+      - name: activated_at
+        dataType: timestamptz
+        nullable: true
+  # ---------------------------------------------------------------------------
+  # Payments pack: the same transaction's truth is distributed across three
+  # systems that disagree in real time; the authoritative source depends on
+  # the QUESTION, and the policies serve that judgment.
+  # ---------------------------------------------------------------------------
+  - name: payment_transactions
+    schema: finance
+    description: Local payment processing ledger for customer transactions.
+    tags: [financial, payments]
+    columns:
+      - name: transaction_id
+        dataType: uuid
+        nullable: false
+      - name: customer_id
+        dataType: uuid
+        nullable: false
+      - name: amount
+        dataType: numeric
+        nullable: false
+        classification: { dataTypeId: financial.revenue, sensitivity: internal, isPii: false, source: pattern }
+      - name: status
+        dataType: text
+        nullable: false
+        description: >-
+          Local processing status (authorized|captured|settled_pending|reconciled)
+          — what THIS system last saw, not the network truth.
+      - name: settlement_state
+        dataType: text
+        nullable: false
+        description: >-
+          Local mirror of settlement progress; the authoritative settlement
+          state lives in network_settlements.
+      - name: occurred_at
+        dataType: timestamptz
+        nullable: false
+  - name: processor_settlements
+    schema: finance
+    description: Processor-reported settlement batches and fees.
+    tags: [financial, payments]
+    columns:
+      - name: settlement_id
+        dataType: uuid
+        nullable: false
+      - name: transaction_id
+        dataType: uuid
+        nullable: false
+      - name: processor_batch
+        dataType: text
+        nullable: false
+      - name: fee_amount
+        dataType: numeric
+        nullable: false
+        classification: { dataTypeId: financial.revenue, sensitivity: internal, isPii: false, source: pattern }
+      - name: settlement_state
+        dataType: text
+        nullable: false
+        description: Processor-reported state — authoritative for fees, not for network settlement.
+      - name: settled_at
+        dataType: timestamptz
+        nullable: true
+  - name: network_settlements
+    schema: finance
+    description: Network-confirmed settlement records — the reconciliation source of truth.
+    tags: [financial, payments]
+    columns:
+      - name: network_settlement_id
+        dataType: uuid
+        nullable: false
+      - name: transaction_id
+        dataType: uuid
+        nullable: false
+      - name: network
+        dataType: text
+        nullable: false
+      - name: settlement_state
+        dataType: text
+        nullable: false
+        description: Network-confirmed settlement state — the reconciliation source of truth.
+      - name: settled_at
+        dataType: timestamptz
+        nullable: true
+  # ---------------------------------------------------------------------------
+  # Healthcare pack (database: care): ONE person as four concepts — patient
+  # (clinical), member (coverage), consumer (marketing), subject (research).
+  # Field-level specifics are deliberately illustrative, not clinical guidance.
+  # ---------------------------------------------------------------------------
+  - name: member_records
+    database: care
+    description: One record per person, governed differently per context of use.
+    tags: [health, pii, privacy_sensitive]
+    columns:
+      - name: member_id
+        dataType: uuid
+        nullable: false
+      - name: member_name
+        dataType: text
+        nullable: false
+        classification: { dataTypeId: pii.identity.full_name, sensitivity: confidential, isPii: true, source: pattern }
+      - name: diagnosis_code
+        dataType: text
+        nullable: true
+        description: Clinical diagnosis code (illustrative).
+        classification: { dataTypeId: custom.clinical_code, sensitivity: restricted, isPii: true, source: manual }
+      - name: clinical_notes
+        dataType: text
+        nullable: true
+        description: Clinician-authored free text (illustrative).
+        classification: { dataTypeId: custom.clinical_free_text, sensitivity: restricted, isPii: true, source: manual }
+      - name: plan_id
+        dataType: text
+        nullable: true
+        description: Coverage plan identifier.
+      - name: coverage_status
+        dataType: text
+        nullable: true
+        description: Active coverage authorization — the recorded basis for eligibility reads.
+      - name: contact_email
+        dataType: text
+        nullable: true
+        classification: { dataTypeId: pii.contact.email, sensitivity: confidential, isPii: true, source: pattern }
+      - name: research_consent
+        dataType: text
+        nullable: true
+        description: Recorded research authorization for this person's data.
+        classification: { dataTypeId: custom.consent_flag, sensitivity: confidential, isPii: true, source: manual }
+      - name: consumer_marketing_consent
+        dataType: text
+        nullable: true
+        description: Recorded consumer-marketing opt-in for this person.
+        classification: { dataTypeId: custom.consent_flag, sensitivity: confidential, isPii: true, source: manual }
+      - name: updated_at
+        dataType: timestamptz
+        nullable: false
+  # ---------------------------------------------------------------------------
+  # Government pack (database: benefits): the fields are there, the program
+  # rules are not — eligibility lives in versioned, date-effective statute
+  # policies layered over the record. Mechanics illustrative by design.
+  # ---------------------------------------------------------------------------
+  - name: applicants
+    database: benefits
+    description: Benefits applications as filed; the program rules live in statute policies.
+    tags: [government, pii]
+    columns:
+      - name: applicant_id
+        dataType: uuid
+        nullable: false
+      - name: household_size
+        dataType: integer
+        nullable: false
+      - name: monthly_income
+        dataType: numeric
+        nullable: true
+        description: Income as reported at application — the income TEST lives in statute, not in this field.
+      - name: categorical_flag
+        dataType: text
+        nullable: true
+        description: Recorded categorical-program participation — the eligibility RULE lives in statute.
+      - name: applied_at
+        dataType: timestamptz
+        nullable: false
+  - name: qualifying_conditions
+    database: benefits
+    description: Verified qualifying conditions; governed only by the statute version not yet in force.
+    tags: [government, pii]
+    columns:
+      - name: condition_id
+        dataType: uuid
+        nullable: false
+      - name: applicant_id
+        dataType: uuid
+        nullable: false
+      - name: condition_code
+        dataType: text
+        nullable: true
+        classification: { dataTypeId: custom.clinical_code, sensitivity: restricted, isPii: true, source: manual }
+      - name: verified
+        dataType: boolean
+        nullable: false
+      - name: recorded_at
+        dataType: timestamptz
         nullable: false

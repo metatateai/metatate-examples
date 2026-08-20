@@ -10,7 +10,7 @@
         "conflict": null,
         "decision": "mask_partial",
         "decision_reason": "email-masking v1 masking:spec.accessControl.masking \u2192 mask_partial on master.public.employees.work_email",
-        "finding_id": "accef000-0000-4000-8000-000000000129",
+        "finding_id": "accef000-0000-4000-8000-000000000140",
         "instructions": [
           {
             "category": "enforceable",
@@ -18,7 +18,7 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "mask_partial",
-            "decision_id": "accef000-0000-4000-8000-000000000088",
+            "decision_id": "accef000-0000-4000-8000-000000000099",
             "decision_reason": "email-masking v1 masking:spec.accessControl.masking \u2192 mask_partial on master.public.employees.work_email",
             "effective_from": null,
             "effective_until": null,
@@ -62,7 +62,7 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "require_review",
-            "decision_id": "accef000-0000-4000-8000-000000000103",
+            "decision_id": "accef000-0000-4000-8000-000000000114",
             "decision_reason": "Permitted uses require a declared purpose; this call stated none (policy Employee data access).",
             "effective_from": null,
             "effective_until": null,
@@ -78,9 +78,9 @@
             "primary_resolution_source": "selector",
             "priority": 2,
             "provenance": {
-              "policy_id": "accef000-0000-4000-8000-000000000057",
+              "policy_id": "accef000-0000-4000-8000-000000000068",
               "policy_name": "Employee data access",
-              "policy_version_id": "accef000-0000-4000-8000-000000000058",
+              "policy_version_id": "accef000-0000-4000-8000-000000000069",
               "version_number": 1
             },
             "resolution_paths": [
@@ -115,7 +115,8 @@
       "published_at": "2026-07-16T00:00:00.000Z"
     },
     "state": "answered",
-    "validation_id": "accef000-0000-4000-8000-000000000128",
+    "validation_id": "accef000-0000-4000-8000-000000000139",
+    "validity_evaluated_at": "2026-08-20T21:47:45.679Z",
     "verdict": "warn"
   },
   "arguments": {

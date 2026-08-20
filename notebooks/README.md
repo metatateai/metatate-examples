@@ -24,6 +24,10 @@ endpoint instead (see `docs/live-mode-saas.md`).
 15. `14_governed_agent_end_to_end.ipynb`
 16. `15_audit_evidence_packet.ipynb`
 17. `16_purpose_bound_agent_data_windows.ipynb`
+18. `17_adtech_consent_three_permissions_one_field.ipynb`
+19. `18_payments_local_data_is_not_the_source_of_truth.ipynb`
+20. `19_healthcare_one_person_four_concepts.ipynb`
+21. `20_government_rules_outside_the_record.ipynb`
 
 Notebook `06_ci_gate_for_data_ai_changes.ipynb` uses the reusable `cicd_policy_gate` package. The same gate can be run from CI with `scripts/run_cicd_policy_gate.sh`.
 
@@ -46,3 +50,11 @@ and rerun it. CI enforces this via `scripts/build_notebooks.py --check`.
 Framework runtime acceptance for LangGraph, OpenAI Agents SDK, and LlamaIndex
 lives outside the notebook pack in `framework_runtime/`. See
 `docs/validation-matrix.md`.
+
+The four vertical-pack notebooks (17-20) are named after the use cases they
+model: purpose-scoped consent (`consent_required` conditions, never
+caller-satisfiable), the payments source-of-truth authority matrix, the
+healthcare four-context role matrix (four role-bound credentials, offline and
+live), and date-effective statute governance with the `data_access_context.as_of`
+flip. Notebook 19 requires the four role tokens in live mode
+(`METATATE_SAAS_MCP_{CLINICAL,MEMBER_SERVICES,RESEARCH,MARKETING}_TOKEN`).

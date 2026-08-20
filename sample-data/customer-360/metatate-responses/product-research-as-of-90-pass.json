@@ -9,14 +9,14 @@
     "evaluated_purpose": {
       "purpose_category": "research",
       "purpose_key": "research.general",
-      "registry_version": 2
+      "registry_version": 3
     },
     "findings": [
       {
         "conflict": null,
         "decision": "allow",
         "decision_reason": "The query proves an as-of occurred_at range within 2026-05-03T00:00:00.000Z through 2026-08-01T00:00:00.000Z.",
-        "finding_id": "accef000-0000-4000-8000-000000000191",
+        "finding_id": "accef000-0000-4000-8000-000000000202",
         "instructions": [
           {
             "category": "enforceable",
@@ -24,7 +24,7 @@
             "conflict_status": "none",
             "conflicts_with": [],
             "decision": "allow",
-            "decision_id": "accef000-0000-4000-8000-000000000178",
+            "decision_id": "accef000-0000-4000-8000-000000000189",
             "decision_reason": "The query proves an as-of occurred_at range within 2026-05-03T00:00:00.000Z through 2026-08-01T00:00:00.000Z.",
             "effective_from": null,
             "effective_until": null,
@@ -65,9 +65,9 @@
             "primary_resolution_source": "selector",
             "priority": 2,
             "provenance": {
-              "policy_id": "accef000-0000-4000-8000-000000000179",
+              "policy_id": "accef000-0000-4000-8000-000000000190",
               "policy_name": "Product data agent access windows",
-              "policy_version_id": "accef000-0000-4000-8000-000000000180",
+              "policy_version_id": "accef000-0000-4000-8000-000000000191",
               "version_number": 1
             },
             "resolution_paths": [
@@ -102,7 +102,8 @@
       "published_at": "2026-07-16T00:00:00.000Z"
     },
     "state": "answered",
-    "validation_id": "accef000-0000-4000-8000-000000000190",
+    "validation_id": "accef000-0000-4000-8000-000000000201",
+    "validity_evaluated_at": "2026-08-01T00:00:00Z",
     "verdict": "pass"
   },
   "arguments": {

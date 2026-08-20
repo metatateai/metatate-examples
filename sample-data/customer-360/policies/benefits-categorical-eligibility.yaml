@@ -1,0 +1,37 @@
+# Customer 360 estate spec — Government pack: managed precedence, upper band.
+# A verified categorical qualifier auto-qualifies regardless of income; the
+# critical band outranks the income test's high band — precedence is
+# governed and visible in the ranked instructions, never guessed.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: benefits-categorical-eligibility
+  version: 1.0.0
+  description: >-
+    Categorical eligibility takes precedence: a verified qualifying
+    condition supports the determination regardless of the income test.
+  tags: [government, pii]
+  businessContext:
+    domain: Benefits Program
+    owner: Program Administration
+    steward: program-policy@example.com
+    purpose: Categorical-eligibility precedence over the income test.
+spec:
+  enforcementMode: enforce
+  priority: 850
+  selector:
+    databases: [benefits]
+    schemas: [public]
+    tables: [applicants]
+  classification:
+    sensitivity: restricted
+    category: pii
+  usage:
+    # B3: registry vocabulary (benefits.determination is v3).
+    permittedUses: [benefits.determination]
+extensions:
+  displayName: Benefits categorical eligibility
+  scenarioMap:
+    "usage_guidance:spec.usage.permittedUses:permitted":
+      scenarioKey: ai.automated_decisioning
+      source: user_confirmed

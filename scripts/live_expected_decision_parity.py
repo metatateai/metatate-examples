@@ -103,13 +103,15 @@ def _call(client: Any, case: dict[str, Any]) -> dict[str, Any]:
 
 
 def _client_for_case(
-    case: dict[str, Any], default_client: Any, agent_client: Any | None
+    case: dict[str, Any], default_client: Any, role_clients: dict[str, Any]
 ) -> Any:
-    if case.get("bound_role") != "agent":
+    role = case.get("bound_role")
+    if not role:
         return default_client
-    if agent_client is None:
-        raise RuntimeError("agent-bound case has no agent client")
-    return agent_client
+    client = role_clients.get(str(role))
+    if client is None:
+        raise RuntimeError(f"{role}-bound case has no client for its role")
+    return client
 
 
 def main() -> int:
@@ -122,22 +124,21 @@ def main() -> int:
     manifest = json.loads(MANIFEST.read_text())
     by_id = {c["id"]: c for c in CASES}
 
+    from common.fixture_cases import ROLE_TOKEN_ENVS
     from common.saas_client import MetatateCloudClient
     client = MetatateCloudClient()
-    agent_case_ids = {
-        str(case["id"]) for case in CASES if case.get("bound_role") == "agent"
-    }
-    agent_client: MetatateCloudClient | None = None
-    if agent_case_ids:
-        if not os.getenv("METATATE_SAAS_MCP_AGENT_TOKEN"):
+    # One live client per bound role the cases carry — fail-closed on a
+    # missing env, exactly like the recorder.
+    role_clients: dict[str, MetatateCloudClient] = {}
+    for role in sorted({str(c["bound_role"]) for c in CASES if c.get("bound_role")}):
+        env = ROLE_TOKEN_ENVS.get(role)
+        if env is None or not os.getenv(env):
             print(
-                "REFUSING: agent-bound parity cases require "
-                "METATATE_SAAS_MCP_AGENT_TOKEN (a {read} token with bound_role=agent)."
+                f"REFUSING: {role}-bound parity cases require {env or '<unmapped role>'} "
+                f"(a {{read}} token with bound_role={role})."
             )
             return 2
-        agent_client = MetatateCloudClient(
-            token_env="METATATE_SAAS_MCP_AGENT_TOKEN"
-        )
+        role_clients[role] = MetatateCloudClient(token_env=env)
 
     # THREE DISTINCT COUNTERS. They were one "skipped" bucket, which made a
     # delegated-but-green fence look identical to a real skipped case — the gate
@@ -183,7 +184,7 @@ def main() -> int:
             continue
         expected = entry["expected_offline_projection"]
         try:
-            case_client = _client_for_case(case, client, agent_client)
+            case_client = _client_for_case(case, client, role_clients)
             answer = _call(case_client, case)
         except Exception as exc:  # noqa: BLE001
             print(f"  FAIL  {cid}: live call raised {type(exc).__name__}: {exc}")
@@ -253,7 +254,7 @@ def main() -> int:
             continue
         expected = check.get("expected_projection") or {}
         try:
-            case_client = _client_for_case(case, client, agent_client)
+            case_client = _client_for_case(case, client, role_clients)
             answer = _call(case_client, case)
         except Exception as exc:  # noqa: BLE001
             print(f"  FAIL  {cid}: live call raised {exc}")

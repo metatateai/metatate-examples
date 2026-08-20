@@ -7,7 +7,7 @@
       "schema": "public",
       "table": "ml_feature_store"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000081",
+    "authorization_id": "accef000-0000-4000-8000-000000000092",
     "can_proceed_now": false,
     "conditions": [],
     "context_facts": {
@@ -18,7 +18,7 @@
       "subcategory": null
     },
     "decision": "deny",
-    "decision_id": "accef000-0000-4000-8000-000000000082",
+    "decision_id": "accef000-0000-4000-8000-000000000093",
     "evaluated_actor_role": null,
     "evaluated_at": "2026-07-30T00:00:00.000Z",
     "evaluated_data_access_context": null,
@@ -30,7 +30,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "deny",
-        "decision_id": "accef000-0000-4000-8000-000000000082",
+        "decision_id": "accef000-0000-4000-8000-000000000093",
         "decision_reason": "ml-embedding-guardrails v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on product.public.ml_feature_store",
         "effective_from": null,
         "effective_until": null,
@@ -46,9 +46,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000077",
+          "policy_id": "accef000-0000-4000-8000-000000000088",
           "policy_name": "ML embedding guardrails",
-          "policy_version_id": "accef000-0000-4000-8000-000000000078",
+          "policy_version_id": "accef000-0000-4000-8000-000000000089",
           "version_number": 1
         },
         "resolution_paths": [
@@ -89,7 +89,8 @@
     "satisfied_exceptions": [],
     "scenario_key": "ai.automated_decisioning",
     "scenario_lane": "agent",
-    "state": "answered"
+    "state": "answered",
+    "validity_evaluated_at": "2026-08-20T21:47:45.575Z"
   },
   "arguments": {
     "asset": {

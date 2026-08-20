@@ -7,7 +7,7 @@
       "schema": "public",
       "table": "employees"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000061",
+    "authorization_id": "accef000-0000-4000-8000-000000000072",
     "can_proceed_now": false,
     "conditions": [],
     "conflict": null,
@@ -33,7 +33,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "require_review",
-        "decision_id": "accef000-0000-4000-8000-000000000062",
+        "decision_id": "accef000-0000-4000-8000-000000000073",
         "decision_reason": "hr-name-review v1 masking:spec.accessControl.masking \u2192 require_review on master.public.employees.full_name",
         "effective_from": null,
         "effective_until": null,
@@ -46,9 +46,9 @@
         "primary_resolution_source": "selector",
         "priority": 1,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000063",
+          "policy_id": "accef000-0000-4000-8000-000000000074",
           "policy_name": "HR name review masking",
-          "policy_version_id": "accef000-0000-4000-8000-000000000064",
+          "policy_version_id": "accef000-0000-4000-8000-000000000075",
           "version_number": 1
         },
         "resolution_paths": [
@@ -81,7 +81,8 @@
     "satisfied_exceptions": [],
     "scenario_key": "masking.display",
     "scenario_lane": "platform",
-    "state": "review_required"
+    "state": "review_required",
+    "validity_evaluated_at": "2026-08-20T21:47:45.528Z"
   },
   "arguments": {
     "asset": {

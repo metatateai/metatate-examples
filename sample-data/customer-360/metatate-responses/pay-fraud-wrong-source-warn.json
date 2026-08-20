@@ -1,0 +1,95 @@
+{
+  "answer": {
+    "advisory": true,
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": {
+      "purpose_category": "fraud",
+      "purpose_key": "fraud.detection",
+      "registry_version": 3
+    },
+    "findings": [
+      {
+        "conflict": null,
+        "decision": "require_review",
+        "decision_reason": "This policy's permitted uses do not name purpose `fraud.detection` (policy Payments transaction operations).",
+        "finding_id": "accef000-0000-4000-8000-000000000238",
+        "instructions": [
+          {
+            "category": "advisory",
+            "conflict_group_id": null,
+            "conflict_status": "none",
+            "conflicts_with": [],
+            "decision": "require_review",
+            "decision_id": "accef000-0000-4000-8000-000000000227",
+            "decision_reason": "This policy's permitted uses do not name purpose `fraud.detection` (policy Payments transaction operations).",
+            "effective_from": null,
+            "effective_until": null,
+            "enforcement_mode": "enforce",
+            "instruction_family": "usage_guidance",
+            "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+            "parameters": {
+              "kind": "permitted",
+              "uses": [
+                "operations.support"
+              ]
+            },
+            "primary_resolution_source": "selector",
+            "priority": 2,
+            "provenance": {
+              "policy_id": "accef000-0000-4000-8000-000000000228",
+              "policy_name": "Payments transaction operations",
+              "policy_version_id": "accef000-0000-4000-8000-000000000229",
+              "version_number": 1
+            },
+            "resolution_paths": [
+              {
+                "ref": null,
+                "source": "selector"
+              }
+            ],
+            "scenario_key": "purpose.allowed_use",
+            "scenario_lane": "human",
+            "scope": {
+              "column": null,
+              "database": "master",
+              "schema": "finance",
+              "table": "payment_transactions"
+            },
+            "weight": 1
+          }
+        ],
+        "reason_code": null,
+        "ref": {
+          "column": null,
+          "database": "master",
+          "schema": "finance",
+          "table": "payment_transactions"
+        },
+        "status": "evaluated"
+      }
+    ],
+    "next_actions": [
+      "Obtain data-steward review before proceeding with this use."
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason_code": "decision_requires_review",
+    "state": "review_required",
+    "validation_id": "accef000-0000-4000-8000-000000000237",
+    "validity_evaluated_at": "2026-08-20T21:47:46.144Z",
+    "verdict": "warn"
+  },
+  "arguments": {
+    "default_database": "master",
+    "default_schema": "public",
+    "purpose_key": "fraud.detection",
+    "scenario_key": "purpose.allowed_use",
+    "sql": "SELECT transaction_id, settlement_state FROM master.finance.payment_transactions WHERE settlement_state <> 'reconciled'"
+  },
+  "case_id": "pay-fraud-wrong-source-warn",
+  "tool": "validate_query_context"
+}

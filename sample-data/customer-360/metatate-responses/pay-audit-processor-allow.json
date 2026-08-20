@@ -1,0 +1,105 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "master",
+      "schema": "finance",
+      "table": "processor_settlements"
+    },
+    "authorization_id": "accef000-0000-4000-8000-000000000231",
+    "can_proceed_now": true,
+    "conditions": [],
+    "context_facts": {
+      "category": "financial",
+      "masking": null,
+      "pii": false,
+      "sensitivity": "internal",
+      "subcategory": null
+    },
+    "decision": "allow",
+    "decision_id": "accef000-0000-4000-8000-000000000232",
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": {
+      "purpose_category": "compliance",
+      "purpose_key": "compliance.audit",
+      "registry_version": 3
+    },
+    "instructions": [
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "allow",
+        "decision_id": "accef000-0000-4000-8000-000000000232",
+        "decision_reason": "Purpose `compliance.audit` is named by this policy's permitted-uses list (policy Payments processor reconciliation).",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "usage_guidance",
+        "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+        "parameters": {
+          "kind": "permitted",
+          "uses": [
+            "compliance.audit",
+            "operations.support"
+          ]
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000233",
+          "policy_name": "Payments processor reconciliation",
+          "policy_version_id": "accef000-0000-4000-8000-000000000234",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "purpose.allowed_use",
+        "scenario_lane": "human",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "finance",
+          "table": "processor_settlements"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "Proceed \u2014 the current published instructions allow this use."
+    ],
+    "obligations": [],
+    "prohibitions": [],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "Purpose `compliance.audit` is named by this policy's permitted-uses list (policy Payments processor reconciliation).",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
+    "scenario_key": "purpose.allowed_use",
+    "scenario_lane": "human",
+    "state": "answered",
+    "validity_evaluated_at": "2026-08-20T21:47:46.130Z"
+  },
+  "arguments": {
+    "asset": {
+      "database": "master",
+      "schema": "finance",
+      "table": "processor_settlements"
+    },
+    "purpose_key": "compliance.audit",
+    "scenario_key": "purpose.allowed_use",
+    "use": "reconcile processor fees for the audit trail"
+  },
+  "case_id": "pay-audit-processor-allow",
+  "tool": "authorize_use"
+}

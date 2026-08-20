@@ -1,0 +1,43 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "benefits",
+      "schema": "public",
+      "table": "qualifying_conditions"
+    },
+    "authorization_id": "accef000-0000-4000-8000-000000000286",
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": {
+      "purpose_category": "benefits",
+      "purpose_key": "benefits.determination",
+      "registry_version": 3
+    },
+    "message": "Not enough published governance state \u2014 review required.",
+    "next_actions": [
+      "Published governance for this asset and scenario is not currently effective \u2014 check the policy validity window and republish or wait until it is in force.",
+      "Treat this use as review-required until published coverage is in force."
+    ],
+    "reason_code": "not_currently_effective",
+    "satisfied_conditions": [],
+    "scenario_key": "compliance.regulatory",
+    "state": "not_enough_published_state",
+    "unresolved_targets": [],
+    "validity_evaluated_at": "2026-08-20T21:47:46.339Z"
+  },
+  "arguments": {
+    "asset": {
+      "database": "benefits",
+      "schema": "public",
+      "table": "qualifying_conditions"
+    },
+    "purpose_key": "benefits.determination",
+    "scenario_key": "compliance.regulatory",
+    "use": "apply the modernized categorical checklist"
+  },
+  "case_id": "gov-qualifying-conditions-not-yet-effective",
+  "tool": "authorize_use"
+}

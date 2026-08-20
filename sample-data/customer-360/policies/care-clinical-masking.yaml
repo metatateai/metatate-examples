@@ -1,0 +1,35 @@
+# Customer 360 estate spec — Healthcare pack: column-grain context contrast.
+# The SAME columns answer differently by verified role: clinical sees the
+# clinical fields; member-services (coverage basis) gets them fully masked.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: care-clinical-masking
+  version: 1.0.0
+  description: >-
+    Clinical fields are fully masked outside the clinical role; coverage
+    and eligibility work never needs diagnosis codes or clinician notes.
+  tags: [health, pii, privacy_sensitive]
+  businessContext:
+    domain: Care Data
+    owner: Care Operations
+    steward: health-governance@example.com
+    purpose: Clinical-field display protection outside the treatment context.
+spec:
+  enforcementMode: enforce
+  priority: 600
+  selector:
+    databases: [care]
+    schemas: [public]
+    columns:
+      - care.public.member_records.diagnosis_code
+      - care.public.member_records.clinical_notes
+  classification:
+    sensitivity: restricted
+    category: pii
+  accessControl:
+    masking:
+      type: full
+      exemptRoles: [clinical]
+extensions:
+  displayName: Care clinical masking

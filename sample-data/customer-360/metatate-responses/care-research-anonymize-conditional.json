@@ -1,0 +1,125 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "care",
+      "schema": "public",
+      "table": "member_records"
+    },
+    "authorization_id": "accef000-0000-4000-8000-000000000259",
+    "can_proceed_now": false,
+    "conditions": [
+      {
+        "kind": "anonymize_first",
+        "projection": {
+          "kind": "ai",
+          "requires_anonymization": true,
+          "restrictions": []
+        },
+        "required_by_policy": "Care research anonymization",
+        "required_role": null,
+        "requirement": "This data must be anonymized before the proposed AI use.",
+        "satisfied": false,
+        "satisfied_by": "Anonymize or de-identify the columns in scope, then re-run authorize_use.",
+        "satisfied_by_exception_id": null
+      }
+    ],
+    "context_facts": {
+      "category": "pii",
+      "masking": {
+        "exempt_roles": [
+          "clinical"
+        ],
+        "type": "full"
+      },
+      "pii": true,
+      "sensitivity": "restricted",
+      "subcategory": null
+    },
+    "decision": "conditional",
+    "decision_id": "accef000-0000-4000-8000-000000000260",
+    "evaluated_actor_role": "research",
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": {
+      "purpose_category": "research",
+      "purpose_key": "research.general",
+      "registry_version": 3
+    },
+    "instructions": [
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "conditional",
+        "decision_id": "accef000-0000-4000-8000-000000000260",
+        "decision_reason": "care-research-anonymization v1 ai_governance:spec.aiGovernance:anonymization \u2192 conditional on care.public.member_records",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "ai_governance",
+        "instruction_key": "ai_governance:spec.aiGovernance:anonymization",
+        "parameters": {
+          "allowInference": null,
+          "allowTraining": false,
+          "requiresAnonymization": true,
+          "restrictions": []
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000261",
+          "policy_name": "Care research anonymization",
+          "policy_version_id": "accef000-0000-4000-8000-000000000262",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "protection.anonymization",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "care",
+          "schema": "public",
+          "table": "member_records"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "You may proceed only after satisfying the stated condition(s) below (e.g. obtain the named approval, anonymize first, or act as a granted role).",
+      "If the condition cannot be met, treat this use as denied."
+    ],
+    "obligations": [],
+    "prohibitions": [],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "care-research-anonymization v1 ai_governance:spec.aiGovernance:anonymization \u2192 conditional on care.public.member_records",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
+    "scenario_key": "protection.anonymization",
+    "scenario_lane": "platform",
+    "state": "answered",
+    "validity_evaluated_at": "2026-08-20T21:47:46.224Z"
+  },
+  "arguments": {
+    "asset": {
+      "database": "care",
+      "schema": "public",
+      "table": "member_records"
+    },
+    "purpose_key": "research.general",
+    "scenario_key": "protection.anonymization",
+    "use": "analyze member outcomes for a research study"
+  },
+  "case_id": "care-research-anonymize-conditional",
+  "tool": "authorize_use"
+}

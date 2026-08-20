@@ -1,0 +1,36 @@
+# Customer 360 estate spec — AdTech pack: destination-aware activation.
+# Deliberately on its OWN table (never customers) so the existing
+# transfer-guardrails policy keeps its lane untouched.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: adtech-activation-transfer
+  version: 1.0.0
+  description: >-
+    Audience activation leaves the platform only toward approved demand-side
+    partners, and only with approval; every other destination is denied.
+  tags: [marketing, restricted_transfer]
+  businessContext:
+    domain: Customer Data
+    owner: Revenue Operations
+    steward: privacy-review@example.com
+    purpose: Approved-partner activation of consented audience exports.
+spec:
+  enforcementMode: enforce
+  priority: 600
+  selector:
+    databases: [master]
+    schemas: [public]
+    tables: [ad_audience_exports]
+  classification:
+    sensitivity: confidential
+    category: pii
+  transferGovernance:
+    defaultEffect: deny
+    rules:
+      - effect: conditional
+        operations: [export]
+        destinationSystems: [APPROVED_DSP_A, APPROVED_DSP_B]
+        requiresApproval: true
+extensions:
+  displayName: AdTech activation transfer

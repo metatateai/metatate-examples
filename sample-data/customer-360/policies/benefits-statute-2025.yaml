@@ -1,0 +1,39 @@
+# Customer 360 estate spec — Government pack: the statute in force today.
+# spec.validity gives the rule an effective window (B3T); the successor
+# statute (benefits-statute-2026) takes over at the boundary. The rules
+# live in POLICY, not in the applicant record — mechanics illustrative.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: benefits-statute-2025
+  version: 1.0.0
+  description: >-
+    Benefits determinations run under the 2025 statute while it remains in
+    force; the record holds the fields, the statute holds the rules.
+  tags: [government, pii]
+  businessContext:
+    domain: Benefits Program
+    owner: Program Administration
+    steward: program-policy@example.com
+    purpose: The determination rule set in force before 2027-01-01.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [benefits]
+    schemas: [public]
+    tables: [applicants]
+  classification:
+    sensitivity: restricted
+    category: pii
+  usage:
+    # B3: registry vocabulary (benefits.determination is v3).
+    permittedUses: [benefits.determination]
+  validity:
+    effectiveUntil: "2027-01-01T00:00:00Z"
+extensions:
+  displayName: Benefits statute 2025
+  scenarioMap:
+    "usage_guidance:spec.usage.permittedUses:permitted":
+      scenarioKey: compliance.regulatory
+      source: user_confirmed

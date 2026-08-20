@@ -7,7 +7,7 @@
       "schema": "public",
       "table": "customers"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000045",
+    "authorization_id": "accef000-0000-4000-8000-000000000056",
     "can_proceed_now": false,
     "conditions": [],
     "conflict": null,
@@ -36,7 +36,50 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "require_review",
-        "decision_id": "accef000-0000-4000-8000-000000000025",
+        "decision_id": "accef000-0000-4000-8000-000000000034",
+        "decision_reason": "Permitted uses require a declared purpose; this call stated none (policy AdTech audience use guardrails).",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "usage_guidance",
+        "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+        "parameters": {
+          "kind": "permitted",
+          "uses": [
+            "analytics.reporting"
+          ]
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000006",
+          "policy_name": "AdTech audience use guardrails",
+          "policy_version_id": "accef000-0000-4000-8000-000000000007",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "purpose.allowed_use",
+        "scenario_lane": "human",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "customers"
+        },
+        "weight": 1
+      },
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "require_review",
+        "decision_id": "accef000-0000-4000-8000-000000000036",
         "decision_reason": "Permitted uses require a declared purpose; this call stated none (policy Customer use guardrails).",
         "effective_from": null,
         "effective_until": null,
@@ -54,9 +97,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000006",
+          "policy_id": "accef000-0000-4000-8000-000000000009",
           "policy_name": "Customer use guardrails",
-          "policy_version_id": "accef000-0000-4000-8000-000000000007",
+          "policy_version_id": "accef000-0000-4000-8000-000000000010",
           "version_number": 1
         },
         "resolution_paths": [
@@ -83,13 +126,14 @@
       "publication_id": "accef000-0000-4000-8000-000000000001",
       "published_at": "2026-07-16T00:00:00.000Z"
     },
-    "reason": "Permitted uses require a declared purpose; this call stated none (policy Customer use guardrails).",
+    "reason": "Permitted uses require a declared purpose; this call stated none (policy AdTech audience use guardrails).",
     "reason_code": "decision_requires_review",
     "satisfied_conditions": [],
     "satisfied_exceptions": [],
     "scenario_key": "purpose.allowed_use",
     "scenario_lane": "human",
-    "state": "review_required"
+    "state": "review_required",
+    "validity_evaluated_at": "2026-08-20T21:47:45.456Z"
   },
   "arguments": {
     "asset": {

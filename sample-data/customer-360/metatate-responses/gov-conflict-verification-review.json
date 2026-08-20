@@ -1,0 +1,256 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "benefits",
+      "schema": "public",
+      "table": "applicants"
+    },
+    "authorization_id": "accef000-0000-4000-8000-000000000294",
+    "can_proceed_now": false,
+    "conditions": [],
+    "conflict": {
+      "group_id": "accef000-0000-4000-8000-000000000298",
+      "sources": [
+        {
+          "category": "advisory",
+          "conflict_group_id": "accef000-0000-4000-8000-000000000298",
+          "conflict_status": "conflicted",
+          "conflicts_with": [
+            {
+              "decision": "allow",
+              "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+              "policy_version_id": "accef000-0000-4000-8000-000000000299"
+            }
+          ],
+          "decision": "deny",
+          "decision_id": "accef000-0000-4000-8000-000000000295",
+          "decision_reason": "benefits-verification-block v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on benefits.public.applicants",
+          "effective_from": null,
+          "effective_until": null,
+          "enforcement_mode": "enforce",
+          "instruction_family": "usage_guidance",
+          "instruction_key": "usage_guidance:spec.usage.prohibitedUses:prohibited",
+          "parameters": {
+            "kind": "prohibited",
+            "uses": [
+              "verification_outreach"
+            ]
+          },
+          "primary_resolution_source": "selector",
+          "priority": 2,
+          "provenance": {
+            "policy_id": "accef000-0000-4000-8000-000000000296",
+            "policy_name": "Benefits verification block",
+            "policy_version_id": "accef000-0000-4000-8000-000000000297",
+            "version_number": 1
+          },
+          "resolution_paths": [
+            {
+              "ref": null,
+              "source": "selector"
+            }
+          ],
+          "scenario_key": "purpose.allowed_use",
+          "scenario_lane": "human",
+          "scope": {
+            "column": null,
+            "database": "benefits",
+            "schema": "public",
+            "table": "applicants"
+          },
+          "weight": 1
+        },
+        {
+          "category": "advisory",
+          "conflict_group_id": "accef000-0000-4000-8000-000000000298",
+          "conflict_status": "conflicted",
+          "conflicts_with": [
+            {
+              "decision": "deny",
+              "instruction_key": "usage_guidance:spec.usage.prohibitedUses:prohibited",
+              "policy_version_id": "accef000-0000-4000-8000-000000000297"
+            }
+          ],
+          "decision": "require_review",
+          "decision_id": "accef000-0000-4000-8000-000000000300",
+          "decision_reason": "Permitted uses require a declared purpose; this call stated none (policy Benefits verification permit).",
+          "effective_from": null,
+          "effective_until": null,
+          "enforcement_mode": "enforce",
+          "instruction_family": "usage_guidance",
+          "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+          "parameters": {
+            "kind": "permitted",
+            "uses": [
+              "verification_outreach"
+            ]
+          },
+          "primary_resolution_source": "selector",
+          "priority": 2,
+          "provenance": {
+            "policy_id": "accef000-0000-4000-8000-000000000301",
+            "policy_name": "Benefits verification permit",
+            "policy_version_id": "accef000-0000-4000-8000-000000000299",
+            "version_number": 1
+          },
+          "resolution_paths": [
+            {
+              "ref": null,
+              "source": "selector"
+            }
+          ],
+          "scenario_key": "purpose.allowed_use",
+          "scenario_lane": "human",
+          "scope": {
+            "column": null,
+            "database": "benefits",
+            "schema": "public",
+            "table": "applicants"
+          },
+          "weight": 1
+        }
+      ]
+    },
+    "context_facts": {
+      "category": "pii",
+      "masking": null,
+      "pii": true,
+      "sensitivity": "restricted",
+      "subcategory": null
+    },
+    "decision": "require_review",
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": null,
+    "instructions": [
+      {
+        "category": "advisory",
+        "conflict_group_id": "accef000-0000-4000-8000-000000000298",
+        "conflict_status": "conflicted",
+        "conflicts_with": [
+          {
+            "decision": "allow",
+            "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+            "policy_version_id": "accef000-0000-4000-8000-000000000299"
+          }
+        ],
+        "decision": "deny",
+        "decision_id": "accef000-0000-4000-8000-000000000295",
+        "decision_reason": "benefits-verification-block v1 usage_guidance:spec.usage.prohibitedUses:prohibited \u2192 deny on benefits.public.applicants",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "usage_guidance",
+        "instruction_key": "usage_guidance:spec.usage.prohibitedUses:prohibited",
+        "parameters": {
+          "kind": "prohibited",
+          "uses": [
+            "verification_outreach"
+          ]
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000296",
+          "policy_name": "Benefits verification block",
+          "policy_version_id": "accef000-0000-4000-8000-000000000297",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "purpose.allowed_use",
+        "scenario_lane": "human",
+        "scope": {
+          "column": null,
+          "database": "benefits",
+          "schema": "public",
+          "table": "applicants"
+        },
+        "weight": 1
+      },
+      {
+        "category": "advisory",
+        "conflict_group_id": "accef000-0000-4000-8000-000000000298",
+        "conflict_status": "conflicted",
+        "conflicts_with": [
+          {
+            "decision": "deny",
+            "instruction_key": "usage_guidance:spec.usage.prohibitedUses:prohibited",
+            "policy_version_id": "accef000-0000-4000-8000-000000000297"
+          }
+        ],
+        "decision": "require_review",
+        "decision_id": "accef000-0000-4000-8000-000000000300",
+        "decision_reason": "Permitted uses require a declared purpose; this call stated none (policy Benefits verification permit).",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "usage_guidance",
+        "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+        "parameters": {
+          "kind": "permitted",
+          "uses": [
+            "verification_outreach"
+          ]
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000301",
+          "policy_name": "Benefits verification permit",
+          "policy_version_id": "accef000-0000-4000-8000-000000000299",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "purpose.allowed_use",
+        "scenario_lane": "human",
+        "scope": {
+          "column": null,
+          "database": "benefits",
+          "schema": "public",
+          "table": "applicants"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "Do not proceed on this answer \u2014 the published governance state is conflicted.",
+      "Resolve the conflicting policy instructions in Policies, then publish a new deployment."
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "Current published instructions for this asset and scenario disagree; review is required before proceeding.",
+    "reason_code": "conflicted_published_state",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
+    "scenario_key": "purpose.allowed_use",
+    "scenario_lane": "human",
+    "state": "review_required",
+    "validity_evaluated_at": "2026-08-20T21:47:46.359Z"
+  },
+  "arguments": {
+    "asset": {
+      "database": "benefits",
+      "schema": "public",
+      "table": "applicants"
+    },
+    "scenario_key": "purpose.allowed_use",
+    "use": "run verification outreach against applicants"
+  },
+  "case_id": "gov-conflict-verification-review",
+  "tool": "authorize_use"
+}

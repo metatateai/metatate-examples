@@ -22,6 +22,7 @@
 # PROVENANCE — this file is a vendored copy, not an original.
 #   source: metatate-saas docs/b3-customer360-purpose-vocabulary-manifest.md
 #   at:     origin/main 19a3fdd  (#374 mapping table, approved 2026-07-28)
+#           + the registry-v3 section (verification_outreach ruling, 2026-08-20)
 # Re-sync it from that manifest; do not edit dispositions here by hand.
 #
 # WHY THIS FILE EXISTS
@@ -149,6 +150,21 @@ entries:
       conflicted-state demonstration. Collapsing them would delete the fixture
       while the demo still served both rows.
 
+  - authored_entry: verification_outreach
+    kind: deliberate_conflict
+    list: both            # permitted in one policy, prohibited in another
+    resolved_key: null
+    do_not_map: false
+    retain_both_occurrences: true
+    rationale: >-
+      RULED 2026-08-20 (registry-v3 manifest section): the estate's SECOND
+      intentional governance-debt pair, mirroring prospect_outreach on
+      benefits.public.applicants (benefits-verification-permit vs
+      benefits-verification-block, same band, no remap). It demonstrates
+      review_required / conflicted_published_state — an unmanaged same-band
+      disagreement surfaced honestly, contrasted with the MANAGED band
+      precedence on the same table. Mapping or removing either occurrence
+      destroys the lesson.
   - authored_entry: public_sharing
     kind: unmapped_untouched
     list: prohibited
@@ -258,5 +274,11 @@ prohibition_bite_checks:
     covers: vendor_transfer
   - case_id: ml-automated-decisioning-deny
     covers: automated_decisioning
+  - case_id: gov-conflict-verification-review
+    covers: verification_outreach
+  - case_id: adtech-personalization-prohibited-deny
+    covers: marketing.personalization (registry key, prohibited)
+  - case_id: care-marketing-outreach-deny
+    covers: marketing.advertising (registry key, prohibited on care)
   - case_id: marketing-customers-deny
     covers: advertising/marketing/personalization (discovered, unmapped, prohibited)

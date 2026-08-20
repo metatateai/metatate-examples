@@ -1,0 +1,104 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "master",
+      "schema": "finance",
+      "table": "payment_transactions"
+    },
+    "authorization_id": "accef000-0000-4000-8000-000000000230",
+    "can_proceed_now": true,
+    "conditions": [],
+    "context_facts": {
+      "category": "financial",
+      "masking": null,
+      "pii": false,
+      "sensitivity": "internal",
+      "subcategory": null
+    },
+    "decision": "allow",
+    "decision_id": "accef000-0000-4000-8000-000000000227",
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": {
+      "purpose_category": "operations",
+      "purpose_key": "operations.support",
+      "registry_version": 3
+    },
+    "instructions": [
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "allow",
+        "decision_id": "accef000-0000-4000-8000-000000000227",
+        "decision_reason": "Purpose `operations.support` is named by this policy's permitted-uses list (policy Payments transaction operations).",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "usage_guidance",
+        "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+        "parameters": {
+          "kind": "permitted",
+          "uses": [
+            "operations.support"
+          ]
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000228",
+          "policy_name": "Payments transaction operations",
+          "policy_version_id": "accef000-0000-4000-8000-000000000229",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "purpose.allowed_use",
+        "scenario_lane": "human",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "finance",
+          "table": "payment_transactions"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "Proceed \u2014 the current published instructions allow this use."
+    ],
+    "obligations": [],
+    "prohibitions": [],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "Purpose `operations.support` is named by this policy's permitted-uses list (policy Payments transaction operations).",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
+    "scenario_key": "purpose.allowed_use",
+    "scenario_lane": "human",
+    "state": "answered",
+    "validity_evaluated_at": "2026-08-20T21:47:46.122Z"
+  },
+  "arguments": {
+    "asset": {
+      "database": "master",
+      "schema": "finance",
+      "table": "payment_transactions"
+    },
+    "purpose_key": "operations.support",
+    "scenario_key": "purpose.allowed_use",
+    "use": "answer a customer-facing balance question"
+  },
+  "case_id": "pay-ops-transactions-allow",
+  "tool": "authorize_use"
+}

@@ -1,0 +1,43 @@
+# Customer 360 estate spec — Payments pack: the local ledger's honest scope.
+# Customer-facing balance questions defer to THIS table; analytics is
+# reliable only for reconciled rows; fraud defers to network_settlements.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: payments-transaction-operations
+  version: 1.0.0
+  description: >-
+    The local payment ledger answers customer-facing balance questions.
+    Fraud investigation reads network_settlements — the reconciliation
+    source of truth — and analytics must restrict itself to reconciled rows.
+  tags: [financial, payments]
+  businessContext:
+    domain: Payments
+    owner: Payments Engineering
+    steward: finance-data@example.com
+    purpose: Authority boundaries for the local transaction ledger.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [master]
+    schemas: [finance]
+    tables: [payment_transactions]
+  classification:
+    sensitivity: internal
+    category: financial
+  usage:
+    # B3: registry vocabulary (B3P authoring contract).
+    permittedUses: [operations.support]
+  aiGovernance:
+    restrictions:
+      - >-
+        Analytics on raw payment transactions is reliable only for
+        reconciled rows (settlement_state = 'reconciled');
+        network_settlements is the reconciliation source of truth.
+extensions:
+  displayName: Payments transaction operations
+  scenarioMap:
+    "ai_governance:spec.aiGovernance:restrictions":
+      scenarioKey: quality.reliability
+      source: user_confirmed

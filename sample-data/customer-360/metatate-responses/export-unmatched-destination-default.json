@@ -7,7 +7,7 @@
       "schema": "public",
       "table": "customer_exports"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000054",
+    "authorization_id": "accef000-0000-4000-8000-000000000065",
     "can_proceed_now": false,
     "conditions": [
       {
@@ -35,7 +35,7 @@
       "subcategory": null
     },
     "decision": "conditional",
-    "decision_id": "accef000-0000-4000-8000-000000000035",
+    "decision_id": "accef000-0000-4000-8000-000000000046",
     "evaluated_actor_role": null,
     "evaluated_at": "2026-07-30T00:00:00.000Z",
     "evaluated_data_access_context": null,
@@ -47,7 +47,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "conditional",
-        "decision_id": "accef000-0000-4000-8000-000000000035",
+        "decision_id": "accef000-0000-4000-8000-000000000046",
         "decision_reason": "No transfer rule matched to INTERNAL_WAREHOUSE (US) for consumer jurisdiction US; default effect conditional applies (policy Transfer guardrails).",
         "effective_from": null,
         "effective_until": null,
@@ -92,9 +92,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000014",
+          "policy_id": "accef000-0000-4000-8000-000000000020",
           "policy_name": "Transfer guardrails",
-          "policy_version_id": "accef000-0000-4000-8000-000000000015",
+          "policy_version_id": "accef000-0000-4000-8000-000000000021",
           "version_number": 1
         },
         "resolution_paths": [
@@ -129,7 +129,8 @@
     "satisfied_exceptions": [],
     "scenario_key": "residency.cross_border_transfer",
     "scenario_lane": "platform",
-    "state": "answered"
+    "state": "answered",
+    "validity_evaluated_at": "2026-08-20T21:47:45.513Z"
   },
   "arguments": {
     "asset": {

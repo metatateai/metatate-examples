@@ -1,9 +1,10 @@
 {
   "answer": {
     "answer_state": "answered",
-    "authorization_id": "accef000-0000-4000-8000-000000000044",
+    "authorization_id": "accef000-0000-4000-8000-000000000055",
     "cited_decision_ids": [
-      "accef000-0000-4000-8000-000000000025"
+      "accef000-0000-4000-8000-000000000034",
+      "accef000-0000-4000-8000-000000000036"
     ],
     "decision": "allow",
     "evaluated": {
@@ -19,7 +20,7 @@
       "purpose_context": {
         "purpose_category": "analytics",
         "purpose_key": "analytics.reporting",
-        "registry_version": 2
+        "registry_version": 3
       },
       "scenario_key": "purpose.allowed_use"
     },
@@ -43,7 +44,7 @@
     "satisfied_exception_ids": null
   },
   "arguments": {
-    "authorization_id": "accef000-0000-4000-8000-000000000044",
+    "authorization_id": "accef000-0000-4000-8000-000000000055",
     "kind": "authorization"
   },
   "case_id": "explain_analytics_authorization",

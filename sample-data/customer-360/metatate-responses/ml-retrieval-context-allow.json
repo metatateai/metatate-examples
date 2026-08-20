@@ -7,7 +7,7 @@
       "schema": "public",
       "table": "ml_feature_store"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000073",
+    "authorization_id": "accef000-0000-4000-8000-000000000084",
     "can_proceed_now": true,
     "conditions": [],
     "context_facts": {
@@ -18,14 +18,14 @@
       "subcategory": null
     },
     "decision": "allow",
-    "decision_id": "accef000-0000-4000-8000-000000000074",
+    "decision_id": "accef000-0000-4000-8000-000000000085",
     "evaluated_actor_role": null,
     "evaluated_at": "2026-07-30T00:00:00.000Z",
     "evaluated_data_access_context": null,
     "evaluated_purpose": {
       "purpose_category": "ai",
       "purpose_key": "ai.inference",
-      "registry_version": 2
+      "registry_version": 3
     },
     "instructions": [
       {
@@ -34,7 +34,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "allow",
-        "decision_id": "accef000-0000-4000-8000-000000000074",
+        "decision_id": "accef000-0000-4000-8000-000000000085",
         "decision_reason": "Purpose `ai.inference` is named by this policy's permitted-uses list (policy ML feature AI lifecycle).",
         "effective_from": null,
         "effective_until": null,
@@ -50,9 +50,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000071",
+          "policy_id": "accef000-0000-4000-8000-000000000082",
           "policy_name": "ML feature AI lifecycle",
-          "policy_version_id": "accef000-0000-4000-8000-000000000072",
+          "policy_version_id": "accef000-0000-4000-8000-000000000083",
           "version_number": 1
         },
         "resolution_paths": [
@@ -86,7 +86,8 @@
     "satisfied_exceptions": [],
     "scenario_key": "ai.retrieval_context",
     "scenario_lane": "agent",
-    "state": "answered"
+    "state": "answered",
+    "validity_evaluated_at": "2026-08-20T21:47:45.551Z"
   },
   "arguments": {
     "asset": {

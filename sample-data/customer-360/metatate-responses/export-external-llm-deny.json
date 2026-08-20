@@ -7,7 +7,7 @@
       "schema": "public",
       "table": "customers"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000053",
+    "authorization_id": "accef000-0000-4000-8000-000000000064",
     "can_proceed_now": false,
     "conditions": [],
     "context_facts": {
@@ -24,7 +24,7 @@
       "subcategory": null
     },
     "decision": "deny",
-    "decision_id": "accef000-0000-4000-8000-000000000013",
+    "decision_id": "accef000-0000-4000-8000-000000000019",
     "evaluated_actor_role": null,
     "evaluated_at": "2026-07-30T00:00:00.000Z",
     "evaluated_data_access_context": null,
@@ -36,7 +36,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "deny",
-        "decision_id": "accef000-0000-4000-8000-000000000013",
+        "decision_id": "accef000-0000-4000-8000-000000000019",
         "decision_reason": "Transfer to EXTERNAL_LLM_VENDOR (US) for consumer jurisdiction US is denied by policy Transfer guardrails.",
         "effective_from": null,
         "effective_until": null,
@@ -81,9 +81,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000014",
+          "policy_id": "accef000-0000-4000-8000-000000000020",
           "policy_name": "Transfer guardrails",
-          "policy_version_id": "accef000-0000-4000-8000-000000000015",
+          "policy_version_id": "accef000-0000-4000-8000-000000000021",
           "version_number": 1
         },
         "resolution_paths": [
@@ -124,7 +124,8 @@
     "satisfied_exceptions": [],
     "scenario_key": "residency.cross_border_transfer",
     "scenario_lane": "platform",
-    "state": "answered"
+    "state": "answered",
+    "validity_evaluated_at": "2026-08-20T21:47:45.506Z"
   },
   "arguments": {
     "asset": {

@@ -7,7 +7,7 @@
       "schema": "public",
       "table": "product_usage_events"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000177",
+    "authorization_id": "accef000-0000-4000-8000-000000000188",
     "can_proceed_now": false,
     "conditions": [
       {
@@ -40,7 +40,7 @@
       "subcategory": null
     },
     "decision": "conditional",
-    "decision_id": "accef000-0000-4000-8000-000000000178",
+    "decision_id": "accef000-0000-4000-8000-000000000189",
     "evaluated_actor_role": "agent",
     "evaluated_at": "2026-07-30T00:00:00.000Z",
     "evaluated_data_access_context": {
@@ -49,7 +49,7 @@
     "evaluated_purpose": {
       "purpose_category": "research",
       "purpose_key": "research.general",
-      "registry_version": 2
+      "registry_version": 3
     },
     "instructions": [
       {
@@ -58,7 +58,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "conditional",
-        "decision_id": "accef000-0000-4000-8000-000000000178",
+        "decision_id": "accef000-0000-4000-8000-000000000189",
         "decision_reason": "Agent access for research.general requires a as-of 90-day predicate on occurred_at (policy Product data agent access windows).",
         "effective_from": null,
         "effective_until": null,
@@ -87,9 +87,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000179",
+          "policy_id": "accef000-0000-4000-8000-000000000190",
           "policy_name": "Product data agent access windows",
-          "policy_version_id": "accef000-0000-4000-8000-000000000180",
+          "policy_version_id": "accef000-0000-4000-8000-000000000191",
           "version_number": 1
         },
         "resolution_paths": [
@@ -124,7 +124,8 @@
     "satisfied_exceptions": [],
     "scenario_key": "access.read",
     "scenario_lane": "platform",
-    "state": "answered"
+    "state": "answered",
+    "validity_evaluated_at": "2026-08-01T00:00:00Z"
   },
   "arguments": {
     "asset": {

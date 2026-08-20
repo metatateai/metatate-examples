@@ -27,8 +27,8 @@ own**:
 2. On your new workspace's dashboard, follow the **"New here?" banner → Load
    the demo**, then click **Load the full estate** — the notebooks and
    walkthroughs expect the complete governed domain this repo specifies
-   (eleven governed tables across two logical databases and two schemas plus a deliberately
-   ungoverned legacy corner, twenty policies, one live publication). The smaller starter sample the
+   (eighteen governed tables across four logical databases and three schemas plus a deliberately
+   ungoverned legacy corner, thirty-seven policies, one live publication). The smaller starter sample the
    onboarding page also offers is a first-run product tour, not enough for
    this cookbook.
 3. Open **MCP Tools → Tokens** and issue an access token (shown once).
@@ -50,7 +50,7 @@ Customer 360 covers customer operations, revenue, product usage, support, and pr
 The domain is defined as a machine-readable **estate spec** in
 `sample-data/customer-360/` — `catalog.yaml` (tables, columns, descriptions,
 tags, and the initial column classification against the Metatate taxonomy,
-including tenant custom types), twenty real Metatate Cloud policy documents in
+including tenant custom types), thirty-seven real Metatate Cloud policy documents in
 `policies/`, and `expected-decisions.yaml` (the behavior contract). The
 product derives the demo workspace from this spec with its real governance
 engine, so what these examples document is exactly what the engine serves.
@@ -68,6 +68,13 @@ Governed tables:
 - `master.public.marketing_prospects` (the governance-debt corner)
 - `master.finance.invoices` (second schema)
 - `master.finance.revenue_ledger` (second schema)
+- `master.public.ad_audience_exports` (AdTech activation lane)
+- `master.finance.payment_transactions` (Payments: the local ledger)
+- `master.finance.processor_settlements` (Payments: the processor feed)
+- `master.finance.network_settlements` (Payments: the network truth)
+- `care.public.member_records` (Healthcare: one person, four contexts)
+- `benefits.public.applicants` (Government: statute-governed determinations)
+- `benefits.public.qualifying_conditions` (Government: published, not yet in force)
 
 Plus `master.public.legacy_customer_backup` — cataloged but
 **deliberately ungoverned**, so the typed `not_enough_published_state`
@@ -90,6 +97,10 @@ Demo policy behavior:
 - plain-English uses map deterministically to canonical scenarios with no `scenario_key` at all — and ambiguous text refuses with a typed `scenario_unresolved`
 - the `finance` schema (`invoices`, `revenue_ledger`) carries its own guardrails: a multi-schema estate, one decision layer
 - agent reads are purpose- and time-bound: `master` uses rolling 90/30-day windows for research/commercial work, while `product` uses reproducible as-of 90/30-day windows; broader or unprovable SQL fails closed
+- consent is three permissions, not one flag: the consent question answers per declared purpose with a typed `consent_required` condition naming the exact basis column — never satisfiable by caller assertion; activation runs only through an approved-partner transfer lane
+- payments truth is distributed: which settlement source wins depends on the QUESTION (fraud → network, balance → ledger, fees → processor, analytics → reconciled rows only) — authority served as judgment, wrong-source SQL caught in review
+- one person, four contexts: four role-bound credentials answer four access shapes over `member_records` (clinical allow, coverage masked, research de-identified + consent, marketing denied) — the role rides the verified token, never the call
+- the program rules live outside the record: statutes are date-effective policies (`not_currently_effective` when published but not in force), `data_access_context.as_of` evaluates under the statute in force at a declared instant, categorical-over-income precedence is visible in the ranked bands, and the second sanctioned conflict pair keeps unmanaged disagreement honest
 
 ## Notebook Pack
 
@@ -112,6 +123,10 @@ Demo policy behavior:
 | `14_governed_agent_end_to_end.ipynb` | The flagship arc: one brief, eleven governed calls — rulebook first, self-revised SQL, a conditional export resumed with controls, a denied fine-tune rerouted, every decision explained. |
 | `15_audit_evidence_packet.ipynb` | A day of decisions as an audit-ready report: citations by policy version, the explain chain proving currency, and the honest corners on the record. |
 | `16_purpose_bound_agent_data_windows.ipynb` | Four-variable agent access: database × purpose × rolling/as-of anchor × 90/30-day lookback, with authorization and SQL proof. |
+| `17_adtech_consent_three_permissions_one_field.ipynb` | Consent as three purpose-scoped permissions: typed `consent_required` conditions naming the basis column, the purpose-flip SQL contrast, and the approved-partner activation lane. |
+| `18_payments_local_data_is_not_the_source_of_truth.ipynb` | Distributed settlement truth: the purpose × source authority matrix, the reconciled-only condition, and wrong-source queries caught in review. |
+| `19_healthcare_one_person_four_concepts.ipynb` | One record, four role-bound credentials: table-grain role gate, column-grain masking contrast, purpose + consent lanes, and the role-flip SQL verdict. |
+| `20_government_rules_outside_the_record.ipynb` | Date-effective statutes over a plain record: the as-of flip, published-but-not-in-force, band precedence in rank, and the sanctioned conflict pair. |
 
 See the committed
 [expected output](sample-outputs/purpose-bound-agent-data-windows.md) for the
@@ -184,6 +199,10 @@ Runtime coverage is separate from core notebook execution:
 - `14_governed_agent_end_to_end.ipynb` is backed by the reusable `governed_agent_arc` package and an acceptance script that pins the arc's exact eleven-call decision sequence.
 - `15_audit_evidence_packet.ipynb` is backed by the reusable `audit_evidence` package and an acceptance script that pins the packet structure (4/4 explained and current, both honest corners on the record).
 - `16_purpose_bound_agent_data_windows.ipynb` exercises twelve canonical cases: four authorizations, two missing-context controls, four valid SQL windows, and two over-broad SQL failures.
+- `17_adtech_consent_three_permissions_one_field.ipynb` exercises eleven canonical cases: three consent conditionals, the allowed/prohibited personalization pair, a purpose-missing control, the approved/unlisted transfer pair, the purpose-flip SQL pair, and an authorization receipt.
+- `18_payments_local_data_is_not_the_source_of_truth.ipynb` exercises ten canonical cases: two settlement meaning facts, the four-question authority matrix, the reconciled-only conditional, and the wrong/right-source SQL pair.
+- `19_healthcare_one_person_four_concepts.ipynb` exercises seventeen canonical cases across four role-bound credentials: the four-role read gate, the masking contrast, purpose and consent lanes, the treatment fail-closed control, the role-flip SQL pair, and an authorization receipt.
+- `20_government_rules_outside_the_record.ipynb` exercises eight canonical cases: the statute today/as-of pair, published-but-not-in-force, band precedence, the sanctioned conflict, the as-of SQL pair, and an authorization receipt.
 
 The LangGraph, OpenAI, and LlamaIndex runtime checks invoke real framework objects, but they intentionally do not call an LLM. Review [docs/validation-matrix.md](docs/validation-matrix.md) and [docs/framework-runtime-acceptance.md](docs/framework-runtime-acceptance.md) for the exact coverage.
 

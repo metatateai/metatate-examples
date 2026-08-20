@@ -7,7 +7,7 @@
       "schema": "public",
       "table": "product_usage_events"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000183",
+    "authorization_id": "accef000-0000-4000-8000-000000000194",
     "can_proceed_now": false,
     "conditions": [],
     "conflict": null,
@@ -28,7 +28,7 @@
     "evaluated_purpose": {
       "purpose_category": "research",
       "purpose_key": "research.general",
-      "registry_version": 2
+      "registry_version": 3
     },
     "instructions": [
       {
@@ -37,7 +37,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "require_review",
-        "decision_id": "accef000-0000-4000-8000-000000000178",
+        "decision_id": "accef000-0000-4000-8000-000000000189",
         "decision_reason": "Access-window context is incomplete: the as-of rule requires data_access_context.as_of (policy Product data agent access windows).",
         "effective_from": null,
         "effective_until": null,
@@ -66,9 +66,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000179",
+          "policy_id": "accef000-0000-4000-8000-000000000190",
           "policy_name": "Product data agent access windows",
-          "policy_version_id": "accef000-0000-4000-8000-000000000180",
+          "policy_version_id": "accef000-0000-4000-8000-000000000191",
           "version_number": 1
         },
         "resolution_paths": [
@@ -101,7 +101,8 @@
     "satisfied_exceptions": [],
     "scenario_key": "access.read",
     "scenario_lane": "platform",
-    "state": "review_required"
+    "state": "review_required",
+    "validity_evaluated_at": "2026-08-20T21:47:45.946Z"
   },
   "arguments": {
     "asset": {

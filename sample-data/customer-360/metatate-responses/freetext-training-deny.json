@@ -7,7 +7,7 @@
       "schema": "public",
       "table": "support_tickets"
     },
-    "authorization_id": "accef000-0000-4000-8000-000000000146",
+    "authorization_id": "accef000-0000-4000-8000-000000000157",
     "can_proceed_now": false,
     "conditions": [],
     "context_facts": {
@@ -21,7 +21,7 @@
       "subcategory": null
     },
     "decision": "deny",
-    "decision_id": "accef000-0000-4000-8000-000000000049",
+    "decision_id": "accef000-0000-4000-8000-000000000060",
     "evaluated_actor_role": null,
     "evaluated_at": "2026-07-30T00:00:00.000Z",
     "evaluated_data_access_context": null,
@@ -33,7 +33,7 @@
         "conflict_status": "none",
         "conflicts_with": [],
         "decision": "deny",
-        "decision_id": "accef000-0000-4000-8000-000000000049",
+        "decision_id": "accef000-0000-4000-8000-000000000060",
         "decision_reason": "customer-use-guardrails v1 ai_governance:spec.aiGovernance:training \u2192 deny on product.public.support_tickets",
         "effective_from": null,
         "effective_until": null,
@@ -49,9 +49,9 @@
         "primary_resolution_source": "selector",
         "priority": 2,
         "provenance": {
-          "policy_id": "accef000-0000-4000-8000-000000000006",
+          "policy_id": "accef000-0000-4000-8000-000000000009",
           "policy_name": "Customer use guardrails",
-          "policy_version_id": "accef000-0000-4000-8000-000000000007",
+          "policy_version_id": "accef000-0000-4000-8000-000000000010",
           "version_number": 1
         },
         "resolution_paths": [
@@ -92,7 +92,8 @@
     "satisfied_exceptions": [],
     "scenario_key": "ai.training",
     "scenario_lane": "agent",
-    "state": "answered"
+    "state": "answered",
+    "validity_evaluated_at": "2026-08-20T21:47:45.743Z"
   },
   "arguments": {
     "asset": {

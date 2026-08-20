@@ -1,0 +1,91 @@
+{
+  "answer": {
+    "advisory": true,
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": {
+      "purpose_category": "benefits",
+      "purpose_key": "benefits.determination",
+      "registry_version": 3
+    },
+    "findings": [
+      {
+        "conflict": null,
+        "decision": "allow",
+        "decision_reason": "Purpose `benefits.determination` is named by this policy's permitted-uses list (policy Benefits statute 2025).",
+        "finding_id": "accef000-0000-4000-8000-000000000303",
+        "instructions": [
+          {
+            "category": "advisory",
+            "conflict_group_id": null,
+            "conflict_status": "none",
+            "conflicts_with": [],
+            "decision": "allow",
+            "decision_id": "accef000-0000-4000-8000-000000000279",
+            "decision_reason": "Purpose `benefits.determination` is named by this policy's permitted-uses list (policy Benefits statute 2025).",
+            "effective_from": null,
+            "effective_until": "2027-01-01T00:00:00+00:00",
+            "enforcement_mode": "enforce",
+            "instruction_family": "usage_guidance",
+            "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+            "parameters": {
+              "kind": "permitted",
+              "uses": [
+                "benefits.determination"
+              ]
+            },
+            "primary_resolution_source": "selector",
+            "priority": 2,
+            "provenance": {
+              "policy_id": "accef000-0000-4000-8000-000000000280",
+              "policy_name": "Benefits statute 2025",
+              "policy_version_id": "accef000-0000-4000-8000-000000000281",
+              "version_number": 1
+            },
+            "resolution_paths": [
+              {
+                "ref": null,
+                "source": "selector"
+              }
+            ],
+            "scenario_key": "compliance.regulatory",
+            "scenario_lane": "human",
+            "scope": {
+              "column": null,
+              "database": "benefits",
+              "schema": "public",
+              "table": "applicants"
+            },
+            "weight": 1
+          }
+        ],
+        "reason_code": null,
+        "ref": {
+          "column": null,
+          "database": "benefits",
+          "schema": "public",
+          "table": "applicants"
+        },
+        "status": "evaluated"
+      }
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "state": "answered",
+    "validation_id": "accef000-0000-4000-8000-000000000302",
+    "validity_evaluated_at": "2026-08-20T21:47:46.371Z",
+    "verdict": "pass"
+  },
+  "arguments": {
+    "default_database": "master",
+    "default_schema": "public",
+    "purpose_key": "benefits.determination",
+    "scenario_key": "compliance.regulatory",
+    "sql": "SELECT applicant_id, categorical_flag FROM benefits.public.applicants"
+  },
+  "case_id": "gov-determination-2025-pass",
+  "tool": "validate_query_context"
+}

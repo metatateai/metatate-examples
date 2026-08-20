@@ -4,7 +4,7 @@
     "findings": [
       {
         "decision": "allow",
-        "finding_id": "accef000-0000-4000-8000-000000000111",
+        "finding_id": "accef000-0000-4000-8000-000000000122",
         "reason_code": null,
         "ref": {
           "column": null,
@@ -34,17 +34,17 @@
     "purpose_context": {
       "purpose_category": "analytics",
       "purpose_key": "analytics.reporting",
-      "registry_version": 2
+      "registry_version": 3
     },
-    "query_fingerprint": "sha256:812ce96e522f00fb080151b6ab4983d718190a1441f887b121c8a7ccada8216a",
+    "query_fingerprint": "sha256:6bdaf3004952c6c7db278a9ec42ddc70b225c95778b568c155e108d63772336d",
     "reason_code": null,
     "statement_kind": "select",
-    "validation_id": "accef000-0000-4000-8000-000000000110",
+    "validation_id": "accef000-0000-4000-8000-000000000121",
     "verdict": "pass"
   },
   "arguments": {
     "kind": "validation",
-    "validation_id": "accef000-0000-4000-8000-000000000110"
+    "validation_id": "accef000-0000-4000-8000-000000000121"
   },
   "case_id": "explain_safe_validation",
   "tool": "explain_why"

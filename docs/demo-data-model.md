@@ -3,7 +3,7 @@
 Customer 360 is a synthetic B2B SaaS company. The dataset is intentionally small so the examples stay readable, but it includes enough variety to demonstrate policy-aware agent behavior.
 
 The machine-readable estate spec lives in `sample-data/customer-360/`
-(`catalog.yaml`, eighteen policy DSL documents in `policies/`, and
+(`catalog.yaml`, thirty-seven policy DSL documents in `policies/`, and
 `expected-decisions.yaml`); this page is the narrative companion.
 
 ## Tables
@@ -115,3 +115,22 @@ That keeps the examples focused on the decision layer rather than legal interpre
   plain-English uses deterministically ("fine-tune a model on this data" →
   `ai.training`), and text that names two canonical keys refuses with a typed
   `scenario_unresolved` instead of guessing.
+
+## Vertical pack additions (2026-08)
+
+Four industry scenario packs extend the estate without a second fabric:
+
+- **AdTech** — `customers` gains three purpose-scoped consent bases beside the
+  legacy `marketing_consent` boolean; `master.public.ad_audience_exports`
+  carries the approved-partner activation transfer lane.
+- **Payments** — `master.finance.payment_transactions`,
+  `processor_settlements`, and `network_settlements` hold one transaction's
+  distributed truth; the policies serve which source wins per question.
+- **Healthcare** — `care.public.member_records` is one person as four
+  concepts; access shapes follow four role-bound credentials, clinical
+  columns are masked outside the clinical role, and consent bases are
+  purpose-scoped. Field-level specifics are illustrative.
+- **Government** — `benefits.public.applicants` and `qualifying_conditions`
+  are governed by date-effective statute policies (the 2026 statute is
+  published but not in force until 2027-01-01), band precedence, and the
+  estate's SECOND sanctioned conflict pair (`verification_outreach`).

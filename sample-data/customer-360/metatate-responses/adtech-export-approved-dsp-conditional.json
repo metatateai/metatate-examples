@@ -1,0 +1,125 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "master",
+      "schema": "public",
+      "table": "ad_audience_exports"
+    },
+    "authorization_id": "accef000-0000-4000-8000-000000000213",
+    "can_proceed_now": false,
+    "conditions": [
+      {
+        "kind": "approval_required",
+        "projection": null,
+        "required_by_policy": "AdTech activation transfer",
+        "required_role": null,
+        "requirement": "Transfer to APPROVED_DSP_A requires approval (policy AdTech activation transfer).",
+        "satisfied": false,
+        "satisfied_by": null,
+        "satisfied_by_exception_id": null
+      }
+    ],
+    "context_facts": {
+      "category": "pii",
+      "masking": null,
+      "pii": true,
+      "sensitivity": "confidential",
+      "subcategory": null
+    },
+    "decision": "conditional",
+    "decision_id": "accef000-0000-4000-8000-000000000214",
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": null,
+    "instructions": [
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "conditional",
+        "decision_id": "accef000-0000-4000-8000-000000000214",
+        "decision_reason": "Transfer to APPROVED_DSP_A requires approval (policy AdTech activation transfer).",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "transfer_governance",
+        "instruction_key": "transfer_governance:spec.transferGovernance",
+        "parameters": {
+          "defaultEffect": "deny",
+          "rules": [
+            {
+              "destinationSystems": [
+                "APPROVED_DSP_A",
+                "APPROVED_DSP_B"
+              ],
+              "effect": "conditional",
+              "operations": [
+                "export"
+              ],
+              "requiresApproval": true
+            }
+          ]
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000215",
+          "policy_name": "AdTech activation transfer",
+          "policy_version_id": "accef000-0000-4000-8000-000000000216",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "residency.cross_border_transfer",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "public",
+          "table": "ad_audience_exports"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "You may proceed only after satisfying the stated condition(s) below (e.g. obtain the named approval, anonymize first, or act as a granted role).",
+      "If the condition cannot be met, treat this use as denied."
+    ],
+    "obligations": [],
+    "prohibitions": [],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "Transfer to APPROVED_DSP_A requires approval (policy AdTech activation transfer).",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
+    "scenario_key": "residency.cross_border_transfer",
+    "scenario_lane": "platform",
+    "state": "answered",
+    "validity_evaluated_at": "2026-08-20T21:47:46.056Z"
+  },
+  "arguments": {
+    "asset": {
+      "database": "master",
+      "schema": "public",
+      "table": "ad_audience_exports"
+    },
+    "destination": {
+      "system": "APPROVED_DSP_A"
+    },
+    "operation": "export",
+    "scenario_key": "residency.cross_border_transfer",
+    "use": "activate the consented audience with an approved partner"
+  },
+  "case_id": "adtech-export-approved-dsp-conditional",
+  "tool": "authorize_use"
+}

@@ -28,7 +28,7 @@ try:
 except ImportError:  # pragma: no cover - dotenv is a notebook convenience.
     load_dotenv = None
 
-from .fixture_cases import CASES, case_for
+from .fixture_cases import CASES, ROLE_TOKEN_ENVS, case_for
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 FIXTURE_DIR = REPO_ROOT / "sample-data" / "customer-360" / "metatate-responses"
@@ -51,8 +51,16 @@ class OfflineMetatateClient:
     offline reader is never shown an invented governance answer.
     """
 
-    def __init__(self, fixture_dir: Path | str = FIXTURE_DIR) -> None:
+    def __init__(
+        self,
+        fixture_dir: Path | str = FIXTURE_DIR,
+        bound_role: str | None = None,
+    ) -> None:
         self.fixture_dir = Path(fixture_dir)
+        # The credential's role, offline as live: a role-bound recording is
+        # reachable only through the client that represents that role's token
+        # (get_client maps the token ENV back to the role).
+        self.bound_role = bound_role
         self._explains: dict[tuple[str, str], str] | None = None
 
     # ---- the seven context + decision tools this pack replays ----------------
@@ -176,7 +184,7 @@ class OfflineMetatateClient:
     # ---- routing -----------------------------------------------------------
 
     def _dispatch(self, tool: str, arguments: dict[str, Any]) -> dict[str, Any]:
-        case = case_for(tool, arguments)
+        case = case_for(tool, arguments, self.bound_role)
         if case is None:
             nearest = ", ".join(c["id"] for c in CASES if c["tool"] == tool)
             raise MetatateToolError(
@@ -360,7 +368,8 @@ def get_client(*, token_env: str | None = None) -> Any:
         return MetatateCloudClient(token_env=token_env)
     if mode != "offline":
         raise ValueError("METATATE_EXAMPLES_MODE must be offline or live")
-    return OfflineMetatateClient()
+    role_by_env = {env: role for role, env in ROLE_TOKEN_ENVS.items()}
+    return OfflineMetatateClient(bound_role=role_by_env.get(token_env or ""))
 
 
 def _mcp_endpoint_from_env() -> str:

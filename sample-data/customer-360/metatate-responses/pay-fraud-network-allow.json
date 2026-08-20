@@ -1,0 +1,105 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "master",
+      "schema": "finance",
+      "table": "network_settlements"
+    },
+    "authorization_id": "accef000-0000-4000-8000-000000000222",
+    "can_proceed_now": true,
+    "conditions": [],
+    "context_facts": {
+      "category": "financial",
+      "masking": null,
+      "pii": false,
+      "sensitivity": "internal",
+      "subcategory": null
+    },
+    "decision": "allow",
+    "decision_id": "accef000-0000-4000-8000-000000000223",
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": {
+      "purpose_category": "fraud",
+      "purpose_key": "fraud.detection",
+      "registry_version": 3
+    },
+    "instructions": [
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "allow",
+        "decision_id": "accef000-0000-4000-8000-000000000223",
+        "decision_reason": "Purpose `fraud.detection` is named by this policy's permitted-uses list (policy Payments network authority).",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "usage_guidance",
+        "instruction_key": "usage_guidance:spec.usage.permittedUses:permitted",
+        "parameters": {
+          "kind": "permitted",
+          "uses": [
+            "fraud.detection",
+            "analytics.reporting"
+          ]
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000224",
+          "policy_name": "Payments network authority",
+          "policy_version_id": "accef000-0000-4000-8000-000000000225",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "purpose.allowed_use",
+        "scenario_lane": "human",
+        "scope": {
+          "column": null,
+          "database": "master",
+          "schema": "finance",
+          "table": "network_settlements"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "Proceed \u2014 the current published instructions allow this use."
+    ],
+    "obligations": [],
+    "prohibitions": [],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "Purpose `fraud.detection` is named by this policy's permitted-uses list (policy Payments network authority).",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
+    "scenario_key": "purpose.allowed_use",
+    "scenario_lane": "human",
+    "state": "answered",
+    "validity_evaluated_at": "2026-08-20T21:47:46.107Z"
+  },
+  "arguments": {
+    "asset": {
+      "database": "master",
+      "schema": "finance",
+      "table": "network_settlements"
+    },
+    "purpose_key": "fraud.detection",
+    "scenario_key": "purpose.allowed_use",
+    "use": "investigate suspected fraud on a settled transaction"
+  },
+  "case_id": "pay-fraud-network-allow",
+  "tool": "authorize_use"
+}

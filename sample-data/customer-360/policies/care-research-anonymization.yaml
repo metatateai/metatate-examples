@@ -1,0 +1,33 @@
+# Customer 360 estate spec — Healthcare pack: the research (subject) context.
+# Research use is de-identified only; model training on member records is
+# blocked outright. "Only under an active protocol" is the steward-granted
+# exception lane, not a policy switch.
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: care-research-anonymization
+  version: 1.0.0
+  description: >-
+    Member records enter research work only de-identified; training models
+    on member records is prohibited.
+  tags: [health, pii, ai_training_blocked]
+  businessContext:
+    domain: Care Data
+    owner: Care Operations
+    steward: health-governance@example.com
+    purpose: De-identification requirement for research use of member data.
+spec:
+  enforcementMode: enforce
+  priority: 550
+  selector:
+    databases: [care]
+    schemas: [public]
+    tables: [member_records]
+  classification:
+    sensitivity: restricted
+    category: pii
+  aiGovernance:
+    allowTraining: false
+    requiresAnonymization: true
+extensions:
+  displayName: Care research anonymization

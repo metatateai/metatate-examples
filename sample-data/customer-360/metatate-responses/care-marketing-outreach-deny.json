@@ -1,0 +1,117 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "care",
+      "schema": "public",
+      "table": "member_records"
+    },
+    "authorization_id": "accef000-0000-4000-8000-000000000265",
+    "can_proceed_now": false,
+    "conditions": [],
+    "context_facts": {
+      "category": "pii",
+      "masking": {
+        "exempt_roles": [
+          "clinical"
+        ],
+        "type": "full"
+      },
+      "pii": true,
+      "sensitivity": "restricted",
+      "subcategory": null
+    },
+    "decision": "deny",
+    "decision_id": "accef000-0000-4000-8000-000000000266",
+    "evaluated_actor_role": "marketing",
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": {
+      "purpose_category": "marketing",
+      "purpose_key": "marketing.advertising",
+      "registry_version": 3
+    },
+    "instructions": [
+      {
+        "category": "advisory",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "deny",
+        "decision_id": "accef000-0000-4000-8000-000000000266",
+        "decision_reason": "Use for purpose `marketing.advertising` is prohibited by this policy's prohibited-uses list (policy Care use guardrails).",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "usage_guidance",
+        "instruction_key": "usage_guidance:spec.usage.prohibitedUses:prohibited",
+        "parameters": {
+          "kind": "prohibited",
+          "uses": [
+            "marketing.advertising",
+            "marketing.personalization"
+          ]
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000257",
+          "policy_name": "Care use guardrails",
+          "policy_version_id": "accef000-0000-4000-8000-000000000258",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "purpose.prohibited_use",
+        "scenario_lane": "human",
+        "scope": {
+          "column": null,
+          "database": "care",
+          "schema": "public",
+          "table": "member_records"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "Do not proceed with this use.",
+      "Request an approved exception or an alternative asset from the data steward."
+    ],
+    "obligations": [],
+    "prohibitions": [
+      {
+        "detail": "Use for purpose `marketing.advertising` is prohibited by this policy's prohibited-uses list (policy Care use guardrails).",
+        "required_by_policy": "Care use guardrails",
+        "source": "prohibited_use"
+      }
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "Use for purpose `marketing.advertising` is prohibited by this policy's prohibited-uses list (policy Care use guardrails).",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
+    "scenario_key": "purpose.prohibited_use",
+    "scenario_lane": "human",
+    "state": "answered",
+    "validity_evaluated_at": "2026-08-20T21:47:46.243Z"
+  },
+  "arguments": {
+    "asset": {
+      "database": "care",
+      "schema": "public",
+      "table": "member_records"
+    },
+    "purpose_key": "marketing.advertising",
+    "scenario_key": "purpose.prohibited_use",
+    "use": "market wellness products to members"
+  },
+  "case_id": "care-marketing-outreach-deny",
+  "tool": "authorize_use"
+}

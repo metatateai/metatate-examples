@@ -32,7 +32,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from common.fixture_cases import CASES  # noqa: E402
+from common.fixture_cases import CASES, ROLE_TOKEN_ENVS  # noqa: E402
 from common.saas_client import MetatateCloudClient  # noqa: E402
 
 FIXTURE_DIR = ROOT / "sample-data" / "customer-360" / "metatate-responses"
@@ -198,23 +198,28 @@ def preflight(client: "MetatateCloudClient") -> None:
 def main() -> int:
     client = MetatateCloudClient()
     preflight(client)
-    agent_client: MetatateCloudClient | None = None
-    if any(case.get("bound_role") == "agent" for case in CASES):
-        if not os.getenv("METATATE_SAAS_MCP_AGENT_TOKEN"):
+    # One live client per bound role present in CASES (ROLE_TOKEN_ENVS is the
+    # single source of truth). Fail-closed: a missing role token aborts the
+    # whole run rather than silently weakening a role-bound case.
+    role_clients: dict[str, MetatateCloudClient] = {}
+    for role in sorted({str(c["bound_role"]) for c in CASES if c.get("bound_role")}):
+        env = ROLE_TOKEN_ENVS.get(role)
+        if env is None:
+            raise SystemExit(f"recording FAILED: no token env mapped for bound_role={role!r}")
+        if not os.getenv(env):
             raise SystemExit(
-                "recording FAILED: agent-bound cases require "
-                "METATATE_SAAS_MCP_AGENT_TOKEN (a {read} token with bound_role=agent)"
+                f"recording FAILED: {role}-bound cases require {env} "
+                f"(a {{read}} token with bound_role={role})"
             )
-        agent_client = MetatateCloudClient(token_env="METATATE_SAAS_MCP_AGENT_TOKEN")
-        preflight(agent_client)
+        role_clients[role] = MetatateCloudClient(token_env=env)
+        preflight(role_clients[role])
     recorded: dict[str, dict[str, Any]] = {}
     ordered: list[dict[str, Any]] = []
 
     for case in CASES:
         arguments = resolve_reference(dict(case["arguments"]), recorded)
-        case_client = agent_client if case.get("bound_role") == "agent" else client
-        if case_client is None:
-            raise RuntimeError("agent client was not initialized")
+        role = case.get("bound_role")
+        case_client = role_clients[str(role)] if role else client
         answer = case_client.call_tool(str(case["tool"]), arguments)
         recording = {
             "case_id": case["id"],

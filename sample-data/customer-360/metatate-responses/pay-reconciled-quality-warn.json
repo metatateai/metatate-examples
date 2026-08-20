@@ -1,0 +1,93 @@
+{
+  "answer": {
+    "advisory": true,
+    "evaluated_actor_role": null,
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": {
+      "purpose_category": "analytics",
+      "purpose_key": "analytics.reporting",
+      "registry_version": 3
+    },
+    "findings": [
+      {
+        "conflict": null,
+        "decision": "conditional",
+        "decision_reason": "payments-transaction-operations v1 ai_governance:spec.aiGovernance:restrictions \u2192 conditional on master.finance.payment_transactions",
+        "finding_id": "accef000-0000-4000-8000-000000000242",
+        "instructions": [
+          {
+            "category": "advisory",
+            "conflict_group_id": null,
+            "conflict_status": "none",
+            "conflicts_with": [],
+            "decision": "conditional",
+            "decision_id": "accef000-0000-4000-8000-000000000236",
+            "decision_reason": "payments-transaction-operations v1 ai_governance:spec.aiGovernance:restrictions \u2192 conditional on master.finance.payment_transactions",
+            "effective_from": null,
+            "effective_until": null,
+            "enforcement_mode": "enforce",
+            "instruction_family": "ai_governance",
+            "instruction_key": "ai_governance:spec.aiGovernance:restrictions",
+            "parameters": {
+              "allowInference": null,
+              "allowTraining": null,
+              "requiresAnonymization": null,
+              "restrictions": [
+                "Analytics on raw payment transactions is reliable only for reconciled rows (settlement_state = 'reconciled'); network_settlements is the reconciliation source of truth."
+              ]
+            },
+            "primary_resolution_source": "selector",
+            "priority": 2,
+            "provenance": {
+              "policy_id": "accef000-0000-4000-8000-000000000228",
+              "policy_name": "Payments transaction operations",
+              "policy_version_id": "accef000-0000-4000-8000-000000000229",
+              "version_number": 1
+            },
+            "resolution_paths": [
+              {
+                "ref": null,
+                "source": "selector"
+              }
+            ],
+            "scenario_key": "quality.reliability",
+            "scenario_lane": "platform",
+            "scope": {
+              "column": null,
+              "database": "master",
+              "schema": "finance",
+              "table": "payment_transactions"
+            },
+            "weight": 1
+          }
+        ],
+        "reason_code": null,
+        "ref": {
+          "column": null,
+          "database": "master",
+          "schema": "finance",
+          "table": "payment_transactions"
+        },
+        "status": "evaluated"
+      }
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "state": "answered",
+    "validation_id": "accef000-0000-4000-8000-000000000241",
+    "validity_evaluated_at": "2026-08-20T21:47:46.159Z",
+    "verdict": "warn"
+  },
+  "arguments": {
+    "default_database": "master",
+    "default_schema": "public",
+    "purpose_key": "analytics.reporting",
+    "scenario_key": "quality.reliability",
+    "sql": "SELECT transaction_id, amount FROM master.finance.payment_transactions"
+  },
+  "case_id": "pay-reconciled-quality-warn",
+  "tool": "validate_query_context"
+}

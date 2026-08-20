@@ -1,0 +1,101 @@
+{
+  "answer": {
+    "advisory": true,
+    "asset": {
+      "column": null,
+      "database": "care",
+      "schema": "public",
+      "table": "member_records"
+    },
+    "authorization_id": "accef000-0000-4000-8000-000000000247",
+    "can_proceed_now": false,
+    "conditions": [],
+    "conflict": null,
+    "context_facts": {
+      "category": "pii",
+      "masking": {
+        "exempt_roles": [
+          "clinical"
+        ],
+        "type": "full"
+      },
+      "pii": true,
+      "sensitivity": "restricted",
+      "subcategory": null
+    },
+    "decision": "require_review",
+    "evaluated_actor_role": "member_services",
+    "evaluated_at": "2026-07-30T00:00:00.000Z",
+    "evaluated_data_access_context": null,
+    "evaluated_purpose": null,
+    "instructions": [
+      {
+        "category": "enforceable",
+        "conflict_group_id": null,
+        "conflict_status": "none",
+        "conflicts_with": [],
+        "decision": "require_review",
+        "decision_id": "accef000-0000-4000-8000-000000000244",
+        "decision_reason": "Access is granted to role `clinical`; the evaluated actor role holds no matching grant (policy Care member role access).",
+        "effective_from": null,
+        "effective_until": null,
+        "enforcement_mode": "enforce",
+        "instruction_family": "role_grant",
+        "instruction_key": "role_grant:spec.accessControl.allowedRoles:clinical:allow",
+        "parameters": {
+          "action": "allow",
+          "role": "clinical"
+        },
+        "primary_resolution_source": "selector",
+        "priority": 2,
+        "provenance": {
+          "policy_id": "accef000-0000-4000-8000-000000000245",
+          "policy_name": "Care member role access",
+          "policy_version_id": "accef000-0000-4000-8000-000000000246",
+          "version_number": 1
+        },
+        "resolution_paths": [
+          {
+            "ref": null,
+            "source": "selector"
+          }
+        ],
+        "scenario_key": "access.read",
+        "scenario_lane": "platform",
+        "scope": {
+          "column": null,
+          "database": "care",
+          "schema": "public",
+          "table": "member_records"
+        },
+        "weight": 1
+      }
+    ],
+    "next_actions": [
+      "Obtain data-steward review before proceeding with this use."
+    ],
+    "publication": {
+      "publication_id": "accef000-0000-4000-8000-000000000001",
+      "published_at": "2026-07-16T00:00:00.000Z"
+    },
+    "reason": "Access is granted to role `clinical`; the evaluated actor role holds no matching grant (policy Care member role access).",
+    "reason_code": "decision_requires_review",
+    "satisfied_conditions": [],
+    "satisfied_exceptions": [],
+    "scenario_key": "access.read",
+    "scenario_lane": "platform",
+    "state": "review_required",
+    "validity_evaluated_at": "2026-08-20T21:47:46.176Z"
+  },
+  "arguments": {
+    "asset": {
+      "database": "care",
+      "schema": "public",
+      "table": "member_records"
+    },
+    "scenario_key": "access.read",
+    "use": "read the full member record for coverage work"
+  },
+  "case_id": "care-member-services-read-review",
+  "tool": "authorize_use"
+}

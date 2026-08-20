@@ -1,0 +1,47 @@
+# Customer 360 estate spec — Healthcare pack: purpose-scoped consent bases.
+# care.treatment deliberately carries NO rule — a treatment-purpose consent
+# question fails closed to review (the no-matching-rule control).
+apiVersion: metatate.io/v1
+kind: DataPolicy
+metadata:
+  name: care-consent-requirements
+  version: 1.0.0
+  description: >-
+    Eligibility reads require an active coverage authorization; research use
+    requires a recorded research authorization; consumer marketing requires
+    an explicit opt-in. Each basis is verified per declared purpose.
+  tags: [health, pii, consent]
+  businessContext:
+    domain: Care Data
+    owner: Care Operations
+    steward: health-governance@example.com
+    purpose: Purpose-scoped consent verification over the member record.
+spec:
+  enforcementMode: enforce
+  priority: 600
+  selector:
+    databases: [care]
+    schemas: [public]
+    tables: [member_records]
+  classification:
+    sensitivity: restricted
+    category: pii
+  consentRequirements:
+    rules:
+      - purposeKey: care.eligibility
+        basisColumn: coverage_status
+        requirement: >-
+          Eligibility reads require an active coverage authorization on file
+          (coverage_status = 'active').
+      - purposeKey: research.general
+        basisColumn: research_consent
+        requirement: >-
+          Research use requires an active research authorization recorded in
+          research_consent.
+      - purposeKey: marketing.advertising
+        basisColumn: consumer_marketing_consent
+        requirement: >-
+          Consumer marketing requires an explicit opt-in recorded in
+          consumer_marketing_consent.
+extensions:
+  displayName: Care consent requirements
